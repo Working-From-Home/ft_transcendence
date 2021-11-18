@@ -12,15 +12,15 @@ Content-Type: application/json
 DELETE http://localhost:3000/auth/3
 
 ### Update user
-PATCH http://localhost:3000/auth/4
+PATCH http://localhost:3000/auth/1
 Content-Type: application/json
 
 {
-    "password": "bobwin"
+    "username": "bob"
 }
 
 ### Find user by id
-GET http://localhost:3000/auth/2
+GET http://localhost:3000/auth/1
 
 ### Find user by username
 GET http://localhost:3000/auth?username=wini
