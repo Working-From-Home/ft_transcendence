@@ -1,0 +1,35 @@
+### Create user
+POST http://localhost:3000/auth/signup
+Content-Type: application/json
+
+{
+    "email": "wini@bobland.com",
+    "username": "wini",
+    "password": "bobwin"
+}
+
+### Remove user
+DELETE http://localhost:3000/auth/3
+
+### Update user
+PATCH http://localhost:3000/auth/1
+Content-Type: application/json
+
+{
+    "username": "bob"
+}
+
+### Find user by id
+GET http://localhost:3000/auth/1
+
+### Find user by username
+GET http://localhost:3000/auth?username=wini
+
+### Sign in
+POST http://localhost:3000/auth/signin
+Content-Type: application/json
+
+{
+    "username": "wini",
+    "password": "bobwin"
+}
