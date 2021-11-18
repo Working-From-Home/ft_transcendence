@@ -1,0 +1,29 @@
+### sign up
+POST http://localhost:3000/auth/signup
+Content-Type: application/json
+
+{
+    "email": "mail@mail.com",
+    "username": "name",
+    "password": "password"
+}
+
+### sign in
+POST http://localhost:3000/auth/signin
+Content-Type: application/json
+
+{
+    "username": "name",
+    "password": "password"
+}
+
+### update
+PATCH http://localhost:3000/users/1
+Content-Type: application/json
+
+{
+    "username": "newName"
+}
+
+### get user by name
+GET http://localhost:3000/users?username=newName

@@ -1,8 +1,8 @@
 import { BadRequestException } from '@nestjs/common'
-import { Test } from '@nestjs/testing'
-import { AuthService } from '../services/auth.service'
-import { UsersService } from '../services/users.service'
-import { User } from '../entities/user.entity'
+import { Test } from '@nestjs/testing'
+import { AuthService } from './auth.service'
+import { UsersService } from '../users/users.service'
+import { User } from '../users/user.entity'
 
 describe('AuthService', () => {
     let service: AuthService;

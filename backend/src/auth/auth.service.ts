@@ -1,9 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
-import { UsersService } from "./users.service";
+import { BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
 import { randomBytes, scrypt as _scrypt } from "crypto";
 import { promisify } from "util";
-import { NotFoundError } from "rxjs";
-import { User } from "../../users/entities/user.entity";
+import { UsersService } from '../users/users.service';
+import { User } from '../users/user.entity';
 
 const scrypt = promisify(_scrypt);
 
