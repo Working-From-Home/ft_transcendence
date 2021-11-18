@@ -3,6 +3,7 @@ documentation/
 # compiled output
 /dist
 /node_modules
+tmp_db
 
 # Logs
 logs
