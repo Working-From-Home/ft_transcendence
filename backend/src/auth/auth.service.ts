@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { randomBytes, scrypt as _scrypt } from "crypto";
 import { promisify } from "util";
 import { UsersService } from '../users/users.service';
@@ -8,7 +9,7 @@ const scrypt = promisify(_scrypt);
 
 @Injectable()
 export class AuthService {
-    constructor(private usersService: UsersService) {}
+    constructor(private usersService: UsersService, private jwtService: JwtService) {}
 
     async signup(email: string, username: string, password: string) {
         const emailisAvailable = await this.isEmailAvailable(email);
@@ -34,7 +35,8 @@ export class AuthService {
         if (storedHash !== hash.toString('hex')) {
             throw new BadRequestException('Bad password');
         }
-        return user;
+        const payload = { username: user.username, sub: user.id };
+        return {"access_token": this.jwtService.sign(payload) };
     }
 
     async update(id: number, attrs: Partial<User>) {
