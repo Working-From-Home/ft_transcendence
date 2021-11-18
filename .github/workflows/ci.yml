@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [12.x, 14.x, 16.x]
+        node-version: [14.x, 16.x, 17.x]
     
     steps:
     - uses: actions/checkout@v2
@@ -28,25 +28,22 @@ jobs:
     - run: yarn run test
       working-directory: ./backend
 
-    # - run: sh -c 'yarn install && yarn run start:dev'
-    #   working-directory: ./backend
 
-
-  frontend-unit-test:
-    runs-on: ubuntu-latest
-    timeout-minutes: 25
-    strategy:
-      fail-fast: false
-      matrix:
-        node-version: [12.x, 14.x, 16.x]
+  # frontend-unit-test:
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 25
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       node-version: [12.x, 14.x, 16.x]
     
-    steps:
-    - uses: actions/checkout@v2
+  #   steps:
+  #   - uses: actions/checkout@v2
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
+  #   - name: Use Node.js ${{ matrix.node-version }}
+  #     uses: actions/setup-node@v1
+  #     with:
+  #       node-version: ${{ matrix.node-version }}
 
-    - run: sh -c 'npm install && npm run serve'
-      working-directory: ./frontend
+  #   - run: sh -c 'npm install && npm run serve'
+  #     working-directory: ./frontend
