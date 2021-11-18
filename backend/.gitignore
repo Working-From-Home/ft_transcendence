@@ -1,8 +1,5 @@
 documentation/
 
-# tmp
-tmp_db
-
 # compiled output
 /dist
 /node_modules
