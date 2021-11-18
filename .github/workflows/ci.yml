@@ -23,8 +23,13 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    - run: sh -c 'yarn install && yarn run start:dev'
+    - run: yarn install
       working-directory: ./backend
+    - run: yarn run test
+      working-directory: ./backend
+
+    # - run: sh -c 'yarn install && yarn run start:dev'
+    #   working-directory: ./backend
 
 
   frontend-unit-test:
