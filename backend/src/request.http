@@ -3,8 +3,8 @@ POST http://localhost:3000/auth/signup
 Content-Type: application/json
 
 {
-    "email": "lol@mail.com",
-    "username": "k",
+    "email": "bob@mail.com",
+    "username": "bob",
     "password": "password"
 }
 
@@ -13,7 +13,7 @@ POST http://localhost:3000/auth/signin
 Content-Type: application/json
 
 {
-    "username": "yayao",
+    "username": "bob",
     "password": "password"
 }
 
@@ -26,7 +26,7 @@ Content-Type: application/json
 }
 
 ### get user by id
-GET http://localhost:3000/users/1
+GET http://localhost:3000/users/3
 
 ### get user by name
 GET http://localhost:3000/users?username=newName

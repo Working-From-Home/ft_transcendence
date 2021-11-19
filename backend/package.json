@@ -38,6 +38,7 @@
     "rxjs": "^7.4.0",
     "sqlite3": "^5.0.2",
     "swagger-ui-express": "^4.1.6",
+    "ts-jest-mock": "^1.1.0",
     "typeorm": "^0.2.40",
     "util": "^0.12.4"
   },

@@ -3,6 +3,8 @@ import { Test } from '@nestjs/testing'
 import { AuthService } from '../services/auth.service'
 import { UsersService } from '../services/users.service'
 import { User } from '../entities/user.entity'
+import { JwtModule } from '@nestjs/jwt';
+import { jwtConstants } from '../constants'
 
 describe('AuthService', () => {
     let service: AuthService;
@@ -30,6 +32,12 @@ describe('AuthService', () => {
             }
         };
         const module = await Test.createTestingModule({
+            imports: [
+                JwtModule.register({
+                    secret: jwtConstants.secret,
+                    signOptions: { expiresIn: '60s' }
+                })
+            ],
             providers: [
                 AuthService,
                 {
@@ -45,15 +53,14 @@ describe('AuthService', () => {
         expect(service).toBeDefined();
     });
 
-    it('can create a new user with a salted and hashed password', async () => {
-        const user = await service.signup('mail', 'username', 'password');
-        expect(user.password).not.toEqual('password');
-        const [salt, hash] = user.password.split('.');
-        expect(salt).toBeDefined();
-        expect(hash).toBeDefined();
+    it('returns an access_token if a user signs up with valid credentials', async () => {
+        const obj = await service.signup('email',  'unusedUsername', 'password');
+        expect(obj).toBeDefined();
+        expect(obj.access_token).toBeDefined();
+        expect(obj.access_token.length).toBeGreaterThan(0);
     });
 
-    it('throws an error if user signs up with email that is in use', async () => {
+    it('throws an error if a user signs up with an already used email', async () => {
         await service.signup('email',  'unusedUsername', 'password');
         try {
             await service.signup('email',  'name', 'password');
@@ -62,7 +69,7 @@ describe('AuthService', () => {
         }
     });
 
-    it('throws an error if user signs up with username that is in use', async () => {
+    it('throws an error if a user signs up with an already used username', async () => {
         await service.signup('email',  'username', 'password');
         try {
             await service.signup('mail',  'username', 'password');
@@ -71,7 +78,15 @@ describe('AuthService', () => {
         }
     });
 
-    it('throws an error if signin is called with unused username', async () => {
+    it('returns an access_token if a user signs in with valid credentials', async () => {
+        await service.signup('email',  'username', 'password');
+        const obj = await service.signin('username', 'password');
+        expect(obj).toBeDefined();
+        expect(obj.access_token).toBeDefined();
+        expect(obj.access_token.length).toBeGreaterThan(0);
+    });
+
+    it('throws an error if a user signs in with an unknown username', async () => {
         try {
             await service.signin('name', 'password');
         } catch (err) {
@@ -79,18 +94,12 @@ describe('AuthService', () => {
         }
     });
 
-    it('throws an error if an invalid password is provided', async () => {
+    it('throws an error if a user signs in with an invalid password', async () => {
         await service.signup('email',  'username', 'password');
         try {
             await service.signin('username', 'badPassword');
         } catch (err) {
             expect(err).toEqual(new BadRequestException('Bad password'));
         }
-    });
-
-    it('returns a user if a correct password is provided', async () => {
-        await service.signup('email',  'username', 'password');
-        const user = await service.signin('username', 'password');
-        expect(user).toBeDefined();
     });
 });
