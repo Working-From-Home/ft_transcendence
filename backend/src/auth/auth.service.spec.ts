@@ -1,10 +1,11 @@
 import { BadRequestException } from '@nestjs/common'
 import { Test } from '@nestjs/testing'
+import { JwtModule } from '@nestjs/jwt';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service'
 import { UsersService } from '../users/users.service'
 import { User } from '../users/entities/user.entity'
-import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from './constants'
+
 
 describe('AuthService', () => {
     let service: AuthService;
@@ -49,9 +50,13 @@ describe('AuthService', () => {
         };
         const module = await Test.createTestingModule({
             imports: [
-                JwtModule.register({
-                    secret: jwtConstants.secret,
-                    signOptions: { expiresIn: '60s' }
+                JwtModule.registerAsync({
+                    imports: [ConfigModule],
+                    useFactory: async (config: ConfigService) => ({
+                      secret: 'SECRET',
+                      signOptions: { expiresIn: '3600s' },
+                    }),
+                    inject: [ConfigService],
                 })
             ],
             providers: [
