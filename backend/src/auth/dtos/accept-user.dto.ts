@@ -4,7 +4,7 @@ import { IsString, IsNotEmpty } from "class-validator";
  *  Defines how sign in inputs should be formated.
  */
 
-export class SignUserInDto {
+export class AcceptUserDto {
     @IsNotEmpty()
     @IsString()
     username: string;

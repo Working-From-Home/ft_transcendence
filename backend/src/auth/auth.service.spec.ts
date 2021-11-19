@@ -1,10 +1,10 @@
 import { BadRequestException } from '@nestjs/common'
 import { Test } from '@nestjs/testing'
-import { AuthService } from '../services/auth.service'
-import { UsersService } from '../services/users.service'
-import { User } from '../entities/user.entity'
+import { AuthService } from './auth.service'
+import { UsersService } from '../users/users.service'
+import { User } from '../users/entities/user.entity'
 import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from '../constants'
+import { jwtConstants } from './constants'
 
 describe('AuthService', () => {
     let service: AuthService;

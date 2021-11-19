@@ -1,7 +1,7 @@
 import { Body, Controller, Get, NotFoundException, Param, Patch, Query } from '@nestjs/common';
-import { Serialize } from '../../interceptors/serialize.interceptor';
-import { UsersService } from '../services/users.service';
-import { UserDto } from '../dtos/user.dto'
+import { Serialize } from '../interceptors/serialize.interceptor';
+import { UsersService } from './users.service';
+import { UserDto } from './dtos/user.dto'
 
 @Controller('users')
 @Serialize(UserDto)

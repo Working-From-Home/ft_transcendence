@@ -1,9 +1,9 @@
 import { Body, Controller, Param, Patch, Post } from '@nestjs/common';
-import { AuthService } from '../services/auth.service';
-import { UsersService } from '../services/users.service';
-import { CreateUserDto } from '../dtos/create-user.dto';
-import { SignUserInDto } from '../dtos/sign-user-in.dto';
-import { UpdateUserDto } from '../dtos/update-user.dto'
+import { AuthService } from './auth.service';
+import { UsersService } from '../users/users.service';
+import { CreateUserDto } from './dtos/create-user.dto';
+import { AcceptUserDto } from './dtos/accept-user.dto';
+import { UpdateUserDto } from './dtos/update-user.dto'
 
 @Controller('auth')
 export class AuthController {
@@ -16,7 +16,7 @@ export class AuthController {
     }
 
     @Post('/signin')
-    async signin(@Body() body: SignUserInDto) {
+    async signin(@Body() body: AcceptUserDto) {
         const access_token = await this.authService.signin(body.username, body.password);
         return access_token;
     }
