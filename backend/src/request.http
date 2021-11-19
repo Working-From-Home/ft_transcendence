@@ -20,9 +20,10 @@ Content-Type: application/json
 ### update
 PATCH http://localhost:3000/auth/1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJiIiwic3ViIjoyNSwiaWF0IjoxNjM3MzU4MjAzLCJleHAiOjE2MzczNTgyNjN9.v6kXM9RBU3vIvIxOT0AHTk8cXIuLhOWf6a9rgs6cuVE
 
 {
-    "username": "yayao"
+    "username": "yao"
 }
 
 ### get user by id

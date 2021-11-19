@@ -1,9 +1,10 @@
-import { Body, Controller, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UsersService } from '../users/users.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { AcceptUserDto } from './dtos/accept-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto'
+import { JwtAuthGuard } from './guards/jwt-auth.guard'
 
 @Controller('auth')
 export class AuthController {
@@ -21,6 +22,7 @@ export class AuthController {
         return access_token;
     }
 
+    @UseGuards(JwtAuthGuard)
     @Patch('/:id')
     async updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
         const user = await this.authService.update(parseInt(id), body);
