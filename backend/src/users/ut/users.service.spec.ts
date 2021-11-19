@@ -19,14 +19,10 @@ describe('UsersService', () => {
             },
             find: (attrs: Partial<User>) => {
                 if (attrs.email) {
-                    const user = users.filter(user => user.email === attrs.email);
-                    if (user.length === 0) { return null; }
-                    return user;
+                    return users.filter(user => user.email === attrs.email);
                 }
                 if (attrs.username) {
-                    const user = users.filter(user => user.username === attrs.username);
-                    if (user.length === 0) { return null; }
-                    return user;
+                    return users.filter(user => user.username === attrs.username);
                 }
             }
         }
@@ -58,7 +54,7 @@ describe('UsersService', () => {
 
     it('should find user with an email of "1"', async () => {
         const user = await service.findByEmail("1");
-        expect(user[0].username).toEqual("1");
+        expect(user.username).toEqual("1");
     });
 
     it('should not find user with an email of "3"', async () => {
@@ -68,7 +64,7 @@ describe('UsersService', () => {
 
     it('should find user with a username of "1"', async () => {
         const user = await service.findByEmail("1");
-        expect(user[0].email).toEqual("1");
+        expect(user.email).toEqual("1");
     });
 
     it('should not find user with a username of "3"', async () => {

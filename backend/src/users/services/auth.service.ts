@@ -12,13 +12,11 @@ export class AuthService {
     constructor(private usersService: UsersService, private jwtService: JwtService) {}
 
     async signup(email: string, username: string, password: string) {
-        const emailisAvailable = await this.isEmailAvailable(email);
-        if (!emailisAvailable) {
-            throw new BadRequestException('Email in use');
+        if (! await this.isEmailAvailable(email)) {
+            throw new BadRequestException('email in use');
         }
-        const usernameisAvailable = await this.isUsernameAvailable(username);
-        if (!usernameisAvailable) {
-            throw new BadRequestException('Username in use');
+        if (! await this.isUsernameAvailable(username)) {
+            throw new BadRequestException('username in use');
         }
         const encryptedPasword = await this.encryptPassword(password);
         const user = await this.usersService.create(email, username, encryptedPasword);
@@ -26,29 +24,27 @@ export class AuthService {
     }
 
     async signin(username: string, password: string) {
-        const [user] = await this.usersService.findByName(username);
+        const user = await this.usersService.findByName(username);
         if (!user) {
-            throw new NotFoundException('User not found');
+            throw new NotFoundException('user not found');
         }
         const [salt, storedHash] = user.password.split('.');
         const hash = (await scrypt(password, salt, 32)) as Buffer;
         if (storedHash !== hash.toString('hex')) {
-            throw new BadRequestException('Bad password');
+            throw new BadRequestException('bad password');
         }
         return this.generateAccessToken(user);
     }
 
     async update(id: number, attrs: Partial<User>) {
         if (attrs.email) {
-            const emailisAvailable = await this.isEmailAvailable(attrs.email);
-            if (!emailisAvailable) {
-                throw new BadRequestException('Email in use');
+            if (! await this.isEmailAvailable(attrs.email)) {
+                throw new BadRequestException('email in use');
             }
         }
         if (attrs.username) {
-            const usernameisAvailable = await this.isUsernameAvailable(attrs.username);
-            if (!usernameisAvailable) {
-                throw new BadRequestException('Username in use');
+            if (! await this.isUsernameAvailable(attrs.username)) {
+                throw new BadRequestException('username in use');
             }
         }
         if (attrs.password) {
@@ -60,19 +56,15 @@ export class AuthService {
     }
 
     private async isEmailAvailable(email: string) {
-        const users = await this.usersService.findByEmail(email);
-        if (users.length) {
-            return false;
-        }
-        return true;
+        const user = await this.usersService.findByEmail(email);
+        if (!user) { return true; }
+        return false;
     }
 
     private async isUsernameAvailable(username: string) {
-        const users = await this.usersService.findByName(username);
-        if (users.length) {
-            return false;
-        }
-        return true;
+        const user = await this.usersService.findByName(username);
+        if (!user) { return true; }
+        return false;
     }
 
     private async encryptPassword(password: string) {
