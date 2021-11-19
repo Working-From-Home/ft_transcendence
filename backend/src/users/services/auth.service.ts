@@ -2,8 +2,8 @@ import { BadRequestException, Injectable, NotFoundException} from '@nestjs/commo
 import { JwtService } from '@nestjs/jwt';
 import { randomBytes, scrypt as _scrypt } from "crypto";
 import { promisify } from "util";
-import { UsersService } from '../users/users.service';
-import { User } from '../users/user.entity';
+import { UsersService } from './users.service';
+import { User } from '../entities/user.entity';
 
 const scrypt = promisify(_scrypt);
 
@@ -22,7 +22,7 @@ export class AuthService {
         }
         const encryptedPasword = await this.encryptPassword(password);
         const user = await this.usersService.create(email, username, encryptedPasword);
-        return user;
+        return this.generateAccessToken(user);
     }
 
     async signin(username: string, password: string) {
@@ -35,8 +35,7 @@ export class AuthService {
         if (storedHash !== hash.toString('hex')) {
             throw new BadRequestException('Bad password');
         }
-        const payload = { username: user.username, sub: user.id };
-        return {"access_token": this.jwtService.sign(payload) };
+        return this.generateAccessToken(user);
     }
 
     async update(id: number, attrs: Partial<User>) {
@@ -57,7 +56,7 @@ export class AuthService {
             attrs.password = encryptedPasword;
         }
         const user = await this.usersService.update(id, attrs);
-        return user;
+        return this.generateAccessToken(user);
     }
 
     private async isEmailAvailable(email: string) {
@@ -81,5 +80,10 @@ export class AuthService {
         const hash = (await scrypt(password, salt, 32)) as Buffer;
         const result = salt + '.' + hash.toString('hex');
         return result;
+    }
+
+    private async generateAccessToken(user: User) {
+        const payload = { username: user.username, sub: user.id };
+        return {"access_token": this.jwtService.sign(payload) };
     }
 }

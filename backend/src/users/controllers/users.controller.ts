@@ -1,9 +1,8 @@
 import { Body, Controller, Get, NotFoundException, Param, Patch, Query } from '@nestjs/common';
-import { Serialize } from '../interceptors/serialize.interceptor';
-import { UsersService } from './users.service';
+import { Serialize } from '../../interceptors/serialize.interceptor';
+import { UsersService } from '../services/users.service';
 import { UserDto } from '../dtos/user.dto'
-import { UpdateUserDto } from '../dtos/update-user.dto'
-import { AuthService } from 'src/auth/auth.service';
+import { AuthService } from '../services/auth.service';
 
 @Controller('users')
 @Serialize(UserDto)
@@ -22,11 +21,5 @@ export class UsersController {
     @Get()
     findUserByName(@Query('username') username: string) {
         return this.usersService.findByName(username);
-    }
-
-    @Patch('/:id')
-    async updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
-        const user = await this.authService.update(parseInt(id), body);
-        return user;
     }
 }
