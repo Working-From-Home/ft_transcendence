@@ -16,17 +16,15 @@ describe('Authentication System', () => {
   });
 
   it('handles a signup request', async () => {
-    const email = 'emaili@mail.com';
-    const username = 'username';
+    const email = 'aiiq@mail.com';
+    const username = 'qqqqq';
     return request(app.getHttpServer())
       .post('/auth/signup')
       .send({ email, username, password: 'password' })
       .expect(201)
       .then((res) => {
-        const { id, email, username } = res.body;
-        expect(id).toBeDefined();
-        expect(email).toEqual(email);
-        expect(username).toEqual(username);
+        const { access_token } = res.body;
+        expect(access_token).toBeDefined();
       })
   });
 });

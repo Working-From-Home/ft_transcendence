@@ -3,8 +3,8 @@ POST http://localhost:3000/auth/signup
 Content-Type: application/json
 
 {
-    "email": "boob@mail.com",
-    "username": "boob",
+    "email": "bob@mail.com",
+    "username": "bob",
     "password": "password"
 }
 
@@ -13,14 +13,14 @@ POST http://localhost:3000/auth/signin
 Content-Type: application/json
 
 {
-    "username": "boob",
+    "username": "bob",
     "password": "password"
 }
 
 ### update
 PATCH http://localhost:3000/auth/1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Inlhb29vbyIsInN1YiI6MSwiaWF0IjoxNjM3MzYzNjk4LCJleHAiOjE2MzczNjcyOTh9.iOI7OMVssPrm0eYOhNpALY0-w96MMl5MwmsnQXRCwkY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJvYiIsInN1YiI6MSwiaWF0IjoxNjM3MzY5MTY1LCJleHAiOjE2MzczNzI3NjV9.73VTLUQu0uewDU4-_KY9Mmf4rI-TqkkXKnNzVCV3Kn0
 
 {
     "username": "aazooo"
