@@ -1,9 +1,17 @@
 documentation/
 
+# env
+.env.development
+.env.test
+
+#tmp
+request.http
+
 # compiled output
 /dist
 /node_modules
-tmp_db
+dev_db
+test_db
 
 # Logs
 logs
