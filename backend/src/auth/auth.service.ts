@@ -36,25 +36,6 @@ export class AuthService {
         return this.generateAccessToken(user);
     }
 
-    async update(id: number, attrs: Partial<User>) {
-        if (attrs.email) {
-            if (! await this.isEmailAvailable(attrs.email)) {
-                throw new BadRequestException('email in use');
-            }
-        }
-        if (attrs.username) {
-            if (! await this.isUsernameAvailable(attrs.username)) {
-                throw new BadRequestException('username in use');
-            }
-        }
-        if (attrs.password) {
-            const encryptedPasword = await this.encryptPassword(attrs.password);
-            attrs.password = encryptedPasword;
-        }
-        const user = await this.usersService.update(id, attrs);
-        return this.generateAccessToken(user);
-    }
-
     private async isEmailAvailable(email: string) {
         const user = await this.usersService.findByEmail(email);
         if (!user) { return true; }

@@ -123,37 +123,4 @@ describe('AuthService', () => {
             expect(err).toEqual(new BadRequestException('bad password'));
         }
     });
-
-    it('updates the email of an existing user', async () => {
-        await service.signup('email', 'username', 'password');
-        let user = await fakeUsersService.findByName("username");
-        const obj = await service.update(user.id, { username: "newName" });
-        user = await fakeUsersService.findByName("newName");
-        expect(user.email).toEqual('email');
-        expect(obj).toBeDefined();
-        expect(obj.access_token).toBeDefined();
-        expect(obj.access_token.length).toBeGreaterThan(0);
-    });
-
-    it('throws an error if a user updates his credentials with already used email', async () => {
-        await service.signup('1', '1', '1');
-        await service.signup('2', '2', '2');
-        let user = await fakeUsersService.findByName('1');
-        try {
-            await service.update(user.id, { email: '2' });
-        } catch(err) {
-            expect(err).toEqual(new BadRequestException('email in use'));
-        }
-    });
-
-    it('throws an error if a user updates his credentials with already used username', async () => {
-        await service.signup('1', '1', '1');
-        await service.signup('2', '2', '2');
-        let user = await fakeUsersService.findByName('1');
-        try {
-            await service.update(user.id, { username: '2' });
-        } catch(err) {
-            expect(err).toEqual(new BadRequestException('username in use'));
-        }
-    });
 });
