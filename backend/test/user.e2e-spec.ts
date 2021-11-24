@@ -17,9 +17,9 @@ describe('Authentication System', () => {
   // })
 
   beforeEach(async () => {
-    try {
-      await rm(join(__dirname, '..', 'test.sqlite'));
-    } catch(err) {}
+    // try {
+    //   await rm(join(__dirname, '..', 'test.sqlite'));
+    // } catch(err) {}
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
@@ -30,9 +30,13 @@ describe('Authentication System', () => {
     await app.init();
   });
 
-  global.afterEach(async () => {
-    const conn = getConnection();
-    await conn.close();
+  afterEach(async () => {
+    await app.close();
+    try {
+      await rm(join(__dirname, '..', 'test.sqlite'));
+    } catch(err) {}
+    // const conn = getConnection();
+    // await conn.close();
   });
 
   it('handles a signup request', async () => {
