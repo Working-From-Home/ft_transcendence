@@ -1,4 +1,4 @@
-import { rm } from 'fs.promises'
+import { rm, writeFile } from 'fs.promises'
 import { join } from 'path'
 import { getConnection } from 'typeorm'
 
@@ -12,3 +12,18 @@ import { getConnection } from 'typeorm'
 //     const conn = getConnection();
 //     await conn.close();
 // });
+
+
+global.beforeAll(async () => {
+    const content = "DB_NAME=test.sqlite\nJWT_SECRET=SECRET\n";
+    try {
+        await writeFile(join(__dirname, '..', '.env.test', content));
+    } catch(err) {}
+})
+
+global.afterAll(async () => {
+    try {
+        await rm('../.env.test');
+    } catch(err) {}
+})
+
