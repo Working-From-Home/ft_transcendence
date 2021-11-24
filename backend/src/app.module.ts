@@ -19,8 +19,7 @@ import { AuthModule } from './auth/auth.module';
       useFactory: (config: ConfigService) => {
         return {
           type: 'sqlite',
-          // database: config.get<string>('DB_NAME'),
-          database: "DB",
+          database: config.get<string>('DB_NAME'),
           entities: [User, Avatar],
           synchronize: true     // shouldn't be used in production: may lose data
         }

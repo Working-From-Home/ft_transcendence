@@ -3,8 +3,23 @@ import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
 
+import { rm } from 'fs.promises'
+import { join } from 'path'
+import { getConnection } from 'typeorm'
+
 describe('Authentication System', () => {
   let app: INestApplication;
+
+  global.beforeEach(async () => {
+    try {
+        await rm(join(__dirname, '..', 'test.sqlite'));
+    } catch(err) {}
+});
+
+global.afterEach(async () => {
+    const conn = getConnection();
+    await conn.close();
+});
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
