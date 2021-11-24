@@ -3,9 +3,8 @@ import { Test } from '@nestjs/testing'
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service'
-import { UsersService } from '../users/users.service'
+import { UsersService } from '../users/services/users.service'
 import { User } from '../users/entities/user.entity'
-
 
 describe('AuthService', () => {
     let service: AuthService;
@@ -18,22 +17,6 @@ describe('AuthService', () => {
                 const user = { id: Math.floor(Math.random() * 99999), email, username, password } as User; 
                 users.push(user);
                 return Promise.resolve(user);
-            },
-            update: (id: number, attrs: Partial<User>) => {
-                const filteredUsers = users.filter(user => user.id === id);
-                if (filteredUsers.length === 0) {
-                    return null;
-                }
-                if (attrs.email) {
-                    filteredUsers[0].email = attrs.email;
-                }
-                if (attrs.username) {
-                    filteredUsers[0].username = attrs.username;
-                }
-                if (attrs.password) {
-                    filteredUsers[0].password = attrs.password;
-                }
-                return Promise.resolve(filteredUsers[0]);
             },
             findById: (id: number) => {
                 const filteredUsers = users.filter(user => user.id === id);

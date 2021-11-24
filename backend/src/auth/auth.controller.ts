@@ -11,13 +11,11 @@ export class AuthController {
 
     @Post('/signup')
     async createUser(@Body() body: CreateUserDto) {
-        const access_token = await this.authService.signup(body.email, body.username, body.password);
-        return access_token;
+        return await this.authService.signup(body.email, body.username, body.password);
     }
 
     @Post('/signin')
     async signin(@Body() body: AcceptUserDto) {
-        const access_token = await this.authService.signin(body.username, body.password);
-        return access_token;
+        return await this.authService.signin(body.username, body.password);
     }
 }

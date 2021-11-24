@@ -1,4 +1,5 @@
-import { IsEmail, IsString, IsNotEmpty } from "class-validator";
+import { IsEmail, IsString, IsNotEmpty, IsNumber } from "class-validator";
+import { Avatar } from "../../users/entities/avatar.entity";
 
 /**
  *  Defines how sign up inputs should be formated.
@@ -16,4 +17,6 @@ export class CreateUserDto {
     @IsNotEmpty()
     @IsString()
     password: string;
+
+    avatarId: number;
 }

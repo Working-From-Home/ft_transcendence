@@ -13,4 +13,7 @@ export class UserDto {
 
     @Expose()
     username: string;
+
+    @Expose()
+    avatarId: number;
 }
