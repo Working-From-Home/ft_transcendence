@@ -10,8 +10,8 @@ request.http
 # compiled output
 /dist
 /node_modules
-dev_db
-test_db
+dev.sqlite
+test.sqlite
 
 # Logs
 logs

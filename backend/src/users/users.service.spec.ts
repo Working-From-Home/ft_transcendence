@@ -1,13 +1,20 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from "@nestjs/typeorm";
-import { UsersService } from './users.service'
-import { User } from './entities/user.entity'
+import { Connection } from 'typeorm';
+import { UsersService } from './services/users.service';
+import { User } from './entities/user.entity';
+import { AvatarService } from './services/avatar.service';
+import { Avatar } from './entities/avatar.entity'
 
 describe('UsersService', () => {
     let service: UsersService;
     const users: Partial<User>[] = [
-        {id: 1, email: "1", username: "1", password: "1"},
-        {id: 2, email: "2", username: "2", password: "2"}
+        {id: 1, email: "1", username: "1", password: "1", avatarId: 1},
+        {id: 2, email: "2", username: "2", password: "2", avatarId: 2}
+    ];
+    const avatars: Partial<Avatar>[] = [
+        {id: 1},
+        {id: 2}
     ];
 
     beforeEach(async () => {
@@ -28,11 +35,19 @@ describe('UsersService', () => {
         }
         const module: TestingModule = await Test.createTestingModule({
             providers: [
-                UsersService,
+                UsersService, AvatarService,
                 {
                     provide: getRepositoryToken(User),
                     useValue: fakeRepo
                 },
+                {
+                    provide: Connection, 
+                    useValue: 1
+                },
+                {
+                    provide: getRepositoryToken(Avatar),
+                    useValue: fakeRepo
+                }
             ]
         }).compile();
         service = module.get<UsersService>(UsersService);

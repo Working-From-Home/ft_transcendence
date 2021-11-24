@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { User } from './users/entities/user.entity';
+import { Avatar } from './users/entities/avatar.entity';
 import { AuthModule } from './auth/auth.module';
 
 @Module({
@@ -19,8 +20,8 @@ import { AuthModule } from './auth/auth.module';
         return {
           type: 'sqlite',
           database: config.get<string>('DB_NAME'),
-          synchronize: true,
-          entities: [User]
+          entities: [User, Avatar],
+          synchronize: true     // shouldn't be used in production: may lose data
         }
       }
     }),
