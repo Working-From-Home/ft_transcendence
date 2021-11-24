@@ -12,14 +12,9 @@ describe('Authentication System', () => {
 
   global.beforeEach(async () => {
     try {
-        await rm(join(__dirname, '..', 'test.sqlite'));
+      await rm(join(__dirname, '..', 'test.sqlite'));
     } catch(err) {}
-});
-
-global.afterEach(async () => {
-    const conn = getConnection();
-    await conn.close();
-});
+  })
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -29,6 +24,12 @@ global.afterEach(async () => {
     app = moduleFixture.createNestApplication();
     app.useGlobalPipes(new ValidationPipe());
     await app.init();
+  });
+
+  global.afterEach(async () => {
+    // const conn = getConnection();
+    // await conn.close();
+    await app.close();
   });
 
   it('handles a signup request', async () => {
@@ -375,4 +376,5 @@ global.afterEach(async () => {
           });
       });
   });
+
 });
