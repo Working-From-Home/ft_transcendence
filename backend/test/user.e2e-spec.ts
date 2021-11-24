@@ -3,28 +3,24 @@ import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
 
-import { rm } from 'fs.promises'
+import { rm, writeFile } from 'fs.promises'
 import { join } from 'path'
 import { getConnection } from 'typeorm'
 
 describe('Authentication System', () => {
   let app: INestApplication;
 
-  // global.beforeEach(async () => {
-  //   try {
-  //     await rm(join(__dirname, '..', 'test.sqlite'));
-  //   } catch(err) {}
-  // })
+  beforeAll(async () => {
+    const content = "DB_NAME=test.sqlite\nJWT_SECRET=SECRET";
+    try {
+        await writeFile(join(__dirname, '..', '.env.test'), content);
+    } catch(err) {}
+  });
 
   beforeEach(async () => {
-    // try {
-    //   await rm(join(__dirname, '..', 'test.sqlite'));
-    // } catch(err) {}
-
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
-
     app = moduleFixture.createNestApplication();
     app.useGlobalPipes(new ValidationPipe());
     await app.init();
@@ -35,8 +31,6 @@ describe('Authentication System', () => {
     try {
       await rm(join(__dirname, '..', 'test.sqlite'));
     } catch(err) {}
-    // const conn = getConnection();
-    // await conn.close();
   });
 
   it('handles a signup request', async () => {
@@ -382,6 +376,12 @@ describe('Authentication System', () => {
               expect(200);
           });
       });
+  });
+
+  afterAll(async () => {
+    try {
+        await rm('../.env.test');
+    } catch(err) {}
   });
 
 });
