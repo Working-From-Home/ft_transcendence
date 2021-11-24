@@ -10,13 +10,17 @@ import { getConnection } from 'typeorm'
 describe('Authentication System', () => {
   let app: INestApplication;
 
-  global.beforeEach(async () => {
+  // global.beforeEach(async () => {
+  //   try {
+  //     await rm(join(__dirname, '..', 'test.sqlite'));
+  //   } catch(err) {}
+  // })
+
+  beforeEach(async () => {
     try {
       await rm(join(__dirname, '..', 'test.sqlite'));
     } catch(err) {}
-  })
 
-  beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -27,9 +31,8 @@ describe('Authentication System', () => {
   });
 
   global.afterEach(async () => {
-    // const conn = getConnection();
-    // await conn.close();
-    await app.close();
+    const conn = getConnection();
+    await conn.close();
   });
 
   it('handles a signup request', async () => {
