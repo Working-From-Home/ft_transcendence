@@ -14,6 +14,7 @@ describe('users/auth modules', () => {
     }).compile();
     app = moduleFixture.createNestApplication();
     app.useGlobalPipes(new ValidationPipe());
+
     await app.init();
   });
 
@@ -21,7 +22,6 @@ describe('users/auth modules', () => {
     try { await app.close(); } catch(err) {}
     try { await rm(join(__dirname, '..', 'test.sqlite')); } catch(err) {}
   });
-
 
   it('handles a signup request', async () => {
     const email = '1@email.com';
