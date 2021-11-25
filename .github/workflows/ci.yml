@@ -1,4 +1,4 @@
-name: C/C++ CI
+name: CI
 
 on:
   push:
@@ -45,6 +45,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
+    - run: echo 'DB_NAME=test.sqlite\nJWT_SECRET=SECRET' > ../.env.test
     - run: yarn install
       working-directory: ./backend
     - run: yarn run test:e2e
