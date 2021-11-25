@@ -1,21 +1,12 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
+import { join } from 'path';
+import { rm } from 'fs.promises';
 import { AppModule } from '../src/app.module';
 
-import { rm, writeFile } from 'fs.promises'
-import { join } from 'path'
-import { getConnection } from 'typeorm'
-
-describe('Authentication System', () => {
+describe('users/auth modules', () => {
   let app: INestApplication;
-
-  beforeAll(async () => {
-    const content = "DB_NAME=test.sqlite\nJWT_SECRET=SECRET";
-    try {
-        await writeFile(join(__dirname, '..', '.env.test'), content);
-    } catch(err) {}
-  });
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -27,11 +18,10 @@ describe('Authentication System', () => {
   });
 
   afterEach(async () => {
-    await app.close();
-    try {
-      await rm(join(__dirname, '..', 'test.sqlite'));
-    } catch(err) {}
+    try { await app.close(); } catch(err) {}
+    try { await rm(join(__dirname, '..', 'test.sqlite')); } catch(err) {}
   });
+
 
   it('handles a signup request', async () => {
     const email = '1@email.com';
@@ -377,11 +367,4 @@ describe('Authentication System', () => {
           });
       });
   });
-
-  afterAll(async () => {
-    try {
-        await rm('../.env.test');
-    } catch(err) {}
-  });
-
 });

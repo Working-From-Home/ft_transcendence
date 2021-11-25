@@ -1,16 +1,15 @@
 import { rm, writeFile } from 'fs.promises'
 import { join } from 'path'
 
-// global.beforeAll(async () => {
-//     const content = "DB_NAME=test.sqlite\nJWT_SECRET=SECRET\n";
+// beforeAll(async () => {
+//     const content = "DB_NAME=test.sqlite\nJWT_SECRET=SECRET";
 //     try {
-//         await writeFile(join(__dirname, '..', '.env.testi'), content);
+//         await writeFile(join(__dirname, '..', '.env.test'), content);
 //     } catch(err) {}
-// })
+// });
 
-// global.afterAll(async () => {
+// afterAll(async () => {
 //     try {
-//         await rm('../.env.test');
+//         await rm(join(__dirname, '..', '.env.test'));
 //     } catch(err) {}
-// })
-
+// });
