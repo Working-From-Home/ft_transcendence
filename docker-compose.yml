@@ -28,6 +28,13 @@ services:
       - mynet
     command: sh -c 'npm install && npm run serve'
 
+  debug:
+    restart: always
+    image: "ubuntu"
+    networks:
+      - mynet
+    tty: true
+
 networks:
   mynet:
 ##  compodoc:

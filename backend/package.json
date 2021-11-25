@@ -32,7 +32,7 @@
     "@types/multer": "^1.4.7",
     "@types/passport-jwt": "^3.0.6",
     "avatarholder": "^1.0.6",
-    "class-transformer": "^0.4.0",
+    "class-transformer": "^0.5.1",
     "class-validator": "^0.13.1",
     "cross-env": "^7.0.3",
     "file-type": "^16.5.3",

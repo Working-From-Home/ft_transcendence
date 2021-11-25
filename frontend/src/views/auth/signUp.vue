@@ -1,0 +1,42 @@
+<template>
+	<div>
+		<base-dialog :show="!!error" title="An error ocured" @close="handleError">
+			<p>{{ error }}</p>
+		</base-dialog>
+		<card>
+			<sign-up-component @save-data="saveData"></sign-up-component>
+		</card>
+	</div>
+</template>
+
+<script lang="ts">
+import { Options, Vue } from "vue-class-component";
+import SignUpComponent from "../../components/auth/SignUp.vue";
+
+@Options({
+  components: {
+    SignUpComponent,
+  },
+  data() {
+	  return {
+		  error: '',
+	  }
+  },
+  methods: {
+    async saveData(data: any) {
+	  try {
+        await this.$store.dispatch('signUp', data);
+        this.$router.replace('/');
+	  } catch (err) {
+		this.error = err.message || 'Failed to authenticate, try later.';
+	  }
+    },
+	handleError() {
+		this.error = null;
+	}
+  },
+})
+export default class signUp extends Vue {
+	
+}
+</script>
