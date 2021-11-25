@@ -21,6 +21,8 @@
     "test:e2e": "cross-env NODE_ENV=test jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@dicebear/avatars": "^4.10.1",
+    "@dicebear/avatars-initials-sprites": "^4.10.1",
     "@nestjs/common": "^8.2.1",
     "@nestjs/config": "^1.1.0",
     "@nestjs/core": "^8.0.0",
@@ -32,7 +34,7 @@
     "@types/multer": "^1.4.7",
     "@types/passport-jwt": "^3.0.6",
     "canvas": "^2.8.0",
-    "class-transformer": "^0.4.0",
+    "class-transformer": "^0.5.1",
     "class-validator": "^0.13.1",
     "cross-env": "^7.0.3",
     "file-type": "^16.5.3",
@@ -46,6 +48,7 @@
     "rimraf": "^3.0.2",
     "rxjs": "^7.4.0",
     "sqlite3": "^5.0.2",
+    "svg-to-img": "^2.0.9",
     "swagger-ui-express": "^4.1.6",
     "ts-jest-mock": "^1.1.0",
     "typeorm": "^0.2.40",
