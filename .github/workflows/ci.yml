@@ -2,9 +2,15 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    paths-ignore:
+      - ./**/README.md
+      - ./frontend/**
+      - ./**/.gitignore
   pull_request:
-    branches: [ main ]
+    paths-ignore:
+      - ./**/README.md
+      - ./frontend/**
+      - ./**/.gitignore
 
 jobs:
   backend-unit-test:
@@ -23,9 +29,11 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    - run: yarn install
+    - run: npm ci
       working-directory: ./backend
-    - run: yarn run test
+    - run: npm test
+      working-directory: ./backend
+    - run: npm test:cov
       working-directory: ./backend
 
 

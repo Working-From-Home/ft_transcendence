@@ -4,8 +4,8 @@ services:
     restart: always
     image: 42-node
     build:
-      context: ./dockerfiles
-      dockerfile: Dockerfile.AH
+      context: ./
+      dockerfile: Dockerfile.42-node
     environment:
       - NODE_ENV=development   
     volumes:
