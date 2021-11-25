@@ -8,8 +8,8 @@ import { join } from 'path'
 //     } catch(err) {}
 // });
 
-// afterAll(async () => {
-//     try {
-//         await rm(join(__dirname, '..', '.env.test'));
-//     } catch(err) {}
-// });
+afterAll(async () => {
+    try {
+        await rm(join(__dirname, '..', '.env.test'));
+    } catch(err) {}
+});
