@@ -7,7 +7,7 @@ https://www.linkedin.com/pulse/nestjs-why-use-filipe-mazzon
 #### getting started
 Download the repo :
 ```bash
-git clone https://github.com/ggjulio/ft_transcendence.git && cd ft_transcendence
+git clone https://github.com/Working-From-Home/ft_transcendance.git && cd ft_transcendence
 ```
 Then build :
 ```bash
