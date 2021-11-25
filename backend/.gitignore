@@ -2,7 +2,7 @@ documentation/
 
 # env
 .env.development
-.env.test
+# .env.test
 
 #tmp
 request.http
