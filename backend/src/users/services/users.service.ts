@@ -14,18 +14,18 @@ export class UsersService {
     ) {}
 
     async create(email: string, username: string, password: string) {
-        //const avatar = await this.generateDefaultAvatar(username, 400);
-        const user = this.repo.create({ email, username, password });
+        const avatar = await this.generateDefaultAvatar(username, 400);
+        const user = this.repo.create({ email, username, password, avatar });
         return this.repo.save(user);
     }
 
-    //private async generateDefaultAvatar(username: string, size: number) {
-    //    const img = avatarholder.generateAvatar(username, { size: size });
-    //    const base64 = img.replace(/^data:image\/png;base64,/, "");
-    //    const buffer = Buffer.from(base64, 'base64');
-    //    const queryRunner = this.connection.createQueryRunner();
-    //    return await this.avatarService.uploadAvatar(buffer, 'default.png', 'image/png', queryRunner);
-    //}
+    private async generateDefaultAvatar(username: string, size: number) {
+        const img = avatarholder.generateAvatar(username, { size: size });
+        const base64 = img.replace(/^data:image\/png;base64,/, "");
+        const buffer = Buffer.from(base64, 'base64');
+        const queryRunner = this.connection.createQueryRunner();
+        return await this.avatarService.uploadAvatar(buffer, 'default.png', 'image/png', queryRunner);
+    }
 
     async remove(id: number) {
         const user = await this.findById(id);
