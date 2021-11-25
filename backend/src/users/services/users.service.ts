@@ -13,9 +13,9 @@ export class UsersService {
     ) {}
 
     async create(email: string, username: string, password: string) {
-        const buffer = this.avatarService.generate(username, 400);
-        const avatar = await this.avatarService.create(buffer, 'default.png', 'image/png');
-        const user = this.repo.create({ email, username, password, avatar });
+        // const buffer = this.avatarService.generate(username, 400);
+        // const avatar = await this.avatarService.create(buffer, 'default.png', 'image/png');
+        const user = this.repo.create({ email, username, password });//, avatar });
         return this.repo.save(user);
     }
 
