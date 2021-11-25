@@ -36,6 +36,10 @@ jobs:
       fail-fast: false
       matrix:
         node-version: [14.x, 16.x, 17.x]
+
+    env:
+      DB_NAME: db
+      JWT_SECRET: SECRET
     
     steps:
     - uses: actions/checkout@v2
@@ -45,14 +49,14 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    - run: echo 'DB_NAME=test.sqlite\nJWT_SECRET=SECRET\n' > ../.env.test
-      working-directory: ./backend/test
+    # - run: echo 'DB_NAME=test.sqlite\nJWT_SECRET=SECRET\n' > .env.test
+    #   working-directory: ./backend
     - run: yarn install
-      working-directory: ./backend/test
+      working-directory: ./backend
     - run: yarn run test:e2e
-      working-directory: ./backend/test
-    - run: rm .env.test
-      working-directory: ./backend/test
+      working-directory: ./backend
+    # - run: rm .env.test
+    #   working-directory: ./backend
 
   # frontend-unit-test:
   #   runs-on: ubuntu-latest
