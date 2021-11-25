@@ -47,7 +47,7 @@ jobs:
 
     - run: echo 'DB_NAME=test.sqlite\nJWT_SECRET=SECRET' > .env.test
       working-directory: ./backend
-    - run: ls
+    - run: ls -la
       working-directory: ./backend
     - run: yarn install
       working-directory: ./backend
