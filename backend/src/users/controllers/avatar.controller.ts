@@ -33,7 +33,7 @@ export class AvatarController {
 
         const user = await this.usersService.findById(parseInt(id));
         if (!user) { throw new NotFoundException('user not found'); }
-        const file = await this.avatarService.getAvatarById(user.avatarId);
+        const file = await this.avatarService.findById(user.avatarId);
         const stream = Readable.from(file.data);
         response.set({ 'Content-Type': file.mimetype });
         return new StreamableFile(stream);
@@ -41,7 +41,7 @@ export class AvatarController {
 
     @Get('avatar/:id')
     async getAvatarById(@Param('id') id: string, @Res({ passthrough: true }) response: Response) {
-        const file = await this.avatarService.getAvatarById(parseInt(id));
+        const file = await this.avatarService.findById(parseInt(id));
         const stream = Readable.from(file.data);
         response.set({ 'Content-Type': file.mimetype });
         return new StreamableFile(stream);

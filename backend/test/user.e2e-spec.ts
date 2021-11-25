@@ -1,19 +1,26 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
+import { join } from 'path';
+import { rm } from 'fs.promises';
 import { AppModule } from '../src/app.module';
 
-describe('Authentication System', () => {
+describe('users/auth modules', () => {
   let app: INestApplication;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
-
     app = moduleFixture.createNestApplication();
     app.useGlobalPipes(new ValidationPipe());
+
     await app.init();
+  });
+
+  afterEach(async () => {
+    try { await app.close(); } catch(err) {}
+    try { await rm(join(__dirname, '..', 'test.sqlite')); } catch(err) {}
   });
 
   it('handles a signup request', async () => {

@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Connection, Repository } from 'typeorm'
 import { User } from '../entities/user.entity';
 import { AvatarService } from './avatar.service';
-import * as avatarholder from 'avatarholder';
 
 @Injectable()
 export class UsersService {
@@ -14,23 +13,16 @@ export class UsersService {
     ) {}
 
     async create(email: string, username: string, password: string) {
-        const avatar = await this.generateDefaultAvatar(username, 400);
+        const buffer = this.avatarService.generate(username, 400);
+        const avatar = await this.avatarService.create(buffer, 'default.png', 'image/png');
         const user = this.repo.create({ email, username, password, avatar });
         return this.repo.save(user);
-    }
-
-    private async generateDefaultAvatar(username: string, size: number) {
-        const img = avatarholder.generateAvatar(username, { size: size });
-        const base64 = img.replace(/^data:image\/png;base64,/, "");
-        const buffer = Buffer.from(base64, 'base64');
-        const queryRunner = this.connection.createQueryRunner();
-        return await this.avatarService.uploadAvatar(buffer, 'default.png', 'image/png', queryRunner);
     }
 
     async remove(id: number) {
         const user = await this.findById(id);
         if (!user) { throw new NotFoundException('user not found'); }
-        return await this.avatarService.removeAvatar(user.avatarId);
+        return await this.avatarService.remove(user.avatarId);
     }
 
     findById(id: number) {
