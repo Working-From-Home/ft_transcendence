@@ -45,10 +45,13 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    # - run: echo 'DB_NAME=test.sqlite\nJWT_SECRET=SECRET' > ../.env.test
+    - run: echo 'DB_NAME=test.sqlite\nJWT_SECRET=SECRET' > .env.test
+      working-directory: ./backend
     - run: yarn install
       working-directory: ./backend
     - run: yarn run test:e2e
+      working-directory: ./backend
+    - run: rm .env.test
       working-directory: ./backend
 
 
