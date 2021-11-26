@@ -48,6 +48,13 @@ const router = createRouter({
   routes,
 });
 
-
+router.beforeEach(function(to, _, next) {
+	if (to.meta.requiresAuth && !store.getters.isAuth)
+		next('/');
+	else if (to.meta.requiresUnAuth && store.getters.isAuth)
+		next('/');
+	else
+		next();
+});
 
 export default router;
