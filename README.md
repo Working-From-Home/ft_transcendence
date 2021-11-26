@@ -11,6 +11,13 @@ Download the repo :
 ```bash
 git clone https://github.com/Working-From-Home/ft_transcendance.git && cd ft_transcendence
 ```
+Create a `.env` file, template example:
+```
+DB_NAME=db.sqlite
+JWT_SECRET=my_secret
+API_KEY_42=my_api_key
+```
+
 Then build :
 ```bash
 docker-compose build
