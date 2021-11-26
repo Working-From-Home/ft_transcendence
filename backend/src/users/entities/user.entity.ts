@@ -21,6 +21,6 @@ export class User {
     @OneToOne(() => Avatar, avatar => avatar.user, { onDelete: "CASCADE" })
     avatar: Avatar;
  
-    @Column({nullable: true})
+    @Column()
     avatarId: number;
 }

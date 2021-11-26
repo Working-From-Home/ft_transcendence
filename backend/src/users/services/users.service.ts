@@ -13,9 +13,8 @@ export class UsersService {
     ) {}
 
     async create(email: string, username: string, password: string) {
-        // const buffer = this.avatarService.generate(username, 400);
-        // const avatar = await this.avatarService.create(buffer, 'default.png', 'image/png');
-        const user = this.repo.create({ email, username, password });//, avatar });
+        const avatar = await this.avatarService.create(username);
+        const user = this.repo.create({ email, username, password, avatar });
         return this.repo.save(user);
     }
 
@@ -49,11 +48,11 @@ export class UsersService {
         await queryRunner.connect();
         await queryRunner.startTransaction();
         try {
-            const currentAvatarId = user.avatarId;
-            const avatar = await this.avatarService.uploadAvatar(imageBuffer, filename, mimetype, queryRunner);
+            const oldId = user.avatarId;
+            const avatar = await this.avatarService.update(imageBuffer, filename, mimetype, queryRunner);
             await queryRunner.manager.update(User, id, { avatarId: avatar.id });
-            if (currentAvatarId) {
-                await this.avatarService.deleteAvatar(currentAvatarId, queryRunner);
+            if (oldId) {
+                await this.avatarService.removeOld(oldId, queryRunner);
             }
             await queryRunner.commitTransaction();
             return avatar;
