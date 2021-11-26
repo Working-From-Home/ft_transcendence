@@ -1,9 +1,5 @@
 documentation/
 
-# env
-.env.development
-.env.test
-
 #tmp
 request.http
 
