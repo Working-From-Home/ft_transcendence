@@ -55,10 +55,16 @@ paths:
     get:
       summary: Your GET endpoint
       tags: []
-      responses: {}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
       operationId: get-users
-      security:
-        - BearerAuth: []
       description: Return a list of user
       parameters:
         - schema:
@@ -191,10 +197,6 @@ paths:
             schema:
               type: object
               properties: {}
-    patch:
-      summary: Update User Information
-      operationId: patch-users-userId
-      description: Update the information of an existing user.
   '/users/{id}/avatar':
     parameters:
       - schema:
@@ -249,7 +251,21 @@ paths:
           application/json:
             schema:
               type: object
-              properties: {}
+              properties:
+                achievements:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Achievement'
+            examples:
+              example-1:
+                value:
+                  achievements:
+                    - id: 42
+                      name: Tyson Fury
+                      description: Win 30 games in a row.
+                    - id: 43
+                      name: Pilier de bar
+                      description: Play 15 games each day for one month
   /achievements:
     get:
       summary: Your GET endpoint
@@ -293,6 +309,39 @@ components:
         password:
           type: string
           format: password
+        online:
+          type: boolean
+        avatar:
+          type: string
+          format: uri-reference
+        friends:
+          type: array
+          items:
+            $ref: '#/components/schemas/Friend'
+      required:
+        - userName
+        - email
+    Friend:
+      title: Friend
+      type: object
+      description: A friend representation
+      examples:
+        - id: 142
+          userName: alice
+          email: alice.smith@gmail.com
+          online: true
+          avatar: 'http://localhost:3000'
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the given user.
+          readOnly: true
+        userName:
+          type: string
+          example: Bread Pitt
+        email:
+          type: string
+          format: email
         online:
           type: boolean
         avatar:
@@ -357,3 +406,14 @@ components:
       description: An object id
       required: true
   examples: {}
+  requestBodies: {}
+  responses:
+    Test:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                $ref: '#/components/schemas/User'
