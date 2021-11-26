@@ -5,9 +5,27 @@ https://www.linkedin.com/pulse/nestjs-why-use-filipe-mazzon
 ### Just a poc
 
 #### getting started
+Download the repo :
 ```bash
-$ docker-compose up
+git clone https://github.com/Working-From-Home/ft_transcendance.git && cd ft_transcendence
 ```
+Then build :
+```bash
+docker-compose build
+```
+Then run the services :
+```bash
+docker-compose up
+```
+Then to either run tests, use vue/nest cli, or install packages,
+open a new zsh in one of the container :
+```bash
+docker-compose exec frontend zsh
+```
+```bash
+docker-compose exec backend zsh
+```
+
 
 ###### access the backend api
 - http://localhost:3000/

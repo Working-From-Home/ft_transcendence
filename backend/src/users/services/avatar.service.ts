@@ -1,20 +1,19 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { join } from 'path/posix';
 import { QueryRunner, Repository } from 'typeorm';
 import { Avatar } from '../entities/avatar.entity';
-import { createAvatar } from '@dicebear/avatars';
-import * as style from '@dicebear/avatars-initials-sprites';
-const svgToImg = require("svg-to-img");
- 
+
+const jdenticon = require('jdenticon');
+
 @Injectable()
 export class AvatarService {
     constructor(@InjectRepository(Avatar) private repo: Repository<Avatar>) {}
 
     async create(username: string) {
-        let svg = createAvatar(style, { seed: username });
-        const image = await svgToImg.from(svg).toPng({ encoding: "base64" });
-        const buffer = Buffer.from(image, 'base64');
-        const avatar = this.repo.create({ filename: 'default.png', data: buffer, mimetype: 'image/png' });
+        const png = jdenticon.toPng(username, 200);
+        const data = Buffer.from(png);
+        const avatar = this.repo.create({ filename: join(username, '.png'), data, mimetype: 'image/png' });
         return this.repo.save(avatar);
     }
 
@@ -42,3 +41,4 @@ export class AvatarService {
         }
     }
 }
+
