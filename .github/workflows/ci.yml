@@ -2,9 +2,15 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    paths-ignore:
+      - ./**/README.md
+      - ./frontend/**
+      - ./**/.gitignore
   pull_request:
-    branches: [ main ]
+    paths-ignore:
+      - ./**/README.md
+      - ./frontend/**
+      - ./**/.gitignore
 
 jobs:
   backend-unit-test:
@@ -23,36 +29,34 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
+    - run: npm ci
+      working-directory: ./backend
+    - run: npm test
+      working-directory: ./backend
+    - run: npm run test:cov
+      working-directory: ./backend
+
+
+  backend-e2e-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [14.x, 16.x, 17.x]
+  
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
     - run: yarn install
       working-directory: ./backend
-    - run: yarn run test
+    - run: yarn run test:e2e
       working-directory: ./backend
-
-
-  # backend-e2e-test:
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 25
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       node-version: [14.x, 16.x, 17.x]
-
-  #   env:
-  #     DB_NAME: db
-  #     JWT_SECRET: SECRET
-    
-  #   steps:
-  #   - uses: actions/checkout@v2
-
-  #   - name: Use Node.js ${{ matrix.node-version }}
-  #     uses: actions/setup-node@v1
-  #     with:
-  #       node-version: ${{ matrix.node-version }}
-
-  #   - run: yarn install
-  #     working-directory: ./backend
-  #   - run: yarn run test:e2e
-  #     working-directory: ./backend
 
   # frontend-unit-test:
   #   runs-on: ubuntu-latest

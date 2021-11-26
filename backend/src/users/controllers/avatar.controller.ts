@@ -4,7 +4,7 @@ import { BadRequestException, ClassSerializerInterceptor, Controller,
 import { ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Readable } from 'stream';
-import { Response } from 'express';
+import { Express, Response } from 'express';
 import { AvatarService } from '../services/avatar.service';
 import { UsersService } from '../services/users.service';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
