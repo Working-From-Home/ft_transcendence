@@ -1,27 +1,43 @@
+import { UserLog, UserUp } from './type';
+
 export default {
-	async signIn(context: any, payload: any) {
-		const user = {
-			username: String,
-			password: String
-		};
-		user.username = payload.username;
-		user.password = payload.password;
+	async signIn(context: any, payload: UserLog) {
+		context.dispatch('auth', {
+			...payload,
+			mode: 'signIn'
+		});
+	},
+	async signUp(context: any, payload: UserUp) {
+		context.dispatch('auth', {
+			...payload,
+			mode: 'signUp'
+		});
+	},
+	async auth(context: any, payload: any) {
+		let url = 'http://localhost:3000/auth/signup';
+		if (payload.mode === 'signIn')
+			url = 'http://localhost:3000/auth/signin';
 
 		const fetchData = {
 			method: 'POST',
-			body: JSON.stringify(user),
+			body: JSON.stringify(payload),
 			headers: new Headers()
 		};
 		fetchData.headers.append('Content-Type', 'Application/json');
 
-		fetch(`http://localhost:3000/auth/signin`, fetchData)
+		fetch(url, fetchData)
 		.then((response) => response.json())
 		.then(data => {
 			console.log('Success:', data);
+
+			const expiration = new Date().getTime() + 3600;
+			localStorage.setItem('token', data.access_token);
+			localStorage.setItem('userId', payload.username);
+			localStorage.setItem('tokenExpiration', expiration.toString());
+
 			context.commit('signIn', {
 				token: data.access_token,
-				userId: user.username,
-				tokenExpiration: "100",
+				userId: payload.username
 			})
 			return data;
 		}).catch(error => {
@@ -29,43 +45,24 @@ export default {
 			throw error;
 		});
 	},
-	async signUp(context: any, payload: any) {
-		const user = {
-			email: String,
-			username: String,
-			password: String
-		};
-		user.username = payload.username;
-		user.email = payload.email;
-		user.password = payload.password;
+	checkLog(context: any) {
+		const token = localStorage.getItem('token');
+		const userId = localStorage.getItem('userId');
 
-		const fetchData = {
-			method: 'POST',
-			body: JSON.stringify(user),
-			headers: new Headers()
-		};
-		fetchData.headers.append('Content-Type', 'Application/json');
-
-		fetch(`http://localhost:3000/auth/signup`, fetchData)
-		.then((response) => response.json())
-		.then(data => {
-			console.log('Success:', data);
+		if (token && userId) {
 			context.commit('signIn', {
-				token: data.access_token,
-				userId: user.username,
-				tokenExpiration: "100",
-			})
-			return data;
-		}).catch(error => {
-			console.error('Error:', error);
-			throw error;
-		});
+				token: token,
+				userId: userId,
+				tokenExpiration: "3600",
+			});
+		}
 	},
 	logout(context: any) {
+		localStorage.removeItem('token');
+		localStorage.removeItem('userId');
 		context.commit('signIn', {
 			token: null,
-			userId: null,
-			tokenExpiration: null,
+			userId: null
 		})
 		console.log('Token:', context.token);
 	},

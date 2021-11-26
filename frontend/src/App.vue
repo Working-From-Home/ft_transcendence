@@ -22,6 +22,9 @@ import { Options, Vue } from "vue-class-component";
 			return this.$store.getters.isAuth;
 		},
 	},
+	created() {
+		this.$store.dispatch('checkLog');
+	},
 	methods: {
 		logout() {
 			this.$store.dispatch('logout');
