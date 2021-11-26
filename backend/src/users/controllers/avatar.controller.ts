@@ -1,5 +1,5 @@
 import { BadRequestException, ClassSerializerInterceptor, Controller,
-    Get, NotFoundException, Param, Post, Res, StreamableFile,
+    Get, NotFoundException, Param, Post, Query, Res, StreamableFile,
     UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -10,16 +10,16 @@ import { UsersService } from '../services/users.service';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { fileFilter } from '../filters/file.filter';
 
-@ApiTags('users')
-@Controller()
+@ApiTags('avatar')
+@Controller('avatar')
 @UseInterceptors(ClassSerializerInterceptor)
 export class AvatarController {
     constructor(private readonly avatarService: AvatarService, private usersService: UsersService) {}
 
-    @Post('users/:id/upload')
+    @Post('/:userId')
     @UseGuards(JwtAuthGuard)
     @UseInterceptors(FileInterceptor('image', fileFilter))
-    async uploadAvatar(@Param('id') id: string, @UploadedFile() file: Express.Multer.File) {
+    async uploadAvatar(@Param('userId') id: string, @UploadedFile() file: Express.Multer.File) {
         const filename = file?.originalname;
         if (!filename) {
             throw new BadRequestException('File must be a png or jpg/jpeg');
@@ -27,9 +27,9 @@ export class AvatarController {
         return await this.usersService.updateAvatar(parseInt(id), file.buffer, filename, file.mimetype);
     }
 
-    @Get('users/:id/avatar')
+    @Get('/:userId')
     @UseGuards(JwtAuthGuard)
-    async getAvatar(@Param('id') id: string, @Res({ passthrough: true }) response: Response) {
+    async getAvatar(@Param('userId') id: string, @Res({ passthrough: true }) response: Response) {
 
         const user = await this.usersService.findById(parseInt(id));
         if (!user) { throw new NotFoundException('user not found'); }
@@ -39,8 +39,8 @@ export class AvatarController {
         return new StreamableFile(stream);
     }
 
-    @Get('avatar/:id')
-    async getAvatarById(@Param('id') id: string, @Res({ passthrough: true }) response: Response) {
+    @Get()
+    async getAvatarById(@Query('id') id: string, @Res({ passthrough: true }) response: Response) {
         const file = await this.avatarService.findById(parseInt(id));
         const stream = Readable.from(file.data);
         response.set({ 'Content-Type': file.mimetype });
