@@ -7,7 +7,8 @@ services:
       context: ./
       dockerfile: Dockerfile.42-node
     environment:
-      - NODE_ENV=development   
+      - DB_NAME=${DB_NAME}
+      - JWT_SECRET=${JWT_SECRET} 
     volumes:
       - ./backend/:/app
     ports:
