@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { join } from 'path/posix';
 import { QueryRunner, Repository } from 'typeorm';
 import { Avatar } from '../entities/avatar.entity';
 
@@ -13,7 +12,7 @@ export class AvatarService {
     async create(username: string) {
         const png = jdenticon.toPng(username, 200);
         const data = Buffer.from(png);
-        const avatar = this.repo.create({ filename: join(username, '.png'), data, mimetype: 'image/png' });
+        const avatar = this.repo.create({ filename: username + '.png', data, mimetype: 'image/png' });
         return this.repo.save(avatar);
     }
 
