@@ -39,9 +39,7 @@ services:
       - ./reference/:/app
     ports:
       - 3001:4010
-    # networks:
-    #   - mynet
-    command: 'prism mock --dynamic -h 0.0.0.0 ./api.oas3.yml'
+    command: prism mock --dynamic -h 0.0.0.0 ./api.oas3.yaml
 
   # compodoc:
   #   image: 42-node
