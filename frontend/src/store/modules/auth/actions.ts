@@ -1,4 +1,5 @@
 import { UserLog, UserUp } from './type';
+let timer: any;
 
 export default {
 	async signIn(context: any, payload: UserLog) {
@@ -34,7 +35,9 @@ export default {
 			localStorage.setItem('token', data.access_token);
 			localStorage.setItem('userId', payload.username);
 			localStorage.setItem('tokenExpiration', expiration.toString());
-
+			timer = setTimeout(function() {
+				context.dispatch('logout');
+			}, 3600);
 			context.commit('signIn', {
 				token: data.access_token,
 				userId: payload.username
@@ -48,18 +51,22 @@ export default {
 	checkLog(context: any) {
 		const token = localStorage.getItem('token');
 		const userId = localStorage.getItem('userId');
+		const tokenExpiration = localStorage.getItem('tokenExpiration');
 
 		if (token && userId) {
 			context.commit('signIn', {
 				token: token,
-				userId: userId,
-				tokenExpiration: "3600",
+				userId: userId
 			});
 		}
 	},
 	logout(context: any) {
 		localStorage.removeItem('token');
 		localStorage.removeItem('userId');
+		localStorage.removeItem('tokenExpiration');
+
+		clearTimeout(timer);
+
 		context.commit('signIn', {
 			token: null,
 			userId: null
