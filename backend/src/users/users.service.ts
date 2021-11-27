@@ -4,6 +4,8 @@ import { Repository } from 'typeorm'
 import { User } from './user.entity';
 import { AvatarService } from '../avatar/avatar.service';
 
+import { paginate, Pagination, IPaginationOptions } from 'nestjs-typeorm-paginate';
+
 @Injectable()
 export class UsersService {
     constructor(
@@ -38,5 +40,11 @@ export class UsersService {
         const users = await this.repo.find({ username });
         if (users.length === 0) { return null; }
         return users[0];
+    }
+
+    async paginate(options: IPaginationOptions): Promise<Pagination<User>> {
+        const queryBuilder = this.repo.createQueryBuilder('user');
+        queryBuilder.orderBy('user.username', 'DESC');
+        return paginate<User>(queryBuilder, options);
     }
 }
