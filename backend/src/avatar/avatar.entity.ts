@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne } from "typeorm";
-import { User } from "./user.entity";
+import { User } from "../users/user.entity";
 
 @Entity()
 export class Avatar {
