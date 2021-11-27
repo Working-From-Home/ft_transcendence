@@ -1,4 +1,6 @@
-[![C/C++ CI](https://github.com/ggjulio/poc_dockerize_nestjs/actions/workflows/ci.yml/badge.svg)](https://github.com/ggjulio/poc_dockerize_nestjs/actions/workflows/ci.yml)
+[![CI](https://github.com/ggjulio/poc_dockerize_nestjs/actions/workflows/ci.yml/badge.svg)](https://github.com/ggjulio/poc_dockerize_nestjs/actions/workflows/ci.yml)
+
+Create a .env file to the project root and set DB_NAME, JWT_SECRET and API_KEY_42
 
 https://www.linkedin.com/pulse/nestjs-why-use-filipe-mazzon
 

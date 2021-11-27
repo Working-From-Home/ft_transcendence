@@ -1,9 +1,10 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import * as request from 'supertest';
 import { join } from 'path';
 import { rm } from 'fs.promises';
 import { AppModule } from '../src/app.module';
+
+const request = require('supertest');
 
 describe('users/auth modules', () => {
   let app: INestApplication;
@@ -14,7 +15,6 @@ describe('users/auth modules', () => {
     }).compile();
     app = moduleFixture.createNestApplication();
     app.useGlobalPipes(new ValidationPipe());
-
     await app.init();
   });
 
