@@ -1,7 +1,7 @@
 import {
     Entity, Column, PrimaryGeneratedColumn,
     OneToOne, JoinColumn } from "typeorm";
-import { Avatar } from "./avatar.entity";
+import { Avatar } from "../avatar/avatar.entity";
 
 @Entity()
 export class User {

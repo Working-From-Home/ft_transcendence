@@ -1,10 +1,10 @@
-import { Controller, Get, NotFoundException, Param,
-    Post, Query, UseGuards } from '@nestjs/common';
+import { Controller, Delete, Get, NotFoundException, Param,
+    Query, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Serialize } from '../../interceptors/serialize.interceptor';
-import { UsersService } from '../services/users.service';
-import { UserDto } from '../dtos/user.dto';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { Serialize } from '../interceptors/serialize.interceptor';
+import { UsersService } from './users.service';
+import { UserDto } from './dtos/user.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @ApiTags('users')
 @Controller('users')
@@ -19,16 +19,16 @@ export class UsersController {
         return user;
     }
 
+    @Delete('/:id')
+    @UseGuards(JwtAuthGuard)
+    async deleteAccount(@Param('id') id: string) {
+        return await this.usersService.remove(parseInt(id));
+    }
+
     @Get()
     async findUserByName(@Query('username') username: string) {
         const user = await this.usersService.findByName(username);
         if (!user) { throw new NotFoundException('user not found'); }
         return user;
-    }
-
-    @Post('/:id/delete')
-    @UseGuards(JwtAuthGuard)
-    async deleteAccount(@Param('id') id: string) {
-        return await this.usersService.remove(parseInt(id));
     }
 }
