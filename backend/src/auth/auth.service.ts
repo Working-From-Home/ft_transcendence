@@ -2,8 +2,8 @@ import { BadRequestException, Injectable, NotFoundException} from '@nestjs/commo
 import { JwtService } from '@nestjs/jwt';
 import { randomBytes, scrypt as _scrypt } from "crypto";
 import { promisify } from "util";
-import { UsersService } from '../users/services/users.service';
-import { User } from '../users/entities/user.entity';
+import { UsersService } from '../users/users.service';
+import { User } from '../users/user.entity';
 
 const scrypt = promisify(_scrypt);
 
