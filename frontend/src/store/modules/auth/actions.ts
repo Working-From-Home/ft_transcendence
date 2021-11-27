@@ -31,17 +31,22 @@ export default {
 		.then(data => {
 			console.log('Success:', data);
 
-			const expiration = new Date().getTime() + 3600;
+			const expiration = new Date().getTime() + 3600000;
 			localStorage.setItem('token', data.access_token);
-			localStorage.setItem('userId', payload.username);
+			localStorage.setItem('userId', data.id);
 			localStorage.setItem('tokenExpiration', expiration.toString());
 			timer = setTimeout(function() {
 				context.dispatch('logout');
-			}, 3600);
+			}, 3600000);
 			context.commit('signIn', {
 				token: data.access_token,
-				userId: payload.username
+				userId: data.id
 			})
+			context.dispatch('getProfile', {
+				...payload,
+				id: data.id,
+				token: data.access_token
+			});
 			return data;
 		}).catch(error => {
 			console.error('Error:', error);

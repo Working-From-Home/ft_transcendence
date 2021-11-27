@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "@babel/cli": "^7.16.0",
+    "@babel/core": "^7.16.0",
+    "@babel/preset-env": "^7.16.4",
+    "babel-plugin-transform-remove-console": "^6.9.4",
+    "terser-webpack-plugin": "^5.2.5"
+  }
+}

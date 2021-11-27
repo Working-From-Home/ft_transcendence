@@ -5,6 +5,7 @@
 			<router-link to="/pong" v-if="isLoggedIn">Pong</router-link><span v-if="isLoggedIn"> | </span>
 			<router-link to="/chat" v-if="isLoggedIn">Chat</router-link><span v-if="!isLoggedIn"> | </span>
 			<router-link to="/auth/signin" v-if="!isLoggedIn">Login</router-link><span v-if="isLoggedIn"> | </span>
+			<router-link to="/profile" v-if="isLoggedIn">Your Profile</router-link><span v-if="isLoggedIn"> | </span>
 			<router-link class="logout" to="/" @click="logout" v-if="isLoggedIn">Logout </router-link><span v-if="!isLoggedIn"> | </span>
 			<router-link to="/auth/signup" v-if="!isLoggedIn">Register</router-link>
 		</div>
