@@ -6,7 +6,7 @@ import { UserDto } from '../dtos/user.dto';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { User } from '../user.entity';
 import { UsersService } from '../users.service';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+// import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 
 @ApiTags('users')
 @Controller('users')
