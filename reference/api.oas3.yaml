@@ -58,6 +58,37 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/User'
+  /me/stats:
+    get:
+      summary: Your GET endpoint
+      operationId: get-me-stats
+      description: Return my info
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  level:
+                    type: integer
+                    minimum: 0
+                    maximum: 100
+                  victories:
+                    type: integer
+                    minimum: 0
+                  loses:
+                    type: integer
+                    minimum: 0
+                required:
+                  - level
+                  - victories
+                  - loses
+        '401':
+          $ref: '#/components/responses/401'
+    parameters: []
   /me/friends:
     get:
       summary: Your GET endpoint
@@ -78,14 +109,6 @@ paths:
       operationId: get-me-friends
       description: 'Get a list of accepted friends ? maybe '
       tags: []
-    post:
-      summary: ''
-      operationId: post-me-friends
-      responses:
-        '200':
-          description: OK
-      description: Send an invitation to someone
-      tags: []
     delete:
       summary: ''
       operationId: delete-me-friends
@@ -94,6 +117,21 @@ paths:
           description: OK
       description: Delete a friend
       tags: []
+    put:
+      summary: ''
+      operationId: put-me-friends
+      responses:
+        '200':
+          description: OK
+      description: Send an invite
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: number
   /me/channels:
     get:
       summary: Your GET endpoint
@@ -114,6 +152,19 @@ paths:
       operationId: get-me-channels
       tags: []
       description: Get the list of channels im in.
+    put:
+      summary: ''
+      operationId: put-me-channels
+      responses:
+        '200':
+          description: OK
+    delete:
+      summary: ''
+      operationId: delete-me-channels
+      responses:
+        '200':
+          description: OK
+      description: ''
   /me/history:
     get:
       summary: List of past games
@@ -186,10 +237,11 @@ paths:
                 Get User Alice Smith:
                   value:
                     id: 142
-                    name: Alice
+                    username: Alice
                     email: alice.smith@gmail.com
                     online: true
                     avatar: 'http://localhost:3000/users/142/avatar'
+                    role: admin
         '401':
           $ref: '#/components/responses/401'
         '404':
@@ -220,10 +272,11 @@ paths:
                 Get User Alice Smith:
                   value:
                     id: 142
-                    name: Alice
+                    username: Alice
                     email: alice.smith@gmail.com
                     online: true
                     avatar: 'http://localhost:3000/users/142/avatar'
+                    role: admin
         '401':
           $ref: '#/components/responses/401'
         '404':
@@ -335,6 +388,51 @@ paths:
         - $ref: '#/components/parameters/skip'
         - $ref: '#/components/parameters/order_by'
     parameters: []
+  /auth/signup:
+    post:
+      summary: ''
+      operationId: post-signup
+      responses:
+        '200':
+          description: OK
+      description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                username:
+                  type: string
+                password:
+                  type: string
+        description: ''
+    parameters: []
+  /auth/signin:
+    post:
+      summary: ''
+      operationId: post-signin
+      responses:
+        '200':
+          description: OK
+      description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                username:
+                  type: string
+                password:
+                  type: string
+    parameters: []
 components:
   securitySchemes:
     BearerAuth:
@@ -355,11 +453,11 @@ components:
           minimum: 0
           format: int64
           readOnly: true
-        name:
+        username:
           type: string
           example: Bread Pitt
-          readOnly: true
           x-faker: internet.userName
+          readOnly: true
         email:
           type: string
           format: email
@@ -374,12 +472,18 @@ components:
           x-faker: image.avatar
           example: 'http://localhost:3001/users/42/avatar'
           readOnly: true
+        role:
+          type: string
+          enum:
+            - admin
+            - user
       required:
         - id
-        - name
+        - username
         - email
         - online
         - avatar
+        - role
     Friend:
       $ref: '#/components/schemas/User'
     Achievement:
@@ -453,7 +557,7 @@ components:
           status: 418
           message: I'm a teapot
       properties:
-        status:
+        statusCode:
           type: integer
           minimum: 100
           maximum: 600
@@ -461,7 +565,7 @@ components:
         message:
           type: string
       required:
-        - status
+        - statusCode
         - message
   parameters:
     take:
