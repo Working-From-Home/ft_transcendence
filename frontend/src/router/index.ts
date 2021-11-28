@@ -23,6 +23,13 @@ const routes: Array<RouteRecordRaw> = [
       import("../views/Chat.vue"),
   },
   {
+    path: "/profile",
+    name: "profile",
+	meta: { requiresAuth: true },
+    component: () =>
+      import("../views/profiles/Profile.vue"),
+  },
+  {
     path: "/auth/signup",
     name: "Register",
 	meta: { requiresUnAuth: true },
