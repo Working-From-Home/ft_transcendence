@@ -1,53 +1,34 @@
-import { Body, Controller, Delete, Get, NotFoundException,
-    Param, Patch, Post, Query } from '@nestjs/common';
-import { CreateUserDto } from './dtos/create-user.dto';
-import { UpdateUserDto } from './dtos/update-user.dto';
-import { UserDto } from './dtos/user.dto';
-import { SignUserInDto } from './dtos/sign-user-in.dto';
+import { Controller, Delete, Get, NotFoundException, Param,
+    Query, UseGuards } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { Serialize } from '../interceptors/serialize.interceptor';
-import { UsersService } from './services/users.service';
-import { AuthService } from './services/auth.service';
+import { UsersService } from './users.service';
+import { UserDto } from './dtos/user.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
-@Controller('auth')
+@ApiTags('users')
+@Controller('users')
 @Serialize(UserDto)
 export class UsersController {
-    constructor(private usersService: UsersService, private authService: AuthService) {}
-
-    @Post('/signup')
-    async createUser(@Body() body: CreateUserDto) {
-        const user = await this.authService.signup(body.email, body.username, body.password);
-        return user;
-    }
-
-    @Post('/signin')
-    async signin(@Body() body: SignUserInDto) {//, @Session() session: any) {
-        const user = await this.authService.signin(body.username, body.password);
-        // session.userId = user.id;
-        return user;
-    }
-
-    @Delete('/:id')
-    removeUser(@Param('id') id: string) {
-        return this.usersService.remove(parseInt(id));
-    }
-
-    @Patch('/:id')
-    async updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
-        const user = await this.authService.update(parseInt(id), body);
-        return user;
-    }
+    constructor(private usersService: UsersService) {}
 
     @Get('/:id')
     async findUserById(@Param('id') id: string) {
         const user = await this.usersService.findById(parseInt(id));
-        if (!user) {
-            throw new NotFoundException('User not found');
-        }
+        if (!user) { throw new NotFoundException('user not found'); }
         return user;
     }
 
+    @Delete('/:id')
+    @UseGuards(JwtAuthGuard)
+    async deleteAccount(@Param('id') id: string) {
+        return await this.usersService.remove(parseInt(id));
+    }
+
     @Get()
-    findUserByName(@Query('username') username: string) {
-        return this.usersService.findByName(username);
+    async findUserByName(@Query('username') username: string) {
+        const user = await this.usersService.findByName(username);
+        if (!user) { throw new NotFoundException('user not found'); }
+        return user;
     }
 }

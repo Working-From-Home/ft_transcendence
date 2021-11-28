@@ -2,40 +2,52 @@ version: "3.8"
 services:
   backend:
     restart: always
-    image: "node:16-alpine"
-    user: "node"
-    working_dir: /home/node/app
+    image: 42-node
+    build:
+      context: ./
+      dockerfile: Dockerfile.42-node
     environment:
-      - NODE_ENV=development
+      - DB_NAME=${DB_NAME}
+      - JWT_SECRET=${JWT_SECRET}
+      - API_KEY_42=${API_KEY_42}
     volumes:
-      - ./backend/:/home/node/app
+      - ./backend/:/app
     ports:
       - 3000:3000
     networks:
       - mynet
-    command: sh -c 'yarn install && yarn run start:dev'
+    command: sh -c 'npm install && npm run start:dev'
 
   frontend:
     restart: always
-    image: "node:16-alpine"
-    user: "node"
-    working_dir: /home/node/app
+    image: 42-node
     volumes:
-      - ./frontend/:/home/node/app
+      - ./frontend/:/app
+    environment:
+      - BACKEND_HOST=localhost
+      - BACKEND_PORT=3000
     ports:
       - 8080:8080
     networks:
       - mynet
     command: sh -c 'npm install && npm run serve'
 
+  mock-api:
+    restart: always
+    image: 42-node
+    volumes:
+      - ./reference/:/app
+    ports:
+      - 3001:4010
+    command: prism mock --dynamic -h 0.0.0.0 ./api.oas3.yaml
+
+  # compodoc:
+  #   image: 42-node
+  #   volumes:
+  #     - ./backend/:/app
+  #   ports:
+  #     - 8081:8080
+  #   command: "npx @compodoc/compodoc -p tsconfig.json -s"
+
 networks:
   mynet:
-##  compodoc:
-##    image: "node:17-alpine"
-##    user: "node"
-##    working_dir: /home/node/app
-##    volumes:
-##      - ./backend/:/home/node/app
-##    ports:
-##      - 8080:8080
-##    command: "npx @compodoc/compodoc -p tsconfig.json -s"

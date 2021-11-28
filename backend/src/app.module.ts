@@ -1,19 +1,34 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm'
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
-import { User } from './users/entities/user.entity';
+import { User } from './users/user.entity';
+import { Avatar } from './avatar/avatar.entity';
+import { AuthModule } from './auth/auth.module';
+import { AvatarModule } from './avatar/avatar.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'sqlite',
-      database: 'tmp_db',
-      entities: [User],
-      synchronize: true
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env'
     }),
-    UsersModule
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => {
+        return {
+          type: 'sqlite',
+          database: config.get<string>('DB_NAME'),
+          entities: [User, Avatar],
+          synchronize: true     // shouldn't be used in production: may lose data
+        }
+      }
+    }),
+    UsersModule,
+    AuthModule,
+    AvatarModule
   ],
   controllers: [AppController],
   providers: [AppService],
