@@ -194,11 +194,13 @@ paths:
       responses:
         '200':
           description: OK
-      description: |
+      description: |-
         Separate matchmaking from websocket easier ?
 
         https://www.reddit.com/r/gamedev/comments/628h2s/rest_api_for_matchmaking/
         https://docs.microsoft.com/en-us/rest/api/playfab/client/matchmaking/matchmake?view=playfab-rest
+
+        Once a matchmaking matched or the requested player accepted, then return a une id to initiate the websocket ?  
       parameters:
         - schema:
             type: string
@@ -229,6 +231,8 @@ paths:
         Only the owner can add/update/delete password.
         owner can add admin role to user.
         administrator can ban or mute users for a certain amount of time
+
+        Create one two guards in the backend ? to filter admin and owner ?
   /me/history:
     get:
       summary: List of past games
@@ -624,6 +628,7 @@ components:
         - date
         - winner
         - looser
+      description: ''
     Channel:
       title: Channel
       type: object
