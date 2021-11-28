@@ -1,0 +1,786 @@
+openapi: 3.0.1
+info:
+  title: API Transcendence
+  version: '1.0'
+  description: |
+    - https://oai.github.io/Documentation/best-practices.html
+    - https://stoplight.io/studio/ https://openapi.tools/#text-editors
+    - http://apistylebook.com/design/guidelines/
+    - http://apistylebook.com/design/guidelines/zalando-restful-api-guidelines#api-design https://adidas.gitbook.io/api-guidelines
+    - https://stoplight.io/video/ama-spectral-and-style-guides/
+    - https://stoplight.io/api-design-guide/
+    - https://openapi.tools/
+    - https://meta.stoplight.io/docs/prism/ZG9jOjk3-validation-proxy
+  contact:
+    email: fake@email.com
+    name: Faked
+servers:
+  - url: 'http://localhost:3000'
+    description: Local dev base url
+paths:
+  /me:
+    get:
+      summary: Your GET endpoint
+      operationId: get-me
+      description: Return my info
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/401'
+    delete:
+      summary: ''
+      operationId: delete-me
+      responses:
+        '200':
+          description: OK
+        '401':
+          $ref: '#/components/responses/401'
+      description: 'Delete me, autodestruction initiated'
+      tags: []
+    patch:
+      summary: ''
+      operationId: patch-me
+      responses:
+        '204':
+          description: No Content
+        '401':
+          $ref: '#/components/responses/401'
+      description: 'Update some of the information, email, password... only email and password right ?'
+      tags: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                me:
+                  allOf:
+                    - $ref: '#/components/schemas/User'
+                    - type: object
+                      properties:
+                        password:
+                          type: string
+            examples: {}
+        description: ''
+  /me/stats:
+    get:
+      summary: Your GET endpoint
+      operationId: get-me-stats
+      description: Return my stats
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  level:
+                    type: integer
+                    minimum: 0
+                    maximum: 100
+                  victories:
+                    type: integer
+                    minimum: 0
+                  loses:
+                    type: integer
+                    minimum: 0
+                required:
+                  - level
+                  - victories
+                  - loses
+        '401':
+          $ref: '#/components/responses/401'
+    parameters: []
+  /me/friends:
+    get:
+      summary: Your GET endpoint
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  friends:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/401'
+      operationId: get-me-friends
+      description: Get a list of accepted friends ? maybe ? or accepted and pending ?
+      tags: []
+    delete:
+      summary: ''
+      operationId: delete-me-friends
+      responses:
+        '200':
+          description: OK
+        '401':
+          $ref: '#/components/responses/401'
+      description: Delete a friend
+      tags: []
+    put:
+      summary: ''
+      operationId: put-me-friends
+      responses:
+        '204':
+          description: No Content
+        '401':
+          $ref: '#/components/responses/401'
+      description: Send an invite
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: number
+      tags: []
+  /me/channels:
+    get:
+      summary: Get channels I'm in
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  channels:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Channel'
+        '401':
+          $ref: '#/components/responses/401'
+      operationId: get-me-channels
+      tags: []
+      description: Get the list of channels im in.
+    put:
+      summary: ''
+      operationId: put-me-channels
+      responses:
+        '200':
+          description: OK
+      description: 'Join a channel, private or public, if private, then must provide the password.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                password:
+                  type: string
+              required:
+                - id
+      tags: []
+  /me/play:
+    post:
+      summary: Search (matchmaking) or ask someone to play
+      operationId: post-me-play
+      responses:
+        '200':
+          description: OK
+      description: |-
+        Separate matchmaking from websocket easier ?
+
+        https://www.reddit.com/r/gamedev/comments/628h2s/rest_api_for_matchmaking/
+        https://docs.microsoft.com/en-us/rest/api/playfab/client/matchmaking/matchmake?view=playfab-rest
+
+        Once a matchmaking matched or the requested player accepted, then return a une id to initiate the websocket ?  
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: userId
+          description: Ask someone to play with
+  '/me/channels/{id}':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    delete:
+      summary: Leave a given channel
+      operationId: delete-me-channels-id
+      responses:
+        '200':
+          description: OK
+      description: 'Leave a given channel, if the user who leave is the admin, then the oldest to have joined become admin ? If there is not already an other admin ?'
+    put:
+      summary: Update channel property
+      operationId: put-me-channels-id
+      responses:
+        '200':
+          description: OK
+      description: |-
+        Only the owner can add/update/delete password.
+        owner can add admin role to user.
+        administrator can ban or mute users for a certain amount of time
+
+        Create one two guards in the backend ? to filter admin and owner ?
+  /me/history:
+    get:
+      summary: List of past games
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  history:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Game'
+        '401':
+          $ref: '#/components/responses/401'
+      operationId: get-me-history
+      description: Return a list
+  /users:
+    get:
+      summary: List of users
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                uniqueItems: true
+                items:
+                  $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/401'
+      operationId: get-users
+      description: 'Return a list of users, two queries parameter can be added to filter by user name and if they are online'
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: name
+          description: Find users who approximately match the given name
+        - schema:
+            type: boolean
+            default: false
+          in: query
+          name: online
+          description: To filter online users
+  '/users/{id}':
+    parameters:
+      - name: id
+        in: path
+        schema:
+          type: integer
+          format: int64
+        description: An object id
+        required: true
+    get:
+      summary: Get User
+      tags: []
+      responses:
+        '200':
+          description: User Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                Get User Alice Smith:
+                  value:
+                    id: 142
+                    username: Alice
+                    email: alice.smith@gmail.com
+                    online: true
+                    avatar: 'http://localhost:3000/users/142/avatar'
+                    role: admin
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          description: User Not Found
+      operationId: get-users-userId
+      description: Retrieve the user information.
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/order_by'
+  '/users/{id}/history':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    get:
+      summary: Get match history of a user
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  history:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Game'
+      operationId: get-users-id-history
+      description: Return a list of past games from a user.
+  '/users/{id}/games':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    get:
+      summary: Return the game history of a user
+      responses:
+        '200':
+          description: Games
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                Get User Alice Smith:
+                  value:
+                    id: 142
+                    username: Alice
+                    email: alice.smith@gmail.com
+                    online: true
+                    avatar: 'http://localhost:3000/users/142/avatar'
+                    role: admin
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          description: User Not Found
+      operationId: get-users-id-games
+      description: Retrieve the game history of a specific user
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/order_by'
+      tags: []
+  '/users/{id}/avatar':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    get:
+      summary: Get the avatar of a specific player
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            image/*:
+              schema:
+                type: string
+                format: binary
+                x-faker: image.image
+        '401':
+          $ref: '#/components/responses/401'
+      operationId: get-users-userId-avatar
+      parameters: []
+      description: Return the user avatar
+    put:
+      summary: ''
+      tags: []
+      operationId: put-users-id-avatar
+      responses:
+        '200':
+          description: OK
+        '401':
+          $ref: '#/components/responses/401'
+      description: Update the avatar. multipart ?
+      parameters: []
+  '/users/{id}/achievements':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  achievements:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Achievement'
+                required:
+                  - achievements
+              examples:
+                example-1:
+                  value:
+                    achievements:
+                      - id: 42
+                        name: Tyson Fury
+                        description: Win 30 games in a row.
+                      - id: 43
+                        name: Pilier de bar
+                        description: Play 15 games each day for one month
+        '401':
+          $ref: '#/components/responses/401'
+      operationId: get-users-userId-achievements
+      description: Return the list of achievements a specific user won
+  /achievements:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  achievements:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Achievement'
+                required:
+                  - achievements
+        '401':
+          $ref: '#/components/responses/401'
+      operationId: get-achievements
+      description: Return the list of all existing achievements
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/order_by'
+    parameters: []
+  /auth/signup:
+    post:
+      summary: ''
+      operationId: post-signup
+      responses:
+        '200':
+          description: OK
+      description: Create an account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                username:
+                  type: string
+                password:
+                  type: string
+        description: ''
+      tags: []
+      security: []
+  /auth/signin:
+    post:
+      summary: ''
+      operationId: post-signin
+      responses:
+        '200':
+          description: OK
+      description: 'Just Login '
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                username:
+                  type: string
+                password:
+                  type: string
+      tags: []
+      security: []
+    parameters: []
+components:
+  securitySchemes:
+    BearerAuthJWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    User:
+      title: User
+      type: object
+      description: ''
+      x-tags:
+        - user
+      x-examples:
+        example-1:
+          id: 0
+          username: Bread Pitt
+          email: bread.pitt@student.42.fr
+          online: true
+          avatar: 'http://localhost:3001/users/42/avatar'
+          role: admin
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the given user.
+          minimum: 0
+          format: int64
+          readOnly: true
+        username:
+          type: string
+          example: Bread Pitt
+          x-faker: internet.userName
+          readOnly: true
+        email:
+          type: string
+          format: email
+          example: bread.pitt@student.42.fr
+          x-faker: internet.exampleEmail
+        avatar:
+          type: string
+          format: uri-reference
+          x-faker: image.avatar
+          example: 'http://localhost:3001/users/42/avatar'
+          readOnly: true
+        role:
+          type: string
+          enum:
+            - admin
+            - user
+          readOnly: true
+      required:
+        - id
+        - username
+        - email
+        - avatar
+        - role
+    Achievement:
+      title: Achievement
+      type: object
+      description: Achievement object
+      x-examples:
+        example-1:
+          id: 42
+          name: Tyson Fury
+          description: Win 30 games in a row.
+      properties:
+        id:
+          type: integer
+          format: int64
+          minimum: 0
+        name:
+          type: string
+          x-faker: company.catchPhrase
+        description:
+          type: string
+          x-faker: lorem.sentenses
+      required:
+        - id
+        - name
+        - description
+    Game:
+      title: Game
+      type: object
+      properties:
+        id:
+          type: integer
+          minimum: 0
+        date:
+          type: string
+          format: date-time
+        winner:
+          $ref: '#/components/schemas/User'
+        looser:
+          $ref: '#/components/schemas/User'
+      required:
+        - id
+        - date
+        - winner
+        - looser
+      description: ''
+    Channel:
+      title: Channel
+      type: object
+      description: ''
+      properties:
+        id:
+          type: integer
+          minimum: 0
+        visibility:
+          type: string
+          enum:
+            - public
+            - private
+        what_else:
+          type: string
+      required:
+        - id
+        - visibility
+        - what_else
+    Error:
+      title: Error
+      type: object
+      description: Standard error object
+      x-examples:
+        example-1:
+          status: 418
+          message: I'm a teapot
+      properties:
+        statusCode:
+          type: integer
+          minimum: 100
+          maximum: 600
+          exclusiveMaximum: true
+        message:
+          type: string
+      required:
+        - statusCode
+        - message
+    Pagination:
+      title: Pagination
+      type: object
+      properties:
+        first:
+          type: string
+          format: uri
+          example: 'http://localhost:3000/users?page=3&limit=15'
+          readOnly: true
+        previous:
+          type: string
+          format: uri
+          example: 'http://localhost:3000/users?page=2&limit=15'
+          readOnly: true
+        next:
+          type: string
+          format: uri
+          example: 'http://localhost:3000/users?page=4&limit=15'
+          readOnly: true
+        last:
+          type: string
+          format: uri
+          example: 'http://localhost:3000/users?page=11&limit=15'
+          readOnly: true
+      required:
+        - first
+        - previous
+        - next
+        - last
+    Meta:
+      title: Meta
+      type: object
+      properties:
+        meta:
+          type: object
+          properties:
+            totalItems:
+              type: integer
+              format: int32
+              minimum: 0
+            itemCount:
+              type: integer
+              minimum: 0
+              format: int32
+            totalPages:
+              type: integer
+              format: int32
+              minimum: 0
+            currentPage:
+              type: integer
+              minimum: 0
+              format: int32
+          required:
+            - totalItems
+            - itemCount
+            - totalPages
+            - currentPage
+    Friends:
+      title: Friends
+      allOf:
+        - $ref: '#/components/schemas/User'
+        - type: object
+          properties:
+            online:
+              type: boolean
+            inGame:
+              type: boolean
+  parameters:
+    limit:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        example: 25
+        minimum: 0
+        format: int32
+        default: 10
+      description: Define the maximum items returned per page
+    order_by:
+      name: order_by
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+          - asc
+          - desc
+        default: asc
+      description: Choose the order either asc or desc
+    page:
+      name: page
+      in: query
+      schema:
+        type: integer
+        minimum: 0
+        format: int32
+      description: The page we want
+    sort:
+      name: sort
+      in: query
+      required: false
+      schema:
+        type: string
+      description: sort by a given field
+  examples: {}
+  requestBodies: {}
+  responses:
+    '401':
+      description: 'The request requires user authentication or, if the request included authorization credentials, authorization has been refused for those credentials.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples: {}
+security:
+  - BearerAuthJWT: []
