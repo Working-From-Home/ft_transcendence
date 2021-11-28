@@ -57,12 +57,22 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              type: object
+              properties:
+                me:
+                  allOf:
+                    - $ref: '#/components/schemas/User'
+                    - type: object
+                      properties:
+                        password:
+                          type: string
+            examples: {}
+        description: ''
   /me/stats:
     get:
       summary: Your GET endpoint
       operationId: get-me-stats
-      description: Return my info
+      description: Return my stats
       tags: []
       responses:
         '200':
@@ -103,11 +113,11 @@ paths:
                   friends:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Friend'
+                      $ref: '#/components/schemas/User'
         '401':
           $ref: '#/components/responses/401'
       operationId: get-me-friends
-      description: 'Get a list of accepted friends ? maybe '
+      description: Get a list of accepted friends ? maybe ? or accepted and pending ?
       tags: []
     delete:
       summary: ''
@@ -115,14 +125,18 @@ paths:
       responses:
         '200':
           description: OK
+        '401':
+          $ref: '#/components/responses/401'
       description: Delete a friend
       tags: []
     put:
       summary: ''
       operationId: put-me-friends
       responses:
-        '200':
-          description: OK
+        '204':
+          description: No Content
+        '401':
+          $ref: '#/components/responses/401'
       description: Send an invite
       requestBody:
         content:
@@ -135,7 +149,7 @@ paths:
       tags: []
   /me/channels:
     get:
-      summary: Your GET endpoint
+      summary: Get channels I'm in
       responses:
         '200':
           description: OK
@@ -173,14 +187,52 @@ paths:
               required:
                 - id
       tags: []
-    delete:
-      summary: ''
-      operationId: delete-me-channels
+  /me/play:
+    post:
+      summary: Search (matchmaking) or ask someone to play
+      operationId: post-me-play
       responses:
         '200':
           description: OK
-      description: Quit or delete a channel ????????
-      tags: []
+      description: |-
+        Separate matchmaking from websocket easier ?
+
+        https://www.reddit.com/r/gamedev/comments/628h2s/rest_api_for_matchmaking/
+        https://docs.microsoft.com/en-us/rest/api/playfab/client/matchmaking/matchmake?view=playfab-rest
+
+        Once a matchmaking matched or the requested player accepted, then return a une id to initiate the websocket ?  
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: userId
+          description: Ask someone to play with
+  '/me/channels/{id}':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    delete:
+      summary: Leave a given channel
+      operationId: delete-me-channels-id
+      responses:
+        '200':
+          description: OK
+      description: 'Leave a given channel, if the user who leave is the admin, then the oldest to have joined become admin ? If there is not already an other admin ?'
+    put:
+      summary: Update channel property
+      operationId: put-me-channels-id
+      responses:
+        '200':
+          description: OK
+      description: |-
+        Only the owner can add/update/delete password.
+        owner can add admin role to user.
+        administrator can ban or mute users for a certain amount of time
+
+        Create one two guards in the backend ? to filter admin and owner ?
   /me/history:
     get:
       summary: List of past games
@@ -212,6 +264,7 @@ paths:
             application/json:
               schema:
                 type: array
+                uniqueItems: true
                 items:
                   $ref: '#/components/schemas/User'
         '401':
@@ -265,9 +318,33 @@ paths:
       operationId: get-users-userId
       description: Retrieve the user information.
       parameters:
-        - $ref: '#/components/parameters/take'
-        - $ref: '#/components/parameters/skip'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
         - $ref: '#/components/parameters/order_by'
+  '/users/{id}/history':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    get:
+      summary: Get match history of a user
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  history:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Game'
+      operationId: get-users-id-history
+      description: Return a list of past games from a user.
   '/users/{id}/games':
     parameters:
       - schema:
@@ -300,8 +377,8 @@ paths:
       operationId: get-users-id-games
       description: Retrieve the game history of a specific user
       parameters:
-        - $ref: '#/components/parameters/take'
-        - $ref: '#/components/parameters/skip'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
         - $ref: '#/components/parameters/order_by'
       tags: []
   '/users/{id}/avatar':
@@ -400,8 +477,8 @@ paths:
       operationId: get-achievements
       description: Return the list of all existing achievements
       parameters:
-        - $ref: '#/components/parameters/take'
-        - $ref: '#/components/parameters/skip'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
         - $ref: '#/components/parameters/order_by'
     parameters: []
   /auth/signup:
@@ -465,6 +542,14 @@ components:
       description: ''
       x-tags:
         - user
+      x-examples:
+        example-1:
+          id: 0
+          username: Bread Pitt
+          email: bread.pitt@student.42.fr
+          online: true
+          avatar: 'http://localhost:3001/users/42/avatar'
+          role: admin
       properties:
         id:
           type: integer
@@ -482,9 +567,6 @@ components:
           format: email
           example: bread.pitt@student.42.fr
           x-faker: internet.exampleEmail
-        online:
-          type: boolean
-          readOnly: true
         avatar:
           type: string
           format: uri-reference
@@ -496,15 +578,13 @@ components:
           enum:
             - admin
             - user
+          readOnly: true
       required:
         - id
         - username
         - email
-        - online
         - avatar
         - role
-    Friend:
-      $ref: '#/components/schemas/User'
     Achievement:
       title: Achievement
       type: object
@@ -548,6 +628,7 @@ components:
         - date
         - winner
         - looser
+      description: ''
     Channel:
       title: Channel
       type: object
@@ -586,15 +667,85 @@ components:
       required:
         - statusCode
         - message
+    Pagination:
+      title: Pagination
+      type: object
+      properties:
+        first:
+          type: string
+          format: uri
+          example: 'http://localhost:3000/users?page=3&limit=15'
+          readOnly: true
+        previous:
+          type: string
+          format: uri
+          example: 'http://localhost:3000/users?page=2&limit=15'
+          readOnly: true
+        next:
+          type: string
+          format: uri
+          example: 'http://localhost:3000/users?page=4&limit=15'
+          readOnly: true
+        last:
+          type: string
+          format: uri
+          example: 'http://localhost:3000/users?page=11&limit=15'
+          readOnly: true
+      required:
+        - first
+        - previous
+        - next
+        - last
+    Meta:
+      title: Meta
+      type: object
+      properties:
+        meta:
+          type: object
+          properties:
+            totalItems:
+              type: integer
+              format: int32
+              minimum: 0
+            itemCount:
+              type: integer
+              minimum: 0
+              format: int32
+            totalPages:
+              type: integer
+              format: int32
+              minimum: 0
+            currentPage:
+              type: integer
+              minimum: 0
+              format: int32
+          required:
+            - totalItems
+            - itemCount
+            - totalPages
+            - currentPage
+    Friends:
+      title: Friends
+      allOf:
+        - $ref: '#/components/schemas/User'
+        - type: object
+          properties:
+            online:
+              type: boolean
+            inGame:
+              type: boolean
   parameters:
-    take:
-      name: take
+    limit:
+      name: limit
       in: query
       required: false
       schema:
-        type: string
-        example: '25'
-      description: Define the number of items returned
+        type: integer
+        example: 25
+        minimum: 0
+        format: int32
+        default: 10
+      description: Define the maximum items returned per page
     order_by:
       name: order_by
       in: query
@@ -606,13 +757,21 @@ components:
           - desc
         default: asc
       description: Choose the order either asc or desc
-    skip:
-      name: skip
+    page:
+      name: page
+      in: query
+      schema:
+        type: integer
+        minimum: 0
+        format: int32
+      description: The page we want
+    sort:
+      name: sort
       in: query
       required: false
       schema:
         type: string
-      description: Skip n elements before taking elements
+      description: sort by a given field
   examples: {}
   requestBodies: {}
   responses:
