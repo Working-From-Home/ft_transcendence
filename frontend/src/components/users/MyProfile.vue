@@ -1,7 +1,12 @@
 <template>
 	<div>
-		<p>this is the profile of {{ userName }}</p>
-		<p>email: {{ email }}</p>
+		<span>
+			<img v-bind:src="avatar"/>
+		</span>
+		<span>
+			<p>this is the profile of {{ userName }}</p>
+			<p>email: {{ email }}</p>
+		</span>
 	</div>
 </template>
 
@@ -14,14 +19,15 @@ import { Options, Vue } from "vue-class-component";
 			userid: null,
 			userName: null,
 			email: null,
-			avatarId: null
+			avatar: null,
+			test: "http://purepng.com/public/uploads/large/purepng.com-red-appleappleapplesfruitsweet-170152718058288lsq.png"
 		};
 	},
   created() {
 	this.userid = this.$store.getters.myUserId;
-	this.username = this.$store.getters.myUserName;
+	this.userName = this.$store.getters.myUserName;
 	this.email = this.$store.getters.myEmail;
-	this.avatarId = this.$store.getters.avatarId;
+	this.avatar = this.$store.getters.myAvatar;
   }
 })
 export default class HelloWorld extends Vue {

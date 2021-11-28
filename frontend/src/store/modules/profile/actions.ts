@@ -10,7 +10,7 @@ export default {
 				username: data.username,
 				email: data.email,
 				avatarId: data.avatarId,
-			})
+			});
 		}).catch(error => {
 			console.error('Error:', error);
 			throw error;
@@ -28,8 +28,12 @@ export default {
 		fetch(url, fetchData)
 		.then((response) => response.blob())
 		.then(data => {
-			//var objectURL = URL.createObjectURL(data);
+			context.commit('initAvatar', {
+				avatar: URL.createObjectURL(data),
+			})
+			avatar: URL.createObjectURL(data);
 			console.log('Success avatar:', data);
+			console.log('Success url avatar:', URL.createObjectURL(data));
 		}).catch(error => {
 			console.error('Error:', error);
 			throw error;

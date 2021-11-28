@@ -27,7 +27,13 @@ export default {
 		fetchData.headers.append('Content-Type', 'Application/json');
 
 		fetch(url, fetchData)
-		.then((response) => response.json())
+		.then((response) => {
+			console.log('reponse log', response)
+			if (!response.ok) {
+				throw new Error(response.statusText);
+			  }
+			return response.json();
+		})
 		.then(data => {
 			console.log('Success:', data);
 
@@ -38,10 +44,12 @@ export default {
 			timer = setTimeout(function() {
 				context.dispatch('logout');
 			}, 3600000);
+
 			context.commit('signIn', {
 				token: data.access_token,
 				userId: data.id
 			})
+			
 			context.dispatch('getProfile', {
 				...payload,
 				id: data.id,
@@ -49,7 +57,7 @@ export default {
 			});
 			return data;
 		}).catch(error => {
-			console.error('Error:', error);
+			console.error('Error:', error.message);
 			throw error;
 		});
 	},
