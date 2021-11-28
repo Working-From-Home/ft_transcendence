@@ -342,12 +342,11 @@ paths:
       parameters:
         - schema:
             type: string
-          in: header
-          name: name
+          in: query
+          name: username
           description: Find users who approximately match the given name
         - schema:
             type: boolean
-            default: false
           in: query
           name: online
           description: To filter online users
