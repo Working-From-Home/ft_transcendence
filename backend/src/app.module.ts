@@ -9,6 +9,7 @@ import { Avatar } from './avatar/avatar.entity';
 import { AuthModule } from './auth/auth.module';
 import { AvatarModule } from './avatar/avatar.module';
 import { PongModule } from './pong/pong.module';
+import { RankController } from './rank/rank.controller';
 
 @Module({
   imports: [
@@ -32,7 +33,7 @@ import { PongModule } from './pong/pong.module';
     AvatarModule,
 		PongModule
   ],
-  controllers: [AppController],
+  controllers: [AppController, RankController],
   providers: [AppService],
 })
 export class AppModule {}

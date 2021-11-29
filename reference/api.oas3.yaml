@@ -18,6 +18,88 @@ servers:
   - url: 'http://localhost:3000'
     description: Local dev base url
 paths:
+  /auth/signup:
+    post:
+      summary: ''
+      operationId: post-signup
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  acces_token:
+                    type: string
+                required:
+                  - id
+                  - acces_token
+        '400':
+          $ref: '#/components/responses/400'
+      description: Create an account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+              required:
+                - username
+                - email
+                - password
+        description: ''
+      tags: []
+      security: []
+  /auth/signin:
+    post:
+      summary: ''
+      operationId: post-signin
+      responses:
+        '201':
+          description: Created
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    minimum: 0
+                  access_token:
+                    type: string
+                required:
+                  - id
+                  - access_token
+        '400':
+          $ref: '#/components/responses/400'
+      description: 'Just Login '
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+                - username
+                - password
+      tags: []
+      security: []
+    parameters: []
   /me:
     get:
       summary: Get logged user
@@ -491,26 +573,7 @@ paths:
                   - achievements
                   - meta
                   - links
-              examples:
-                example-2:
-                  value:
-                    achievements:
-                      - id: 42
-                        name: Tyson Fury
-                        description: Win 30 games in a row.
-                      - id: 43
-                        name: Pilier de bar
-                        description: Play 15 games each day for one month
-                    meta:
-                      totalItems: 2
-                      itemCount: 2
-                      totalPages: 1
-                      currentPage: 1
-                    links:
-                      first: 'http://localhost:3000/users?page=3&limit=15'
-                      previous: 'http://localhost:3000/users?page=2&limit=15'
-                      next: 'http://localhost:3000/users?page=4&limit=15'
-                      last: 'http://localhost:3000/users?page=11&limit=15'
+              examples: {}
         '401':
           $ref: '#/components/responses/401'
       operationId: get-users-userId-achievements
@@ -539,6 +602,23 @@ paths:
                   - achievements
                   - meta
                   - links
+              examples:
+                example-1:
+                  value:
+                    achievements:
+                      - id: 0
+                        name: string
+                        description: string
+                    meta:
+                      totalItems: 0
+                      itemCount: 0
+                      totalPages: 0
+                      currentPage: 0
+                    links:
+                      first: 'http://localhost:3000/users?page=3&limit=15'
+                      previous: 'http://localhost:3000/users?page=2&limit=15'
+                      next: 'http://localhost:3000/users?page=4&limit=15'
+                      last: 'http://localhost:3000/users?page=11&limit=15'
         '401':
           $ref: '#/components/responses/401'
       operationId: get-achievements
@@ -548,54 +628,38 @@ paths:
         - $ref: '#/components/parameters/limit'
         - $ref: '#/components/parameters/order_by'
     parameters: []
-  /auth/signup:
-    post:
-      summary: ''
-      operationId: post-signup
+  /rank:
+    get:
+      summary: Get users ordered by rank
+      tags: []
       responses:
         '200':
           description: OK
-      description: Create an account
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                  format: email
-                username:
-                  type: string
-                password:
-                  type: string
-        description: ''
-      tags: []
-      security: []
-  /auth/signin:
-    post:
-      summary: ''
-      operationId: post-signin
-      responses:
-        '200':
-          description: OK
-      description: 'Just Login '
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                  format: email
-                username:
-                  type: string
-                password:
-                  type: string
-      tags: []
-      security: []
-    parameters: []
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      allOf:
+                        - $ref: '#/components/schemas/User'
+                        - $ref: '#/components/schemas/Stats'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+                  links:
+                    $ref: '#/components/schemas/Pagination'
+                required:
+                  - users
+                  - meta
+                  - links
+              examples: {}
+      operationId: get-rank
+      description: return bla bla
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
 components:
   securitySchemes:
     BearerAuthJWT:
@@ -611,10 +675,21 @@ components:
         - user
       x-examples:
         example-1:
-          id: 0
+          id: 1
           username: Bread Pitt
           email: bread.pitt@student.42.fr
-          online: true
+          avatar: 'http://localhost:3001/users/42/avatar'
+          role: admin
+        example-2:
+          id: 2
+          username: Pickle rick
+          email: rick@student.42.fr
+          avatar: 'http://localhost:3001/users/43/avatar'
+          role: user
+        example-4:
+          id: 3
+          username: Alan
+          email: Alan@student.42.fr
           avatar: 'http://localhost:3001/users/42/avatar'
           role: admin
       properties:
@@ -661,6 +736,10 @@ components:
           id: 42
           name: Tyson Fury
           description: Win 30 games in a row.
+        example-2:
+          id: 43
+          name: Pilier de bar
+          description: Play 15 games each day for one month
       properties:
         id:
           type: integer
@@ -734,9 +813,12 @@ components:
           exclusiveMaximum: true
         message:
           type: string
+        error:
+          type: string
       required:
         - statusCode
         - message
+        - error
     Pagination:
       title: Pagination
       type: object
@@ -769,6 +851,7 @@ components:
     Meta:
       title: Meta
       type: object
+      x-examples: {}
       properties:
         totalItems:
           type: integer
@@ -782,10 +865,12 @@ components:
           type: integer
           format: int32
           minimum: 0
+          example: 11
         currentPage:
           type: integer
           minimum: 0
           format: int32
+          example: 3
       required:
         - totalItems
         - itemCount
@@ -804,6 +889,24 @@ components:
           required:
             - online
             - inGame
+    Stats:
+      title: Stats
+      type: object
+      properties:
+        level:
+          example: 42
+          format: int32
+          type: integer
+        victories:
+          type: integer
+          minimum: 0
+          example: 51
+        losses:
+          type: integer
+          minimum: 0
+          example: 49
+      required:
+        - level
   parameters:
     limit:
       name: limit
@@ -845,6 +948,12 @@ components:
   examples: {}
   requestBodies: {}
   responses:
+    '400':
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
     '401':
       description: 'The request requires user authentication or, if the request included authorization credentials, authorization has been refused for those credentials.'
       content:
