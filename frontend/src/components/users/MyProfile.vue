@@ -1,15 +1,13 @@
 <template>
 	<div>
-		<span>
+		<span class="photo">
 			<img v-bind:src="avatar"/>
 		</span>
 		<span>
 			<p>this is the profile of {{ userName }}</p>
 			<p>email: {{ email }}</p>
 		</span>
-		<base-button>
-			<button-del></button-del>
-		</base-button>
+		<button-del></button-del>
 	</div>
 </template>
 
@@ -59,4 +57,5 @@ li {
 a {
   color: #42b983;
 }
+
 </style>
