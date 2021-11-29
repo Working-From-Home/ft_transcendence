@@ -13,11 +13,11 @@ import { fileFilter } from './filters/file.filter';
 @ApiTags('avatar')
 @Controller('/users/:id/avatar')
 @UseInterceptors(ClassSerializerInterceptor)
+@UseGuards(JwtAuthGuard)
 export class AvatarController {
     constructor(private readonly avatarService: AvatarService, private usersService: UsersService) {}
 
     @Post()
-    @UseGuards(JwtAuthGuard)
     @UseInterceptors(FileInterceptor('image', fileFilter))
     async uploadAvatar(@Param('id') id: string, @UploadedFile() file: Express.Multer.File) {
         const user = await this.usersService.findById(parseInt(id));
@@ -28,7 +28,6 @@ export class AvatarController {
     }
 
     @Get()
-    @UseGuards(JwtAuthGuard)
     async getAvatar(@Param('id') id: string, @Res({ passthrough: true }) response: Response) {
         const user = await this.usersService.findById(parseInt(id));
         if (!user) { throw new NotFoundException('user not found'); }
@@ -39,7 +38,6 @@ export class AvatarController {
     }
 
     @Delete()
-    @UseGuards(JwtAuthGuard)
     async deleteAvatar(@Param('id') id: string) {
         const user = await this.usersService.findById(parseInt(id));
         if (!user) { throw new NotFoundException('user not found'); }
