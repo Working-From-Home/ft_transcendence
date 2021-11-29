@@ -20,9 +20,9 @@ servers:
 paths:
   /me:
     get:
-      summary: Your GET endpoint
+      summary: Get logged user
       operationId: get-me
-      description: Return my info
+      description: Return info about loged user
       tags: []
       responses:
         '200':
@@ -70,9 +70,9 @@ paths:
         description: ''
   /me/stats:
     get:
-      summary: Your GET endpoint
+      summary: Get stats about logged user
       operationId: get-me-stats
-      description: Return my stats
+      description: Return my stats. Maybe just remove this route and serialize stats directly with user in route GET /me ?
       tags: []
       responses:
         '200':
@@ -101,7 +101,7 @@ paths:
     parameters: []
   /me/friends:
     get:
-      summary: Your GET endpoint
+      summary: Get friend's list of logged user
       responses:
         '200':
           description: OK
@@ -113,7 +113,15 @@ paths:
                   friends:
                     type: array
                     items:
-                      $ref: '#/components/schemas/User'
+                      $ref: '#/components/schemas/Friends'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+                  links:
+                    $ref: '#/components/schemas/Pagination'
+                required:
+                  - friends
+                  - meta
+                  - links
         '401':
           $ref: '#/components/responses/401'
       operationId: get-me-friends
@@ -162,6 +170,14 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Channel'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+                  links:
+                    $ref: '#/components/schemas/Pagination'
+                required:
+                  - channels
+                  - meta
+                  - links
         '401':
           $ref: '#/components/responses/401'
       operationId: get-me-channels
@@ -195,18 +211,21 @@ paths:
         '200':
           description: OK
       description: |-
-        Separate matchmaking from websocket easier ?
+        Separate matchmaking from websocket easier, or not ?
 
         https://www.reddit.com/r/gamedev/comments/628h2s/rest_api_for_matchmaking/
         https://docs.microsoft.com/en-us/rest/api/playfab/client/matchmaking/matchmake?view=playfab-rest
 
         Once a matchmaking matched or the requested player accepted, then return a une id to initiate the websocket ?  
+
+        OR maybe delete this route and to all the things in websockets ? what's easier ?
       parameters:
         - schema:
             type: string
           in: query
           name: userId
           description: Ask someone to play with
+      tags: []
   '/me/channels/{id}':
     parameters:
       - schema:
@@ -220,19 +239,50 @@ paths:
       responses:
         '200':
           description: OK
+        '401':
+          $ref: '#/components/responses/401'
       description: 'Leave a given channel, if the user who leave is the admin, then the oldest to have joined become admin ? If there is not already an other admin ?'
+      tags: []
     put:
       summary: Update channel property
       operationId: put-me-channels-id
       responses:
         '200':
           description: OK
+        '401':
+          $ref: '#/components/responses/401'
+      description: |-
+        Subscribe to a channel if public. if private, the password must be provided
+
+        OR maybe delete this route and to all the things in websockets ? what's easier ?
+      tags: []
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                  format: password
+    patch:
+      tags: []
+      summary: Modify channel
+      operationId: patch-me-channels-id
+      responses:
+        '200':
+          description: OK
+        '401':
+          $ref: '#/components/responses/401'
       description: |-
         Only the owner can add/update/delete password.
-        owner can add admin role to user.
+        owner can add admin role to a user.
         administrator can ban or mute users for a certain amount of time
 
         Create one two guards in the backend ? to filter admin and owner ?
+
+        OR maybe delete this route and to all the things in websockets ? what's easier ?
   /me/history:
     get:
       summary: List of past games
@@ -249,10 +299,18 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Game'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+                  links:
+                    $ref: '#/components/schemas/Pagination'
+                required:
+                  - history
+                  - meta
+                  - links
         '401':
           $ref: '#/components/responses/401'
       operationId: get-me-history
-      description: Return a list
+      description: Return a list of games
   /users:
     get:
       summary: List of users
@@ -263,10 +321,20 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                uniqueItems: true
-                items:
-                  $ref: '#/components/schemas/User'
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+                  links:
+                    $ref: '#/components/schemas/Pagination'
+                required:
+                  - users
+                  - meta
+                  - links
         '401':
           $ref: '#/components/responses/401'
       operationId: get-users
@@ -274,12 +342,11 @@ paths:
       parameters:
         - schema:
             type: string
-          in: header
-          name: name
+          in: query
+          name: username
           description: Find users who approximately match the given name
         - schema:
             type: boolean
-            default: false
           in: query
           name: online
           description: To filter online users
@@ -293,7 +360,7 @@ paths:
         description: An object id
         required: true
     get:
-      summary: Get User
+      summary: Get a specific user
       tags: []
       responses:
         '200':
@@ -316,7 +383,7 @@ paths:
         '404':
           description: User Not Found
       operationId: get-users-userId
-      description: Retrieve the user information.
+      description: Retrieve the user information given a specific id.
       parameters:
         - $ref: '#/components/parameters/page'
         - $ref: '#/components/parameters/limit'
@@ -343,44 +410,22 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Game'
-      operationId: get-users-id-history
-      description: Return a list of past games from a user.
-  '/users/{id}/games':
-    parameters:
-      - schema:
-          type: string
-        name: id
-        in: path
-        required: true
-    get:
-      summary: Return the game history of a user
-      responses:
-        '200':
-          description: Games
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-              examples:
-                Get User Alice Smith:
-                  value:
-                    id: 142
-                    username: Alice
-                    email: alice.smith@gmail.com
-                    online: true
-                    avatar: 'http://localhost:3000/users/142/avatar'
-                    role: admin
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+                  links:
+                    $ref: '#/components/schemas/Pagination'
+                required:
+                  - history
+                  - meta
+                  - links
         '401':
           $ref: '#/components/responses/401'
-        '404':
-          description: User Not Found
-      operationId: get-users-id-games
-      description: Retrieve the game history of a specific user
+      operationId: get-users-id-history
+      description: Return a list of past games from a user.
       parameters:
         - $ref: '#/components/parameters/page'
         - $ref: '#/components/parameters/limit'
-        - $ref: '#/components/parameters/order_by'
-      tags: []
+        - $ref: '#/components/parameters/sort'
   '/users/{id}/avatar':
     parameters:
       - schema:
@@ -438,10 +483,16 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Achievement'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+                  links:
+                    $ref: '#/components/schemas/Pagination'
                 required:
                   - achievements
+                  - meta
+                  - links
               examples:
-                example-1:
+                example-2:
                   value:
                     achievements:
                       - id: 42
@@ -450,6 +501,16 @@ paths:
                       - id: 43
                         name: Pilier de bar
                         description: Play 15 games each day for one month
+                    meta:
+                      totalItems: 2
+                      itemCount: 2
+                      totalPages: 1
+                      currentPage: 1
+                    links:
+                      first: 'http://localhost:3000/users?page=3&limit=15'
+                      previous: 'http://localhost:3000/users?page=2&limit=15'
+                      next: 'http://localhost:3000/users?page=4&limit=15'
+                      last: 'http://localhost:3000/users?page=11&limit=15'
         '401':
           $ref: '#/components/responses/401'
       operationId: get-users-userId-achievements
@@ -470,8 +531,14 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Achievement'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+                  links:
+                    $ref: '#/components/schemas/Pagination'
                 required:
                   - achievements
+                  - meta
+                  - links
         '401':
           $ref: '#/components/responses/401'
       operationId: get-achievements
@@ -642,11 +709,14 @@ components:
           enum:
             - public
             - private
+        ownerId:
+          type: integer
         what_else:
           type: string
       required:
         - id
         - visibility
+        - ownerId
         - what_else
     Error:
       title: Error
@@ -700,30 +770,27 @@ components:
       title: Meta
       type: object
       properties:
-        meta:
-          type: object
-          properties:
-            totalItems:
-              type: integer
-              format: int32
-              minimum: 0
-            itemCount:
-              type: integer
-              minimum: 0
-              format: int32
-            totalPages:
-              type: integer
-              format: int32
-              minimum: 0
-            currentPage:
-              type: integer
-              minimum: 0
-              format: int32
-          required:
-            - totalItems
-            - itemCount
-            - totalPages
-            - currentPage
+        totalItems:
+          type: integer
+          format: int32
+          minimum: 0
+        itemCount:
+          type: integer
+          minimum: 0
+          format: int32
+        totalPages:
+          type: integer
+          format: int32
+          minimum: 0
+        currentPage:
+          type: integer
+          minimum: 0
+          format: int32
+      required:
+        - totalItems
+        - itemCount
+        - totalPages
+        - currentPage
     Friends:
       title: Friends
       allOf:
@@ -734,6 +801,9 @@ components:
               type: boolean
             inGame:
               type: boolean
+          required:
+            - online
+            - inGame
   parameters:
     limit:
       name: limit
