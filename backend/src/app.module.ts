@@ -8,6 +8,7 @@ import { User } from './users/user.entity';
 import { Avatar } from './avatar/avatar.entity';
 import { AuthModule } from './auth/auth.module';
 import { AvatarModule } from './avatar/avatar.module';
+import { PongModule } from './pong/pong.module';
 
 @Module({
   imports: [
@@ -28,7 +29,8 @@ import { AvatarModule } from './avatar/avatar.module';
     }),
     UsersModule,
     AuthModule,
-    AvatarModule
+    AvatarModule,
+		PongModule
   ],
   controllers: [AppController],
   providers: [AppService],

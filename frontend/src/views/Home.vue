@@ -1,11 +1,11 @@
 <template>
-<card>
-  <div class="home">
-	<not-log v-if="!isLoggedIn"></not-log>
-    <img alt="Vue logo" src="../assets/logo42.png" />
-    <Index msg="Welcome to Ft_transcendance" />
-  </div>
-</card>
+	<card>
+		<div class="home">
+			<not-log v-if="!isLoggedIn"></not-log>
+			<img alt="Vue logo" src="../assets/logo42.png" />
+			<Index msg="Welcome to Ft_transcendance" />
+		</div>
+	</card>
 </template>
 
 <script lang="ts">
