@@ -95,6 +95,23 @@ export default {
 			token: null,
 			userId: null
 		})
-		console.log('Token:', context.token);
 	},
+	deleteUser(context: any, payload: any) {
+		let url = 'http://localhost:3000/users/' + payload.userId;
+		const fetchData = {
+			method: 'DELETE',
+			headers: new Headers()
+		};
+		const newToken = 'Bearer ' + payload.token;
+		fetchData.headers.append('Authorization', newToken);
+		console.log('Token:', context.token);
+		fetch(url, fetchData)
+		.then((response) => response.json())
+		.then(data => {
+			console.log('Success delete:', data);
+		}).catch(error => {
+			console.error('Error:', error);
+			throw error;
+		});
+	}
 };
