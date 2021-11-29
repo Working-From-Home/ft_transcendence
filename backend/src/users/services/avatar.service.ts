@@ -1,9 +1,9 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, QueryRunner, Repository } from 'typeorm';
-import { GenerateAvatarDto } from './dtos/generate-avatar.dto';
-import { Avatar } from './avatar.entity';
-import { User } from '../users/user.entity';
+import { GenerateAvatarDto } from '../dtos/generate-avatar.dto';
+import { Avatar } from '../entities/avatar.entity';
+import { User } from '../entities/user.entity';
 const jdenticon = require('jdenticon');
 
 @Injectable()

@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from "@nestjs/typeorm";
 import { Connection } from 'typeorm';
-import { UsersService } from './users.service';
-import { User } from './user.entity';
-import { AvatarService } from '../avatar/avatar.service';
-import { Avatar } from '../avatar/avatar.entity'
+import { UsersService } from '../services/users.service';
+import { User } from '../entities/user.entity';
+import { AvatarService } from '../services/avatar.service';
+import { Avatar } from '../entities/avatar.entity'
 
 describe('UsersService', () => {
     let service: UsersService;

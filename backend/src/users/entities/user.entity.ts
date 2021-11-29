@@ -1,7 +1,8 @@
 import {
     Entity, Column, PrimaryGeneratedColumn,
-    OneToOne, JoinColumn } from "typeorm";
-import { Avatar } from "../avatar/avatar.entity";
+    OneToOne, JoinColumn, OneToMany } from "typeorm";
+import { Avatar } from "./avatar.entity";
+import { FriendRequest } from "./friend-request.entity";
 
 @Entity()
 export class User {
@@ -23,4 +24,11 @@ export class User {
  
     @Column()
     avatarId: number;
+
+    // @OneToMany(() => FriendRequest, friendRequest => friendRequest.sender)
+    // sentfriendRequests: FriendRequest[];
+
+    // @OneToMany(() => FriendRequest, friendRequest => friendRequest.receiver)
+    // receivedfriendRequests: FriendRequest[];
+
 }

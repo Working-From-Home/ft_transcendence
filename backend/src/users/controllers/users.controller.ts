@@ -1,17 +1,35 @@
-import { Controller, DefaultValuePipe, Get, NotFoundException, Query, UseGuards, Param, ParseIntPipe } from '@nestjs/common';
+import {
+    Controller,
+    DefaultValuePipe,
+    Get,
+    NotFoundException,
+    Param,
+    ParseIntPipe,
+    Query,
+    Res,
+    StreamableFile,
+    UseGuards
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { Readable } from 'stream';
+import { Response } from 'express';
 import { Serialize } from '../../interceptors/serialize.interceptor';
 import { UsersPaginationDto } from '../dtos/users-pagination.dto';
 import { UserDto } from '../dtos/user.dto';
 import { Pagination } from 'nestjs-typeorm-paginate';
-import { User } from '../user.entity';
-import { UsersService } from '../users.service';
-// import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { User } from '../entities/user.entity';
+import { UsersService } from '../services/users.service';
+import { AvatarService } from '../services/avatar.service';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 
 @ApiTags('users')
 @Controller('users')
+@UseGuards(JwtAuthGuard)
 export class UsersController {
-    constructor(private usersService: UsersService) {}
+    constructor(
+        private usersService: UsersService,
+        private avatarService: AvatarService
+    ) {}
 
     @Serialize(UsersPaginationDto)
     @Get()
@@ -29,5 +47,15 @@ export class UsersController {
         const user = await this.usersService.findById(parseInt(id));
         if (!user) { throw new NotFoundException('user not found'); }
         return user;
+    }
+
+    @Get('/:id/avatar')
+    async getAvatar(@Param('id') id: string, @Res({ passthrough: true }) response: Response) {
+        const user = await this.usersService.findById(parseInt(id));
+        if (!user) { throw new NotFoundException('user not found'); }
+        const file = await this.avatarService.findById(user.avatarId);
+        const stream = Readable.from(file.data);
+        response.set({ 'Content-Type': file.mimetype });
+        return new StreamableFile(stream);
     }
 }

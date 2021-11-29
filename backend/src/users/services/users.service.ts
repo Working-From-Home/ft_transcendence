@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
-import { User } from './user.entity';
-import { AvatarService } from '../avatar/avatar.service';
+import { User } from '../entities/user.entity';
+import { AvatarService } from './avatar.service';
 
 import { paginate, Pagination, IPaginationOptions } from 'nestjs-typeorm-paginate';
 

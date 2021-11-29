@@ -3,8 +3,8 @@ import { Test } from '@nestjs/testing'
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service'
-import { UsersService } from '../users/users.service'
-import { User } from '../users/user.entity'
+import { UsersService } from '../users/services/users.service'
+import { User } from '../users/entities/user.entity'
 
 describe('AuthService', () => {
     let service: AuthService;
