@@ -7,13 +7,22 @@
 			<p>this is the profile of {{ userName }}</p>
 			<p>email: {{ email }}</p>
 		</span>
+		<base-button>
+			<button-del></button-del>
+		</base-button>
 	</div>
 </template>
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
+import BaseButton from "../ui/BaseButton.vue";
+import ButtonDel from "./ButtonDel.vue";
 
 @Options({
+  components: {
+    ButtonDel,
+    BaseButton,
+  },
   data() {
 		return {
 			userid: null,
@@ -30,8 +39,8 @@ import { Options, Vue } from "vue-class-component";
 	this.avatar = this.$store.getters.myAvatar;
   }
 })
-export default class HelloWorld extends Vue {
-  msg!: string;
+export default class MyProfile extends Vue {
+
 }
 </script>
 
