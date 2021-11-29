@@ -2,7 +2,8 @@
     <div>
         <h3>this is the canvas</h3>
         <canvas id="canvas" width="640" height="360"></canvas>
-				<button id="start">Start</button>
+				<button id="start" @click="startGame">Start</button>
+				<button id="stop" @click="stopGame">Stop</button>
     </div>
 </template>
 
@@ -23,11 +24,13 @@ export default defineComponent({
 		}
 	},
 	created() {
-		this.socket = io("http://localhost:3000");
-		window.addEventListener('keydown', this.move);
+		this.socket = io("http://localhost:3000/pong");
+		window.addEventListener('keydown', this.handleKeydown);
+		document.addEventListener('keyup', this.handleKeyup);
 	},
 	unmounted() {
-	window.removeEventListener('keydown', this.move);
+	window.removeEventListener('keydown', this.handleKeydown);
+	document.addEventListener('keyup', this.handleKeyup);
 },
   mounted() : void {
 		this.gameView = new GameView('#canvas');
@@ -42,14 +45,27 @@ export default defineComponent({
 		this.socket.emit('msgToServer', "yo le server");
 	},
 	methods: {
-		move(event : KeyboardEvent) {
-			if(["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(event.code) > -1) {
+		handleKeydown(event : KeyboardEvent) {
+			if(["ArrowUp","ArrowDown"].indexOf(event.code) > -1) {
         event.preventDefault();
-    }
-
-			let cmd = event.code;
-			console.log(cmd);
-			//this.socket.emit("move", direction);
+				let key = event.code;
+				console.log(key);
+				this.socket.emit("keydown", key);
+    	}
+		},
+		handleKeyup(event : KeyboardEvent) {
+			if(["ArrowUp","ArrowDown"].indexOf(event.code) > -1) {
+        event.preventDefault();
+				let key = event.code;
+				console.log(key);
+				this.socket.emit("keyup", key);
+    	}
+		},
+		startGame() {
+			this.socket.emit("start");
+		},
+		stopGame() {
+			this.socket.emit("stop");
 		}
 	}
 })
