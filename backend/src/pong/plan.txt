@@ -1,0 +1,35 @@
+things to do:
+
+| | mettre la logique de jeux boucle etc dans game.ts.
+		| |fonction gameLoop(server : Server);
+
+or class PongGame?
+
+| | créer les fonctions de check de collision dans collision.ts.
+
+class PongGame: {
+	GameID;
+	PaddleLeft;
+	PaddleRight;
+	Ball;
+	clientPlayerLeft: Socket;
+	clientPlayerRight: Socket;
+	server: Server; (there will be a room "gameId")
+
+	Constructor() created on connexion;
+
+	public:
+		startGame() on "start".
+		stopGame() on "stop".
+		pauseGame() on "pause".
+		keyDown(key : string, client : Socket).
+		keyUp(key : string, client : Socket).
+
+	private:
+		GameLoop()
+		UpdatePos()
+		HandleCollisions()
+}
+
+| |Comment split ça en plusieurs class,
+		reusable code etc..

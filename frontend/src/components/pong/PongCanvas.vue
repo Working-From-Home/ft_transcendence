@@ -35,9 +35,6 @@ export default defineComponent({
   mounted() : void {
 		this.gameView = new GameView('#canvas');
 		this.paddle = new GameObject(60, 15, {x: 10, y: 100});
-		this.socket.on("msgToClient", data => {
-			console.log(`recv: ${data}`);
-		})
 		this.socket.on("position", data => {
 			this.paddle.setPos(data);
 			this.gameView.drawGameObject((this.paddle as any) as GameObject);
@@ -49,7 +46,6 @@ export default defineComponent({
 			if(["ArrowUp","ArrowDown"].indexOf(event.code) > -1) {
         event.preventDefault();
 				let key = event.code;
-				console.log(key);
 				this.socket.emit("keydown", key);
     	}
 		},
@@ -57,7 +53,6 @@ export default defineComponent({
 			if(["ArrowUp","ArrowDown"].indexOf(event.code) > -1) {
         event.preventDefault();
 				let key = event.code;
-				console.log(key);
 				this.socket.emit("keyup", key);
     	}
 		},
