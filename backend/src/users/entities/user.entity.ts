@@ -25,10 +25,12 @@ export class User {
     @Column()
     avatarId: number;
 
-    // @OneToMany(() => FriendRequest, friendRequest => friendRequest.sender)
+
+
+    // @OneToMany(() => FriendRequest, friendRequest => friendRequest.applicant)
     // sentfriendRequests: FriendRequest[];
 
-    // @OneToMany(() => FriendRequest, friendRequest => friendRequest.receiver)
+    // @OneToMany(() => FriendRequest, friendRequest => friendRequest.recipient)
     // receivedfriendRequests: FriendRequest[];
 
 }

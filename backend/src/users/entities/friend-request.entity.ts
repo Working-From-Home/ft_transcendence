@@ -9,10 +9,10 @@ export class FriendRequest {
     id: number;
 
     // @ManyToOne(() => User, user => user.sentfriendRequests)
-    // sender: User;
+    // applicant: User;
 
     // @ManyToOne(() => User, user => user.receivedfriendRequests)
-    // receiver: User;
+    // recipient: User;
 
     @Column()
     status: string;
