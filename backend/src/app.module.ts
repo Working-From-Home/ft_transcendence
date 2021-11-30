@@ -8,6 +8,7 @@ import { User } from './users/entities/user.entity';
 import { Avatar } from './users/entities/avatar.entity';
 import { AuthModule } from './auth/auth.module';
 import { PongModule } from './pong/pong.module';
+import { RankController } from './rank/rank.controller';
 
 @Module({
   imports: [
@@ -30,7 +31,7 @@ import { PongModule } from './pong/pong.module';
     AuthModule,
 		PongModule
   ],
-  controllers: [AppController],
+  controllers: [AppController, RankController],
   providers: [AppService],
 })
 export class AppModule {}

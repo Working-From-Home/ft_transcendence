@@ -1,7 +1,6 @@
 <template>
   <div>
-    <h1>{{ msg }}</h1>
-	<p>{{ user.pseudo }}</p>
+    <h1>{{ msg }} {{ user }}</h1>
 	<h2>by hwinston, tlecoeuv, alesanto, juligonz</h2>
     <p>This is not C or C++ basic functions! To do something that you’ve never
 	done before without a piscine. Remind yourself at the beginning of your journey in
@@ -22,8 +21,7 @@ import { Options, Vue } from "vue-class-component";
 		};
 	},
   created() {
-	//this.user = this.$store.getters['users/users'];
-	this.user = '';
+	this.user = this.$store.getters.myUserName;
   }
 })
 export default class HelloWorld extends Vue {

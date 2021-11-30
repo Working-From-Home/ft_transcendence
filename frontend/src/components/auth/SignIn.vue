@@ -62,7 +62,7 @@ import { Options, Vue } from "vue-class-component";
 		await this.$emit('save-data', formData);
 	},
     switchAuthMode() {
-		this.$router.replace('auth/signup');
+		this.$router.push('/auth/signup');
     }
   },
 })
