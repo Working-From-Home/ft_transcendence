@@ -8,7 +8,6 @@ export default {
 			userId: null,
 			username: null,
 			email: null,
-			avatarId: null,
 			avatar: null
 		};
 	},
