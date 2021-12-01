@@ -14,9 +14,7 @@
 
 #### good ones
 - https://dba.stackexchange.com/questions/192172/how-to-create-a-flexible-table-schema-for-storing-messages-from-different-chats
-
-- friendship should be mutual
-- Foes/ban could be mutual or not ?
+- https://dba.stackexchange.com/questions/219411/creating-a-friendships-database-that-includes-a-block-friend-option
 
 #### representation
 - https://www.visual-paradigm.com/VPGallery/datamodeling/EntityRelationshipDiagram.html
@@ -27,9 +25,9 @@
 - https://stackoverflow.com/questions/10993139/depicting-friend-relationship-between-classes-in-uml
 
 
-Pb: ban should be mutual ?
 
 #### a revoir au braiistorming:
+
     - relationship table attributes
     - on ne peut pas faire la difference entre un message direct et un groupe deux solutions:
         - Un, rajouter un champ dans ChatRoom
@@ -37,3 +35,5 @@ Pb: ban should be mutual ?
         - 3, autre solution pas trop complique ?
 
 
+- friendship should be mutual
+- Foes/ban could be mutual or not ?
