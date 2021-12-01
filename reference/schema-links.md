@@ -18,6 +18,10 @@
 - friendship should be mutual
 - Foes/ban could be mutual or not ?
 
+#### representation
+- https://www.visual-paradigm.com/VPGallery/datamodeling/EntityRelationshipDiagram.html
+- http://www.uml.org.cn/UMLTools/pdf/ermodeling.pdf
+
 Pb: ban should be mutual ?
 
 #### a revoir au braiistorming:
