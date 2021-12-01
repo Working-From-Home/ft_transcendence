@@ -21,6 +21,11 @@
 #### representation
 - https://www.visual-paradigm.com/VPGallery/datamodeling/EntityRelationshipDiagram.html
 - http://www.uml.org.cn/UMLTools/pdf/ermodeling.pdf
+- http://www.csci.csusb.edu/dick/samples/uml1b.html
+
+#### uml
+- https://stackoverflow.com/questions/10993139/depicting-friend-relationship-between-classes-in-uml
+
 
 Pb: ban should be mutual ?
 
