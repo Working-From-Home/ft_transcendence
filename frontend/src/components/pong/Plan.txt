@@ -1,22 +1,5 @@
 				Plan to code frontend pong:
 
-things we need to render:
+how to scale back-end coord to frontend coord?
 
-2 Paddle
-1 Ball
-
-Class:
-*GameView:
-	Attributes:
-		-canvas.
-		-ball : GameObject.
-		-paddlePlayer : GameObject.
-		-paddleOpponent : GameObject.
-	Methods:
-		updatePositions.
-		drawView.
-
-*GameObject:
-	Attributes:
-		pos: {x, y}.
-		Dimension {height, width}.
+let ratio = canvas.width/backend.width;

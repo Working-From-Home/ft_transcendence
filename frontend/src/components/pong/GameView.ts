@@ -19,4 +19,13 @@ export class GameView {
         // this.context?.fill();
         // this.context?.closePath();
     }
+
+		clear() {
+			this.context?.clearRect(0, 0, this.canvas.width, this.canvas.height);
+		}
+
+		setUpCanvasSize() {
+			this.canvas.width = this.canvas.clientWidth;
+      this.canvas.height = this.canvas.clientHeight;
+		}
 }

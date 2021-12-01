@@ -1,7 +1,9 @@
 <template>
     <div>
         <h3>this is the canvas</h3>
-        <canvas id="canvas" width="640" height="360"></canvas>
+				<div class="canvas-container">
+        	<canvas id="canvas" width="640" height="360"></canvas>
+				</div>
 				<button id="start" @click="startGame">Start</button>
 				<button id="stop" @click="stopGame">Stop</button>
     </div>
@@ -27,6 +29,7 @@ export default defineComponent({
 		this.socket = io("http://localhost:3000/pong");
 		window.addEventListener('keydown', this.handleKeydown);
 		document.addEventListener('keyup', this.handleKeyup);
+		//window.addEventListener('resize', this.handleResize);
 	},
 	unmounted() {
 	window.removeEventListener('keydown', this.handleKeydown);
@@ -56,6 +59,11 @@ export default defineComponent({
 				this.socket.emit("keyup", key);
     	}
 		},
+		handleResize() {
+			this.gameView.clear();
+    	this.gameView.setUpCanvasSize();
+    	this.gameView.drawGameObject((this.paddle as any) as GameObject);
+		},
 		startGame() {
 			this.socket.emit("start");
 		},
@@ -72,4 +80,8 @@ export default defineComponent({
     canvas {
         background: #000000;
     }
+		
+		.canvas-container {
+    width: 100%;
+  	}
 </style>
