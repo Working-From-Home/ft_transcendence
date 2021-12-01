@@ -23,8 +23,8 @@
 
 #### uml
 - https://stackoverflow.com/questions/10993139/depicting-friend-relationship-between-classes-in-uml
-
-
+- https://softwareengineering.stackexchange.com/questions/345709/erd-many-vs-zero-or-many-one-or-many-crowfoot-notation
+- https://stackoverflow.com/questions/20388056/one-to-many-zero-to-many-relationship
 
 #### a revoir au braiistorming:
 
