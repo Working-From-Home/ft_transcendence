@@ -25,6 +25,8 @@
 - https://stackoverflow.com/questions/10993139/depicting-friend-relationship-between-classes-in-uml
 - https://softwareengineering.stackexchange.com/questions/345709/erd-many-vs-zero-or-many-one-or-many-crowfoot-notation
 - https://stackoverflow.com/questions/20388056/one-to-many-zero-to-many-relationship
+- https://qastack.fr/programming/3113885/difference-between-one-to-many-many-to-one-and-many-to-many
+
 
 #### a revoir au braiistorming:
 
@@ -33,7 +35,7 @@
         - Un, rajouter un champ dans ChatRoom
         - 2, creer une nouvelle table
         - 3, autre solution pas trop complique ?
-
+    - pleins d'autres choses a revoir (but what ? that's the question)
 
 - friendship should be mutual
 - Foes/ban could be mutual or not ?
