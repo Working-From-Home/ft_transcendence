@@ -19,7 +19,7 @@ import SignUpComponent from "../../components/auth/SignUp.vue";
   },
   data() {
 	  return {
-		  error: '',
+		  error: null,
 	  }
   },
   methods: {
@@ -28,6 +28,7 @@ import SignUpComponent from "../../components/auth/SignUp.vue";
         await this.$store.dispatch('signUp', data);
         this.$router.replace('/');
 	  } catch (err) {
+		console.log('Sign Up Do i land here:');
 		this.error = err.message || 'Failed to authenticate, try later.';
 	  }
     },

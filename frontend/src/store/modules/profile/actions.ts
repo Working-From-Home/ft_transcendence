@@ -5,11 +5,11 @@ export default {
 		.then((response) => response.json())
 		.then(data => {
 			console.log('Success users:', data);
+			localStorage.setItem('email', data.email);
 			context.commit('initProfile', {
 				userId: data.id,
 				username: data.username,
 				email: data.email,
-				avatarId: data.avatarId,
 			});
 		}).catch(error => {
 			console.error('Error:', error);
@@ -22,18 +22,14 @@ export default {
 		const newToken = 'Bearer ' + payload.token;
 		fetchData.headers.append('Authorization', newToken);
 		url += '/avatar';
-		console.log('url:', url);
-		console.log('token:', payload.token);
-		console.log('fetchData:', fetchData);
 		fetch(url, fetchData)
 		.then((response) => response.blob())
 		.then(data => {
+			console.log('Success avatar:', data);
+			localStorage.setItem('avatar', URL.createObjectURL(data));
 			context.commit('initAvatar', {
 				avatar: URL.createObjectURL(data),
 			})
-			avatar: URL.createObjectURL(data);
-			console.log('Success avatar:', data);
-			console.log('Success url avatar:', URL.createObjectURL(data));
 		}).catch(error => {
 			console.error('Error:', error);
 			throw error;

@@ -28,6 +28,7 @@ import SignInComponent from "../../components/auth/SignIn.vue";
         await this.$store.dispatch('signIn', data);
         this.$router.replace('/');
 	  } catch (err) {
+		console.log('Sign In Do i land here:');
 		this.error = err.message || 'Failed to authenticate, try later.';
 	  }
     },

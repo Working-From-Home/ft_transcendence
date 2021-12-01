@@ -1,19 +1,26 @@
 <template>
 	<div>
-		<span>
+		<span class="photo">
 			<img v-bind:src="avatar"/>
 		</span>
 		<span>
 			<p>this is the profile of {{ userName }}</p>
 			<p>email: {{ email }}</p>
 		</span>
+		<button-del></button-del>
 	</div>
 </template>
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
+import BaseButton from "../ui/BaseButton.vue";
+import ButtonDel from "./ButtonDel.vue";
 
 @Options({
+  components: {
+    ButtonDel,
+    BaseButton,
+  },
   data() {
 		return {
 			userid: null,
@@ -30,8 +37,8 @@ import { Options, Vue } from "vue-class-component";
 	this.avatar = this.$store.getters.myAvatar;
   }
 })
-export default class HelloWorld extends Vue {
-  msg!: string;
+export default class MyProfile extends Vue {
+
 }
 </script>
 
@@ -50,4 +57,5 @@ li {
 a {
   color: #42b983;
 }
+
 </style>

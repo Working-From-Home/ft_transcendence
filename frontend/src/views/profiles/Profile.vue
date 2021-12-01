@@ -1,6 +1,5 @@
 <template>
 	<card>
-		<p>User profile</p>
 		<my-profile></my-profile>
 	</card>
 </template>
