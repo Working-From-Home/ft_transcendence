@@ -5,16 +5,14 @@ import { UsersService } from '../services/users.service';
 import { User } from '../entities/user.entity';
 import { AvatarService } from '../services/avatar.service';
 import { Avatar } from '../entities/avatar.entity'
+import { StatsService } from '../services/stats.service';
+import { Stats } from 'fs';
 
 describe('UsersService', () => {
     let service: UsersService;
     const users: Partial<User>[] = [
         {id: 1, email: "1", username: "1", password: "1"},
         {id: 2, email: "2", username: "2", password: "2"}
-    ];
-    const avatars: Partial<Avatar>[] = [
-        {id: 1},
-        {id: 2}
     ];
 
     beforeEach(async () => {
@@ -35,7 +33,7 @@ describe('UsersService', () => {
         }
         const module: TestingModule = await Test.createTestingModule({
             providers: [
-                UsersService, AvatarService,
+                UsersService, AvatarService, StatsService,
                 {
                     provide: getRepositoryToken(User),
                     useValue: fakeRepo
@@ -46,6 +44,10 @@ describe('UsersService', () => {
                 },
                 {
                     provide: getRepositoryToken(Avatar),
+                    useValue: fakeRepo
+                },
+                {
+                    provide: getRepositoryToken(Stats),
                     useValue: fakeRepo
                 }
             ]
