@@ -1,8 +1,6 @@
 import { Expose } from "class-transformer";
-
-/**
- *  Describes how to serialize a user.
- */
+import { Stats } from "../entities/stats.entity";
+// import { UserRole } from "../entities/user.entity";
 
 export class UserDto {
     @Expose()
@@ -14,6 +12,9 @@ export class UserDto {
     @Expose()
     username: string;
 
+    // @Expose()
+    // role: UserRole;
+
     @Expose()
-    avatarId: number;
+    stats: Stats;
 }

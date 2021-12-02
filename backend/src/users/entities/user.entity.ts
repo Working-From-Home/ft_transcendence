@@ -1,8 +1,12 @@
-import {
-    Entity, Column, PrimaryGeneratedColumn,
-    OneToOne, JoinColumn, OneToMany } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne, OneToMany } from "typeorm";
 import { Avatar } from "./avatar.entity";
-import { FriendRequest } from "./friend-request.entity";
+import { Friendship } from "./friendship.entity";
+import { Stats } from "./stats.entity";
+
+// export enum UserRole {
+//     User = "user",
+//     Admin = "admin",
+// }
 
 @Entity()
 export class User {
@@ -12,25 +16,36 @@ export class User {
     @Column()
     email: string;
 
-    @Column()
+    @Column({ unique: true })
     username: string;
+
+    // @Column({
+    //     type: "enum",
+    //     enum: UserRole,
+    //     default: UserRole.User
+    // })
+    // role: UserRole;
 
     @Column()
     password: string;
 
-    @JoinColumn({ name: 'avatarId' })
-    @OneToOne(() => Avatar, avatar => avatar.user, { onDelete: "CASCADE" })
+    @OneToOne(() => Avatar, (avatar) => avatar.user, { eager: true })
     avatar: Avatar;
- 
-    @Column()
-    avatarId: number;
+
+    @OneToOne(() => Stats, (stats) => stats.user, { eager: true })//, cascade: ['insert', 'update'] })
+    stats: Stats;
+
+
+    // @OneToOne(() => Stats, stats => stats.user, { cascade: ['insert'] })
+    // @JoinColumn({ name: 'statsId' })
+    // stats: Stats;
 
 
 
-    // @OneToMany(() => FriendRequest, friendRequest => friendRequest.applicant)
-    // sentfriendRequests: FriendRequest[];
+    // @OneToMany(() => Friendship, friendRequest => friendRequest.applicant)
+    // sentFriendRequests: Friendship[];
 
-    // @OneToMany(() => FriendRequest, friendRequest => friendRequest.recipient)
-    // receivedfriendRequests: FriendRequest[];
+    // @OneToMany(() => Friendship, friendRequest => friendRequest.recipient)
+    // receivedFriendRequests: Friendship[];
 
 }

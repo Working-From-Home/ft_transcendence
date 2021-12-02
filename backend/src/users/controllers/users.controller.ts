@@ -2,7 +2,6 @@ import {
     Controller,
     DefaultValuePipe,
     Get,
-    NotFoundException,
     Param,
     ParseIntPipe,
     Query,
@@ -19,21 +18,17 @@ import { UserDto } from '../dtos/user.dto';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { User } from '../entities/user.entity';
 import { UsersService } from '../services/users.service';
-import { AvatarService } from '../services/avatar.service';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 
 @ApiTags('users')
 @Controller('users')
 @UseGuards(JwtAuthGuard)
 export class UsersController {
-    constructor(
-        private usersService: UsersService,
-        private avatarService: AvatarService
-    ) {}
+    constructor(private usersService: UsersService) {}
 
     @Serialize(UsersPaginationDto)
     @Get()
-    async index(
+    async getIndex(
         @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
         @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
     ): Promise<Pagination<User>> {
@@ -45,17 +40,14 @@ export class UsersController {
     @Get('/:id')
     async findUserById(@Param('id') id: string) {
         const user = await this.usersService.findById(parseInt(id));
-        if (!user) { throw new NotFoundException('user not found'); }
         return user;
     }
 
     @Get('/:id/avatar')
-    async getAvatar(@Param('id') id: string, @Res({ passthrough: true }) response: Response) {
+    async getUserAvatar(@Param('id') id: string, @Res({ passthrough: true }) response: Response) {
         const user = await this.usersService.findById(parseInt(id));
-        if (!user) { throw new NotFoundException('user not found'); }
-        const file = await this.avatarService.findById(user.avatarId);
-        const stream = Readable.from(file.data);
-        response.set({ 'Content-Type': file.mimetype });
+        const stream = Readable.from(user.avatar.data);
+        response.set({ 'Content-Type': user.avatar.mimetype });
         return new StreamableFile(stream);
     }
 }

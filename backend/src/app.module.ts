@@ -9,6 +9,7 @@ import { Avatar } from './users/entities/avatar.entity';
 import { AuthModule } from './auth/auth.module';
 import { PongModule } from './pong/pong.module';
 import { RankController } from './rank/rank.controller';
+import { Stats } from './users/entities/stats.entity';
 
 @Module({
   imports: [
@@ -22,7 +23,7 @@ import { RankController } from './rank/rank.controller';
         return {
           type: 'sqlite',
           database: config.get<string>('DB_NAME'),
-          entities: [Avatar, User],
+          entities: [Avatar, User, Stats],
           synchronize: true     // shouldn't be used in production: may lose data
         }
       }
