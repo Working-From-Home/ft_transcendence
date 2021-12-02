@@ -33,4 +33,3 @@ export class AvatarService {
         return { filename: username + '.png', data, mimetype: 'image/png' }
     }
 }
-
