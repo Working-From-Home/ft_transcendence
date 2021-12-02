@@ -1,5 +1,0 @@
-				Plan to code frontend pong:
-
-how to scale back-end coord to frontend coord?
-
-let ratio = canvas.width/backend.width;

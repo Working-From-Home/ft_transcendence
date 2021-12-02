@@ -1,4 +1,10 @@
-import { GameObject } from "./GameObject";
+import { Vector } from "./types";
+
+export interface GameState {
+  leftPaddle : Vector;
+  rightPaddle : Vector;
+  ball : Vector;
+};
 
 export class GameView {
     canvas: HTMLCanvasElement;
@@ -10,14 +16,13 @@ export class GameView {
         this.context = this.canvas.getContext('2d');
     }
 
-    drawGameObject(object : GameObject) : void {
+    drawGameState(gameState : GameState) : void {
         // this.context?.beginPath();
-        this.context!.fillStyle = "#F8F8FF";
-				this.context?.clearRect(0,0, 680, 360);
-				this.context?.fillRect(object.pos.x, object.pos.y, object.width, object.height);
-        // this.context?.rect(object.pos.x, object.pos.y, object.width, object.height);
-        // this.context?.fill();
-        // this.context?.closePath();
+        this.context!.fillStyle = "#F0F8FF";
+				this.context?.clearRect(0,0, 640, 400);
+				this.context?.fillRect(gameState.ball.x, gameState.ball.y, 10, 10);
+        this.context?.fillRect(gameState.leftPaddle.x, gameState.leftPaddle.y, 10, 80);
+        this.context?.fillRect(gameState.rightPaddle.x, gameState.rightPaddle.y, 10, 80);
     }
 
 		clear() {
