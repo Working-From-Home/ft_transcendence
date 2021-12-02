@@ -68,7 +68,7 @@ describe('UsersService', () => {
         try {
             await service.findById(3);
         } catch (err) {
-            expect(err).toEqual("user not found");
+            expect(err).toEqual("NotFoundException: user not found");
         }
     });
 
@@ -77,18 +77,24 @@ describe('UsersService', () => {
         expect(user.username).toEqual("1");
     });
 
-    // it('should not find user with an email of "3"', async () => {
-    //     const user = await service.findByEmail("3");
-    //     expect(user).toEqual(null);
-    // });
+    it('should not find user with an email of "3"', async () => {
+        try {
+            await service.findByEmail("3");
+        } catch (err) {
+            expect(err).toEqual("NotFoundException: user not found");
+        }
+    });
 
     it('should find user with a username of "1"', async () => {
         const user = await service.findByEmail("1");
         expect(user.email).toEqual("1");
     });
 
-    // it('should not find user with a username of "3"', async () => {
-    //     const user = await service.findByName("3");
-    //     expect(user).toEqual(null);
-    // });
+    it('should not find user with a username of "3"', async () => {
+        try {
+            await service.findByName("3");
+        } catch (err) {
+            expect(err).toEqual("NotFoundException: user not found");
+        }
+    });
 });
