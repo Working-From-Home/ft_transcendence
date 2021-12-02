@@ -4,12 +4,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
-import { User } from './users/user.entity';
-import { Avatar } from './avatar/avatar.entity';
+import { User } from './users/entities/user.entity';
+import { Avatar } from './users/entities/avatar.entity';
 import { AuthModule } from './auth/auth.module';
-import { AvatarModule } from './avatar/avatar.module';
 import { PongModule } from './pong/pong.module';
 import { RankController } from './rank/rank.controller';
+import { Stats } from './users/entities/stats.entity';
 
 @Module({
   imports: [
@@ -23,14 +23,13 @@ import { RankController } from './rank/rank.controller';
         return {
           type: 'sqlite',
           database: config.get<string>('DB_NAME'),
-          entities: [User, Avatar],
+          entities: [Avatar, User, Stats],
           synchronize: true     // shouldn't be used in production: may lose data
         }
       }
     }),
     UsersModule,
     AuthModule,
-    AvatarModule,
 		PongModule
   ],
   controllers: [AppController, RankController],

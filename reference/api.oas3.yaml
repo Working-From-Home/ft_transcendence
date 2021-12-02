@@ -141,46 +141,45 @@ paths:
             schema:
               type: object
               properties:
-                me:
-                  allOf:
-                    - $ref: '#/components/schemas/User'
-                    - type: object
-                      properties:
-                        password:
-                          type: string
+                password:
+                  type: string
+                  format: password
+                email:
+                  type: string
             examples: {}
         description: ''
-  /me/stats:
+  /me/avatar:
     get:
-      summary: Get stats about logged user
-      operationId: get-me-stats
-      description: Return my stats. Maybe just remove this route and serialize stats directly with user in route GET /me ?
+      summary: Get my avatar
       tags: []
       responses:
         '200':
           description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  level:
-                    type: integer
-                    minimum: 0
-                    maximum: 100
-                  victories:
-                    type: integer
-                    minimum: 0
-                  loses:
-                    type: integer
-                    minimum: 0
-                required:
-                  - level
-                  - victories
-                  - loses
         '401':
           $ref: '#/components/responses/401'
-    parameters: []
+      operationId: get-me-avatar
+      description: Get my avatar
+    put:
+      summary: ''
+      operationId: put-me-avatar
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties: {}
+        description: file must be jpg/jpeg or png
+    delete:
+      summary: Remove current avatar
+      operationId: delete-me-avatar
+      responses:
+        '200':
+          description: OK
   /me/friends:
     get:
       summary: Get friend's list of logged user
@@ -204,6 +203,27 @@ paths:
                   - friends
                   - meta
                   - links
+              examples:
+                example-1:
+                  value:
+                    friends:
+                      - id: 0
+                        username: Bread Pitt
+                        email: bread.pitt@student.42.fr
+                        avatar: 'http://localhost:3001/users/42/avatar'
+                        role: admin
+                        online: true
+                        inGame: true
+                    meta:
+                      totalItems: 0
+                      itemCount: 0
+                      totalPages: 11
+                      currentPage: 3
+                    links:
+                      first: 'http://localhost:3000/users?page=3&limit=15'
+                      previous: 'http://localhost:3000/users?page=2&limit=15'
+                      next: 'http://localhost:3000/users?page=4&limit=15'
+                      last: 'http://localhost:3000/users?page=11&limit=15'
         '401':
           $ref: '#/components/responses/401'
       operationId: get-me-friends
@@ -265,48 +285,13 @@ paths:
       operationId: get-me-channels
       tags: []
       description: Get the list of channels im in.
-    put:
-      summary: ''
-      operationId: put-me-channels
-      responses:
-        '200':
-          description: OK
-      description: 'Join a channel, private or public, if private, then must provide the password.'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                id:
-                  type: integer
-                password:
-                  type: string
-              required:
-                - id
-      tags: []
-  /me/play:
     post:
-      summary: Search (matchmaking) or ask someone to play
-      operationId: post-me-play
+      summary: Create a new channel
+      operationId: post-me-channels
       responses:
         '200':
           description: OK
-      description: |-
-        Separate matchmaking from websocket easier, or not ?
-
-        https://www.reddit.com/r/gamedev/comments/628h2s/rest_api_for_matchmaking/
-        https://docs.microsoft.com/en-us/rest/api/playfab/client/matchmaking/matchmake?view=playfab-rest
-
-        Once a matchmaking matched or the requested player accepted, then return a une id to initiate the websocket ?  
-
-        OR maybe delete this route and to all the things in websockets ? what's easier ?
-      parameters:
-        - schema:
-            type: string
-          in: query
-          name: userId
-          description: Ask someone to play with
+      description: 'Create, join and administrate a channel'
       tags: []
   '/me/channels/{id}':
     parameters:
@@ -326,7 +311,7 @@ paths:
       description: 'Leave a given channel, if the user who leave is the admin, then the oldest to have joined become admin ? If there is not already an other admin ?'
       tags: []
     put:
-      summary: Update channel property
+      summary: Join a given channel
       operationId: put-me-channels-id
       responses:
         '200':
@@ -365,6 +350,29 @@ paths:
         Create one two guards in the backend ? to filter admin and owner ?
 
         OR maybe delete this route and to all the things in websockets ? what's easier ?
+  /me/play:
+    post:
+      summary: Search (matchmaking) or ask someone to play
+      operationId: post-me-play
+      responses:
+        '200':
+          description: OK
+      description: |-
+        Separate matchmaking from websocket easier, or not ?
+
+        https://www.reddit.com/r/gamedev/comments/628h2s/rest_api_for_matchmaking/
+        https://docs.microsoft.com/en-us/rest/api/playfab/client/matchmaking/matchmake?view=playfab-rest
+
+        Once a matchmaking matched or the requested player accepted, then return a une id to initiate the websocket ?  
+
+        OR maybe delete this route and to all the things in websockets ? what's easier ?
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: userId
+          description: Ask someone to play with
+      tags: []
   /me/history:
     get:
       summary: List of past games
@@ -532,17 +540,6 @@ paths:
       operationId: get-users-userId-avatar
       parameters: []
       description: Return the user avatar
-    put:
-      summary: ''
-      tags: []
-      operationId: put-users-id-avatar
-      responses:
-        '200':
-          description: OK
-        '401':
-          $ref: '#/components/responses/401'
-      description: Update the avatar. multipart ?
-      parameters: []
   '/users/{id}/achievements':
     parameters:
       - schema:
@@ -886,6 +883,12 @@ components:
               type: boolean
             inGame:
               type: boolean
+            status:
+              type: string
+              enum:
+                - accepted
+                - pending
+                - rejected
           required:
             - online
             - inGame
