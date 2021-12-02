@@ -1,6 +1,5 @@
 <template>
 	<div>
-
 		<span class="photo" @click="onPickFile">
 				<img :src="'data:image/png;base64,' + avatar"/>
 		</span>
