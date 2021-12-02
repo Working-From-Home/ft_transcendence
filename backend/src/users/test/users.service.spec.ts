@@ -68,7 +68,7 @@ describe('UsersService', () => {
         try {
             await service.findById(3);
         } catch (err) {
-            expect(err).toEqual("NotFoundException: user not found");
+            expect(err).toBeDefined;
         }
     });
 
@@ -81,7 +81,7 @@ describe('UsersService', () => {
         try {
             await service.findByEmail("3");
         } catch (err) {
-            expect(err).toEqual("NotFoundException: user not found");
+            expect(err).toBeDefined;
         }
     });
 
@@ -94,7 +94,7 @@ describe('UsersService', () => {
         try {
             await service.findByName("3");
         } catch (err) {
-            expect(err).toEqual("NotFoundException: user not found");
+            expect(err).toBeDefined;
         }
     });
 });
