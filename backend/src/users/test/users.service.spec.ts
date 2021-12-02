@@ -9,8 +9,8 @@ import { Avatar } from '../entities/avatar.entity'
 describe('UsersService', () => {
     let service: UsersService;
     const users: Partial<User>[] = [
-        {id: 1, email: "1", username: "1", password: "1", avatarId: 1},
-        {id: 2, email: "2", username: "2", password: "2", avatarId: 2}
+        {id: 1, email: "1", username: "1", password: "1"},
+        {id: 2, email: "2", username: "2", password: "2"}
     ];
     const avatars: Partial<Avatar>[] = [
         {id: 1},
