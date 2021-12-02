@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Connection, Repository } from 'typeorm';
 import { GenerateAvatarDto } from '../dtos/generate-avatar.dto';
 import { Avatar } from '../entities/avatar.entity';
 import { User } from '../entities/user.entity';

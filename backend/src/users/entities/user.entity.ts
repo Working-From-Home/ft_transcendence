@@ -29,16 +29,12 @@ export class User {
     @Column()
     password: string;
 
-    @OneToOne(() => Avatar, (avatar) => avatar.user, { eager: true })
+    @OneToOne(() => Avatar, (avatar) => avatar.user)
     avatar: Avatar;
 
     @OneToOne(() => Stats, (stats) => stats.user, { eager: true })//, cascade: ['insert', 'update'] })
     stats: Stats;
 
-
-    // @OneToOne(() => Stats, stats => stats.user, { cascade: ['insert'] })
-    // @JoinColumn({ name: 'statsId' })
-    // stats: Stats;
 
 
 
