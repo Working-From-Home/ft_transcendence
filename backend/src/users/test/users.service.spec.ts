@@ -65,8 +65,11 @@ describe('UsersService', () => {
     });
 
     it('should not find user with an id of 3', async () => {
-        const user = await service.findById(3);
-        expect(user).toEqual(null);
+        try {
+            await service.findById(3);
+        } catch (err) {
+            expect(err).toEqual("user not found");
+        }
     });
 
     it('should find user with an email of "1"', async () => {
