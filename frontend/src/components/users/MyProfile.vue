@@ -1,8 +1,15 @@
 <template>
 	<div>
-		<span class="photo">
-			<img v-bind:src="avatar"/>
+
+		<span class="photo" @click="onPickFile">
+				<img v-bind:src="avatar"/>
 		</span>
+			<input
+			type="file"
+			style="display: none"
+			ref="fileInput"
+			accept="image/*"
+			@change="onFilePicked"/>
 		<span>
 			<p>this is the profile of {{ userName }}</p>
 			<p>email: {{ email }}</p>
@@ -35,6 +42,31 @@ import ButtonDel from "./ButtonDel.vue";
 	this.userName = this.$store.getters.myUserName;
 	this.email = this.$store.getters.myEmail;
 	this.avatar = this.$store.getters.myAvatar;
+  },
+  methods: {
+	  onPickFile () {
+  		this.$refs.fileInput.click()
+	  },
+	  async onFilePicked (event: any) {
+		const files = event.target.files;
+		console.log('1 files:', files);
+		let filename = files[0].name;
+		const fileReader = new FileReader();
+		fileReader.addEventListener('load', () => {
+			this.imageUrl = fileReader.result;
+		})
+		fileReader.readAsDataURL(files[0]);
+		this.$store.getters.myUserId;
+		try {
+       		await this.$store.dispatch('uploadProfile', {
+				   img: files[0],
+				   id: this.$store.getters.userID
+				   ,token: this.$store.getters.token
+			});
+		} catch (err) {
+			this.error = err.message || 'Failed to authenticate, try later.';
+		}
+	  }
   }
 })
 export default class MyProfile extends Vue {
@@ -57,5 +89,8 @@ li {
 a {
   color: #42b983;
 }
-
+.photo {
+	border: none;
+	background-color: none;
+}
 </style>

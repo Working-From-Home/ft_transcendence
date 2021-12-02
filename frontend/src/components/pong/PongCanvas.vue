@@ -1,8 +1,11 @@
 <template>
     <div>
         <h3>this is the canvas</h3>
-        <canvas id="canvas" width="640" height="360"></canvas>
-				<button id="start">Start</button>
+				<div class="canvas-container">
+        	<canvas id="canvas" width="640" height="400"></canvas>
+				</div>
+				<button id="start" @click="startGame">Start</button>
+				<button id="stop" @click="stopGame">Stop</button>
     </div>
 </template>
 
@@ -12,44 +15,56 @@
 import { defineComponent } from "vue"
 import { io, Socket } from "socket.io-client"
 import { GameView } from "./GameView"
-import { GameObject } from "./GameObject";
 
 export default defineComponent({
 	data() {
 		return {
 			socket: {} as Socket,
 			gameView: {} as GameView,
-			paddle: {} as GameObject
 		}
 	},
 	created() {
-		this.socket = io("http://localhost:3000");
-		window.addEventListener('keydown', this.move);
+		this.socket = io("http://localhost:3000/pong");
+		window.addEventListener('keydown', this.handleKeydown);
+		window.addEventListener('keyup', this.handleKeyup);
+		//window.addEventListener('resize', this.handleResize);
 	},
 	unmounted() {
-	window.removeEventListener('keydown', this.move);
+	window.removeEventListener('keydown', this.handleKeydown);
+	window.removeEventListener('keyup', this.handleKeyup);
 },
   mounted() : void {
 		this.gameView = new GameView('#canvas');
-		this.paddle = new GameObject(60, 15, {x: 10, y: 100});
-		this.socket.on("msgToClient", data => {
-			console.log(`recv: ${data}`);
-		})
-		this.socket.on("position", data => {
-			this.paddle.setPos(data);
-			this.gameView.drawGameObject((this.paddle as any) as GameObject);
+		this.socket.on("gameState", data => {
+			this.gameView.drawGameState(data);
 		})
 		this.socket.emit('msgToServer', "yo le server");
 	},
 	methods: {
-		move(event : KeyboardEvent) {
-			if(["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(event.code) > -1) {
-        event.preventDefault();
-    }
-
-			let cmd = event.code;
-			console.log(cmd);
-			//this.socket.emit("move", direction);
+		handleKeydown(event : KeyboardEvent) {
+			if(["ArrowUp","ArrowDown"].indexOf(event.code) > -1) {
+        		event.preventDefault();
+				let key = event.code;
+				this.socket.emit("keydown", key);
+    		}
+		},
+		handleKeyup(event : KeyboardEvent) {
+			if(["ArrowUp","ArrowDown"].indexOf(event.code) > -1) {
+        		event.preventDefault();
+				let key = event.code;
+				this.socket.emit("keyup", key);
+    		}
+		},
+		handleResize() {
+			// this.gameView.clear();
+    		// this.gameView.setUpCanvasSize();
+    		// this.gameView.drawGameObject((this.paddle as any) as GameObject);
+		},
+		startGame() {
+			this.socket.emit("start");
+		},
+		stopGame() {
+			this.socket.emit("stop");
 		}
 	}
 })
@@ -60,5 +75,10 @@ export default defineComponent({
 <style>
     canvas {
         background: #000000;
+		border:1px solid #000000;
     }
+		
+		.canvas-container {
+    width: 100%;
+  	}
 </style>
