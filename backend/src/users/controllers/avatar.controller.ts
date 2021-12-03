@@ -41,7 +41,11 @@ export class AvatarController {
     @Put()
     @UseGuards(CurrentUserGuard)
     @UseInterceptors(FileInterceptor('image', fileFilter))
-    async uploadAvatar(@Param('id') id: string, @UploadedFile() file: Express.Multer.File) {
+    async uploadAvatar(
+        @Param('id') id: string,
+        @UploadedFile() file: Express.Multer.File,
+        @Res({ passthrough: true }) response: Response
+    ) {
         const user = await this.usersService.getUserWithAvatar(parseInt(id));
         if (!file) {
             throw new BadRequestException('file must be a png or jpg/jpeg');
@@ -51,7 +55,10 @@ export class AvatarController {
             data: file.buffer,
             mimetype:file.mimetype
         };
-        return await this.avatarService.update(user, data);
+        const avatar = await this.avatarService.update(user, data);
+        const stream = Readable.from(avatar.data);
+        response.set({ 'Content-Type': avatar.mimetype });
+        return new StreamableFile(stream);
     }
 
     @Delete()
