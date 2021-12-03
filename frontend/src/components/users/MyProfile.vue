@@ -1,14 +1,14 @@
 <template>
 	<div>
-
 		<span class="photo" @click="onPickFile">
-				<img v-bind:src="avatar"/>
+				<img :src="'data:image/png;base64,' + avatar"/>
 		</span>
-			<input
+		<input
 			type="file"
 			style="display: none"
 			ref="fileInput"
 			accept="image/*"
+			name="uploaded_file"
 			@change="onFilePicked"/>
 		<span>
 			<p>this is the profile of {{ userName }}</p>
@@ -49,14 +49,6 @@ import ButtonDel from "./ButtonDel.vue";
 	  },
 	  async onFilePicked (event: any) {
 		const files = event.target.files;
-		console.log('1 files:', files);
-		let filename = files[0].name;
-		const fileReader = new FileReader();
-		fileReader.addEventListener('load', () => {
-			this.imageUrl = fileReader.result;
-		})
-		fileReader.readAsDataURL(files[0]);
-		this.$store.getters.myUserId;
 		try {
        		await this.$store.dispatch('uploadProfile', {
 				   img: files[0],

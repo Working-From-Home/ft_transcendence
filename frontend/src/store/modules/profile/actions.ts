@@ -1,7 +1,14 @@
 export default {
 	async getProfile(context: any, payload: any) {
-		let url = 'http://localhost:3000/users/' + payload.id;
-		fetch(url)
+		const fetchData = {
+			method: 'GET',
+			headers: new Headers()
+		};
+		const newToken = 'Bearer ' + payload.token;
+		fetchData.headers.append('Authorization', newToken);
+
+		let url = 'http://localhost:3000/me';
+		fetch(url, fetchData)
 		.then((response) => response.json())
 		.then(data => {
 			console.log('Success users:', data);
@@ -26,42 +33,49 @@ export default {
 		};
 		const newToken = 'Bearer ' + payload.token;
 		fetchData.headers.append('Authorization', newToken);
-		let url = 'http://localhost:3000/users/' + payload.id + '/avatar';
-		fetch(url, fetchData)
-		.then((response) => response.blob())
+
+		return context.dispatch('requeteAvatar', {
+			...payload,
+			fetchData: fetchData,
+			url: 'http://localhost:3000/me/avatar'
+		});
+	},
+	async uploadProfile(context: any, payload: any) {
+		const formData = new FormData();
+        formData.append('image', payload.img)
+
+		const fetchData = {
+			method: 'PUT',
+			body: formData,
+			headers: new Headers()
+		};
+		const newToken = 'Bearer ' + payload.token;
+		fetchData.headers.append('Authorization', newToken);
+
+		return context.dispatch('requeteAvatar', {
+			...payload,
+			fetchData: fetchData,
+			url: 'http://localhost:3000/me/avatar'
+		});
+	},
+	async requeteAvatar(context: any, payload: any){
+		fetch(payload. url, payload.fetchData)
+		.then((response) => response.arrayBuffer())
 		.then(data => {
 			console.log('Success avatar:', data);
-			localStorage.setItem('avatar', URL.createObjectURL(data));
+			var binary = '';
+			var bytes = new Uint8Array( data );
+			var len = bytes.byteLength;
+			for (var i = 0; i < len; i++) {
+				binary += String.fromCharCode(bytes[i]);
+			};
+			localStorage.setItem('avatar', window.btoa(binary));
 			context.commit('initAvatar', {
-				avatar: URL.createObjectURL(data),
+				avatar: window.btoa(binary),
 			});
 		}).catch(error => {
 			console.error('Error:', error);
 			throw error;
-		});
-	},
-	async uploadProfile(context: any, payload: any) {
-		console.log('1 avatar:', payload.img);
-		console.log('2 avatar:', JSON.stringify(payload.img));
-		const fetchData = {
-			method: 'POST',
-			body: payload.img,
-			headers: new Headers()
-		};
-		const newToken = 'Bearer ' + payload.token;
-		fetchData.headers.append('Content-Type', 'png');
-		fetchData.headers.append('Authorization', newToken);
-		let url = 'http://localhost:3000/users/' + payload.id + '/avatar';
-		fetch(url, fetchData)
-		.then((response) => response.json())
-		.then(data => {
-			console.log('Success upload avatar:', data);
-		}).catch(error => {
-			console.error('Error:', error);
-			throw error;
-		});
-		return context.dispatch('getAvatar', {
-			...payload,
 		});
 	}
 };
