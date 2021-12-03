@@ -12,11 +12,9 @@ export class CurrentUserGuard implements CanActivate {
         const request = context.switchToHttp().getRequest();
         const paramId: number = request.params.id;
         const currentUserId: number = request.user.userId;
-
-        console.log("paramid =", paramId);
-        console.log("currentid =", currentUserId);
-
-        if (paramId != currentUserId) { throw new ForbiddenException('this is not your account!') }
+        if (paramId != currentUserId) {
+            throw new ForbiddenException('this is not your account!')
+        }
         return true;
     }
 }

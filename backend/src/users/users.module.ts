@@ -8,11 +8,33 @@ import { UsersController } from './controllers/users.controller';
 import { Stats } from './entities/stats.entity';
 import { StatsService } from './services/stats.service';
 import { AvatarController } from './controllers/avatar.controller';
+import { Friendship } from './entities/friendship.entity';
+import { FriendshipService } from './services/friendship.service';
+import { FriendsController } from './controllers/friends.controller';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Avatar, User, Stats])],
-    providers: [UsersService, AvatarService, StatsService],
-    controllers: [UsersController, AvatarController],
-    exports: [UsersService, TypeOrmModule]
+    imports: [
+        TypeOrmModule.forFeature([
+            Avatar,
+            User,
+            Stats,
+            Friendship
+        ])
+    ],
+    providers: [
+        UsersService,
+        AvatarService,
+        StatsService,
+        FriendshipService
+    ],
+    controllers: [
+        UsersController,
+        AvatarController,
+        FriendsController
+    ],
+    exports: [
+        UsersService,
+        TypeOrmModule
+    ]
 })
 export class UsersModule {}

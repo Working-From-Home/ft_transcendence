@@ -38,10 +38,10 @@ export class User {
 
 
 
-    // @OneToMany(() => Friendship, friendRequest => friendRequest.applicant)
-    // sentFriendRequests: Friendship[];
+    @OneToMany(() => Friendship, friendRequest => friendRequest.applicant)
+    sentFriendRequests: Friendship[];
 
-    // @OneToMany(() => Friendship, friendRequest => friendRequest.recipient)
-    // receivedFriendRequests: Friendship[];
+    @OneToMany(() => Friendship, friendRequest => friendRequest.recipient)
+    receivedFriendRequests: Friendship[];
 
 }

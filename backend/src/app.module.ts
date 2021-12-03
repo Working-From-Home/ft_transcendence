@@ -10,6 +10,7 @@ import { AuthModule } from './auth/auth.module';
 import { PongModule } from './pong/pong.module';
 import { RankController } from './rank/rank.controller';
 import { Stats } from './users/entities/stats.entity';
+import { Friendship } from './users/entities/friendship.entity';
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { Stats } from './users/entities/stats.entity';
         return {
           type: 'sqlite',
           database: config.get<string>('DB_NAME'),
-          entities: [Avatar, User, Stats],
+          entities: [Avatar, User, Stats, Friendship],
           synchronize: true     // shouldn't be used in production: may lose data
         }
       }
