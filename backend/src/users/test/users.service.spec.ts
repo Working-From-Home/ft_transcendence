@@ -5,16 +5,14 @@ import { UsersService } from '../services/users.service';
 import { User } from '../entities/user.entity';
 import { AvatarService } from '../services/avatar.service';
 import { Avatar } from '../entities/avatar.entity'
+import { StatsService } from '../services/stats.service';
+import { Stats } from 'fs';
 
 describe('UsersService', () => {
     let service: UsersService;
     const users: Partial<User>[] = [
-        {id: 1, email: "1", username: "1", password: "1", avatarId: 1},
-        {id: 2, email: "2", username: "2", password: "2", avatarId: 2}
-    ];
-    const avatars: Partial<Avatar>[] = [
-        {id: 1},
-        {id: 2}
+        {id: 1, email: "1", username: "1", password: "1"},
+        {id: 2, email: "2", username: "2", password: "2"}
     ];
 
     beforeEach(async () => {
@@ -35,7 +33,7 @@ describe('UsersService', () => {
         }
         const module: TestingModule = await Test.createTestingModule({
             providers: [
-                UsersService, AvatarService,
+                UsersService, AvatarService, StatsService,
                 {
                     provide: getRepositoryToken(User),
                     useValue: fakeRepo
@@ -46,6 +44,10 @@ describe('UsersService', () => {
                 },
                 {
                     provide: getRepositoryToken(Avatar),
+                    useValue: fakeRepo
+                },
+                {
+                    provide: getRepositoryToken(Stats),
                     useValue: fakeRepo
                 }
             ]
@@ -63,8 +65,11 @@ describe('UsersService', () => {
     });
 
     it('should not find user with an id of 3', async () => {
-        const user = await service.findById(3);
-        expect(user).toEqual(null);
+        try {
+            await service.findById(3);
+        } catch (err) {
+            expect(err).toBeDefined;
+        }
     });
 
     it('should find user with an email of "1"', async () => {
@@ -73,8 +78,11 @@ describe('UsersService', () => {
     });
 
     it('should not find user with an email of "3"', async () => {
-        const user = await service.findByEmail("3");
-        expect(user).toEqual(null);
+        try {
+            await service.findByEmail("3");
+        } catch (err) {
+            expect(err).toBeDefined;
+        }
     });
 
     it('should find user with a username of "1"', async () => {
@@ -83,7 +91,10 @@ describe('UsersService', () => {
     });
 
     it('should not find user with a username of "3"', async () => {
-        const user = await service.findByName("3");
-        expect(user).toEqual(null);
+        try {
+            await service.findByName("3");
+        } catch (err) {
+            expect(err).toBeDefined;
+        }
     });
 });

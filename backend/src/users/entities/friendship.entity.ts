@@ -14,11 +14,14 @@ export class Friendship {
     @PrimaryGeneratedColumn()
     id: number;
 
-    // @ManyToOne(() => User, user => user.sentFriendRequests)
-    // applicant: User;
+    @ManyToOne(() => User, user => user.sentFriendRequests)
+    applicant: User;
 
-    // @ManyToOne(() => User, user => user.receivedFriendRequests)
-    // recipient: User;
+    @ManyToOne(() => User, user => user.receivedFriendRequests)
+    recipient: User;
+
+    @Column()
+    status: string;        // temporary
 
     // @Column({
     //     type: "enum",

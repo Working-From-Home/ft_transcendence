@@ -1,26 +1,43 @@
 import { Get, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
+import { Friendship } from '../entities/friendship.entity';
 import { Stats } from '../entities/stats.entity';
 import { User } from '../entities/user.entity';
 import { UsersService } from './users.service';
 
 @Injectable()
 export class FriendshipService {
-    // constructor(
-    //     @InjectRepository(Friendship) private repo: Repository<Friendship>,
-    //     private readonly usersService: UsersService
-    // ) {}
+    constructor(
+        @InjectRepository(Friendship) private repo: Repository<Friendship>,
+        private readonly usersService: UsersService
+    ) {}
 
-    // sendFriendRequest(applicantId: number, recipientId: number) {
-    //     const friendship = this.repo.create(applicantId, recipientId, status: 'pending');
-    // }
+    async create(applicantId: number, recipientId: number) {
+        const applicant = await this.usersService.findById(applicantId);
+        const recipient = await this.usersService.findById(recipientId);
+        const friendship = this.repo.create({ applicant, recipient, status: 'pending' });
+        return await this.repo.save(friendship);
+    }
 
-    acceptFriendRequest() {}
+    async update(friendship: Friendship, status: string) {
+        Object.assign(friendship, status);
+        return await this.repo.save(friendship);
+    }
 
-    declineFriendRequest() {}
+    async remove(friendship: Friendship) {
+        return await this.repo.remove(friendship);
+    }
 
-    getFriends() {}
+    async getFriends(userId: number) {
+        const user = await this.usersService.findById(userId);
+        return await this.repo.find({
+            where: [
+                { applicant: user, status: 'accepted' },
+                { recipient: user, status: 'accepted' },
+            ],
+            relations: ['applicant', 'recipient']});
+    }
 
     getAcceptedFriends() {}
 

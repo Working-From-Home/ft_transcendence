@@ -48,4 +48,10 @@ export class UsersService {
         queryBuilder.orderBy('user.username', 'DESC');
         return paginate<User>(queryBuilder, options);
     }
+
+    async getUserWithAvatar(id: number) {
+        const user = await this.repo.findOne(id, { relations: ["avatar"] });
+        if (!user) { throw new NotFoundException('user not found'); }
+        return user;
+    }
 }
