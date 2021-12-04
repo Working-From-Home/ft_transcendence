@@ -3,10 +3,6 @@ import { ValidateNested } from "class-validator";
 import { User } from "../entities/user.entity";
 import { UserDto } from "./user.dto";
 
-/**
- *  Describes how to serialize a user.
- */
-
 export class UsersPaginationDto {
 
     @ValidateNested({ each: true })

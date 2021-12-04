@@ -1,10 +1,7 @@
-import { Expose } from "class-transformer";
-import { Entity, Column, PrimaryGeneratedColumn,
-    JoinColumn, ManyToOne } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
 import { User } from "./user.entity";
 
 export enum FriendshipStatus {
-    Pending = "pending",
     Accepted = "accepted",
     Rejected = "rejected"
 }
@@ -14,19 +11,12 @@ export class Friendship {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToOne(() => User, user => user.sentFriendRequests)
+    @ManyToOne(() => User, user => user.sentFriendRequests, { onDelete: "CASCADE" })
     applicant: User;
 
-    @ManyToOne(() => User, user => user.receivedFriendRequests)
+    @ManyToOne(() => User, user => user.receivedFriendRequests, { onDelete: "CASCADE" })
     recipient: User;
 
     @Column()
-    status: string;        // temporary
-
-    // @Column({
-    //     type: "enum",
-    //     enum: FriendshipStatus,
-    //     default: FriendshipStatus.Pending
-    // })
-    // status: FriendshipStatus;
+    status: string;
 }

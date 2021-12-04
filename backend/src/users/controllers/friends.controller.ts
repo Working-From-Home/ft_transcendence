@@ -1,8 +1,12 @@
 import {
+    BadRequestException,
+    Body,
     Controller,
     Delete,
     Get,
+    NotFoundException,
     Param,
+    ParseIntPipe,
     Patch,
     Post,
     Query,
@@ -15,6 +19,8 @@ import { FriendshipService } from '../services/friendship.service';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { UsersPaginationDto } from '../dtos/users-pagination.dto';
 import { FriendshipStatus } from '../entities/friendship.entity';
+import { FriendshipsPaginationDto } from '../dtos/friendships-pagination.dto';
+import { UpdateFriendshipDto } from '../dtos/update-friendship.dto';
 
 @ApiTags('friends')
 @Controller('/users/:id/friends')
@@ -23,8 +29,8 @@ export class FriendsController {
     constructor(private friendshipService: FriendshipService) {}
 
     @Get()
-    @Serialize(UsersPaginationDto)
-    async getFriendshipsByStatus(
+    @Serialize(FriendshipsPaginationDto)
+    async filterFriendshipsByStatus(
         @Param('id') userId: string,
         @Query('status') status: FriendshipStatus
     ) {
@@ -33,27 +39,38 @@ export class FriendsController {
 
     @Post('/:recipientId')
     @UseGuards(CurrentUserGuard)
-    async sendRequest(
-        @Param('id') userId: string,
-        @Param('recipientId') recipientId: string
+    async initiateFriendship(
+        @Param('id', ParseIntPipe) applicantId: number,
+        @Param('recipientId', ParseIntPipe) recipientId: number
     ) {
-        return await this.friendshipService.create(parseInt(userId), parseInt(recipientId));
+        if (await this.friendshipService.findTwoDirections(applicantId, recipientId)) {
+            throw new BadRequestException('a request has already been sent');
+        }
+        return await this.friendshipService.create(applicantId, recipientId);
     }
 
-    @Patch()
+    @Patch('/:applicantId')
     @UseGuards(CurrentUserGuard)
-    async respondToRequest(
-        @Param('id') userId: string,
+    async updateFriendship(
+        @Param('id', ParseIntPipe) recipientId: number,
+        @Param('applicantId', ParseIntPipe) applicantId: number,
+        @Body() body: UpdateFriendshipDto
     ) {
-
+        const friendship = await this.friendshipService.findOneDirection(applicantId, recipientId);
+        if (!friendship) {
+            throw new NotFoundException('request not found')
+        }
+        return await this.friendshipService.update(friendship, body);
     }
 
     @Delete('/:recipientId')
     @UseGuards(CurrentUserGuard)
-    async breakFriendship(
-        @Param('id') userId: string,
-        @Param('recipientId') recipientId: string
+    async removeFriendship(
+        @Param('id', ParseIntPipe) applicantId: number,
+        @Param('recipientId', ParseIntPipe) recipientId: number
     ) {
-        
+        const friendship = await this.friendshipService.findTwoDirections(applicantId, recipientId);
+        if (!friendship) { throw new NotFoundException('request not found'); }
+        return await this.friendshipService.remove(friendship);
     }
 }

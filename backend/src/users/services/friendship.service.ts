@@ -21,7 +21,7 @@ export class FriendshipService {
         return await this.repo.save(friendship);
     }
 
-    async update(friendship: Friendship, status: FriendshipStatus) {
+    async update(friendship: Friendship, status: Partial<Friendship>) {
         Object.assign(friendship, status);
         return await this.repo.save(friendship);
     }
@@ -36,6 +36,27 @@ export class FriendshipService {
             where: [
                 { applicant: user, status },
                 { recipient: user, status },
+            ],
+            relations: ['applicant', 'recipient']});
+    }
+
+    async findTwoDirections(lhsId: number, rhsId: number) {
+        const lhs = await this.usersService.findById(lhsId);
+        const rhs = await this.usersService.findById(rhsId);
+        return await this.repo.findOne({
+            where: [
+                { applicant: lhs, recipient: rhs },
+                { applicant: rhs, recipient: lhs },
+            ],
+            relations: ['applicant', 'recipient']});
+    }
+
+    async findOneDirection(applicantId: number, recipientId: number) {
+        const applicant = await this.usersService.findById(applicantId);
+        const recipient = await this.usersService.findById(recipientId);
+        return await this.repo.findOne({
+            where: [
+                { applicant, recipient },
             ],
             relations: ['applicant', 'recipient']});
     }
