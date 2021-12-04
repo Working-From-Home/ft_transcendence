@@ -3,11 +3,11 @@ import { Entity, Column, PrimaryGeneratedColumn,
     JoinColumn, ManyToOne } from "typeorm";
 import { User } from "./user.entity";
 
-// export enum FriendshipStatus {
-//     Pending = "pending",
-//     Accepted = "accepted",
-//     Rejected = "rejected"
-// }
+export enum FriendshipStatus {
+    Pending = "pending",
+    Accepted = "accepted",
+    Rejected = "rejected"
+}
 
 @Entity()
 export class Friendship {
