@@ -33,14 +33,13 @@ export default {
 button,
 a {
   text-decoration: none;
-  padding: 0.75rem 1.5rem;
+  padding: 5px;
   font: inherit;
-  background-color: #3a0061;
-  border: 1px solid #3a0061;
-  color: white;
+  background-color: #42b983;
+  border: 1px solid #42b983;
+  color: rgba(255, 255, 255, 0.884);
   cursor: pointer;
-  border-radius: 30px;
-  margin-right: 0.5rem;
+  border-radius: 0.3em;
   display: inline-block;
 }
 
@@ -48,13 +47,13 @@ a:hover,
 a:active,
 button:hover,
 button:active {
-  background-color: #270041;
-  border-color: #270041;
+  background-color: #276b4c;
+  border-color: #276b4c;
 }
 
 .flat {
   background-color: transparent;
-  color: #3a0061;
+  color: #42b983;
   border: none;
 }
 
@@ -68,6 +67,7 @@ button:active {
 .flat:active,
 .outline:hover,
 .outline:active {
-  background-color: #edd2ff;
+  color: #276b4c;
+  background-color: transparent;
 }
 </style>

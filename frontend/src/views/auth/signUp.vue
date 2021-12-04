@@ -4,6 +4,7 @@
 			<p>{{ error }}</p>
 		</base-dialog>
 		<card>
+			<h1>Register</h1>
 			<sign-up-component @save-data="saveData"></sign-up-component>
 		</card>
 	</div>
@@ -41,3 +42,11 @@ export default class signUp extends Vue {
 	
 }
 </script>
+
+<style scoped>
+.card {
+	background-color: #192531;
+	box-shadow: none;
+	max-width: 20rem;
+}
+</style>

@@ -7,7 +7,7 @@ export default {
 		const newToken = 'Bearer ' + payload.token;
 		fetchData.headers.append('Authorization', newToken);
 
-		let url = 'http://localhost:3000/me';
+		let url = 'http://localhost:3000/users/' + payload.id;
 		fetch(url, fetchData)
 		.then((response) => response.json())
 		.then(data => {
@@ -37,7 +37,7 @@ export default {
 		return context.dispatch('requeteAvatar', {
 			...payload,
 			fetchData: fetchData,
-			url: 'http://localhost:3000/me/avatar'
+			url: 'http://localhost:3000/users/' + payload.id + '/avatar'
 		});
 	},
 	async uploadProfile(context: any, payload: any) {
@@ -55,7 +55,21 @@ export default {
 		return context.dispatch('requeteAvatar', {
 			...payload,
 			fetchData: fetchData,
-			url: 'http://localhost:3000/me/avatar'
+			url: 'http://localhost:3000/users/' + payload.id + '/avatar'
+		});
+	},
+	async deleteAvatar(context: any, payload: any) {
+		const fetchData = {
+			method: 'DElETE',
+			headers: new Headers()
+		};
+		const newToken = 'Bearer ' + payload.token;
+		fetchData.headers.append('Authorization', newToken);
+
+		return context.dispatch('requeteAvatar', {
+			...payload,
+			fetchData: fetchData,
+			url: 'http://localhost:3000/users/' + payload.id + '/avatar'
 		});
 	},
 	async requeteAvatar(context: any, payload: any){
@@ -69,9 +83,10 @@ export default {
 			for (var i = 0; i < len; i++) {
 				binary += String.fromCharCode(bytes[i]);
 			};
-			localStorage.setItem('avatar', window.btoa(binary));
+			let newAvatar = window.btoa(binary);
+			localStorage.setItem('avatar', newAvatar);
 			context.commit('initAvatar', {
-				avatar: window.btoa(binary),
+				avatar: newAvatar,
 			});
 		}).catch(error => {
 			console.error('Error:', error);

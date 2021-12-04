@@ -1,5 +1,5 @@
 <template>
-	<base-button @click="openModal">
+	<base-button @click="openModal"  mode="flat">
 		<base-dialog :show="!!open" title="Delete Account" @close="closeModal">
 			<p>Are you sure you want to delete your account?</p>
 			<base-button class="red" @click="deleteUser">Yes</base-button>

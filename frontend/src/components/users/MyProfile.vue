@@ -1,18 +1,19 @@
 <template>
 	<div>
-		<span class="photo" @click="onPickFile">
-				<img :src="'data:image/png;base64,' + avatar"/>
-		</span>
+		<div class="photo" @click="UndleClick">
+				<img :src="count"/>
+		</div>
 		<input
 			type="file"
 			style="display: none"
 			ref="fileInput"
 			accept="image/*"
 			name="uploaded_file"
-			@change="onFilePicked"/>
+			@change="changeIMG"/>
+		<base-button @click="defaultIMG"  mode="flat">Image by default</base-button>
 		<span>
-			<p>this is the profile of {{ userName }}</p>
-			<p>email: {{ email }}</p>
+			<p>This is the profile of {{ userName }}</p>
+			<p>Email: {{ email }}</p>
 		</span>
 		<button-del></button-del>
 	</div>
@@ -34,7 +35,6 @@ import ButtonDel from "./ButtonDel.vue";
 			userName: null,
 			email: null,
 			avatar: null,
-			test: "http://purepng.com/public/uploads/large/purepng.com-red-appleappleapplesfruitsweet-170152718058288lsq.png"
 		};
 	},
   created() {
@@ -43,22 +43,36 @@ import ButtonDel from "./ButtonDel.vue";
 	this.email = this.$store.getters.myEmail;
 	this.avatar = this.$store.getters.myAvatar;
   },
+  computed: {
+	count() {
+		this.avatar = 'data:image/png;base64,' + this.$store.getters.myAvatar
+		return this.avatar;
+		}
+  },
   methods: {
-	  onPickFile () {
+	  UndleClick() {
   		this.$refs.fileInput.click()
 	  },
-	  async onFilePicked (event: any) {
+	  async changeIMG(event: any) {
 		const files = event.target.files;
 		try {
        		await this.$store.dispatch('uploadProfile', {
-				   img: files[0],
-				   id: this.$store.getters.userID
-				   ,token: this.$store.getters.token
+				img: files[0],
+				id: this.$store.getters.userID,
+				token: this.$store.getters.token,
 			});
+			this.avatar = this.$store.getters.myAvatar;
 		} catch (err) {
 			this.error = err.message || 'Failed to authenticate, try later.';
 		}
-	  }
+	  },
+	  async defaultIMG() {
+		await this.$store.dispatch('deleteAvatar', {
+			id: this.$store.getters.userID,
+			token: this.$store.getters.token,
+		});
+		this.avatar = this.$store.getters.myAvatar;
+	  },
   }
 })
 export default class MyProfile extends Vue {
