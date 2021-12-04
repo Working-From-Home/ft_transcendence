@@ -31,7 +31,10 @@ export class AvatarController {
     ) {}
 
     @Get()
-    async getUserAvatar(@Param('id') id: string, @Res({ passthrough: true }) response: Response) {
+    async getUserAvatar(
+        @Param('id') id: string,
+        @Res({ passthrough: true }) response: Response
+    ) {
         const user = await this.usersService.getUserWithAvatar(parseInt(id));
         const stream = Readable.from(user.avatar.data);
         response.set({ 'Content-Type': user.avatar.mimetype });
@@ -63,8 +66,14 @@ export class AvatarController {
 
     @Delete()
     @UseGuards(CurrentUserGuard)
-    async deleteAvatar(@Param('id') id: string) {
+    async deleteAvatar(
+        @Param('id') id: string,
+        @Res({ passthrough: true }) response: Response
+    ) {
         const user = await this.usersService.getUserWithAvatar(parseInt(id));
-        return await this.avatarService.remove(user);
+        const avatar = await this.avatarService.remove(user);
+        const stream = Readable.from(avatar.data);
+        response.set({ 'Content-Type': avatar.mimetype });
+        return new StreamableFile(stream);
     }
 }
