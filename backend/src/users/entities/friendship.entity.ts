@@ -3,7 +3,8 @@ import { User } from "./user.entity";
 
 export enum FriendshipStatus {
     Accepted = "accepted",
-    Rejected = "rejected"
+    Blocked = "blocked",
+    Declined = "declined"
 }
 
 @Entity()

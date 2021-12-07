@@ -17,7 +17,6 @@ import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { CurrentUserGuard } from 'src/auth/guards/current-user.guard';
 import { FriendshipService } from '../services/friendship.service';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
-import { UsersPaginationDto } from '../dtos/users-pagination.dto';
 import { FriendshipStatus } from '../entities/friendship.entity';
 import { FriendshipsPaginationDto } from '../dtos/friendships-pagination.dto';
 import { UpdateFriendshipDto } from '../dtos/update-friendship.dto';
@@ -43,8 +42,8 @@ export class FriendsController {
         @Param('id', ParseIntPipe) applicantId: number,
         @Param('recipientId', ParseIntPipe) recipientId: number
     ) {
-        if (await this.friendshipService.findTwoDirections(applicantId, recipientId)) {
-            throw new BadRequestException('a request has already been sent');
+        if (await this.friendshipService.twoWaySearch(applicantId, recipientId)) {
+            throw new BadRequestException('the relationship already exists');
         }
         return await this.friendshipService.create(applicantId, recipientId);
     }
@@ -56,20 +55,22 @@ export class FriendsController {
         @Param('applicantId', ParseIntPipe) applicantId: number,
         @Body() body: UpdateFriendshipDto
     ) {
-        const friendship = await this.friendshipService.findOneDirection(applicantId, recipientId);
+        const friendship = await this.friendshipService.oneWaySearch(applicantId, recipientId);
         if (!friendship) {
             throw new NotFoundException('request not found')
         }
+        if (body.status === "declined")
+            return await this.friendshipService.remove(friendship);
         return await this.friendshipService.update(friendship, body);
     }
 
-    @Delete('/:recipientId')
+    @Delete('/:friendId')
     @UseGuards(CurrentUserGuard)
     async removeFriendship(
-        @Param('id', ParseIntPipe) applicantId: number,
-        @Param('recipientId', ParseIntPipe) recipientId: number
+        @Param('id', ParseIntPipe) lhsId: number,
+        @Param('friendId', ParseIntPipe) rhsId: number
     ) {
-        const friendship = await this.friendshipService.findTwoDirections(applicantId, recipientId);
+        const friendship = await this.friendshipService.twoWaySearch(lhsId, rhsId);
         if (!friendship) { throw new NotFoundException('request not found'); }
         return await this.friendshipService.remove(friendship);
     }

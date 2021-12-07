@@ -2,8 +2,6 @@ import { BadRequestException, Get, Injectable, NotFoundException } from '@nestjs
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { Friendship, FriendshipStatus } from '../entities/friendship.entity';
-import { Stats } from '../entities/stats.entity';
-import { User } from '../entities/user.entity';
 import { UsersService } from './users.service';
 
 @Injectable()
@@ -37,10 +35,22 @@ export class FriendshipService {
                 { applicant: user, status },
                 { recipient: user, status },
             ],
-            relations: ['applicant', 'recipient']});
+            relations: ['applicant', 'recipient']
+        });
     }
 
-    async findTwoDirections(lhsId: number, rhsId: number) {
+    async oneWaySearch(applicantId: number, recipientId: number) {
+        const applicant = await this.usersService.findById(applicantId);
+        const recipient = await this.usersService.findById(recipientId);
+        return await this.repo.findOne({
+            where: [
+                { applicant, recipient },
+            ],
+            relations: ['applicant', 'recipient']
+        });
+    }
+
+    async twoWaySearch(lhsId: number, rhsId: number) {
         const lhs = await this.usersService.findById(lhsId);
         const rhs = await this.usersService.findById(rhsId);
         return await this.repo.findOne({
@@ -48,16 +58,7 @@ export class FriendshipService {
                 { applicant: lhs, recipient: rhs },
                 { applicant: rhs, recipient: lhs },
             ],
-            relations: ['applicant', 'recipient']});
-    }
-
-    async findOneDirection(applicantId: number, recipientId: number) {
-        const applicant = await this.usersService.findById(applicantId);
-        const recipient = await this.usersService.findById(recipientId);
-        return await this.repo.findOne({
-            where: [
-                { applicant, recipient },
-            ],
-            relations: ['applicant', 'recipient']});
+            relations: ['applicant', 'recipient']
+        });
     }
 }
