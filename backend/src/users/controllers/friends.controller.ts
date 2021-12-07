@@ -18,8 +18,8 @@ import { CurrentUserGuard } from 'src/auth/guards/current-user.guard';
 import { FriendshipService } from '../services/friendship.service';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { FriendshipStatus } from '../entities/friendship.entity';
-import { FriendshipsPaginationDto } from '../dtos/friendships-pagination.dto';
 import { UpdateFriendshipDto } from '../dtos/update-friendship.dto';
+import { FriendshipsDto } from '../dtos/friendship.dto';
 
 @ApiTags('friends')
 @Controller('/users/:id/friends')
@@ -28,7 +28,7 @@ export class FriendsController {
     constructor(private friendshipService: FriendshipService) {}
 
     @Get()
-    @Serialize(FriendshipsPaginationDto)
+    @Serialize(FriendshipsDto)
     async filterFriendshipsByStatus(
         @Param('id') userId: string,
         @Query('status') status: FriendshipStatus
@@ -38,6 +38,7 @@ export class FriendsController {
 
     @Post('/:recipientId')
     @UseGuards(CurrentUserGuard)
+    @Serialize(FriendshipsDto)
     async initiateFriendship(
         @Param('id', ParseIntPipe) applicantId: number,
         @Param('recipientId', ParseIntPipe) recipientId: number
@@ -50,6 +51,7 @@ export class FriendsController {
 
     @Patch('/:applicantId')
     @UseGuards(CurrentUserGuard)
+    @Serialize(FriendshipsDto)
     async updateFriendship(
         @Param('id', ParseIntPipe) recipientId: number,
         @Param('applicantId', ParseIntPipe) applicantId: number,
@@ -59,19 +61,23 @@ export class FriendsController {
         if (!friendship) {
             throw new NotFoundException('request not found')
         }
-        if (body.status === "declined")
+        if (body.status === "declined") {
             return await this.friendshipService.remove(friendship);
+        }
         return await this.friendshipService.update(friendship, body);
     }
 
     @Delete('/:friendId')
     @UseGuards(CurrentUserGuard)
+    @Serialize(FriendshipsDto)
     async removeFriendship(
         @Param('id', ParseIntPipe) lhsId: number,
         @Param('friendId', ParseIntPipe) rhsId: number
     ) {
         const friendship = await this.friendshipService.twoWaySearch(lhsId, rhsId);
-        if (!friendship) { throw new NotFoundException('request not found'); }
+        if (!friendship) {
+            throw new NotFoundException('request not found');
+        }
         return await this.friendshipService.remove(friendship);
     }
 }
