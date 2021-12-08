@@ -1,21 +1,27 @@
 <template>
 	<div>
-		<div class="photo" @click="UndleClick">
-				<img :src="count"/>
-		</div>
-		<input
-			type="file"
-			style="display: none"
-			ref="fileInput"
-			accept="image/*"
-			name="uploaded_file"
-			@change="changeIMG"/>
-		<base-button @click="defaultIMG"  mode="flat">Image by default</base-button>
-		<span>
-			<p>This is the profile of {{ userName }}</p>
-			<p>Email: {{ email }}</p>
-		</span>
-		<button-del></button-del>
+		<card class="container">
+			<div class="row align-items-center">
+				<div class="photo col" @click="UndleClick">
+						<img :src="count"/>
+					<input
+						type="file"
+						style="display: none"
+						ref="fileInput"
+						accept="image/*"
+						name="uploaded_file"
+						@change="changeIMG"/>
+					<base-button @click="defaultIMG"  mode="flat">Image by default</base-button>
+				</div>
+				<div class="col">
+					<p>This is the profile of {{ userName }}</p>
+					<p>Email: {{ email }}</p>
+				</div>
+			</div>
+			<div class="row">
+				<button-del></button-del>
+			</div>
+		</card>
 	</div>
 </template>
 
@@ -24,17 +30,24 @@ import { Options, Vue } from "vue-class-component";
 import BaseButton from "../ui/BaseButton.vue";
 import ButtonDel from "./ButtonDel.vue";
 
+interface State {
+  userid: string,
+  userName: string,
+  email: string,
+  avatar: string
+}
+
 @Options({
   components: {
     ButtonDel,
     BaseButton,
   },
-  data() {
+  data: (): State => {
 		return {
-			userid: null,
-			userName: null,
-			email: null,
-			avatar: null,
+			userid: '',
+			userName: '',
+			email: '',
+			avatar: '',
 		};
 	},
   created() {
@@ -44,7 +57,7 @@ import ButtonDel from "./ButtonDel.vue";
 	this.avatar = this.$store.getters.myAvatar;
   },
   computed: {
-	count() {
+	count(): string {
 		this.avatar = 'data:image/png;base64,' + this.$store.getters.myAvatar
 		return this.avatar;
 		}
@@ -84,19 +97,11 @@ export default class MyProfile extends Vue {
 h3 {
   margin: 40px 0 0;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
 a {
   color: #42b983;
 }
 .photo {
 	border: none;
-	background-color: none;
+	background-color: transparent;
 }
 </style>

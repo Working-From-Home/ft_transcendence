@@ -1,6 +1,6 @@
 <template>
 <div>
-	<form @submit.prevent="submitForm">
+	<form @submit.prevent="submitForm" >
 		<div class ="form-control" :class="{invalid: !username.isValid}">
 			<label for="username">Username</label>
 			<input type="text" id="username" v-model.trim="username.val" @blur="clearValidity('username')"/>
@@ -25,9 +25,16 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 
+interface State {
+  username: { val: string, isValid: boolean },
+  email: { val: string, isValid: boolean },
+  password: { val: string, isValid: boolean },
+  formIsValid: boolean
+}
+
 @Options({
 	emits: ['save-data'],
-	data() {
+	data: (): State => {
 		return {
 			username: {
 				val: '',
@@ -91,7 +98,6 @@ form {
   padding: 1rem;
   background-color: #2c3e50;
 }
-
 .register {
 	width: 100%;
 	padding: 5px;
@@ -103,6 +109,9 @@ form {
 
 .form-control {
   margin: 0.5rem 0;
+  background-color: transparent;
+  color: rgba(255, 255, 255, 0.884);
+  border: none;
 }
 
 label {

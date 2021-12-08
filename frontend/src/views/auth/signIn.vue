@@ -14,11 +14,15 @@
 import { Options, Vue } from "vue-class-component";
 import SignInComponent from "../../components/auth/SignIn.vue";
 
+interface State {
+  error: string;
+}
+
 @Options({
 	components: {
 		SignInComponent,
 	},
-	data() {
+	data: (): State => {
 		return {
 			error: ''
 		};
@@ -51,5 +55,6 @@ export default class signIn extends Vue {
 	background-color: #192531;
 	box-shadow: none;
 	max-width: 20rem;
+	border: none;
 }
 </style>

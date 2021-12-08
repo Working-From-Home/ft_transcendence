@@ -1,11 +1,13 @@
+import { State } from './type';
+
 export default {
-	userID(state: any): string {
+	userID(state: State): string {
 		return state.userId;
 	},
-	token(state: any): string {
+	token(state: State): string {
 		return state.token;
 	},
-	isAuth(state: any): boolean {
+	isAuth(state: State): boolean {
 		return !!state.token;
 	},
 };

@@ -1,13 +1,16 @@
+import { FetchData } from './type';
+
 export default {
 	async getProfile(context: any, payload: any) {
-		const fetchData = {
+		const fetchData: FetchData = {
 			method: 'GET',
+			body: '',
 			headers: new Headers()
 		};
-		const newToken = 'Bearer ' + payload.token;
+		const newToken: string = 'Bearer ' + payload.token;
 		fetchData.headers.append('Authorization', newToken);
 
-		let url = 'http://localhost:3000/users/' + payload.id;
+		let url: string = 'http://localhost:3000/users/' + payload.id;
 		fetch(url, fetchData)
 		.then((response) => response.json())
 		.then(data => {
@@ -27,11 +30,12 @@ export default {
 		});
 	},
 	async getAvatar(context: any, payload: any) {
-		const fetchData = {
+		const fetchData: FetchData = {
 			method: 'GET',
+			body: '',
 			headers: new Headers()
 		};
-		const newToken = 'Bearer ' + payload.token;
+		const newToken:string = 'Bearer ' + payload.token;
 		fetchData.headers.append('Authorization', newToken);
 
 		return context.dispatch('requeteAvatar', {
@@ -44,12 +48,12 @@ export default {
 		const formData = new FormData();
         formData.append('image', payload.img)
 
-		const fetchData = {
+		const fetchData: FetchData = {
 			method: 'PUT',
 			body: formData,
 			headers: new Headers()
 		};
-		const newToken = 'Bearer ' + payload.token;
+		const newToken: string = 'Bearer ' + payload.token;
 		fetchData.headers.append('Authorization', newToken);
 
 		return context.dispatch('requeteAvatar', {
@@ -59,11 +63,12 @@ export default {
 		});
 	},
 	async deleteAvatar(context: any, payload: any) {
-		const fetchData = {
+		const fetchData: FetchData = {
 			method: 'DElETE',
+			body: '',
 			headers: new Headers()
 		};
-		const newToken = 'Bearer ' + payload.token;
+		const newToken: string = 'Bearer ' + payload.token;
 		fetchData.headers.append('Authorization', newToken);
 
 		return context.dispatch('requeteAvatar', {
@@ -78,7 +83,7 @@ export default {
 		.then(data => {
 			console.log('Success avatar:', data);
 			var binary = '';
-			var bytes = new Uint8Array( data );
+			var bytes = new Uint8Array(data);
 			var len = bytes.byteLength;
 			for (var i = 0; i < len; i++) {
 				binary += String.fromCharCode(bytes[i]);

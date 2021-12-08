@@ -21,9 +21,15 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 
+interface State {
+  username: { val: string, isValid: boolean },
+  password: { val: string, isValid: boolean },
+  formIsValid: boolean
+}
+
 @Options({
 	emits: ['save-data'],
-	data() {
+	data: (): State => {
 		return {
 			username: {
 				val: '',
@@ -86,6 +92,9 @@ form {
 
 .form-control {
   margin: 0.5rem 0;
+  background-color: transparent;
+  color: rgba(255, 255, 255, 0.884);
+  border: none;
 }
 
 label {

@@ -1,7 +1,5 @@
 <template>
-	<card>
-		<my-profile></my-profile>
-	</card>
+	<my-profile></my-profile>
 </template>
 
 <script lang="ts">
