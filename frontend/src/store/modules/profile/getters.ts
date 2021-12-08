@@ -1,17 +1,16 @@
+import { State } from './type';
+
 export default {
-	myUserId(state: any): string {
+	myUserId(state: State): string {
 		return state.userId;
 	},
-	myUserName(state: any): string {
+	myUserName(state: State): string {
 		return state.username;
 	},
-	myEmail(state: any): string {
+	myEmail(state: State): string {
 		return state.email;
 	},
-	myAvatarId(state: any) {
-		return state.avatarId;
-	},
-	myAvatar(state: any) {
+	myAvatar(state: State) {
 		return state.avatar;
 	},
 };

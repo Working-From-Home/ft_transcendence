@@ -5,6 +5,8 @@ import store from "./store";
 import Card from './components/ui/Card.vue';
 import BaseButton from './components/ui/BaseButton.vue';
 import BaseDialog from './components/ui/BaseDialog.vue';
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap";
 
 const app = createApp(App);
 

@@ -8,10 +8,14 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 
+interface State {
+  user: string,
+}
+
 @Options({
-  data() {
+  data: (): State => {
 		return {
-			user: null
+			user: ''
 		};
 	},
   created() {

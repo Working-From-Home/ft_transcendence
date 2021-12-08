@@ -11,5 +11,6 @@
   padding: 1rem;
   margin: 2rem auto;
   max-width: 40rem;
+  background-color: #2c3e50;
 }
 </style>
