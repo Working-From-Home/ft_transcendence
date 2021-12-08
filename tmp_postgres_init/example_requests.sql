@@ -45,7 +45,7 @@ SELECT achievement.*
 	WHERE "user".username = 'bob'
 ;
 
--- get all bob's friend (marie, jacques, pierre) (and bob is id 1)
+-- get all bob's friends list (marie, jacques, pierre) (and bob is id 1)
 SELECT u.id, u.username, u.email
 	FROM "user" AS u
   LEFT JOIN relationship AS r
@@ -59,7 +59,7 @@ SELECT u.id, u.username, u.email
   WHERE r.requester_id = 1 AND r."type" = 'friend'
 ;
 
--- get jacques's pendings (marie and pierre) (jacques is id 3)
+-- get jacques's pendings list (marie and pierre) (jacques is id 3)
 SELECT u.id, u.username, u.email
 	FROM "user" AS u
   LEFT JOIN relationship AS r
@@ -67,7 +67,7 @@ SELECT u.id, u.username, u.email
   WHERE r.recipient_id = 3 AND r."type" = 'pending'
 ;
 
--- get bob's blocked (only alice) (bob is id 1)
+-- get bob's blocked list (bob blocked only alice) (bob is id 1)
 SELECT u.id, u.username, u.email
 	FROM "user" AS u
   LEFT JOIN relationship AS r
@@ -75,11 +75,26 @@ SELECT u.id, u.username, u.email
   WHERE r.requester_id = 1 AND r."type" = 'blocked'
 ;
 
--- get all messages of a channel orded by desc creation date
+-- get all messages of a channel orded by ASC (default is asc)
+SELECT *
+	FROM "message"
+	WHERE channel_id = 1
+;
+-- get all messages of a channel orded by DESC creation date
+SELECT *
+	FROM "message"
+	WHERE channel_id = 1
+	ORDER BY id DESC
+;
 
--- get all messages of a channel orded by asc creation date
+-- get all bob's messages in a specific channel
+SELECT *
+	FROM "message"
+	WHERE channel_id = 1 AND user_id = 1
+;
 
--- get all messages of a channel of a specific user
-
-
--- get muted user
+-- get all marie's messages in all channels
+SELECT *
+	FROM "message"
+	WHERE user_id = 2
+;

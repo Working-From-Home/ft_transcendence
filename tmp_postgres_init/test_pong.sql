@@ -133,8 +133,8 @@ INSERT INTO "user" (username, email, "password", "role") VALUES
 	('jacques', 'jacques@email.com', 'mypass', 'user'),
 	('stef', 'stef@mail.com', 'mypass', 'user'),
 	('alice', 'alice@mail.com', 'mypass', 'user'),
-	('pierre', 'pierre@mail.com', 'mypass', 'user');
-	('jean', 'pierre@mail.com', 'mypass', 'user');
+	('pierre', 'pierre@mail.com', 'mypass', 'user'),
+	('jean', 'jeab@mail.com', 'mypass', 'user');
 
 INSERT INTO user_stat (user_id, level, victories, losses) VALUES
 	(1, 42, 15,   7),
@@ -178,7 +178,7 @@ INSERT INTO relationship (requester_id, recipient_id, "type") VALUES
 	(4, 5, 'friend'),
 
 	(6, 1, 'friend'),
-	(6, 3, 'pending');
+	(6, 3, 'pending'),
 
 	(7, 1, 'blocked');
 
@@ -196,24 +196,24 @@ INSERT INTO user_channel (user_id, channel_id, "role", start_ban, minutes_ban, s
 	(4, 2, 'moderator', NULL, NULL, NULL, NULL),
 	(5, 2, 'user', NULL, NULL, NULL, NULL);
 
-INSERT INTO "message" (channel_id, user_id, content) VALUES
-	(1, 1, 'bob: hello l equipe ! premier message'),
-	(1, 2, 'marie: hola, second message'),
-	(1, 3, 'jacques: Hi !, third one'),
-	(1, 1, 'bob: 4'),
-	(1, 2, 'marie: 5'),
-	(1, 1, 'bob: 6'),
-	(1, 1, 'bob: 7'),
-	(1, 1, 'bob: 8'),
+INSERT INTO "message" (channel_id, user_id, content, creation) VALUES
+	(1, 1, 'bob: hello l equipe ! premier message', '2021-12-08 01:45:32.883044+00'),
+	(1, 2, 'marie: hola, second message', 			'2021-12-08 01:45:35.883044+00'),
+	(1, 3, 'jacques: Hi !, third one', 				'2021-12-08 01:46:01.883044+00'),
+	(1, 1, 'bob: 4',								'2021-12-08 01:47:42.883044+00'),
+	(1, 2, 'marie: 5',								'2021-12-08 01:49:32.883044+00'),
+	(1, 1, 'bob: 6',								'2021-12-08 01:51:29.883044+00'),
+	(1, 1, 'bob: 7',								'2021-12-08 01:53:11.883044+00'),
+	(1, 1, 'bob: 8',								'2021-12-08 01:54:02.883044+00'),
 
-	(2, 2, 'marie: hello l equipe 2 ! premier message'),
-	(2, 4, 'stef: hola, second message'),
-	(2, 5, 'alice: Hi !, third one'),
-	(2, 2, 'bob: 4'),
-	(2, 4, 'marie: 5'),
-	(2, 2, 'marie: 6'),
-	(2, 2, 'marie: 7'),
-	(2, 2, 'marie: 8');
+	(2, 2, 'marie: hello l equipe 2 ! premier message', '2021-12-08 01:45:32.883044+00'),
+	(2, 4, 'stef: hola, second message',				'2021-12-08 01:49:32.883044+00'),
+	(2, 5, 'alice: Hi !, third one',					'2021-12-08 01:50:32.883044+00'),
+	(2, 2, 'bob: 4',									'2021-12-08 01:52:32.883044+00'),
+	(2, 4, 'marie: 5',									'2021-12-08 01:55:32.883044+00'),
+	(2, 2, 'marie: 6',									'2021-12-08 01:56:32.883044+00'),
+	(2, 2, 'marie: 7',									'2021-12-08 01:56:35.883044+00'),
+	(2, 2, 'marie: 8',									'2021-12-08 01:57:40.883044+00');
 
 INSERT INTO game (user_one, user_two, winner_id, "status") VALUES
 	(1, 2, 1, 'ended'),
