@@ -8,9 +8,6 @@ export class Stats {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @PrimaryColumn()
-    userId: number;
-
     @Column()
     @Expose()
     level: number;
@@ -26,14 +23,4 @@ export class Stats {
     @OneToOne(() => User, (user) => user.stats, { onDelete: "CASCADE" })
     @JoinColumn({ name: 'userId' })
     user: User;
-
-
-    // @ManyToOne(() => User, user => user.sentFriendRequests)
-    // applicant: User;
-
-    // @ManyToOne(() => User, user => user.receivedFriendRequests)
-    // recipient: User;
-
-    // @Column({ type: 'string' })
-    // status: 'pending' | 'accepted' | 'rejected';
 }
