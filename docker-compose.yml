@@ -3,6 +3,8 @@ services:
   backend:
     restart: always
     image: 42-node
+    # depends_on:
+    #   - postgre
     build:
       context: ./
       dockerfile: Dockerfile.42-node
@@ -31,6 +33,16 @@ services:
     networks:
       - mynet
     command: sh -c 'npm install && npm run serve'
+
+  # postgres:
+  #   restart: always
+  #   image: postgres:14-alpine3.15
+  #   environment:
+  #     - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+  #   ports:
+  #     - 5432:5432
+  #   volumes:
+  #     - ./tmp_postgres_init/:/docker-entrypoint-initdb.d/
 
   mock-api:
     restart: always
