@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { User } from '../entities/user.entity';
@@ -13,15 +13,27 @@ export class StatsService {
         return await this.repo.save(stats);
     }
 
-    incVictories(user: User) {
-        user.stats.victories += 1;
+    async find(userId: number) {
+        const stats = await this.repo.findOne(userId);
+        if (!stats) { throw new NotFoundException('user not found'); }
+        return stats;
     }
 
-    incLosses(user: User) {
-        user.stats.losses += 1;
+    async incVictories(userId: number) {
+        const userStats = await this.find(userId);
+        Object.assign(userStats, { victories: userStats.victories + 1 });
+        return this.repo.save(userStats);
     }
 
-    updateLevel(user: User, xp: number) {
-        user.stats.level += xp;
+    async incLosses(userId: number) {
+        const userStats = await this.find(userId);
+        Object.assign(userStats, { losses: userStats.losses + 1 });
+        return this.repo.save(userStats);
+    }
+
+    async updateLevel(userId: number, xp: number) {
+        const userStats = await this.find(userId);
+        Object.assign(userStats, { losses: userStats.level + xp });
+        return this.repo.save(userStats);
     }
 }

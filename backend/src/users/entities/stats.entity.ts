@@ -1,12 +1,15 @@
 import { Expose } from "class-transformer";
 import { Entity, Column, PrimaryGeneratedColumn,
-    OneToOne, JoinColumn } from "typeorm";
+    OneToOne, JoinColumn, PrimaryColumn } from "typeorm";
 import { User } from "./user.entity";
 
 @Entity()
 export class Stats {
     @PrimaryGeneratedColumn()
     id: number;
+
+    @PrimaryColumn()
+    userId: number;
 
     @Column()
     @Expose()

@@ -6,6 +6,10 @@ export class Avatar {
     @PrimaryGeneratedColumn()
     id: number;
 
+    // @OneToOne(() => User, (user) => user.avatar, { primary: true, onDelete: "CASCADE" })
+    // @JoinColumn({ name: 'userId' })
+    // user: User;
+
     @Column()
     filename: string;
 
