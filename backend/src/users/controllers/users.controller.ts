@@ -20,7 +20,6 @@ import { User } from '../entities/user.entity';
 import { UsersService } from '../services/users.service';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { CurrentUserGuard } from 'src/auth/guards/current-user.guard';
-import { UpdateUserDto } from '../dtos/update-user.dto';
 
 @ApiTags('users')
 @Controller('users')
@@ -40,20 +39,15 @@ export class UsersController {
 
     @Get('/:id')
     @Serialize(UserDto)
-    async findUserById(@Param('id') id: string) {
+    async findUserById(@Param('id') id: string): Promise<User> {
         const user = await this.usersService.findById(parseInt(id));
         return user;
     }
 
-    @Patch('/:id')
-    @UseGuards(CurrentUserGuard)
-    async updateAccount(@Param('id') id: string, @Body() body: UpdateUserDto) {
-        throw new NotImplementedException;
-    }
-
     @Delete('/:id')
     @UseGuards(CurrentUserGuard)
-    async deleteAccount(@Param('id') id: string) {
+    @Serialize(UserDto)
+    async deleteAccount(@Param('id') id: string): Promise<User> {
         const user = await this.usersService.findById(parseInt(id));
         return await this.usersService.remove(user);
     }

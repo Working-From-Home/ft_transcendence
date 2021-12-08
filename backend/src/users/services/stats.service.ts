@@ -8,10 +8,16 @@ import { Stats } from '../entities/stats.entity';
 export class StatsService {
     constructor(@InjectRepository(Stats) private repo: Repository<Stats>) {}
 
-    async create(level: number, victories: number, losses: number) {
-        const stats = this.repo.create({ level, victories, losses });
+    // async create(level: number, victories: number, losses: number) {
+    //     const stats = this.repo.create({ level, victories, losses });
+    //     return await this.repo.save(stats);
+    // }
+
+    async create(user: User) {
+        const stats = this.repo.create({ user });
         return await this.repo.save(stats);
     }
+
 
     async find(userId: number) {
         const stats = await this.repo.findOne(userId);

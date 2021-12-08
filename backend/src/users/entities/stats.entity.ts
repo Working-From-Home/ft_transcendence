@@ -1,26 +1,22 @@
 import { Expose } from "class-transformer";
-import { Entity, Column, PrimaryGeneratedColumn,
-    OneToOne, JoinColumn, PrimaryColumn } from "typeorm";
+import { Entity, Column, OneToOne, JoinColumn } from "typeorm";
 import { User } from "./user.entity";
 
 @Entity()
 export class Stats {
-    @PrimaryGeneratedColumn()
-    id: number;
+    @OneToOne(type => User, user => user.stats, { primary: true, onDelete: "CASCADE" })
+    @JoinColumn({ name: 'userId' })
+    user: User;
 
-    @Column()
+    @Column({ default: 0 })
     @Expose()
     level: number;
 
-    @Column()
+    @Column({ default: 0 })
     @Expose()
     victories: number;
 
-    @Column()
+    @Column({ default: 0 })
     @Expose()
     losses: number;
-
-    @OneToOne(() => User, (user) => user.stats, { onDelete: "CASCADE" })
-    @JoinColumn({ name: 'userId' })
-    user: User;
 }
