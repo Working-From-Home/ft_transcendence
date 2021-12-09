@@ -29,6 +29,7 @@ export class FriendsController {
 
     @Get()
     @Serialize(UserDto)
+    // @UseGuards(CurrentUserGuard)
     async getFriendshipsByStatus(
         @Param('id', ParseIntPipe) userId: number,
         @Query('status') status?: string
