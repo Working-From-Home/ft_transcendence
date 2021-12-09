@@ -8,38 +8,24 @@ import { Stats } from '../entities/stats.entity';
 export class StatsService {
     constructor(@InjectRepository(Stats) private repo: Repository<Stats>) {}
 
-    // async create(level: number, victories: number, losses: number) {
-    //     const stats = this.repo.create({ level, victories, losses });
-    //     return await this.repo.save(stats);
-    // }
-
     async create(user: User) {
-        const stats = this.repo.create({ user });
+        const stats = this.repo.create({ userId: user.id });
         return await this.repo.save(stats);
     }
 
-
-    async find(userId: number) {
-        const stats = await this.repo.findOne(userId);
-        if (!stats) { throw new NotFoundException('user not found'); }
-        return stats;
+    async incVictories(user: User) {
+        const stats = await this.repo.findOne(user.id);
+        if (!stats) { throw new NotFoundException('stats not found'); }
+        stats.victories += 1;
+        return await this.repo.save(stats);
     }
 
-    async incVictories(userId: number) {
-        const userStats = await this.find(userId);
-        Object.assign(userStats, { victories: userStats.victories + 1 });
-        return this.repo.save(userStats);
+    async incLosses(user: User) {
+        const stats = await this.repo.findOne(user.id);
+        if (!stats) { throw new NotFoundException('stats not found'); }
+        stats.losses += 1;
+        return await this.repo.save(stats);
     }
 
-    async incLosses(userId: number) {
-        const userStats = await this.find(userId);
-        Object.assign(userStats, { losses: userStats.losses + 1 });
-        return this.repo.save(userStats);
-    }
-
-    async updateLevel(userId: number, xp: number) {
-        const userStats = await this.find(userId);
-        Object.assign(userStats, { losses: userStats.level + xp });
-        return this.repo.save(userStats);
-    }
+    async updateLevel(userId: number, xp: number) {}
 }

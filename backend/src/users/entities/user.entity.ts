@@ -31,7 +31,7 @@ export class User {
     @OneToOne(type => Avatar, avatar => avatar.user)
     avatar: Avatar;
 
-    @OneToOne(type => Stats, stats => stats.user, { cascade: true })
+    @OneToOne(type => Stats, stats => stats.user, { cascade: ['insert', 'update'] })
     stats: Stats;
 
     @OneToMany(type => Friendship, friendRequest => friendRequest.applicant)

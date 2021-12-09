@@ -5,7 +5,6 @@ import { paginate, Pagination, IPaginationOptions } from 'nestjs-typeorm-paginat
 import { User } from '../entities/user.entity';
 import { AvatarService } from './avatar.service';
 import { StatsService } from './stats.service';
-import { Stats } from 'fs';
 
 @Injectable()
 export class UsersService {
@@ -15,24 +14,12 @@ export class UsersService {
         private readonly statsService: StatsService
     ) {}
 
-    async create(
-        email: string, username: string, password: string): Promise<User> {
-        
-        const avatar = await this.avatarService.create(username);
-        
-        const stats = new Stats();
-
-        const user = this.repo.create({ email, username, password, avatar });
+    async create(email: string, username: string, password: string): Promise<User> {
+        const user = this.repo.create({ email, username, password });
         await this.repo.save(user);
-        await this.statsService.create(user);
-        // return this.repo.save(user);
+        await this.avatarService.create(user);
+        await this.statsService.create(user); 
         return user;
-
-
-        // const avatar = await this.avatarService.create(username);
-        // const stats = await this.statsService.create(0, 0, 0);
-        // const user = this.repo.create({ email, username, password, avatar, stats });
-        // return this.repo.save(user);
     }
 
     async update(user: User, attrs: Partial<User>) {
@@ -77,23 +64,5 @@ export class UsersService {
         const user = await this.repo.findOne(id, { relations: ["stats"] });
         if (!user) { throw new NotFoundException('user not found'); }
         return user;
-    }
-
-    async incVictories(id: number) {
-        const user = await this.getUserWithStats(id);
-        user.stats.victories += 1;
-        return await this.repo.save(user);
-    }
-
-    async incLosses(id: number) {
-        const user = await this.getUserWithStats(id);
-        user.stats.losses += 1;
-        return await this.repo.save(user);
-    }
-
-    async updateLevel(id: number, xp: number) {
-        const user = await this.getUserWithStats(id);
-        user.stats.level += xp;
-        return await this.repo.save(user);
     }
 }
