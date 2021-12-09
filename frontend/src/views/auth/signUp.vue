@@ -4,6 +4,7 @@
 			<p>{{ error }}</p>
 		</base-dialog>
 		<card>
+			<h1>Register</h1>
 			<sign-up-component @save-data="saveData"></sign-up-component>
 		</card>
 	</div>
@@ -13,13 +14,17 @@
 import { Options, Vue } from "vue-class-component";
 import SignUpComponent from "../../components/auth/SignUp.vue";
 
+interface State {
+  error: string;
+}
+
 @Options({
   components: {
     SignUpComponent,
   },
-  data() {
+  data: (): State => {
 	  return {
-		  error: null,
+		  error: '',
 	  }
   },
   methods: {
@@ -41,3 +46,14 @@ export default class signUp extends Vue {
 	
 }
 </script>
+
+<style scoped>
+
+.card {
+	background-color: #192531;
+	box-shadow: none;
+	max-width: 20rem;
+	border: none;
+}
+
+</style>

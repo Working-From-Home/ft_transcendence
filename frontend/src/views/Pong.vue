@@ -13,3 +13,8 @@ export default defineComponent({
 	components: { PongCanvas }
 })
 </script>
+
+<style scoped>
+.card {
+}
+</style>
