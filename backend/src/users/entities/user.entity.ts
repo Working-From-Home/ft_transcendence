@@ -19,8 +19,8 @@ export class User {
     @Column({ unique: true })
     username: string;
 
-    // @Column()
-    // role: string;
+    @Column({ default: 'user' })
+    role: string;
 
     @Column()
     password: string;
@@ -31,7 +31,7 @@ export class User {
     @OneToOne(type => Avatar, avatar => avatar.user)
     avatar: Avatar;
 
-    @OneToOne(type => Stats, stats => stats.user, { cascade: ['insert', 'update'] })
+    @OneToOne(type => Stats, stats => stats.user)
     stats: Stats;
 
     @OneToMany(type => Friendship, friendRequest => friendRequest.applicant)

@@ -1,6 +1,5 @@
 import {
     BadRequestException,
-    Body,
     Controller,
     Delete,
     Get,
@@ -17,9 +16,10 @@ import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { CurrentUserGuard } from 'src/auth/guards/current-user.guard';
 import { FriendshipService } from '../services/friendship.service';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
-import { FriendshipStatus } from '../entities/friendship.entity';
-import { UpdateFriendshipDto } from '../dtos/update-friendship.dto';
-import { FriendshipsDto } from '../dtos/friendship.dto';
+import { Friendship } from '../entities/friendship.entity';
+import { FriendshipDto } from '../dtos/friendship.dto';
+import { UserDto } from '../dtos/user.dto';
+import { User } from '../entities/user.entity';
 
 @ApiTags('friends')
 @Controller('/users/:id/friends')
@@ -28,21 +28,21 @@ export class FriendsController {
     constructor(private friendshipService: FriendshipService) {}
 
     @Get()
-    @Serialize(FriendshipsDto)
-    async filterFriendshipsByStatus(
-        @Param('id') userId: string,
-        @Query('status') status: FriendshipStatus
-    ) {
-        return await this.friendshipService.findByStatus(parseInt(userId), status);
+    @Serialize(UserDto)
+    async getFriendshipsByStatus(
+        @Param('id', ParseIntPipe) userId: number,
+        @Query('status') status?: string
+    ): Promise<User[]> {
+        return await this.friendshipService.getFriendships(userId, status);
     }
 
     @Post('/:recipientId')
     @UseGuards(CurrentUserGuard)
-    @Serialize(FriendshipsDto)
+    @Serialize(FriendshipDto)
     async initiateFriendship(
         @Param('id', ParseIntPipe) applicantId: number,
-        @Param('recipientId', ParseIntPipe) recipientId: number
-    ) {
+        @Param('recipientId', ParseIntPipe) recipientId: number,
+    ): Promise<Friendship> {
         if (await this.friendshipService.twoWaySearch(applicantId, recipientId)) {
             throw new BadRequestException('the relationship already exists');
         }
@@ -51,33 +51,25 @@ export class FriendsController {
 
     @Patch('/:applicantId')
     @UseGuards(CurrentUserGuard)
-    @Serialize(FriendshipsDto)
-    async updateFriendship(
+    @Serialize(FriendshipDto)
+    async acceptFriendship(
         @Param('id', ParseIntPipe) recipientId: number,
         @Param('applicantId', ParseIntPipe) applicantId: number,
-        @Body() body: UpdateFriendshipDto
-    ) {
-        const friendship = await this.friendshipService.oneWaySearch(applicantId, recipientId);
-        if (!friendship) {
-            throw new NotFoundException('request not found')
-        }
-        if (body.status === "declined") {
-            return await this.friendshipService.remove(friendship);
-        }
-        return await this.friendshipService.update(friendship, body);
+    ): Promise<Friendship> {
+        const friendship = await this.friendshipService.oneWaySearch(applicantId, recipientId, 'pending');
+        if (!friendship) { throw new NotFoundException('request not found') }
+        return await this.friendshipService.accept(friendship);
     }
 
     @Delete('/:friendId')
     @UseGuards(CurrentUserGuard)
-    @Serialize(FriendshipsDto)
+    @Serialize(FriendshipDto)
     async removeFriendship(
         @Param('id', ParseIntPipe) lhsId: number,
         @Param('friendId', ParseIntPipe) rhsId: number
-    ) {
+    ): Promise<Friendship> {
         const friendship = await this.friendshipService.twoWaySearch(lhsId, rhsId);
-        if (!friendship) {
-            throw new NotFoundException('request not found');
-        }
+        if (!friendship) { throw new NotFoundException('request not found'); }
         return await this.friendshipService.remove(friendship);
     }
 }

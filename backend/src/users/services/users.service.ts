@@ -36,6 +36,11 @@ export class UsersService {
         return user;
     }
 
+    async findByIds(ids: number[]): Promise<User[]> {
+        const users = await this.repo.findByIds(ids);
+        return users;
+    }
+
     async findByEmail(email: string): Promise<User> {
         const users = await this.repo.find({ email });
         if (users.length === 0) { return null; }

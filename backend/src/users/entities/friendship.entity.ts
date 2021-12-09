@@ -1,24 +1,30 @@
-import { Delete } from "@nestjs/common";
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
+import { Entity, Column, ManyToOne, JoinColumn, PrimaryColumn, CreateDateColumn } from "typeorm";
 import { User } from "./user.entity";
 
 export enum FriendshipStatus {
     Accepted = "accepted",
-    Blocked = "blocked",
     Declined = "declined"
 }
 
 @Entity()
 export class Friendship {
-    @PrimaryGeneratedColumn()
-    id: number;
+    @PrimaryColumn()
+    applicantId: number;
+
+    @PrimaryColumn()
+    recipientId: number;
+
+    @Column({ default: 'pending'})
+    status: string;
+
+    @CreateDateColumn()
+    created_at: Date;
 
     @ManyToOne(() => User, user => user.sentFriendRequests, { onDelete: "CASCADE" })
+    @JoinColumn({ name: 'applicantId' })
     applicant: User;
 
     @ManyToOne(() => User, user => user.receivedFriendRequests, { onDelete: "CASCADE" })
+    @JoinColumn({ name: 'recipientId' })
     recipient: User;
-
-    @Column()
-    status: string;
 }
