@@ -855,10 +855,10 @@
                 <mxCell id="698" value="unmuteUser" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="691" vertex="1">
                     <mxGeometry y="364" width="719.243063546861" height="26" as="geometry"/>
                 </mxCell>
-                <mxCell id="711" value="isPublic (if password is null, then is public)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="691" vertex="1">
+                <mxCell id="711" value="isPublic (if password is null, then the. channel is public)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="691" vertex="1">
                     <mxGeometry y="390" width="719.243063546861" height="26" as="geometry"/>
                 </mxCell>
-                <mxCell id="712" value="isBanned ( if end_ban == null || end_ban &lt; current_date) return false; (beware about dates and dates with time zone)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="691" vertex="1">
+                <mxCell id="712" value="isBanned ( if (end_ban == null || end_ban &lt; current_date) return false; (beware about dates and dates with time zone)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="691" vertex="1">
                     <mxGeometry y="416" width="719.243063546861" height="26" as="geometry"/>
                 </mxCell>
                 <mxCell id="713" value="isMute (similiar to isBanned)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="691" vertex="1">
@@ -903,11 +903,72 @@
                 <mxCell id="734" value="&lt;h1&gt;Auth pb&lt;/h1&gt;&lt;p&gt;- validate mail ? if yes add a &quot;isActivated&quot; bool in user table?&lt;/p&gt;&lt;p&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;|---&amp;gt; if yes, then what ? should we include not activated users in requests ? if no, do nothing, if yes think again.&lt;/p&gt;&lt;p&gt;- 2FA which one ?&amp;nbsp;https://venturebeat.com/2017/09/24/a-guide-to-common-types-of-two-factor-authentication/&lt;/p&gt;&lt;p&gt;- email, tel (if 2fa via tel) are accessible for everyone. Shoud we return only a public profile via rest ?&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
                     <mxGeometry x="-1470" y="1400" width="420" height="260" as="geometry"/>
                 </mxCell>
-                <mxCell id="739" value="&lt;h1&gt;&lt;span&gt;channel schema idea&lt;br&gt;&lt;/span&gt;&lt;/h1&gt;-&amp;nbsp; &amp;nbsp;https://stackoverflow.com/questions/6541302/thread-messaging-system-database-schema-design&lt;br&gt;-&amp;nbsp; &amp;nbsp;https://slack.engineering/how-slack-built-shared-channels/&lt;br&gt;-&amp;nbsp; &amp;nbsp;https://stackoverflow.com/questions/43556796/database-design-for-a-chat-system&lt;br&gt;-&amp;nbsp; &amp;nbsp;https://stackoverflow.com/questions/7569932/database-schema-of-messaging-application" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
-                    <mxGeometry x="1040" y="1360" width="630" height="130" as="geometry"/>
+                <mxCell id="739" value="&lt;h1&gt;&lt;span&gt;channel schema idea&lt;br&gt;&lt;/span&gt;&lt;/h1&gt;-&amp;nbsp; &amp;nbsp;https://stackoverflow.com/questions/6541302/thread-messaging-system-database-schema-design&lt;br&gt;-&amp;nbsp;https://stackoverflow.com/questions/13132939/what-happens-when-i-exhaust-a-bigint-generated-key-how-to-handle-it/13133035&lt;br&gt;- http://improve.dk/stop-worrying-about-exhausting-bigints/&lt;br&gt;-&amp;nbsp;publib.boulder.ibm.com/infocenter/idshelp/v117/index.jsp?topic=%2Fcom.ibm.ddi.doc%2Fids_ddi_194.htm&lt;br&gt;-&amp;nbsp; &amp;nbsp;https://slack.engineering/how-slack-built-shared-channels/&lt;br&gt;-&amp;nbsp; &amp;nbsp;https://stackoverflow.com/questions/43556796/database-design-for-a-chat-system&lt;br&gt;-&amp;nbsp; &amp;nbsp;https://stackoverflow.com/questions/7569932/database-schema-of-messaging-application&lt;br&gt;&lt;br&gt;Don't mind, other non necessary, but interesting shit:&lt;br&gt;-&amp;nbsp;https://www.postgresonline.com/journal/archives/179-Universal-Unique-Identifiers-PostgreSQL-SQL-Server-Compare.html&lt;br&gt;-&amp;nbsp;https://stackoverflow.com/questions/52414414/best-practices-on-primary-key-auto-increment-and-uuid-in-rdbms-and-sql-databas" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="1040" y="1360" width="630" height="290" as="geometry"/>
                 </mxCell>
                 <mxCell id="741" value="&lt;h1&gt;Achievements pb&lt;/h1&gt;&lt;p&gt;&lt;u&gt;&lt;b&gt;Assigner les achievements exemple :&lt;/b&gt;&lt;/u&gt;&lt;/p&gt;&lt;p&gt;- win 3 games -&amp;gt; peut etre verifie a la fin de chaque game.&lt;/p&gt;&lt;p&gt;- create an account -&amp;gt; peut etre check et assigne au login.&lt;br&gt;- get a new friend -&amp;gt; cron job ?&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;span&gt;On peut aussi utiliser un cron job qui tourne toutes les n minutes.&lt;br&gt;&lt;br&gt;Les achievements gagnes passeront par socket. Un popup s'affichera en plein ecran pour chaque nouveau achievement ?&lt;/span&gt;&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
                     <mxGeometry x="-1440" y="1830" width="390" height="260" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="bnXlWMDUiBgZut9tSdMI" name="architecture">
+        <mxGraphModel dx="1402" dy="979" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="Eh4l5McCRe8xXsRn1Zop-0"/>
+                <mxCell id="Eh4l5McCRe8xXsRn1Zop-1" parent="Eh4l5McCRe8xXsRn1Zop-0"/>
+                <mxCell id="Eh4l5McCRe8xXsRn1Zop-16" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="Eh4l5McCRe8xXsRn1Zop-1" source="Eh4l5McCRe8xXsRn1Zop-2" target="Eh4l5McCRe8xXsRn1Zop-9">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="Eh4l5McCRe8xXsRn1Zop-18" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="Eh4l5McCRe8xXsRn1Zop-1" source="Eh4l5McCRe8xXsRn1Zop-2" target="Eh4l5McCRe8xXsRn1Zop-17">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="Eh4l5McCRe8xXsRn1Zop-2" value="Auth&lt;br&gt;JWT Token" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="Eh4l5McCRe8xXsRn1Zop-1">
+                    <mxGeometry x="260" y="247.5" width="120" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="Eh4l5McCRe8xXsRn1Zop-3" value="Actor" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="Eh4l5McCRe8xXsRn1Zop-1">
+                    <mxGeometry x="30" y="255" width="30" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="Eh4l5McCRe8xXsRn1Zop-11" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="Eh4l5McCRe8xXsRn1Zop-1" source="Eh4l5McCRe8xXsRn1Zop-4" target="Eh4l5McCRe8xXsRn1Zop-2">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="Eh4l5McCRe8xXsRn1Zop-14" style="edgeStyle=none;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="Eh4l5McCRe8xXsRn1Zop-1" source="Eh4l5McCRe8xXsRn1Zop-4" target="Eh4l5McCRe8xXsRn1Zop-9">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="230" y="145"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="Eh4l5McCRe8xXsRn1Zop-4" value="" style="verticalLabelPosition=bottom;html=1;verticalAlign=top;align=center;strokeColor=none;fillColor=#00BEF2;shape=mxgraph.azure.computer;pointerEvents=1;" vertex="1" parent="Eh4l5McCRe8xXsRn1Zop-1">
+                    <mxGeometry x="80" y="257.5" width="70" height="67.5" as="geometry"/>
+                </mxCell>
+                <mxCell id="Eh4l5McCRe8xXsRn1Zop-27" style="edgeStyle=none;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=0.98;entryY=0.02;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="Eh4l5McCRe8xXsRn1Zop-1" source="Eh4l5McCRe8xXsRn1Zop-9" target="Eh4l5McCRe8xXsRn1Zop-4">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="250" y="180"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="Eh4l5McCRe8xXsRn1Zop-9" value="&lt;font style=&quot;font-size: 14px&quot;&gt;&lt;b&gt;REST api&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;fillWeight=4;hachureGap=8;hachureAngle=45;fillColor=#1ba1e2;sketch=1;" vertex="1" parent="Eh4l5McCRe8xXsRn1Zop-1">
+                    <mxGeometry x="450" y="130" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="Eh4l5McCRe8xXsRn1Zop-15" value="SignIn / SignUp" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="Eh4l5McCRe8xXsRn1Zop-1">
+                    <mxGeometry x="240" y="100" width="110" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="Eh4l5McCRe8xXsRn1Zop-20" value="&lt;font style=&quot;font-size: 14px&quot;&gt;&lt;b&gt;Services&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;fillWeight=4;hachureGap=8;hachureAngle=45;fillColor=#1ba1e2;sketch=1;" vertex="1" parent="Eh4l5McCRe8xXsRn1Zop-1">
+                    <mxGeometry x="660" y="152.5" width="150" height="270" as="geometry"/>
+                </mxCell>
+                <mxCell id="Eh4l5McCRe8xXsRn1Zop-21" value="" style="swimlane;startSize=0;" vertex="1" parent="Eh4l5McCRe8xXsRn1Zop-1">
+                    <mxGeometry x="410" y="290" width="199" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="Eh4l5McCRe8xXsRn1Zop-8" value="&lt;font style=&quot;font-size: 14px&quot;&gt;&lt;b&gt;/app Gateway&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;fillWeight=4;hachureGap=8;hachureAngle=45;fillColor=#1ba1e2;sketch=1;" vertex="1" parent="Eh4l5McCRe8xXsRn1Zop-21">
+                    <mxGeometry x="35" y="110" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="Eh4l5McCRe8xXsRn1Zop-17" value="&lt;font style=&quot;font-size: 14px&quot;&gt;&lt;b&gt;/pong Gateway&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;fillWeight=4;hachureGap=8;hachureAngle=45;fillColor=#1ba1e2;sketch=1;" vertex="1" parent="Eh4l5McCRe8xXsRn1Zop-21">
+                    <mxGeometry x="35" y="35" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="Eh4l5McCRe8xXsRn1Zop-24" value="Socket.io Framework" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="Eh4l5McCRe8xXsRn1Zop-21">
+                    <mxGeometry x="30" y="10" width="120" height="20" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
