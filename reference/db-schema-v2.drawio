@@ -813,7 +813,7 @@
                 <mxCell id="695" value="getUserAchievements" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="682" vertex="1">
                     <mxGeometry y="156" width="320.71" height="26" as="geometry"/>
                 </mxCell>
-                <mxCell id="691" value="Channel (certaines fonctions dans un service separe ou dans channel ??)" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" parent="626" vertex="1">
+                <mxCell id="691" value="Channel (certaines fonctions dans un service separe ou dans channel directement ??)" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" parent="626" vertex="1">
                     <mxGeometry x="1299.288987341772" y="40" width="719.243063546861" height="546" as="geometry"/>
                 </mxCell>
                 <mxCell id="692" value="create (create a channel, IF password -&gt; private. IF dm -&gt; isDm:true, title -&gt; null, password:null )" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="691" vertex="1">
@@ -904,10 +904,19 @@
                     <mxGeometry x="-1470" y="1400" width="420" height="260" as="geometry"/>
                 </mxCell>
                 <mxCell id="739" value="&lt;h1&gt;&lt;span&gt;channel schema idea&lt;br&gt;&lt;/span&gt;&lt;/h1&gt;-&amp;nbsp; &amp;nbsp;https://stackoverflow.com/questions/6541302/thread-messaging-system-database-schema-design&lt;br&gt;-&amp;nbsp;https://stackoverflow.com/questions/13132939/what-happens-when-i-exhaust-a-bigint-generated-key-how-to-handle-it/13133035&lt;br&gt;- http://improve.dk/stop-worrying-about-exhausting-bigints/&lt;br&gt;-&amp;nbsp;publib.boulder.ibm.com/infocenter/idshelp/v117/index.jsp?topic=%2Fcom.ibm.ddi.doc%2Fids_ddi_194.htm&lt;br&gt;-&amp;nbsp; &amp;nbsp;https://slack.engineering/how-slack-built-shared-channels/&lt;br&gt;-&amp;nbsp; &amp;nbsp;https://stackoverflow.com/questions/43556796/database-design-for-a-chat-system&lt;br&gt;-&amp;nbsp; &amp;nbsp;https://stackoverflow.com/questions/7569932/database-schema-of-messaging-application&lt;br&gt;&lt;br&gt;Don't mind, other non necessary, but interesting shit:&lt;br&gt;-&amp;nbsp;https://www.postgresonline.com/journal/archives/179-Universal-Unique-Identifiers-PostgreSQL-SQL-Server-Compare.html&lt;br&gt;-&amp;nbsp;https://stackoverflow.com/questions/52414414/best-practices-on-primary-key-auto-increment-and-uuid-in-rdbms-and-sql-databas" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
-                    <mxGeometry x="1040" y="1360" width="630" height="290" as="geometry"/>
+                    <mxGeometry x="1040" y="1550" width="630" height="290" as="geometry"/>
                 </mxCell>
                 <mxCell id="741" value="&lt;h1&gt;Achievements pb&lt;/h1&gt;&lt;p&gt;&lt;u&gt;&lt;b&gt;Assigner les achievements exemple :&lt;/b&gt;&lt;/u&gt;&lt;/p&gt;&lt;p&gt;- win 3 games -&amp;gt; peut etre verifie a la fin de chaque game.&lt;/p&gt;&lt;p&gt;- create an account -&amp;gt; peut etre check et assigne au login.&lt;br&gt;- get a new friend -&amp;gt; cron job ?&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;span&gt;On peut aussi utiliser un cron job qui tourne toutes les n minutes.&lt;br&gt;&lt;br&gt;Les achievements gagnes passeront par socket. Un popup s'affichera en plein ecran pour chaque nouveau achievement ?&lt;/span&gt;&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
                     <mxGeometry x="-1440" y="1830" width="390" height="260" as="geometry"/>
+                </mxCell>
+                <mxCell id="YehIDgii4fkM4DpvgWXB-742" value="Only id as primary key ???&lt;br&gt;No need for composite key here.&lt;br&gt;&lt;br&gt;however, index channel_id column ?" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="580" y="800" width="150" height="155" as="geometry"/>
+                </mxCell>
+                <mxCell id="YehIDgii4fkM4DpvgWXB-743" value="" style="edgeStyle=none;html=1;" edge="1" parent="1" source="255" target="YehIDgii4fkM4DpvgWXB-742">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="YehIDgii4fkM4DpvgWXB-744" value="&lt;h1&gt;&lt;span&gt;channel pb&lt;br&gt;&lt;/span&gt;&lt;/h1&gt;- Password must not be stored in clear.&lt;br&gt;-&amp;nbsp;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="1050" y="1200" width="630" height="290" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
