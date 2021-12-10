@@ -741,7 +741,7 @@
                 <mxCell id="666" value="---------------------------------------" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="641" vertex="1">
                     <mxGeometry y="320" width="320.28" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="673" value="getUserDetailed (with stats, hist achievements etc ?)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="641" vertex="1">
+                <mxCell id="673" value="getUserDetailed (with stats, his achievements etc ?)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="641" vertex="1">
                     <mxGeometry y="350" width="320.28" height="26" as="geometry"/>
                 </mxCell>
                 <mxCell id="677" value="getPublicProfile ? oui, non ?&#10;  |-&gt; pour filter les infos privee. email, tel pour 2fa " style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="641" vertex="1">
