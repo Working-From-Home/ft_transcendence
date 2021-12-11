@@ -801,7 +801,7 @@
                 <mxCell id="744" value="getAchievements (return all existing achievements)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="682">
                     <mxGeometry y="179.99776744186045" width="406.51" height="26" as="geometry"/>
                 </mxCell>
-                <mxCell id="695" value="getUserAchievements ()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="682" vertex="1">
+                <mxCell id="695" value="getUserAchievements (get all achievements a user has got)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="682" vertex="1">
                     <mxGeometry y="205.99776744186045" width="406.51" height="27.669441860465117" as="geometry"/>
                 </mxCell>
                 <mxCell id="743" value="checkHeartless &#10; |-&gt; check if the user has the requirements for heartless)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="682">
