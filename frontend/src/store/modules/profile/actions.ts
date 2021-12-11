@@ -1,10 +1,9 @@
-import { FetchData } from './type';
+import { FetchData, FData } from './type';
 
 export default {
 	async getProfile(context: any, payload: any) {
-		const fetchData: FetchData = {
+		const fetchData: FData = {
 			method: 'GET',
-			body: '',
 			headers: new Headers()
 		};
 		const newToken: string = 'Bearer ' + payload.token;
@@ -30,9 +29,8 @@ export default {
 		});
 	},
 	async getAvatar(context: any, payload: any) {
-		const fetchData: FetchData = {
+		const fetchData: FData = {
 			method: 'GET',
-			body: '',
 			headers: new Headers()
 		};
 		const newToken:string = 'Bearer ' + payload.token;
@@ -63,9 +61,8 @@ export default {
 		});
 	},
 	async deleteAvatar(context: any, payload: any) {
-		const fetchData: FetchData = {
+		const fetchData: FData = {
 			method: 'DElETE',
-			body: '',
 			headers: new Headers()
 		};
 		const newToken: string = 'Bearer ' + payload.token;
