@@ -3,7 +3,7 @@
 		<div class="home">
 			<not-log v-if="!isLoggedIn"></not-log>
 			<img alt="Vue logo" src="../assets/logo42.png" />
-			<Index msg="Welcome to Ft_transcendance" />
+			<Index msg="Welcome to Ft_transcendence" />
 		</div>
 	</card>
 </template>
