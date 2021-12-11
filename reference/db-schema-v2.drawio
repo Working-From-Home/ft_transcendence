@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="RysTDXG4jlE5iRAqchQg" name="Schema Tables">
-        <mxGraphModel dx="4504" dy="1958" grid="1" gridSize="10" guides="0" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="3349" dy="1152" grid="1" gridSize="10" guides="0" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -45,13 +45,13 @@
                 <mxCell id="14" value="password" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;" parent="12" vertex="1">
                     <mxGeometry x="30" width="330" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="729" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;top=0;left=0;bottom=0;right=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="2">
+                <mxCell id="729" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;top=0;left=0;bottom=0;right=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="2" vertex="1">
                     <mxGeometry y="150" width="360" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="730" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;editable=1;overflow=hidden;" vertex="1" parent="729">
+                <mxCell id="730" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;editable=1;overflow=hidden;" parent="729" vertex="1">
                     <mxGeometry width="30" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="731" value="ft_oauth_token (nullable) (it can expire so...&#10;                  AND MUST FIND A BETTER NAME)" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;" vertex="1" parent="729">
+                <mxCell id="731" value="ft_oauth_token (nullable) (it can expire so...&#10;                  AND MUST FIND A BETTER NAME)" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;" parent="729" vertex="1">
                     <mxGeometry x="30" width="330" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="269" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;top=0;left=0;bottom=0;right=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="2" vertex="1">
@@ -639,22 +639,22 @@
                 <mxCell id="681" value="generateAccessToken" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="627" vertex="1">
                     <mxGeometry y="210" width="250.7" height="26" as="geometry"/>
                 </mxCell>
-                <mxCell id="726" value="------------------------" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="627">
+                <mxCell id="726" value="------------------------" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="627" vertex="1">
                     <mxGeometry y="236" width="250.7" height="26" as="geometry"/>
                 </mxCell>
-                <mxCell id="728" value="signUpWith42" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="627">
+                <mxCell id="728" value="signUpWith42" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="627" vertex="1">
                     <mxGeometry y="262" width="250.7" height="26" as="geometry"/>
                 </mxCell>
-                <mxCell id="738" value="signInWith42 ??? usefull ?" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="627">
+                <mxCell id="738" value="signInWith42 ??? usefull ?" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="627" vertex="1">
                     <mxGeometry y="288" width="250.7" height="26" as="geometry"/>
                 </mxCell>
-                <mxCell id="727" value="enable2FA" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="627">
+                <mxCell id="727" value="enable2FA" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="627" vertex="1">
                     <mxGeometry y="314" width="250.7" height="26" as="geometry"/>
                 </mxCell>
-                <mxCell id="737" value="disable2FA (maybe all this in user ? Or not)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="627">
+                <mxCell id="737" value="disable2FA (maybe all this in user ? Or not)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="627" vertex="1">
                     <mxGeometry y="340" width="250.7" height="26" as="geometry"/>
                 </mxCell>
-                <mxCell id="732" value="has2FAenabled (is2FAEnabled)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="627">
+                <mxCell id="732" value="has2FAenabled (is2FAEnabled)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="627" vertex="1">
                     <mxGeometry y="366" width="250.7" height="26" as="geometry"/>
                 </mxCell>
                 <mxCell id="631" value="Friendship" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" parent="626" vertex="1">
@@ -702,11 +702,11 @@
                 <mxCell id="640" value="getBlocked (users the user have blocked)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="637" vertex="1">
                     <mxGeometry y="90" width="353.7181818181818" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="725" value="another internal to check if a user is blocked by another user ?" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="637">
+                <mxCell id="725" value="another internal to check if a user is blocked by another user ?" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="637" vertex="1">
                     <mxGeometry y="120" width="353.7181818181818" height="26" as="geometry"/>
                 </mxCell>
                 <mxCell id="641" value="User" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" parent="626" vertex="1">
-                    <mxGeometry x="269.72" y="34.69" width="320.28" height="550" as="geometry"/>
+                    <mxGeometry x="269.72" y="34.69" width="320.28" height="506" as="geometry"/>
                 </mxCell>
                 <mxCell id="642" value="create" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="641" vertex="1">
                     <mxGeometry y="26" width="320.28" height="24" as="geometry"/>
@@ -744,23 +744,20 @@
                 <mxCell id="673" value="getUserDetailed (with stats, his achievements etc ?)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="641" vertex="1">
                     <mxGeometry y="350" width="320.28" height="26" as="geometry"/>
                 </mxCell>
-                <mxCell id="677" value="getPublicProfile ? oui, non ?&#10;  |-&gt; pour filter les infos privee. email, tel pour 2fa " style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="641" vertex="1">
-                    <mxGeometry y="376" width="320.28" height="44" as="geometry"/>
-                </mxCell>
                 <mxCell id="680" value="getGameHistory (guser) dans le service user directement ?" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="641" vertex="1">
-                    <mxGeometry y="420" width="320.28" height="26" as="geometry"/>
+                    <mxGeometry y="376" width="320.28" height="26" as="geometry"/>
                 </mxCell>
                 <mxCell id="676" value="List Item" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="641" vertex="1">
-                    <mxGeometry y="446" width="320.28" height="26" as="geometry"/>
+                    <mxGeometry y="402" width="320.28" height="26" as="geometry"/>
                 </mxCell>
                 <mxCell id="679" value="List Item" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="641" vertex="1">
-                    <mxGeometry y="472" width="320.28" height="26" as="geometry"/>
+                    <mxGeometry y="428" width="320.28" height="26" as="geometry"/>
                 </mxCell>
                 <mxCell id="678" value="List Item" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="641" vertex="1">
-                    <mxGeometry y="498" width="320.28" height="26" as="geometry"/>
+                    <mxGeometry y="454" width="320.28" height="26" as="geometry"/>
                 </mxCell>
                 <mxCell id="675" value="List Item" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="641" vertex="1">
-                    <mxGeometry y="524" width="320.28" height="26" as="geometry"/>
+                    <mxGeometry y="480" width="320.28" height="26" as="geometry"/>
                 </mxCell>
                 <mxCell id="645" value="Stats" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" parent="626" vertex="1">
                     <mxGeometry x="25.687252269530752" y="489.9979591836734" width="218.34164429101136" height="140" as="geometry"/>
@@ -814,15 +811,15 @@
                     <mxGeometry y="156" width="320.71" height="26" as="geometry"/>
                 </mxCell>
                 <mxCell id="691" value="Channel (certaines fonctions dans un service separe ou dans channel directement ??)" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" parent="626" vertex="1">
-                    <mxGeometry x="1299.288987341772" y="40" width="719.243063546861" height="572" as="geometry"/>
+                    <mxGeometry x="1299.288987341772" y="40" width="719.243063546861" height="598" as="geometry"/>
                 </mxCell>
                 <mxCell id="692" value="create (create a channel, IF password -&gt; private. IF dm -&gt; isDm:true, title -&gt; null, password:null )" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="691" vertex="1">
                     <mxGeometry y="26" width="719.243063546861" height="26" as="geometry"/>
                 </mxCell>
-                <mxCell id="693" value="update" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="691" vertex="1">
+                <mxCell id="693" value="update (only password and title, right ?  via the rest api )" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="691" vertex="1">
                     <mxGeometry y="52" width="719.243063546861" height="26" as="geometry"/>
                 </mxCell>
-                <mxCell id="694" value="remove useless ?? &#10;  |-&gt;Sinon il faudra update les tables dependantes. (transaction sql pas oblige mais...)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="691" vertex="1">
+                <mxCell id="694" value="remove useless ?? &#10;  |-&gt; Sinon il faudra update les tables dependantes. (transaction sql pas oblige mais...)&#10;  |-&gt; Aussi possible de remove quand le dernier user quitte le channel. Mais, en vrai on s'en fiche nn ? ca pose d'autres questions." style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="691" vertex="1">
                     <mxGeometry y="78" width="719.243063546861" height="52" as="geometry"/>
                 </mxCell>
                 <mxCell id="700" value="joinChannel (if user not exists, create entry in table userChannel, else just set inChannel to true, also check if is banned ...)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="691" vertex="1">
@@ -843,7 +840,7 @@
                 <mxCell id="702" value="removeModerator" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="691" vertex="1">
                     <mxGeometry y="260" width="719.243063546861" height="26" as="geometry"/>
                 </mxCell>
-                <mxCell id="703" value="banUser(date end_ban)  (set end_ban date, and &quot;inChannel&quot; to false) ( an 3000 == ban a vie)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="691" vertex="1">
+                <mxCell id="703" value="banUser(date end_ban)  (set end_ban date, and &quot;inChannel&quot; to false) ( an 3000 == ban a vie) (check if role != 'admin', et owner ?)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="691" vertex="1">
                     <mxGeometry y="286" width="719.243063546861" height="26" as="geometry"/>
                 </mxCell>
                 <mxCell id="701" value="unbanUser (set end_ban to null in db)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="691" vertex="1">
@@ -864,17 +861,20 @@
                 <mxCell id="713" value="isMute (similiar to isBanned)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="691" vertex="1">
                     <mxGeometry y="442" width="719.243063546861" height="26" as="geometry"/>
                 </mxCell>
-                <mxCell id="723" value="isDm" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="691">
+                <mxCell id="723" value="isDm" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="691" vertex="1">
                     <mxGeometry y="468" width="719.243063546861" height="26" as="geometry"/>
                 </mxCell>
-                <mxCell id="YehIDgii4fkM4DpvgWXB-746" value="-------------------------" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="691">
+                <mxCell id="742" value="SearchChannelByTitle (sorted by joined first ? look at &quot;like&quot; in query builder or like import from typeorm)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="691" vertex="1">
                     <mxGeometry y="494" width="719.243063546861" height="26" as="geometry"/>
                 </mxCell>
-                <mxCell id="722" value="getConversationFromChannel (return the entire  list of messages from a channel ? pagination)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="691">
+                <mxCell id="YehIDgii4fkM4DpvgWXB-746" value="-------------------------" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="691" vertex="1">
                     <mxGeometry y="520" width="719.243063546861" height="26" as="geometry"/>
                 </mxCell>
-                <mxCell id="714" value="List Item" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="691" vertex="1">
+                <mxCell id="722" value="getConversationFromChannel (return the entire  list of messages from a channel ? pagination ?)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="691" vertex="1">
                     <mxGeometry y="546" width="719.243063546861" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="714" value="List Item" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="691" vertex="1">
+                    <mxGeometry y="572" width="719.243063546861" height="26" as="geometry"/>
                 </mxCell>
                 <mxCell id="705" value="Message  (fonctions separe ou dans channel ??)" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" parent="626" vertex="1">
                     <mxGeometry x="1299.29" y="651" width="720.71" height="104" as="geometry"/>
@@ -888,40 +888,40 @@
                 <mxCell id="708" value="Item 3" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="705" vertex="1">
                     <mxGeometry y="78" width="720.71" height="26" as="geometry"/>
                 </mxCell>
-                <mxCell id="717" value="Game" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" vertex="1" parent="626">
+                <mxCell id="717" value="Game" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" parent="626" vertex="1">
                     <mxGeometry x="609.29" y="391" width="550.71" height="104" as="geometry"/>
                 </mxCell>
-                <mxCell id="718" value="?" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="717">
+                <mxCell id="718" value="?" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="717" vertex="1">
                     <mxGeometry y="26" width="550.71" height="26" as="geometry"/>
                 </mxCell>
-                <mxCell id="719" value="?" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="717">
+                <mxCell id="719" value="?" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="717" vertex="1">
                     <mxGeometry y="52" width="550.71" height="26" as="geometry"/>
                 </mxCell>
-                <mxCell id="720" value="getHistory (get the game history list of a user) dans le service user directement ?" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="717">
+                <mxCell id="720" value="getHistory (get the game history list of a user) dans le service user directement ?" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="717" vertex="1">
                     <mxGeometry y="78" width="550.71" height="26" as="geometry"/>
                 </mxCell>
-                <mxCell id="721" value="&lt;h1&gt;Game&lt;/h1&gt;&lt;p&gt;matchmaking separe ou pas ? si oui on cree le game en dehors du jeu, avec (winnerId a null)&lt;/p&gt;&lt;p&gt;et a la fin de la partie, le winner est set, et les stats des users sont incremente.&lt;/p&gt;&lt;p&gt;si oui, via rest websockets ?&lt;/p&gt;&lt;p&gt;- https://gamedev.stackexchange.com/questions/192734/what-server-architecture-should-i-use-for-matchmaking-in-node-js&lt;br&gt;-&amp;nbsp;https://github.com/colyseus/colyseus&lt;/p&gt;&lt;p&gt;-&amp;nbsp;https://github.com/colyseus/colyseus/tree/1d6b2d2486731b03c013714c9e4fd8d31b6f1084/packages/core/src/matchmaker&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="626">
+                <mxCell id="721" value="&lt;h1&gt;Game&lt;/h1&gt;&lt;p&gt;matchmaking separe ou pas ? si oui on peut creer le game en dehors du jeu, avec (winnerId a null)&lt;/p&gt;&lt;p&gt;et a la fin de la partie, le winner est set, et les stats des users sont incremente.&lt;/p&gt;&lt;p&gt;si oui, via rest websockets ?&lt;/p&gt;&lt;p&gt;- https://gamedev.stackexchange.com/questions/192734/what-server-architecture-should-i-use-for-matchmaking-in-node-js&lt;br&gt;-&amp;nbsp;https://github.com/colyseus/colyseus&lt;/p&gt;&lt;p&gt;-&amp;nbsp;https://github.com/colyseus/colyseus/tree/1d6b2d2486731b03c013714c9e4fd8d31b6f1084/packages/core/src/matchmaker&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="626" vertex="1">
                     <mxGeometry x="609.29" y="611" width="670.71" height="239" as="geometry"/>
                 </mxCell>
-                <mxCell id="734" value="&lt;h1&gt;Auth pb&lt;/h1&gt;&lt;p&gt;- validate mail ? if yes add a &quot;isActivated&quot; bool in user table?&lt;/p&gt;&lt;p&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;|---&amp;gt; if yes, then what ? should we include not activated users in requests ? if no, do nothing, if yes think again.&lt;/p&gt;&lt;p&gt;- 2FA which one ?&amp;nbsp;https://venturebeat.com/2017/09/24/a-guide-to-common-types-of-two-factor-authentication/&lt;/p&gt;&lt;p&gt;- email, tel (if 2fa via tel) are accessible for everyone. Shoud we return only a public profile via rest ?&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
+                <mxCell id="734" value="&lt;h1&gt;Auth pb&lt;/h1&gt;&lt;p&gt;- validate mail ? if yes add a &quot;isActivated&quot; bool in user table?&lt;/p&gt;&lt;p&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;|---&amp;gt; if yes, then what ? should we include not activated users in requests ? if no, do nothing, if yes think again.&lt;/p&gt;&lt;p&gt;- 2FA which one ?&amp;nbsp;https://venturebeat.com/2017/09/24/a-guide-to-common-types-of-two-factor-authentication/&lt;/p&gt;&lt;p&gt;- email, tel (if 2fa via tel) are accessible for everyone. Shoud we return only a public profile via rest ?&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="1" vertex="1">
                     <mxGeometry x="-1470" y="1400" width="420" height="260" as="geometry"/>
                 </mxCell>
-                <mxCell id="739" value="&lt;h1&gt;&lt;span&gt;channel schema idea&lt;br&gt;&lt;/span&gt;&lt;/h1&gt;-&amp;nbsp; &amp;nbsp;https://stackoverflow.com/questions/6541302/thread-messaging-system-database-schema-design&lt;br&gt;-&amp;nbsp;https://stackoverflow.com/questions/13132939/what-happens-when-i-exhaust-a-bigint-generated-key-how-to-handle-it/13133035&lt;br&gt;- http://improve.dk/stop-worrying-about-exhausting-bigints/&lt;br&gt;-&amp;nbsp;publib.boulder.ibm.com/infocenter/idshelp/v117/index.jsp?topic=%2Fcom.ibm.ddi.doc%2Fids_ddi_194.htm&lt;br&gt;-&amp;nbsp; &amp;nbsp;https://slack.engineering/how-slack-built-shared-channels/&lt;br&gt;-&amp;nbsp; &amp;nbsp;https://stackoverflow.com/questions/43556796/database-design-for-a-chat-system&lt;br&gt;-&amp;nbsp; &amp;nbsp;https://stackoverflow.com/questions/7569932/database-schema-of-messaging-application&lt;br&gt;&lt;br&gt;Don't mind, other non necessary, but interesting shit:&lt;br&gt;-&amp;nbsp;https://www.postgresonline.com/journal/archives/179-Universal-Unique-Identifiers-PostgreSQL-SQL-Server-Compare.html&lt;br&gt;-&amp;nbsp;https://stackoverflow.com/questions/52414414/best-practices-on-primary-key-auto-increment-and-uuid-in-rdbms-and-sql-databas" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
+                <mxCell id="739" value="&lt;h1&gt;&lt;span&gt;channel schema idea&lt;br&gt;&lt;/span&gt;&lt;/h1&gt;-&amp;nbsp; &amp;nbsp;https://stackoverflow.com/questions/6541302/thread-messaging-system-database-schema-design&lt;br&gt;-&amp;nbsp;https://stackoverflow.com/questions/13132939/what-happens-when-i-exhaust-a-bigint-generated-key-how-to-handle-it/13133035&lt;br&gt;- http://improve.dk/stop-worrying-about-exhausting-bigints/&lt;br&gt;-&amp;nbsp;publib.boulder.ibm.com/infocenter/idshelp/v117/index.jsp?topic=%2Fcom.ibm.ddi.doc%2Fids_ddi_194.htm&lt;br&gt;-&amp;nbsp; &amp;nbsp;https://slack.engineering/how-slack-built-shared-channels/&lt;br&gt;-&amp;nbsp; &amp;nbsp;https://stackoverflow.com/questions/43556796/database-design-for-a-chat-system&lt;br&gt;-&amp;nbsp; &amp;nbsp;https://stackoverflow.com/questions/7569932/database-schema-of-messaging-application&lt;br&gt;&lt;br&gt;Don't mind, other non necessary, but interesting shit:&lt;br&gt;-&amp;nbsp;https://www.postgresonline.com/journal/archives/179-Universal-Unique-Identifiers-PostgreSQL-SQL-Server-Compare.html&lt;br&gt;-&amp;nbsp;https://stackoverflow.com/questions/52414414/best-practices-on-primary-key-auto-increment-and-uuid-in-rdbms-and-sql-databas" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="1" vertex="1">
                     <mxGeometry x="1040" y="1550" width="630" height="290" as="geometry"/>
                 </mxCell>
-                <mxCell id="741" value="&lt;h1&gt;Achievements pb&lt;/h1&gt;&lt;p&gt;&lt;u&gt;&lt;b&gt;Assigner les achievements exemple :&lt;/b&gt;&lt;/u&gt;&lt;/p&gt;&lt;p&gt;- win 3 games -&amp;gt; peut etre verifie a la fin de chaque game.&lt;/p&gt;&lt;p&gt;- create an account -&amp;gt; peut etre check et assigne au login.&lt;br&gt;- get a new friend -&amp;gt; cron job ?&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;span&gt;On peut aussi utiliser un cron job qui tourne toutes les n minutes.&lt;br&gt;&lt;br&gt;Les achievements gagnes passeront par socket. Un popup s'affichera en plein ecran pour chaque nouveau achievement ?&lt;/span&gt;&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
-                    <mxGeometry x="-1440" y="1830" width="390" height="260" as="geometry"/>
+                <mxCell id="741" value="&lt;h1&gt;Achievements pb&lt;/h1&gt;&lt;p&gt;&lt;u&gt;&lt;b&gt;Assigner les achievements exemple :&lt;/b&gt;&lt;/u&gt;&lt;/p&gt;&lt;p&gt;- win 3 games -&amp;gt; peut etre verifie a la fin de chaque game.&lt;/p&gt;&lt;p&gt;- create an account -&amp;gt; peut etre check et assigne au login.&lt;br&gt;- get a new friend -&amp;gt; cron job ?&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;span&gt;On peut aussi utiliser un cron job qui tourne toutes les n minutes.&lt;br&gt;&lt;br&gt;Les achievements gagnes passeront par socket. Un popup s'affichera en plein ecran pour chaque nouveau achievement ?&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span&gt;&lt;br&gt;&lt;/span&gt;&lt;/p&gt;&lt;h1&gt;Achievements ideas:&lt;br&gt;&lt;/h1&gt;-&amp;nbsp; Heartless: block another user&lt;br&gt;&lt;br&gt;-Voir pour les implementer a la fin ? car ca dependra en partie des autres features. Sinon, une fonction par achievements dans le service achievement. Et en fonctions de ou il sera attribute, on appellera la fonction.&lt;br&gt;&lt;br&gt;Par exemple, une fonction heartless qui verifiera que la condition est remplie, enfin bref idk, ca pose d'autres soucis... elle sera appellee, a chaque fois qu'on bloque quelqu'un, bon apres c'est ok en vrai.&lt;br&gt;&lt;br&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="-1440" y="1830" width="390" height="470" as="geometry"/>
                 </mxCell>
-                <mxCell id="YehIDgii4fkM4DpvgWXB-742" value="Only id as primary key ???&lt;br&gt;No need for composite key here.&lt;br&gt;&lt;br&gt;however, index channel_id column ?" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                <mxCell id="YehIDgii4fkM4DpvgWXB-742" value="Only id as primary key ???&lt;br&gt;No need for composite key here.&lt;br&gt;&lt;br&gt;however, index channel_id column ?" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
                     <mxGeometry x="580" y="800" width="150" height="155" as="geometry"/>
                 </mxCell>
-                <mxCell id="YehIDgii4fkM4DpvgWXB-743" value="" style="edgeStyle=none;html=1;" edge="1" parent="1" source="255" target="YehIDgii4fkM4DpvgWXB-742">
+                <mxCell id="YehIDgii4fkM4DpvgWXB-743" value="" style="edgeStyle=none;html=1;" parent="1" source="255" target="YehIDgii4fkM4DpvgWXB-742" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="YehIDgii4fkM4DpvgWXB-744" value="&lt;h1&gt;&lt;span&gt;channel pb&lt;br&gt;&lt;/span&gt;&lt;/h1&gt;- Password must not be stored in clear.&lt;br&gt;- on connexion, sent a tiny par" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
+                <mxCell id="YehIDgii4fkM4DpvgWXB-744" value="&lt;h1&gt;&lt;span&gt;channel pb&lt;br&gt;&lt;/span&gt;&lt;/h1&gt;- Password must not be stored in clear.&lt;br&gt;- on connexion, sent a tiny par" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="1" vertex="1">
                     <mxGeometry x="1050" y="1200" width="630" height="290" as="geometry"/>
                 </mxCell>
-                <mxCell id="YehIDgii4fkM4DpvgWXB-747" value="&lt;h1&gt;&lt;font style=&quot;font-size: 36px&quot;&gt;--------------------------------------------------------&amp;nbsp; Schema tables&amp;nbsp; ----------------------------------------------&lt;/font&gt;&lt;/h1&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                <mxCell id="YehIDgii4fkM4DpvgWXB-747" value="&lt;h1&gt;&lt;font style=&quot;font-size: 36px&quot;&gt;--------------------------------------------------------&amp;nbsp; Schema tables&amp;nbsp; ----------------------------------------------&lt;/font&gt;&lt;/h1&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
                     <mxGeometry x="-1100.0012121212121" y="80" width="2008.15101010101" height="50" as="geometry"/>
                 </mxCell>
             </root>
