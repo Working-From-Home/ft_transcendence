@@ -10,3 +10,8 @@ export interface FetchData  {
 	body: string | FormData,
 	headers: Headers
 };
+
+export interface FData  {
+	method: string,
+	headers: Headers
+};
