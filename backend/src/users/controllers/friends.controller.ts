@@ -34,7 +34,15 @@ export class FriendsController {
         @Param('id', ParseIntPipe) userId: number,
         @Query('status') status?: string
     ): Promise<User[]> {
-        return await this.friendshipService.getFriendships(userId, status);
+        let users: User[];
+        if (status === 'accepted') {
+            users = await this.friendshipService.getFriends(userId);
+        } else if (status === 'pending') {
+            users = await this.friendshipService.getPendings(userId);
+        } else {
+            throw new BadRequestException('bad status');
+        }
+        return users;
     }
 
     @Post('/:recipientId')

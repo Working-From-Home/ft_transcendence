@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { Friendship } from '../entities/friendship.entity';
+import { User } from '../entities/user.entity';
 import { UsersService } from './users.service';
 
 @Injectable()
@@ -28,37 +29,32 @@ export class FriendshipService {
         return await this.repo.remove(friendship);
     }
 
-    async findByStatus(userId: number, status: string): Promise<Friendship[]> {
+    async getFriends(userId: number): Promise<User[]> {
         const user = await this.usersService.findById(userId);
-        return await this.repo.find({
+        const friends = await this.repo.find({
             where: [
-                { applicant: user, status },
-                { recipient: user, status },
+                { applicant: user, status: 'accepted' },
+                { recipient: user, status: 'accepted' },
             ],
             relations: ['applicant', 'recipient']
         });
+        return await this.formatOutput(userId, friends);
     }
 
-   async getFriendships(userId: number, status: string) {
-        const friendships = await this.findByStatus(userId, status);
-        let ids: number[] = [];
-        friendships.forEach((friendship: Friendship) => {
-            if (friendship.applicant.id === userId) {
-                ids.push(friendship.recipient.id);
-            } else if (friendship.recipient.id === userId) {
-                ids.push(friendship.applicant.id);
-            }
-        })
-        return await this.usersService.findByIds(ids);
-    };
+    async getPendings(userId: number): Promise<User[]> {
+        const user = await this.usersService.findById(userId);
+        const pendings = await this.repo.find({
+            where: [{ recipient: user, status: 'pending' }],
+            relations: ['applicant', 'recipient']
+        });
+        return await this.formatOutput(userId, pendings);
+    }
 
     async oneWaySearch(applicantId: number, recipientId: number, status?: string): Promise<Friendship> {
         const applicant = await this.usersService.findById(applicantId);
         const recipient = await this.usersService.findById(recipientId);
         return await this.repo.findOne({
-            where: [
-                { applicant, recipient, status },
-            ],
+            where: [{ applicant, recipient, status }],
             relations: ['applicant', 'recipient']
         });
     }
@@ -73,5 +69,17 @@ export class FriendshipService {
             ],
             relations: ['applicant', 'recipient']
         });
+    }
+
+    private async formatOutput(userId: number, friendships: Friendship[]): Promise<User[]> {
+        let ids: number[] = [];
+        friendships.forEach((friendship: Friendship) => {
+            if (friendship.applicant.id === userId) {
+                ids.push(friendship.recipient.id);
+            } else if (friendship.recipient.id === userId) {
+                ids.push(friendship.applicant.id);
+            }
+        })
+        return await this.usersService.findByIds(ids);
     }
 }
