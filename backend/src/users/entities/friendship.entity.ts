@@ -1,32 +1,30 @@
-import { Expose } from "class-transformer";
-import { Entity, Column, PrimaryGeneratedColumn,
-    JoinColumn, ManyToOne } from "typeorm";
+import { Entity, Column, ManyToOne, JoinColumn, PrimaryColumn, CreateDateColumn } from "typeorm";
 import { User } from "./user.entity";
 
-// export enum FriendshipStatus {
-//     Pending = "pending",
-//     Accepted = "accepted",
-//     Rejected = "rejected"
-// }
+export enum FriendshipStatus {
+    Accepted = 'accepted',
+    Declined = 'declined'
+}
 
 @Entity()
 export class Friendship {
-    @PrimaryGeneratedColumn()
-    id: number;
+    @PrimaryColumn()
+    applicantId: number;
 
-    @ManyToOne(() => User, user => user.sentFriendRequests)
+    @PrimaryColumn()
+    recipientId: number;
+
+    @Column({ default: 'pending'})
+    status: string;
+
+    @CreateDateColumn()
+    created_at: Date;
+
+    @ManyToOne(() => User, user => user.sentFriendRequests, { onDelete: 'CASCADE' })
+    @JoinColumn({ name: 'applicantId' })
     applicant: User;
 
-    @ManyToOne(() => User, user => user.receivedFriendRequests)
+    @ManyToOne(() => User, user => user.receivedFriendRequests, { onDelete: 'CASCADE' })
+    @JoinColumn({ name: 'recipientId' })
     recipient: User;
-
-    @Column()
-    status: string;        // temporary
-
-    // @Column({
-    //     type: "enum",
-    //     enum: FriendshipStatus,
-    //     default: FriendshipStatus.Pending
-    // })
-    // status: FriendshipStatus;
 }

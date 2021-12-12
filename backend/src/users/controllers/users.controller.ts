@@ -1,4 +1,5 @@
 import {
+    Body,
     Controller,
     DefaultValuePipe,
     Delete,
@@ -38,20 +39,15 @@ export class UsersController {
 
     @Get('/:id')
     @Serialize(UserDto)
-    async findUserById(@Param('id') id: string) {
+    async findUserById(@Param('id') id: string): Promise<User> {
         const user = await this.usersService.findById(parseInt(id));
         return user;
     }
 
-    @Patch('/:id')
-    @UseGuards(CurrentUserGuard)
-    async updateAccount(@Param('id') id: string, attrs: Partial<User>) {
-        throw new NotImplementedException;
-    }
-
     @Delete('/:id')
     @UseGuards(CurrentUserGuard)
-    async deleteAccount(@Param('id') id: string) {
+    @Serialize(UserDto)
+    async deleteAccount(@Param('id') id: string): Promise<User> {
         const user = await this.usersService.findById(parseInt(id));
         return await this.usersService.remove(user);
     }

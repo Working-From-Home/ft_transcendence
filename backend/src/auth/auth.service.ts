@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { randomBytes, scrypt as _scrypt } from "crypto";
 import { promisify } from "util";
@@ -9,7 +9,10 @@ const scrypt = promisify(_scrypt);
 
 @Injectable()
 export class AuthService {
-    constructor(private usersService: UsersService, private jwtService: JwtService) {}
+    constructor(
+        private usersService: UsersService,
+        private jwtService: JwtService
+    ) {}
 
     async signup(email: string, username: string, password: string) {
         if (! await this.isEmailAvailable(email)) {
@@ -36,26 +39,40 @@ export class AuthService {
         return { id: user.id, access_token: this.generateAccessToken(user) };
     }
 
-    private async isEmailAvailable(email: string) {
+    async update(id: number, attrs: Partial<User>) {
+        const user = await this.usersService.findById(id);
+        if (attrs.email && ! await this.isEmailAvailable(attrs.email)) {
+            throw new UnauthorizedException('email already in use');
+        }
+        if (attrs.username && ! await this.isUsernameAvailable(attrs.username)) {
+            throw new UnauthorizedException('username already in use');
+        }
+        if (attrs.password) {
+            attrs.password = await this.encryptPassword(attrs.password);
+        }
+        return user;
+    }
+
+    private async isEmailAvailable(email: string): Promise<boolean> {
         const user = await this.usersService.findByEmail(email);
-        if (!user) { return true; }
-        return false;
+        if (user) { return false; }
+        return true;
     }
 
-    private async isUsernameAvailable(username: string) {
+    private async isUsernameAvailable(username: string): Promise<boolean> {
         const user = await this.usersService.findByName(username);
-        if (!user) { return true; }
-        return false;
+        if (user) { return false; }
+        return true;
     }
 
-    private async encryptPassword(password: string) {
+    private async encryptPassword(password: string): Promise<string> {
         const salt = randomBytes(8).toString('hex');
         const hash = (await scrypt(password, salt, 32)) as Buffer;
         const result = salt + '.' + hash.toString('hex');
         return result;
     }
 
-    private generateAccessToken(user: User) {
+    private generateAccessToken(user: User): string {
         const payload = { username: user.username, sub: user.id };
         return this.jwtService.sign(payload);
     }

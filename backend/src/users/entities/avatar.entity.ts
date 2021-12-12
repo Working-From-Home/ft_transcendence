@@ -1,10 +1,14 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn } from "typeorm";
+import { Entity, Column, OneToOne, JoinColumn, PrimaryColumn } from "typeorm";
 import { User } from "./user.entity";
 
 @Entity()
 export class Avatar {
-    @PrimaryGeneratedColumn()
-    id: number;
+    @PrimaryColumn()
+    userId: number;
+
+    @OneToOne(type => User, user => user.avatar, { primary: true, onDelete: "CASCADE" })
+    @JoinColumn({ name: 'userId' })
+    user: User;
 
     @Column()
     filename: string;
@@ -14,8 +18,4 @@ export class Avatar {
 
     @Column({ type: 'blob' })
     data: Uint8Array;
-
-    @OneToOne(() => User, (user) => user.avatar, { onDelete: "CASCADE" })
-    @JoinColumn({ name: 'userId' })
-    user: User;
 }

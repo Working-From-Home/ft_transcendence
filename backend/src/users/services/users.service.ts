@@ -14,30 +14,40 @@ export class UsersService {
         private readonly statsService: StatsService
     ) {}
 
-    async create(email: string, username: string, password: string) {
-        const avatar = await this.avatarService.create(username);
-        const stats = await this.statsService.create(0, 0, 0);
-        const user = this.repo.create({ email, username, password, avatar, stats });
-        return this.repo.save(user);
+    async create(email: string, username: string, password: string): Promise<User> {
+        const user = this.repo.create({ email, username, password });
+        await this.repo.save(user);
+        await this.avatarService.create(user);
+        await this.statsService.create(user); 
+        return user;
     }
 
-    async remove(user: User) {
+    async update(user: User, attrs: Partial<User>) {
+        return await this.repo.update(user, attrs);
+    }
+
+    async remove(user: User): Promise<User> {
         return await this.repo.remove(user);
     }
 
-    async findById(id: number) {
+    async findById(id: number): Promise<User> {
         const user = await this.repo.findOne(id);
         if (!user) { throw new NotFoundException('user not found'); }
         return user;
     }
 
-    async findByEmail(email: string) {
+    async findByIds(ids: number[]): Promise<User[]> {
+        const users = await this.repo.findByIds(ids);
+        return users;
+    }
+
+    async findByEmail(email: string): Promise<User> {
         const users = await this.repo.find({ email });
         if (users.length === 0) { return null; }
         return users[0];
     }
 
-    async findByName(username: string) {
+    async findByName(username: string): Promise<User> {
         const users = await this.repo.find({ username });
         if (users.length === 0) { return null; }
         return users[0];
@@ -49,8 +59,14 @@ export class UsersService {
         return paginate<User>(queryBuilder, options);
     }
 
-    async getUserWithAvatar(id: number) {
+    async getUserWithAvatar(id: number): Promise<User> {
         const user = await this.repo.findOne(id, { relations: ["avatar"] });
+        if (!user) { throw new NotFoundException('user not found'); }
+        return user;
+    }
+
+    async getUserWithStats(id: number): Promise<User> {
+        const user = await this.repo.findOne(id, { relations: ["stats"] });
         if (!user) { throw new NotFoundException('user not found'); }
         return user;
     }

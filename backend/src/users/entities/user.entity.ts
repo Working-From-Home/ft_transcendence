@@ -1,47 +1,43 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne, OneToMany } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne, OneToMany, CreateDateColumn } from "typeorm";
 import { Avatar } from "./avatar.entity";
 import { Friendship } from "./friendship.entity";
 import { Stats } from "./stats.entity";
 
-// export enum UserRole {
-//     User = "user",
-//     Admin = "admin",
-// }
+export enum UserRole {
+    User = "user",
+    Admin = "admin",
+}
 
 @Entity()
 export class User {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({ unique: true })
     email: string;
 
     @Column({ unique: true })
     username: string;
 
-    // @Column({
-    //     type: "enum",
-    //     enum: UserRole,
-    //     default: UserRole.User
-    // })
-    // role: UserRole;
+    @Column({ default: 'user' })
+    role: string;
 
     @Column()
     password: string;
 
-    @OneToOne(() => Avatar, (avatar) => avatar.user)
+    @CreateDateColumn()
+    created_at: Date;
+
+    @OneToOne(type => Avatar, avatar => avatar.user)
     avatar: Avatar;
 
-    @OneToOne(() => Stats, (stats) => stats.user, { eager: true })//, cascade: ['insert', 'update'] })
+    @OneToOne(type => Stats, stats => stats.user)
     stats: Stats;
 
-
-
-
-    @OneToMany(() => Friendship, friendRequest => friendRequest.applicant)
+    @OneToMany(type => Friendship, friendRequest => friendRequest.applicant)
     sentFriendRequests: Friendship[];
 
-    @OneToMany(() => Friendship, friendRequest => friendRequest.recipient)
+    @OneToMany(type => Friendship, friendRequest => friendRequest.recipient)
     receivedFriendRequests: Friendship[];
 
 }

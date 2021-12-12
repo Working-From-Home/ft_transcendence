@@ -11,6 +11,7 @@ import { AvatarController } from './controllers/avatar.controller';
 import { Friendship } from './entities/friendship.entity';
 import { FriendshipService } from './services/friendship.service';
 import { FriendsController } from './controllers/friends.controller';
+import { StatsController } from './controllers/stats.controller';
 
 @Module({
     imports: [
@@ -30,6 +31,7 @@ import { FriendsController } from './controllers/friends.controller';
     controllers: [
         UsersController,
         AvatarController,
+        StatsController,
         FriendsController
     ],
     exports: [
