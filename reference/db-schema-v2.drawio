@@ -274,43 +274,43 @@
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="135" value="Game" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;" parent="1" vertex="1">
-                    <mxGeometry x="-140" y="160" width="520" height="160" as="geometry"/>
+                    <mxGeometry x="-140" y="160" width="600" height="160" as="geometry"/>
                 </mxCell>
                 <mxCell id="136" value="" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;top=0;left=0;bottom=1;right=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="135" vertex="1">
-                    <mxGeometry y="30" width="520" height="30" as="geometry"/>
+                    <mxGeometry y="30" width="600" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="137" value="PK" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;fontStyle=1;overflow=hidden;" parent="136" vertex="1">
                     <mxGeometry width="30" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="138" value="Id" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;fontStyle=5;overflow=hidden;" parent="136" vertex="1">
-                    <mxGeometry x="30" width="490" height="30" as="geometry"/>
+                    <mxGeometry x="30" width="570" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="139" value="" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;top=0;left=0;bottom=0;right=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="135" vertex="1">
-                    <mxGeometry y="60" width="520" height="30" as="geometry"/>
+                    <mxGeometry y="60" width="600" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="140" value="FK" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;editable=1;overflow=hidden;" parent="139" vertex="1">
                     <mxGeometry width="30" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="141" value="player_one" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;" parent="139" vertex="1">
-                    <mxGeometry x="30" width="490" height="30" as="geometry"/>
+                    <mxGeometry x="30" width="570" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="142" value="" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;top=0;left=0;bottom=0;right=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="135" vertex="1">
-                    <mxGeometry y="90" width="520" height="30" as="geometry"/>
+                    <mxGeometry y="90" width="600" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="143" value="FK" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;editable=1;overflow=hidden;" parent="142" vertex="1">
                     <mxGeometry width="30" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="144" value="player_two" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;" parent="142" vertex="1">
-                    <mxGeometry x="30" width="490" height="30" as="geometry"/>
+                    <mxGeometry x="30" width="570" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="145" value="" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;top=0;left=0;bottom=0;right=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="135" vertex="1">
-                    <mxGeometry y="120" width="520" height="30" as="geometry"/>
+                    <mxGeometry y="120" width="600" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="146" value="FK" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;editable=1;overflow=hidden;" parent="145" vertex="1">
                     <mxGeometry width="30" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="147" value="winner_id (nullable) (probably not needed if we insert in one time at the end of the game)" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;" parent="145" vertex="1">
-                    <mxGeometry x="30" width="490" height="30" as="geometry"/>
+                    <mxGeometry x="30" width="570" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="149" value="" style="endArrow=none;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" parent="1" source="2" target="135" edge="1">
                     <mxGeometry relative="1" as="geometry">
@@ -919,7 +919,7 @@
                     <mxGeometry x="1350" y="1630" width="630" height="290" as="geometry"/>
                 </mxCell>
                 <mxCell id="741" value="&lt;h1&gt;Achievements pb&lt;/h1&gt;&lt;p&gt;&lt;u&gt;&lt;b&gt;Assigner les achievements exemple :&lt;/b&gt;&lt;/u&gt;&lt;/p&gt;&lt;p&gt;- win 3 games -&amp;gt; peut etre verifie a la fin de chaque game.&lt;/p&gt;&lt;p&gt;- create an account -&amp;gt; peut etre check et assigne au login.&lt;br&gt;- get a new friend -&amp;gt; cron job ?&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;span&gt;On peut aussi utiliser un cron job qui tourne toutes les n minutes.&lt;br&gt;&lt;br&gt;Les achievements gagnes passeront par socket. Un popup s'affichera en plein ecran pour chaque nouveau achievement ?&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span&gt;&lt;br&gt;&lt;/span&gt;&lt;/p&gt;&lt;h1&gt;Achievements ideas:&lt;br&gt;&lt;/h1&gt;-&amp;nbsp; Heartless: block another user&lt;br&gt;- ?&lt;br&gt;&lt;br&gt;-Voir pour les implementer a la fin ? car ca dependra en partie des autres features. Sinon, une fonction par achievement dans le service achievement. Et en fonctions de ou il sera attribute, on appellera la fonction.&lt;br&gt;&lt;br&gt;Par exemple, une fonction heartless qui verifiera que la condition est remplie au niveau de la fonction de bloquage. Enfin bref idk, ca pose d'autres soucis... Elle sera appellee, a chaque fois qu'on bloque quelqu'un, bon apres c'est ok en vrai.&lt;br&gt;&lt;br&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="1" vertex="1">
-                    <mxGeometry x="-1610" y="1780" width="390" height="470" as="geometry"/>
+                    <mxGeometry x="-1610" y="1780" width="390" height="510" as="geometry"/>
                 </mxCell>
                 <mxCell id="YehIDgii4fkM4DpvgWXB-742" value="Only id as primary key ???&lt;br&gt;No need for composite key here.&lt;br&gt;&lt;br&gt;however, index channel_id column ?" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
                     <mxGeometry x="580" y="800" width="150" height="155" as="geometry"/>
@@ -960,11 +960,8 @@
                 <mxCell id="743" value="checkHeartless &#10; |-&gt; check if the user has the requirements for heartless)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="682" vertex="1">
                     <mxGeometry y="233.66720930232557" width="406.51" height="47.98" as="geometry"/>
                 </mxCell>
-                <mxCell id="mLE8yZWphqlip9nHkqS1-756" value="List Item" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="1" vertex="1">
-                    <mxGeometry x="-90" y="720" width="60" height="26" as="geometry"/>
-                </mxCell>
                 <mxCell id="753" value="Game" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;" parent="1" vertex="1">
-                    <mxGeometry x="390" y="160" width="140" height="130" as="geometry"/>
+                    <mxGeometry x="480" y="170" width="140" height="130" as="geometry"/>
                 </mxCell>
                 <mxCell id="754" value="" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;top=0;left=0;bottom=1;right=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="753" vertex="1">
                     <mxGeometry y="30" width="140" height="30" as="geometry"/>
