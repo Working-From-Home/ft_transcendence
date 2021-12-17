@@ -8,7 +8,6 @@ import { User } from './users/entities/user.entity';
 import { Avatar } from './users/entities/avatar.entity';
 import { AuthModule } from './auth/auth.module';
 import { PongModule } from './pong/pong.module';
-import { RankController } from './rank/rank.controller';
 import { Stats } from './users/entities/stats.entity';
 import { Friendship } from './users/entities/friendship.entity';
 
@@ -33,7 +32,7 @@ import { Friendship } from './users/entities/friendship.entity';
     AuthModule,
 		PongModule
   ],
-  controllers: [AppController, RankController],
+  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}
