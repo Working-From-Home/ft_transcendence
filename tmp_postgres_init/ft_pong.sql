@@ -1,4 +1,3 @@
--- database: ft_pong
 -- https://stackoverflow.com/questions/22256124/cannot-create-a-database-table-named-user-in-postgresql
 
 ---- first time
@@ -16,6 +15,13 @@
 -- SELECT * FROM pg_database;
 
 -- enfer -> mots reserves (doivent etre double quote, sauf si value -> simple quote): user, password, role, message, name, description, type...
+
+-- generate entities from database :
+-- 		npm i -g typeorm-model-generator
+--		typeorm-model-generator -h postgres -p 5432 -d ft_pong -u postgres -x qwerty -e postgres -o . -s public
+
+
+-- database: ft_pong
 
 -- DROP TYPE IF EXISTS user_role;
 CREATE TYPE user_role AS ENUM ('owner', 'admin', 'user');
