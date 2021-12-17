@@ -15,6 +15,6 @@ export class UserDto {
     // @Expose()
     // role: UserRole;
 
-    @Expose()
-    stats: Stats;
+    // @Expose()
+    // stats: Stats;
 }

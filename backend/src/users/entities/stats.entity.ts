@@ -1,36 +1,21 @@
-import { Expose } from "class-transformer";
-import { Entity, Column, PrimaryGeneratedColumn,
-    OneToOne, JoinColumn } from "typeorm";
+import { Entity, Column, OneToOne, JoinColumn, PrimaryColumn } from "typeorm";
 import { User } from "./user.entity";
 
 @Entity()
 export class Stats {
-    @PrimaryGeneratedColumn()
-    id: number;
+    @PrimaryColumn()
+    userId: number;
 
-    @Column()
-    @Expose()
-    level: number;
-
-    @Column()
-    @Expose()
-    victories: number;
-
-    @Column()
-    @Expose()
-    losses: number;
-
-    @OneToOne(() => User, (user) => user.stats, { onDelete: "CASCADE" })
+    @OneToOne(type => User, user => user.stats, { primary: true, onDelete: "CASCADE" })
     @JoinColumn({ name: 'userId' })
     user: User;
 
+    @Column({ default: 0 })
+    level: number;
 
-    // @ManyToOne(() => User, user => user.sentFriendRequests)
-    // applicant: User;
+    @Column({ default: 0 })
+    victories: number;
 
-    // @ManyToOne(() => User, user => user.receivedFriendRequests)
-    // recipient: User;
-
-    // @Column({ type: 'string' })
-    // status: 'pending' | 'accepted' | 'rejected';
+    @Column({ default: 0 })
+    losses: number;
 }

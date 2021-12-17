@@ -1,13 +1,15 @@
+import { FetchData, FData } from './type';
+
 export default {
 	async getProfile(context: any, payload: any) {
-		const fetchData = {
+		const fetchData: FData = {
 			method: 'GET',
 			headers: new Headers()
 		};
-		const newToken = 'Bearer ' + payload.token;
+		const newToken: string = 'Bearer ' + payload.token;
 		fetchData.headers.append('Authorization', newToken);
 
-		let url = 'http://localhost:3000/me';
+		let url: string = 'http://localhost:3000/users/' + payload.id;
 		fetch(url, fetchData)
 		.then((response) => response.json())
 		.then(data => {
@@ -27,35 +29,49 @@ export default {
 		});
 	},
 	async getAvatar(context: any, payload: any) {
-		const fetchData = {
+		const fetchData: FData = {
 			method: 'GET',
 			headers: new Headers()
 		};
-		const newToken = 'Bearer ' + payload.token;
+		const newToken:string = 'Bearer ' + payload.token;
 		fetchData.headers.append('Authorization', newToken);
 
 		return context.dispatch('requeteAvatar', {
 			...payload,
 			fetchData: fetchData,
-			url: 'http://localhost:3000/me/avatar'
+			url: 'http://localhost:3000/users/' + payload.id + '/avatar'
 		});
 	},
 	async uploadProfile(context: any, payload: any) {
 		const formData = new FormData();
         formData.append('image', payload.img)
 
-		const fetchData = {
+		const fetchData: FetchData = {
 			method: 'PUT',
 			body: formData,
 			headers: new Headers()
 		};
-		const newToken = 'Bearer ' + payload.token;
+		const newToken: string = 'Bearer ' + payload.token;
 		fetchData.headers.append('Authorization', newToken);
 
 		return context.dispatch('requeteAvatar', {
 			...payload,
 			fetchData: fetchData,
-			url: 'http://localhost:3000/me/avatar'
+			url: 'http://localhost:3000/users/' + payload.id + '/avatar'
+		});
+	},
+	async deleteAvatar(context: any, payload: any) {
+		const fetchData: FData = {
+			method: 'DElETE',
+			headers: new Headers()
+		};
+		const newToken: string = 'Bearer ' + payload.token;
+		fetchData.headers.append('Authorization', newToken);
+
+		return context.dispatch('requeteAvatar', {
+			...payload,
+			fetchData: fetchData,
+			url: 'http://localhost:3000/users/' + payload.id + '/avatar'
 		});
 	},
 	async requeteAvatar(context: any, payload: any){
@@ -64,14 +80,15 @@ export default {
 		.then(data => {
 			console.log('Success avatar:', data);
 			var binary = '';
-			var bytes = new Uint8Array( data );
+			var bytes = new Uint8Array(data);
 			var len = bytes.byteLength;
 			for (var i = 0; i < len; i++) {
 				binary += String.fromCharCode(bytes[i]);
 			};
-			localStorage.setItem('avatar', window.btoa(binary));
+			let newAvatar = window.btoa(binary);
+			localStorage.setItem('avatar', newAvatar);
 			context.commit('initAvatar', {
-				avatar: window.btoa(binary),
+				avatar: newAvatar,
 			});
 		}).catch(error => {
 			console.error('Error:', error);

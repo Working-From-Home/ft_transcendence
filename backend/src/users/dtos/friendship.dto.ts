@@ -3,16 +3,14 @@ import { ValidateNested } from "class-validator";
 import { User } from "../entities/user.entity";
 import { UserDto } from "./user.dto";
 
-export class UsersPaginationDto {
-
-    @ValidateNested({ each: true })
+export class FriendshipDto {
+    @ValidateNested()
     @Type(() => UserDto)
     @Expose()
-    items: User[];
+    user: User; 
 
-    @Expose()
-    meta: JSON;
-
-    @Expose()
-    links: JSON;
+    // @ValidateNested()
+    // @Type(() => UserDto)
+    // @Expose()
+    // recipient: User;
 }

@@ -11,14 +11,18 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 
+interface State {
+  user: string;
+}
+
 @Options({
   props: {
-    msg: String,
+    user: String,
   },
-  data() {
+  data: (): State => {
 		return {
-			user: null
-		};
+			user: ''
+		}
 	},
   created() {
 	this.user = this.$store.getters.myUserName;

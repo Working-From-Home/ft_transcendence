@@ -1,5 +1,5 @@
-import { UserLog, UserUp } from './type';
-let timer: any;
+import { UserLog, UserUp, FetchData } from './type';
+let timer: number;
 
 export default {
 	async signIn(context: any, payload: UserLog) {
@@ -15,11 +15,11 @@ export default {
 		});
 	},
 	async auth(context: any, payload: any) {
-		let url = 'http://localhost:3000/auth/signup';
+		let url: string = 'http://localhost:3000/auth/signup';
 		if (payload.mode === 'signIn')
 			url = 'http://localhost:3000/auth/signin';
 
-		const fetchData = {
+		const fetchData: FetchData = {
 			method: 'POST',
 			body: JSON.stringify(payload),
 			headers: new Headers()
@@ -34,7 +34,7 @@ export default {
 		.then(data => {
 			console.log('Success:', data);
 
-			const expiration = new Date().getTime() + 3600000;
+			const expiration: number = new Date().getTime() + 3600000;
 			localStorage.setItem('token', data.access_token);
 			localStorage.setItem('userId', data.id);
 			localStorage.setItem('username', payload.username);
@@ -59,12 +59,12 @@ export default {
 		});
 	},
 	checkLog(context: any) {
-		const token = localStorage.getItem('token');
-		const userId = localStorage.getItem('userId');
-		const username = localStorage.getItem('username');
-		const email = localStorage.getItem('email');
-		const avatar = localStorage.getItem('avatar');
-		const tokenExpiration = localStorage.getItem('tokenExpiration');
+		const token: string | null = localStorage.getItem('token');
+		const userId: string | null = localStorage.getItem('userId');
+		const username: string | null = localStorage.getItem('username');
+		const email: string | null = localStorage.getItem('email');
+		const avatar: string | null = localStorage.getItem('avatar');
+		const tokenExpiration: string | null = localStorage.getItem('tokenExpiration');
 
 		if (token && userId) {
 			context.commit('signIn', {
@@ -97,14 +97,14 @@ export default {
 		})
 	},
 	deleteUser(context: any, payload: any) {
-		let url = 'http://localhost:3000/users/' + payload.userId;
-		const fetchData = {
+		let url:string = 'http://localhost:3000/users/' + payload.userId;
+		const fetchData: FetchData = {
 			method: 'DELETE',
+			body: '',
 			headers: new Headers()
 		};
-		const newToken = 'Bearer ' + payload.token;
+		const newToken: string = 'Bearer ' + payload.token;
 		fetchData.headers.append('Authorization', newToken);
-		console.log('Token:', context.token);
 		fetch(url, fetchData)
 		.then((response) => response.json())
 		.then(data => {

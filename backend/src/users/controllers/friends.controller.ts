@@ -1,66 +1,84 @@
 import {
+    BadRequestException,
     Controller,
-    DefaultValuePipe,
     Delete,
     Get,
+    NotFoundException,
     Param,
     ParseIntPipe,
     Patch,
     Post,
-    Put,
     Query,
     UseGuards,
-    UseInterceptors
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { UsersService } from '../services/users.service';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { CurrentUserGuard } from 'src/auth/guards/current-user.guard';
 import { FriendshipService } from '../services/friendship.service';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
-import { UsersPaginationDto } from '../dtos/users-pagination.dto';
+import { Friendship } from '../entities/friendship.entity';
+import { FriendshipDto } from '../dtos/friendship.dto';
+import { UserDto } from '../dtos/user.dto';
 import { User } from '../entities/user.entity';
 
 @ApiTags('friends')
 @Controller('/users/:id/friends')
 @UseGuards(JwtAuthGuard)
 export class FriendsController {
-    constructor(
-        private usersService: UsersService,
-        private friendshipService: FriendshipService
-    ) {}
+    constructor(private friendshipService: FriendshipService) {}
 
     @Get()
-    @Serialize(UsersPaginationDto)
-    async getFriends(@Param('id') userId: string) {
-        return await this.friendshipService.getFriends(parseInt(userId));
+    @Serialize(UserDto)
+    // @UseGuards(CurrentUserGuard)
+    async getFriendshipsByStatus(
+        @Param('id', ParseIntPipe) userId: number,
+        @Query('status') status?: string
+    ): Promise<User[]> {
+        let users: User[];
+        if (status === 'accepted') {
+            users = await this.friendshipService.getFriends(userId);
+        } else if (status === 'pending') {
+            users = await this.friendshipService.getPendings(userId);
+        } else {
+            throw new BadRequestException('bad status');
+        }
+        return users;
     }
-
-    @Get()
-    @Serialize(UsersPaginationDto)
-    async getPendingFriends(@Param('id') userId: string) {}
 
     @Post('/:recipientId')
     @UseGuards(CurrentUserGuard)
-    async sendFriendRequest(
-        @Param('id') userId: string,
-        @Param('recipientId') recipientId: string
-    ) {
-        return await this.friendshipService.create(parseInt(userId), parseInt(recipientId));
+    @Serialize(FriendshipDto)
+    async initiateFriendship(
+        @Param('id', ParseIntPipe) applicantId: number,
+        @Param('recipientId', ParseIntPipe) recipientId: number,
+    ): Promise<Friendship> {
+        if (await this.friendshipService.twoWaySearch(applicantId, recipientId)) {
+            throw new BadRequestException('the relationship already exists');
+        }
+        return await this.friendshipService.create(applicantId, recipientId);
     }
 
-    @Patch()
+    @Patch('/:applicantId')
     @UseGuards(CurrentUserGuard)
-    async acceptFriendRequest(
-        @Param('id') userId: string,
-    ) {
-
+    @Serialize(FriendshipDto)
+    async acceptFriendship(
+        @Param('id', ParseIntPipe) recipientId: number,
+        @Param('applicantId', ParseIntPipe) applicantId: number,
+    ): Promise<Friendship> {
+        const friendship = await this.friendshipService.oneWaySearch(applicantId, recipientId, 'pending');
+        if (!friendship) { throw new NotFoundException('request not found') }
+        return await this.friendshipService.accept(friendship);
     }
 
-    @Delete('/:recipientId')
+    @Delete('/:friendId')
     @UseGuards(CurrentUserGuard)
-    async breakFriendship(
-        @Param('id') userId: string,
-        @Param('recipientId') recipientId: string
-    ) {}
+    @Serialize(FriendshipDto)
+    async removeFriendship(
+        @Param('id', ParseIntPipe) lhsId: number,
+        @Param('friendId', ParseIntPipe) rhsId: number
+    ): Promise<Friendship> {
+        const friendship = await this.friendshipService.twoWaySearch(lhsId, rhsId);
+        if (!friendship) { throw new NotFoundException('request not found'); }
+        return await this.friendshipService.remove(friendship);
+    }
 }

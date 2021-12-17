@@ -8,3 +8,15 @@ export interface UserUp  {
 	email: string,
 	password: string
 };
+
+export interface State  {
+	userId: string,
+	token: string,
+	tokenExpiration: string
+};
+
+export interface FetchData  {
+	method: string,
+	body: string,
+	headers: Headers
+};

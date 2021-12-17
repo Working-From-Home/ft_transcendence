@@ -4,6 +4,7 @@ import {
     Delete,
     Get,
     Param,
+    ParseIntPipe,
     Put,
     Res,
     StreamableFile,
@@ -32,10 +33,10 @@ export class AvatarController {
 
     @Get()
     async getUserAvatar(
-        @Param('id') id: string,
+        @Param('id', ParseIntPipe) id: number,
         @Res({ passthrough: true }) response: Response
     ) {
-        const user = await this.usersService.getUserWithAvatar(parseInt(id));
+        const user = await this.usersService.getUserWithAvatar(id);
         const stream = Readable.from(user.avatar.data);
         response.set({ 'Content-Type': user.avatar.mimetype });
         return new StreamableFile(stream);
@@ -45,19 +46,15 @@ export class AvatarController {
     @UseGuards(CurrentUserGuard)
     @UseInterceptors(FileInterceptor('image', fileFilter))
     async uploadAvatar(
-        @Param('id') id: string,
+        @Param('id', ParseIntPipe) id: number,
         @UploadedFile() file: Express.Multer.File,
         @Res({ passthrough: true }) response: Response
     ) {
-        const user = await this.usersService.getUserWithAvatar(parseInt(id));
         if (!file) {
             throw new BadRequestException('file must be a png or jpg/jpeg');
         }
-        const data = {
-            filename: file.originalname,
-            data: file.buffer,
-            mimetype:file.mimetype
-        };
+        const user = await this.usersService.findById(id);
+        const data = { filename: file.originalname, data: file.buffer, mimetype: file.mimetype };
         const avatar = await this.avatarService.update(user, data);
         const stream = Readable.from(avatar.data);
         response.set({ 'Content-Type': avatar.mimetype });
@@ -67,10 +64,10 @@ export class AvatarController {
     @Delete()
     @UseGuards(CurrentUserGuard)
     async deleteAvatar(
-        @Param('id') id: string,
+        @Param('id', ParseIntPipe) id: number,
         @Res({ passthrough: true }) response: Response
     ) {
-        const user = await this.usersService.getUserWithAvatar(parseInt(id));
+        const user = await this.usersService.getUserWithAvatar(id);
         const avatar = await this.avatarService.remove(user);
         const stream = Readable.from(avatar.data);
         response.set({ 'Content-Type': avatar.mimetype });
