@@ -6,6 +6,7 @@
 -- https://stackoverflow.com/questions/16609724/using-current-time-in-utc-as-default-value-in-postgresql
 -- https://stackoverflow.com/questions/27299234/how-do-i-tell-postgres-a-timestamp-within-a-column-is-utc?rq=1
 -- https://medium.com/building-the-system/how-to-store-dates-and-times-in-postgresql-269bda8d6403
+-- https://wiki.postgresql.org/wiki/BinaryFilesInDB
 
 ---- first time
 -- docker-compose exec postgres bash
@@ -49,10 +50,18 @@ CREATE TABLE IF NOT EXISTS "user"(
 
 -- DROP TABLE IF EXISTS user_stat;
 CREATE TABLE IF NOT EXISTS user_stat (
-   user_id			INTEGER PRIMARY KEY REFERENCES "user"(id) ON DELETE CASCADE,
-   level			INTEGER NOT NULL DEFAULT 0 CHECK( level >= 0 AND level <= 100),
-   victories		INTEGER NOT NULL DEFAULT 0 CHECK( victories >= 0),
-   losses			INTEGER NOT NULL DEFAULT 0 CHECK( losses >= 0)
+	user_id			INTEGER PRIMARY KEY REFERENCES "user"(id) ON DELETE CASCADE,
+	level			INTEGER NOT NULL DEFAULT 0 CHECK( level >= 0 AND level <= 100),
+	victories		INTEGER NOT NULL DEFAULT 0 CHECK( victories >= 0),
+	losses			INTEGER NOT NULL DEFAULT 0 CHECK( losses >= 0)
+);
+
+-- DROP TABLE IF EXISTS avatar;
+CREATE TABLE IF NOT EXISTS avatar (
+	user_id			INTEGER PRIMARY KEY REFERENCES "user"(id) ON DELETE CASCADE,
+	"filename"		TEXT NOT NULL,
+	mimetype		TEXT NOT NULL,
+	"data"			BYTEA NOT NULL
 );
 
 -- DROP TYPE IF EXISTS friendship_type;
