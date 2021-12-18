@@ -63,14 +63,38 @@ services:
     networks:
       - mynet
     # command: prism mock --dynamic -h 0.0.0.0 ./api.oas3.yaml   # simply mock the api reference
-    command: prism proxy ./api.oas3.yaml -h 0.0.0.0 http://backend:3000 --errors      # check and forward backend answer, and mock not 501 not implemented responce from backend 
+    command: prism proxy ./api.oas3.yaml -h 0.0.0.0 http://backend:3000 --errors      # check and forward backend answer, and mock not implemented routes from backend (if backend return 501 status) 
+
+# UI for postgres -> https://hub.docker.com/r/dpage/pgadmin4
+  pgadmin:
+    restart: always
+    image: dpage/pgadmin4
+    ports:
+      - 8081:80
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+    networks:
+      - mynet
+
+# UI to host api reference -> https://hub.docker.com/r/swaggerapi/swagger-ui
+  swagger-ui:
+    restart: always
+    image: swaggerapi/swagger-ui
+    ports:
+      - 8082:8080
+    environment:
+      - API_URL=swagger/api.oas3.yaml
+    volumes:
+      - ./reference:/usr/share/nginx/html/swagger
+
 
   # compodoc:
   #   image: 42-node
   #   volumes:
   #     - ./backend/:/app
   #   ports:
-  #     - 8081:8080
+  #     - 8083:8080
   #   command: "npx @compodoc/compodoc -p tsconfig.json -s"
 
 networks:
