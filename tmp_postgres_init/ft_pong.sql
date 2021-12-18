@@ -1,4 +1,11 @@
 -- https://stackoverflow.com/questions/22256124/cannot-create-a-database-table-named-user-in-postgresql
+-- string types: https://www.depesz.com/2010/03/02/charx-vs-varcharx-vs-varchar-vs-text/
+-- date time types: https://www.postgresql.org/docs/9.2/datatype-datetime.html
+-- time zones: https://www.postgresql.org/docs/7.2/timezones.html
+-- https://stackoverflow.com/questions/7577389/how-to-elegantly-deal-with-timezones
+-- https://stackoverflow.com/questions/16609724/using-current-time-in-utc-as-default-value-in-postgresql
+-- https://stackoverflow.com/questions/27299234/how-do-i-tell-postgres-a-timestamp-within-a-column-is-utc?rq=1
+
 
 ---- first time
 -- docker-compose exec postgres bash
@@ -29,35 +36,35 @@ CREATE TYPE user_role AS ENUM ('owner', 'admin', 'user');
 -- DROP TABLE IF EXISTS "user";
 CREATE TABLE IF NOT EXISTS "user"(
 	id				INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-	email			VARCHAR(200) NOT NULL UNIQUE,
-	username		VARCHAR(50) NOT NULL UNIQUE,
-	"password"		VARCHAR(200) NOT NULL,
+	email			TEXT NOT NULL UNIQUE,
+	username		TEXT NOT NULL UNIQUE,
+	"password"		TEXT NOT NULL,
 	"role"			user_role NOT NULL DEFAULT 'user',
 	end_ban			TIMESTAMP WITH TIME ZONE DEFAULT NULL,
 	created_at		TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	two_fa_enabled	BOOLEAN NOT NULL DEFAULT FALSE,
-	two_fa_secret	VARCHAR(1000) DEFAULT NULL,
-	oauth_token_ft	VARCHAR(2048) DEFAULT NULL
+	two_fa_secret	TEXT DEFAULT NULL,
+	oauth_token_ft	TEXT DEFAULT NULL
 );
 
 -- DROP TABLE IF EXISTS user_stat;
 CREATE TABLE IF NOT EXISTS user_stat (
-   user_id			INTEGER NOT NULL REFERENCES "user"(id) PRIMARY KEY,
+   user_id			INTEGER PRIMARY KEY REFERENCES "user"(id) ON DELETE CASCADE,
    level			INTEGER NOT NULL DEFAULT 0 CHECK( level >= 0 AND level <= 100),
    victories		INTEGER NOT NULL DEFAULT 0 CHECK( victories >= 0),
    losses			INTEGER NOT NULL DEFAULT 0 CHECK( losses >= 0)
 );
 
 -- DROP TYPE IF EXISTS friendship_type;
-CREATE TYPE friendship_type AS ENUM ('accepted', 'pending', 'rejected');
+CREATE TYPE friendship_type AS ENUM ('accepted', 'pending');
 
 -- check for dupplicates A B <-> B A
 -- https://stackoverflow.com/questions/10997043/postgres-table-find-duplicates-in-two-columns-regardless-of-order
 -- DROP TABLE IF EXISTS friendship;
 CREATE TABLE IF NOT EXISTS friendship (
-	applicant_id	INTEGER NOT NULL REFERENCES "user"(id),
-	recipient_id	INTEGER NOT NULL REFERENCES "user"(id),
-	"status"		friendship_type NOT NULL,
+	applicant_id	INTEGER REFERENCES "user"(id) ON DELETE CASCADE,
+	recipient_id	INTEGER REFERENCES "user"(id) ON DELETE CASCADE,
+	"status"		friendship_type NOT NULL DEFAULT 'pending',
 	created_at		TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY(applicant_id, recipient_id)
 );
@@ -68,8 +75,8 @@ CHECK (applicant_id != recipient_id);
 
 -- DROP TABLE IF EXISTS blocked;
 CREATE TABLE IF NOT EXISTS blocked (
-	applicant_id	INTEGER NOT NULL REFERENCES "user"(id),
-	recipient_id	INTEGER NOT NULL REFERENCES "user"(id),
+	applicant_id	INTEGER REFERENCES "user"(id) ON DELETE CASCADE,
+	recipient_id	INTEGER REFERENCES "user"(id) ON DELETE CASCADE,
 	created_at		TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY(applicant_id, recipient_id)
 );
@@ -80,12 +87,13 @@ CHECK (applicant_id != recipient_id);
 
 -- DROP TABLE IF EXISTS channel;
 CREATE TABLE IF NOT EXISTS channel(
-	id			INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-   	owner_id	INTEGER NOT NULL REFERENCES "user"(id),
-	is_dm		BOOLEAN NOT NULL,
-	title		VARCHAR(150),
-	"password"	VARCHAR(200) DEFAULT NULL,
-	created_at	TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+	id				INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+   	owner_id		INTEGER REFERENCES "user"(id) ON DELETE SET NULL,
+	is_dm			BOOLEAN NOT NULL,
+	title			TEXT,
+	"password"		TEXT DEFAULT NULL,
+	created_at		TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	is_destroyed	BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 -- DROP TYPE IF EXISTS user_channel_role;
@@ -93,8 +101,8 @@ CREATE TYPE user_channel_role AS ENUM ('admin', 'user');
 
 -- DROP TABLE IF EXISTS user_channel;
 CREATE TABLE IF NOT EXISTS user_channel(
-  	user_id			INTEGER NOT NULL REFERENCES "user"(id),
-	channel_id		INTEGER NOT NULL REFERENCES channel(id),
+  	user_id			INTEGER REFERENCES "user"(id) ON DELETE CASCADE,
+	channel_id		INTEGER REFERENCES channel(id) ON DELETE CASCADE,
 	"role"			user_channel_role NOT NULL DEFAULT 'user',
 	end_ban			TIMESTAMP WITH TIME ZONE DEFAULT NULL,
 	end_mute		TIMESTAMP WITH TIME ZONE DEFAULT NULL,
@@ -104,8 +112,8 @@ CREATE TABLE IF NOT EXISTS user_channel(
 -- DROP TABLE IF EXISTS "message";
 CREATE TABLE IF NOT EXISTS "message"(
 	id			INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-	channel_id	INTEGER NOT NULL REFERENCES channel(id),
-  	user_id		INTEGER NOT NULL REFERENCES "user"(id),
+	channel_id	INTEGER REFERENCES channel(id) ON DELETE CASCADE,
+	user_id		INTEGER REFERENCES "user"(id) ON DELETE SET NULL,
 	content 	TEXT NOT NULL,
 	created_at	TIMESTAMP WITH TIME ZONE  NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -113,8 +121,8 @@ CREATE TABLE IF NOT EXISTS "message"(
 -- DROP TABLE IF EXISTS achievement;
 CREATE TABLE IF NOT EXISTS achievement(
 	id				INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-	title			VARCHAR(200) NOT NULL UNIQUE,
-	"description"	VARCHAR(500) NOT NULL
+	title			TEXT NOT NULL UNIQUE,
+	"description"	TEXT NOT NULL
 );
 
 -- DROP TABLE IF EXISTS user_achievement;
@@ -127,8 +135,8 @@ CREATE TABLE IF NOT EXISTS user_achievement(
 -- DROP TABLE IF EXISTS game;
 CREATE TABLE IF NOT EXISTS game(
 	id				INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  	winner_id		INTEGER REFERENCES "user"(id) NOT NULL,
-  	looser_id		INTEGER REFERENCES "user"(id) NOT NULL,
+  	winner_id		INTEGER REFERENCES "user"(id) ON DELETE SET NULL,
+  	looser_id		INTEGER REFERENCES "user"(id) ON DELETE SET NULL,
   	winner_score	INTEGER NOT NULL,
   	looser_score	INTEGER NOT NULL,
 	created_at		TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
