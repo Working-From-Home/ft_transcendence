@@ -5,7 +5,7 @@
 -- https://stackoverflow.com/questions/7577389/how-to-elegantly-deal-with-timezones
 -- https://stackoverflow.com/questions/16609724/using-current-time-in-utc-as-default-value-in-postgresql
 -- https://stackoverflow.com/questions/27299234/how-do-i-tell-postgres-a-timestamp-within-a-column-is-utc?rq=1
-
+-- https://medium.com/building-the-system/how-to-store-dates-and-times-in-postgresql-269bda8d6403
 
 ---- first time
 -- docker-compose exec postgres bash
