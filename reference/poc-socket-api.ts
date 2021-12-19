@@ -78,6 +78,7 @@ interface ClientToServerEvents {
 // examples:
   // hello: () => void;
 
+  /** I'm not certain about the channelId (we can't trust user input, help ! ) */
   sendMessage: (channelId: number, content: string) => void; // maybe not string if we keep emoji...
 }
 
