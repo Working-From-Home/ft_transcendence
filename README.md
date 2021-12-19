@@ -49,15 +49,16 @@ docker-compose exec backend zsh
 - http://localhost:8080
 ###### PgAdmin (an ui for postgres)
 - http://localhost:8081/
-###### openapi design first (render better in stoplight studio https://stoplight.io/studio )
+###### openapi design first
+(Render better in [stoplight elements](https://elements-demo.stoplight.io/?spec=https://raw.githubusercontent.com/Working-From-Home/ft_transcendence/main/reference/api.oas3.yaml#/))
+(Or in stoplight studio https://stoplight.io/studio )
 - http://localhost:8082
 ###### Backend rest api
 - http://localhost:3000/
 ###### proxy/mock backend rest api
 - http://localhost:3001/
-###### access the swagger code first (remove ? it cause dependabot warning and not really useful for planing)
+###### access the swagger code first (remove ? it cause dependabot warning and not really useful for planing routes)
 - http://localhost:3000/api
 
 ###### access compodoc (just for testing how it works, maybe useless for api endpoints because of swagger)
 - http://localhost:8080
-
