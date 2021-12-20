@@ -41,11 +41,11 @@ CREATE TABLE IF NOT EXISTS "user"(
 	username		TEXT NOT NULL UNIQUE,
 	"password"		TEXT NOT NULL,
 	"role"			user_role NOT NULL DEFAULT 'user',
-	end_ban			TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+	is_banned		BOOLEAN NOT NULL,
 	created_at		TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	two_fa_enabled	BOOLEAN NOT NULL DEFAULT FALSE,
 	two_fa_secret	TEXT DEFAULT NULL,
-	oauth_token_ft	TEXT DEFAULT NULL
+	oauth_token	TEXT DEFAULT NULL
 );
 
 -- DROP TABLE IF EXISTS user_stat;
@@ -110,11 +110,12 @@ CREATE TYPE user_channel_role AS ENUM ('admin', 'user');
 
 -- DROP TABLE IF EXISTS user_channel;
 CREATE TABLE IF NOT EXISTS user_channel(
-  	user_id			INTEGER REFERENCES "user"(id) ON DELETE CASCADE,
+  user_id			INTEGER REFERENCES "user"(id) ON DELETE CASCADE,
 	channel_id		INTEGER REFERENCES channel(id) ON DELETE CASCADE,
-	"role"			user_channel_role NOT NULL DEFAULT 'user',
-	end_ban			TIMESTAMP WITH TIME ZONE DEFAULT NULL,
-	end_mute		TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+	"role"				user_channel_role NOT NULL DEFAULT 'user',
+	banned_until	TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+	muted_until		TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+	created_at	TIMESTAMP WITH TIME ZONE  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY(user_id, channel_id)
 );
 
@@ -159,14 +160,14 @@ CHECK (winner_id != looser_id);
 -- Insert dummy data
 ----------------------------------------------------------------------------
 
-INSERT INTO "user" (username, email, "password", "role", end_ban) VALUES
-	('bob', 'bob@bob.com', 'mypass', 'owner', NULL),
-	('marie', 'marie@email.com', 'mypass', 'admin', NULL),
-	('jacques', 'jacques@email.com', 'mypass', 'user', NULL),
-	('stef', 'stef@mail.com', 'mypass', 'user', NULL),
-	('alice', 'alice@mail.com', 'mypass', 'user', NULL),
-	('pierre', 'pierre@mail.com', 'mypass', 'user', NULL),
-	('jean', 'jeab@mail.com', 'mypass', 'user', '2026-12-08 01:45:32.883044+00');
+INSERT INTO "user" (username, email, "password", "role", is_banned) VALUES
+	('bob', 'bob@bob.com', 'mypass', 'owner', FALSE),
+	('marie', 'marie@email.com', 'mypass', 'admin', FALSE),
+	('jacques', 'jacques@email.com', 'mypass', 'user', FALSE),
+	('stef', 'stef@mail.com', 'mypass', 'user', FALSE),
+	('alice', 'alice@mail.com', 'mypass', 'user', FALSE),
+	('pierre', 'pierre@mail.com', 'mypass', 'user', FALSE),
+	('jean', 'jeab@mail.com', 'mypass', 'user', FALSE);
 
 INSERT INTO user_stat (user_id, level, victories, losses) VALUES
 	(1, 42, 15,   7),
@@ -222,7 +223,7 @@ INSERT INTO channel (owner_id, is_dm, title, "password") VALUES
 	(2, FALSE, 'L equipe 2', NULL ),
 	(2, TRUE, NULL, NULL);
 
-INSERT INTO user_channel (user_id, channel_id, "role", end_ban, end_mute) VALUES
+INSERT INTO user_channel (user_id, channel_id, "role", banned_until, muted_until) VALUES
 	(1, 1, 'admin', NULL, NULL), -- owner
 	(2, 1, 'admin', NULL, NULL),
 	(3, 1, 'user', NULL, '2022-12-08 01:45:32.883044+00'),
