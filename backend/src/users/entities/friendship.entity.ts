@@ -17,8 +17,11 @@ export class Friendship {
     @Column({ default: 'pending'})
     status: string;
 
-    @CreateDateColumn()
-    created_at: Date;
+    @Column({ type: "enum", enum: ["accepted", "pending"], default: "'pending'" })
+    role: "accepted" | "pending";
+
+    @Column({ type: 'timestamptz', default: () => "CURRENT_TIMESTAMP" })
+    createdAt: Date;
 
     @ManyToOne(() => User, user => user.sentFriendRequests, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'applicantId' })

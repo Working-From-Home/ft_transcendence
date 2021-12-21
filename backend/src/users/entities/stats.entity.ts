@@ -6,7 +6,7 @@ export class Stats {
     @PrimaryColumn()
     userId: number;
 
-    @OneToOne(type => User, user => user.stats, { primary: true, onDelete: "CASCADE" })
+    @OneToOne(() => User, (user) => user.stats, { onDelete: "CASCADE" })
     @JoinColumn({ name: 'userId' })
     user: User;
 
