@@ -7,7 +7,7 @@
  *   - all in one list, no dupplicate data send by sockets.
  * 
  * cons:
- *   - need some helper functions for example to get friends from user list given a set of Ids
+ *   - need some helper functions for example to get friends from user list given a set of friend Ids
  * 
  * Pb:
  *   - how to bind data to the ui ?
