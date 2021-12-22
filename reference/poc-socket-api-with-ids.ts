@@ -128,7 +128,7 @@ interface SocketData {
 {
       var users: IUser[]; // all users
       // or using a dict
-      var usersDict: { [id: number] : IUser; } = {};
+      var usersDict: { [id: number] : IUser; }; // all users stored in a dict by id
       //then
       usersDict[myChannels[0].users[0].id].username;
       usersDict[myPendings[0]].username;
@@ -144,3 +144,9 @@ var myPendings: number[]; // all my pending requests (list of user ids)
 var blockedUsers: number[]; // all users I have bloqued ? usefull only if we filter messages in the front. (to avoid to filter the emit(notifyChannelMessage) in the server side )
 var myChannels: IChannel[]; // all Channels i'm in
 var liveGames: any[]; // type ???
+
+// now, maybe we can separate list for online from IUser or not ? but same for inGame ?
+// it adds more events to update thoses lists, and we will still need the "notifyUserUpdated" to update properties, and when a user create his account.
+// but in the other hand, it's a little more easier to loop through all online/InGame users.
+var onlineUsers: number[];
+var inGameUsers: number[];
