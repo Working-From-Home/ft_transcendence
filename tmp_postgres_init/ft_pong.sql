@@ -26,7 +26,7 @@
 
 -- generate entities from database :
 -- 		npm i -g typeorm-model-generator
---		typeorm-model-generator -h postgres -p 5432 -d ft_pong -u postgres -x qwerty -e postgres -o . -s public
+--		typeorm-model-generator -h postgres -p 5432 -d ft_pong -u postgres -x qwerty -e postgres -o .
 
 
 -- database: ft_pong
