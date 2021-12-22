@@ -151,6 +151,6 @@ var liveGames: any[]; // type ???
 var onlineUsers: number[];
 var inGameUsers: number[];
 // We can also have both. And users[n].connected can be updated inside thoses events:
-	connectedUsers: (usersIds: [number]) => void;
+	connectedUsers: (usersIds: number[]) => void;
 	newConnectedUser: (userId : number) => void;
 	disconnectedUser: (userId : number) => void;
