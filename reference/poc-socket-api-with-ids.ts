@@ -10,8 +10,8 @@ interface IUser
   level: number;
   victory: number;
   losses: number;
-  connected: boolean; // ca va direct dans user ?
-  inGame: boolean; // ca va direct dans user ?
+  connected: boolean;
+  inGame: boolean;
 }
 
 interface IChannelMessage
@@ -44,7 +44,7 @@ interface ServerToClientEvents {
   // users events
   ////////////////////////////////////////////////////////////////
   /** send broadcast on creation, or when a user properties change (online, stats, etc)*/ 
-  notifyUserUpdate: (user: IUser) => void;
+  notifyUserUpdated: (user: IUser) => void;
   /** send broadcas when a user is deleted (either himself or by a website admin) */ 
   notifyUserdelete: (userId: number) => void;  
 
@@ -52,7 +52,7 @@ interface ServerToClientEvents {
   // friends events
   ////////////////////////////////////////////////////////////////
   /** send when a friend request is accepted (send to both sides) */
-  notifyFriendUpdate: (userId: number) => void;
+  notifyFriendUpdated: (userId: number) => void;
   /** send when a friend is removed (send to both sides ?) */
   notifyFriendDelete: (userId: number) => void;
   
@@ -66,7 +66,7 @@ interface ServerToClientEvents {
   // channels events 
   ////////////////////////////////////////////////////////////////
   /** send when the channel is updated (title, public, owner, that's it ?) And about the lists inside ? separate events ? like for "notifyChannelMessage" ? (see below)*/
-  notifyChannelUpdate: (channel: IChannel) => void;
+  notifyChannelUpdated: (channel: IChannel) => void;
   /** useless event probably (if rest api return 200, then remove the channel from the list) */
   notifyChannelRemove: (channelId: number) => void;
   /** add the user id in the channel property named 'users' */
@@ -75,7 +75,7 @@ interface ServerToClientEvents {
   notifyChannelUserLeaved: (channelId: number, userId: number) => void;  
   /** Event who broadcast messages received on the server side to other users in the channel :
   *   - it will find the channel in "myChannels", and push the message to is
-  *   - like "notifyFriendUpdate", it can also be used to send all messages of each channel a client is in at login. (just a loop)
+  *   - it can also be used to send all messages of each channel a client is in at login. (just a loop)
   */
   notifyChannelMessage: (channelId: number, message: IChannelMessage) => void;
 
