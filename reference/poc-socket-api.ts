@@ -59,13 +59,13 @@ interface ServerToClientEvents {
   ////////////////////////////////////////////////////////////////
   // friends events
   ////////////////////////////////////////////////////////////////
-  /** Used to update friends vue store list when:
+  /** Used to update friends vue store list, emits happen when:
    *  - a pending request is accepted (from both sides)
    *  - when any property change (online, in game, etc)
    * can also be used on connexion to send all friends ? (just a loop who send n events) */
   notifyFriendUpdate: (friend: IFriend) => void;
   
-  /** Used to when a friend remove another friend (both will receive the notification)
+  /** Used when a friend remove another friend from his friendlist (via rest) (both will receive the notification ? )
    *    - it will remove the friend from the vue store friends list */
   notifyFriendDelete: (userId: number) => void;
 
@@ -73,13 +73,12 @@ interface ServerToClientEvents {
   // users events (really usefull ? thoses events broadcast to all connected users)
   ////////////////////////////////////////////////////////////////
   /** Used to update users list in vue store when:
-   *  - a user create his accoun
-   *  - a user has his stats changes 
-   *  - when any property change (online, in game, etc)
+   *  - a user create his account
+   *  - when any property change (online, in game, the stats etc)
    * can also be used on connexion to send all friends ? (just a loop who send n events) */
   notifyUserUpdate: (user: IUser) => void;
   
-  /** Used to when a friend remove another friend (both will receive the notification)
+  /** Used when a user account is deleted (either by admins or )
    *    - it will remove the friend from the vue store friends list */
   notifyUserdelete: (userId: number) => void;
   
@@ -120,13 +119,33 @@ interface ServerToClientEvents {
   *   - like "notifyFriendUpdate", it can also be used to send all messages of each channel a client is in at login. (just a loop)
   */
   notifyChannelMessage: (channelId: number, message: IMessage) => void; // maybe not string if we keep emoji...
+
+  ////////////////////////////////////////////////////////////////
+  // games events 
+  ////////////////////////////////////////////////////////////////
+  /** ???
+   *  need to:
+   *    - matchmaking
+   *    - ask a user to play with
+   *    - play the actual game
+   *    - see live games (so obtaining updates of ongoing games ) 
+   */
+
 }
 
 // events send only from server side
 interface ClientToServerEvents {
 
+  ////////////////////////////////////////////////////////////////
+  // channels events 
+  ////////////////////////////////////////////////////////////////
   /** I'm not certain about the channelId (we can't trust user input, help ! Maybe just a if(canSendMessagesToChannel) in the backend side event handler of "sendMessage" ) */
   sendMessage: (channelId: number, content: string) => void; // maybe not string if we keep emoji...
+
+  ////////////////////////////////////////////////////////////////
+  // games events 
+  ////////////////////////////////////////////////////////////////
+
 }
 
 // events who can be send from both sides
@@ -140,8 +159,9 @@ interface SocketData {
 }
 
 // in vue store (Maybe the use of dictionary is easier ? something like myChannels[channelId] = theChannelObject )
-var users: IUser; // all users, really usefull to have the list of users ?
+var users: IUser; // all users, really usefull to have the list of users ? (main advantage, is having online, and inGame not only for friends)
 var friends: IFriend; // all my friends
 var myPendings: IUser; // all my pending requests
-var blockedUsers: IUser; // all users I have bloqued ? usefull only if we filter messages in the front. (to avoid filter sockets emits)
+var blockedUsers: IUser; // all users I have bloqued ? usefull only if we filter messages in the front. (to avoid to filter the emit(notifyChannelMessage) in the server side )
 var myChannels: IChannel; // all Channels i'm in
+var liveGames: any; // type ???
