@@ -10,27 +10,29 @@ interface IUser
   level: number;
   victory: number;
   losses: number;
-}
-
-interface IFriend extends IUser
-{
   connected: boolean; // ca va direct dans user ?
   inGame: boolean; // ca va direct dans user ?
 }
 
-interface IUserChannel extends IUser
+// interface IFriend extends IUser
+// {
+//   connected: boolean; // ca va direct dans user ?
+//   inGame: boolean; // ca va direct dans user ?
+// }
+
+interface IChannelUser extends IUser
 {
   isOwner: boolean;
   isAdmin: boolean;
   muteUntil: Date | null;
   bannedUntil?: Date | null; // probably useless, because banned user are ejected from the channel.
-  isFriend?: boolean; // usefull or not ? (from a frontend point of vue)
+  // isFriend?: boolean; // usefull or not ? (from a frontend point of vue)
 }
 
 interface IChannelMessage
 {
   userId: number;
-  content: string; // maybe another type if we want to keep emoji (utf8)
+  content: string; // maybe another type if we want to keep emoji (utf8)  (maybe of type buffer)
   createdAt: Date;
 }
 
@@ -41,15 +43,8 @@ interface IChannel
   isDm: boolean;
   isPublic: boolean;
   createdAt: Date;
-  users: IUserChannel[];
+  users: IChannelUser[];
   messages: IChannelMessage[];
-}
-
-interface IMessage
-{
-  id: number;
-  content: string; // maybe not of type string if we keep emojis (maybe of type buffer)
-  createdAt?: Date;
 }
 
 // I dont have ideas for events name, help please
@@ -63,7 +58,7 @@ interface ServerToClientEvents {
    *  - a pending request is accepted (from both sides)
    *  - when any property change (online, in game, etc)
    * can also be used on connexion to send all friends ? (just a loop who send n events) */
-  notifyFriendUpdate: (friend: IFriend) => void;
+  notifyFriendUpdate: (friend: IUser) => void;
   
   /** Used when a friend remove another friend from his friendlist (via rest) (both will receive the notification ? )
    *    - it will remove the friend from the vue store friends list */
@@ -100,7 +95,7 @@ interface ServerToClientEvents {
    * Any update (new user ?) will resend the updated channel[payload.id] = payload (use dictionary ?) https://stackoverflow.com/questions/15877362/declare-and-initialize-a-dictionary-in-typescript?rq=1
    * what about messages ? (see below)
    */
-  notifyChannelUpdate: (channel: IFriend) => void;
+  notifyChannelUpdate: (channel: IChannel) => void;
   /** Event probably totally useless
    *
    * , when a user leave (via rest api), if the code is sucessfull, then just remove, the channel from the list "myChannels" (in vue store)
@@ -111,14 +106,14 @@ interface ServerToClientEvents {
   /** send to all clients in the room's channel when someone join
    *    - just add the new user in the vue store list -> channel[payload.channeId].users.push(payload.user) (use dictionary ? channel[payload.channeId].users[payload.user.id](payload.user))
    */
-  notifyChannelUserJoined: (channelId: number, user: IUserChannel) => void;
+  notifyChannelUserJoined: (channelId: number, user: IChannelUser) => void;
   /** Send when a user quit, has been kicked, or banned. right ?*/
-  notifyChannelUserLeaved: (channelId: number, user: IUserChannel) => void;
+  notifyChannelUserLeaved: (channelId: number, userId: number) => void;
  /** Event who broadcast messages received on the server side to other users in the channel :
   *   - it will find the channel in "myChannels", and push the message to is
   *   - like "notifyFriendUpdate", it can also be used to send all messages of each channel a client is in at login. (just a loop)
   */
-  notifyChannelMessage: (channelId: number, message: IMessage) => void; // maybe not string if we keep emoji...
+  notifyChannelMessage: (channelId: number, message: IChannelMessage) => void; // maybe not string if we keep emoji...
 
   ////////////////////////////////////////////////////////////////
   // games events 
@@ -160,7 +155,7 @@ interface SocketData {
 
 // in vue store (Maybe the use of dictionary is easier ? something like myChannels[channelId] = theChannelObject )
 var users: IUser; // all users, really usefull to have the list of users ? (main advantage, is having online, and inGame not only for friends)
-var friends: IFriend; // all my friends
+var friends: IUser; // all my friends
 var myPendings: IUser; // all my pending requests
 var blockedUsers: IUser; // all users I have bloqued ? usefull only if we filter messages in the front. (to avoid to filter the emit(notifyChannelMessage) in the server side )
 var myChannels: IChannel; // all Channels i'm in

@@ -10,7 +10,6 @@ git clone https://github.com/Working-From-Home/ft_transcendence.git && cd ft_tra
 ```
 Create a `.env` file, template example:
 ```
-DB_NAME=db.sqlite   # will be useless
 JWT_SECRET=my_secret
 # must feed a valid 42 api key -> https://api.intra.42.fr/apidoc/guides/getting_started
 API_KEY_42=
