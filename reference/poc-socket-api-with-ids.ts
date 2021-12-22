@@ -32,7 +32,7 @@ interface IChannel
   createdAt: Date;
   users: number[];
   mutedUsers: {userId: number, until: Date}[];
-  messages: IChannelMessage[];
+  messages: IChannelMessage[]; // maybe not needed if messages are directly pushed into the "advanced chat" ?
 }
 
 // I dont have ideas for events name, help please
