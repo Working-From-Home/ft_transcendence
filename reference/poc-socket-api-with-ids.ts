@@ -71,7 +71,7 @@ interface ServerToClientEvents {
   notifyChannelRemove: (channelId: number) => void;
   /** add the user id in the channel property named 'users' */
   notifyChannelUserJoined: (channelId: number, userId: number) => void;
-  /** remove the user id in the channel property named 'users' */
+  /** remove the user id in the channel property named 'users' (can be trigger when a user is kick, ban, or quit on their own)*/
   notifyChannelUserLeaved: (channelId: number, userId: number) => void;  
   /** Event who broadcast messages received on the server side to other users in the channel :
   *   - it will find the channel in "myChannels", and push the message to is
