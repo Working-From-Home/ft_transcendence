@@ -43,7 +43,7 @@ interface ServerToClientEvents {
   ////////////////////////////////////////////////////////////////
   // users events
   ////////////////////////////////////////////////////////////////
-  /** send broadcast on creation, or when a user properties change (online, stats, etc)*/ 
+  /** send broadcast on creation, or when a user properties change (stats, etc, connected ?)*/ 
   notifyUserUpdated: (user: IUser) => void;
   /** send broadcas when a user is deleted (either himself or by a website admin) */ 
   notifyUserdelete: (userId: number) => void;  
@@ -147,6 +147,10 @@ var liveGames: any[]; // type ???
 
 // now, maybe we can separate list for online from IUser or not ? but same for inGame ?
 // it adds more events to update thoses lists, and we will still need the "notifyUserUpdated" to update properties, and when a user create his account.
-// but in the other hand, it's a little more easier to loop through all online/InGame users.
+// but in the other hand, it's a little more easier to loop through all online/InGame users. 
 var onlineUsers: number[];
 var inGameUsers: number[];
+// We can also have both. And users[n].connected can be updated inside thoses events:
+	connectedUsers: (usersIds: [number]) => void;
+	newConnectedUser: (userId : number) => void;
+	disconnectedUser: (userId : number) => void;
