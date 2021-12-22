@@ -122,8 +122,23 @@ interface SocketData {
   id: number;
 }
 
+
 // in vue store (Maybe the use of dictionary is easier ? something like myChannels[channelId] = theChannelObject )
-var users: IUser[]; // all users
+// -> https://stackoverflow.com/questions/15877362/declare-and-initialize-a-dictionary-in-typescript?rq=1
+{
+      var users: IUser[]; // all users
+      // or using a dict
+      var usersDict: { [id: number] : IUser; } = {};
+      //then
+      usersDict[myChannels[0].users[0].id].username;
+      usersDict[myPendings[0]].username;
+      // etc
+      // then to update the user on event "notifyUserUpdated"
+    socket.on("notifyUserUpdated")
+    {
+      usersDict[payload.id] = payload; // and it should also work to send all users at connection (using a loop in the backend to emit N events to the user)
+    }
+}
 var friends: number[]; // all my friends
 var myPendings: number[]; // all my pending requests (list of user ids)
 var blockedUsers: number[]; // all users I have bloqued ? usefull only if we filter messages in the front. (to avoid to filter the emit(notifyChannelMessage) in the server side )
