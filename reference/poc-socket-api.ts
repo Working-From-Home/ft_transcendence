@@ -96,9 +96,8 @@ interface ServerToClientEvents {
    * what about messages ? (see below)
    */
   notifyChannelUpdate: (channel: IChannel) => void;
-  /** Event probably totally useless
-   *
-   * , when a user leave (via rest api), if the code is sucessfull, then just remove, the channel from the list "myChannels" (in vue store)
+  /** Event probably totally useless because
+   *  when a user leave (via rest api), if the http code is sucessfull, then just remove the channel from the list "myChannels" (in vue store)
    */
   notifyChannelRemove: (channelId: number) => void;
 
