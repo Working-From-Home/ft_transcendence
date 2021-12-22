@@ -3,16 +3,16 @@
 
 // https://www.google.com/search?q=socket.io+chat+architecture+events&client=firefox-b-d&channel=crow5&sxsrf=AOaemvKbJlNdKGbMk-FajDgzTqcJ2nd40Q:1639941187336&source=lnms&tbm=isch&sa=X&ved=2ahUKEwj7orH_yPD0AhWKyoUKHfxCA4AQ_AUoAXoECAEQAw&biw=2560&bih=1355&dpr=1
 
-interface IUser 
-{
-  id: number;
-  username: string;
-  level: number;
-  victory: number;
-  losses: number;
-  connected: boolean; // ca va direct dans user ?
-  inGame: boolean; // ca va direct dans user ?
-}
+// interface IUser 
+// {
+//   id: number;
+//   username: string;
+//   level: number;
+//   victory: number;
+//   losses: number;
+//   connected: boolean; // ca va direct dans user ?
+//   inGame: boolean; // ca va direct dans user ?
+// }
 
 // interface IFriend extends IUser
 // {
@@ -46,6 +46,19 @@ interface IChannel
   users: IChannelUser[];
   messages: IChannelMessage[];
 }
+
+interface IChannel
+{
+  id: number;
+  title: string;
+  isDm: boolean;
+  isPublic: boolean;
+  createdAt: Date;
+  users: IChannelUser[];
+  messages: IChannelMessage[];
+}
+
+
 
 // I dont have ideas for events name, help please
 
@@ -112,7 +125,7 @@ interface ServerToClientEvents {
   *   - it will find the channel in "myChannels", and push the message to is
   *   - like "notifyFriendUpdate", it can also be used to send all messages of each channel a client is in at login. (just a loop)
   */
-  notifyChannelMessage: (channelId: number, message: IChannelMessage) => void; // maybe not string if we keep emoji...
+  notifyChannelMessage: (channelId: number, message: IChannelMessage) => void;
 
   ////////////////////////////////////////////////////////////////
   // games events 
@@ -153,9 +166,9 @@ interface SocketData {
 }
 
 // in vue store (Maybe the use of dictionary is easier ? something like myChannels[channelId] = theChannelObject )
-var users: IUser; // all users, really usefull to have the list of users ? (main advantage, is having online, and inGame not only for friends)
-var friends: IUser; // all my friends
-var myPendings: IUser; // all my pending requests
-var blockedUsers: IUser; // all users I have bloqued ? usefull only if we filter messages in the front. (to avoid to filter the emit(notifyChannelMessage) in the server side )
-var myChannels: IChannel; // all Channels i'm in
-var liveGames: any; // type ???
+var users: IUser[]; // all users, really usefull to have the list of users ? (main advantage, is having online, and inGame not only for friends)
+var friends: IUser[]; // all my friends
+var myPendings: IUser[]; // all my pending requests
+var blockedUsers: IUser[]; // all users I have bloqued ? usefull only if we filter messages in the front. (to avoid to filter the emit(notifyChannelMessage) in the server side )
+var myChannels: IChannel[]; // all Channels i'm in
+var liveGames: any[]; // type ???
