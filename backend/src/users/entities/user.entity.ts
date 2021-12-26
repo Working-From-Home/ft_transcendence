@@ -25,7 +25,7 @@ export class User {
     @Column()
     password: string;
 
-    @Column({ type: "enum", enum: ["owner", "admin", "user"], default: "'user'" })
+    @Column({ type: "enum", enum: ["owner", "admin", "user"], default: "user" })
     role: "owner" | "admin" | "user";
 
     @Column({ type: 'timestamptz', default: () => "CURRENT_TIMESTAMP" })

@@ -1,11 +1,6 @@
 import { Entity, Column, ManyToOne, JoinColumn, PrimaryColumn, CreateDateColumn } from "typeorm";
 import { User } from "./user.entity";
 
-export enum FriendshipStatus {
-    Accepted = 'accepted',
-    Declined = 'declined'
-}
-
 @Entity()
 export class Friendship {
     @PrimaryColumn()
@@ -14,11 +9,8 @@ export class Friendship {
     @PrimaryColumn()
     recipientId: number;
 
-    @Column({ default: 'pending'})
-    status: string;
-
-    @Column({ type: "enum", enum: ["accepted", "pending"], default: "'pending'" })
-    role: "accepted" | "pending";
+    @Column({ type: "enum", enum: ["accepted", "pending"], default: "pending" })
+    status: "accepted" | "pending";
 
     @Column({ type: 'timestamptz', default: () => "CURRENT_TIMESTAMP" })
     createdAt: Date;

@@ -23,7 +23,6 @@ services:
     depends_on:
       - postgres
     environment:
-      - DB_NAME=${DB_NAME}
       - JWT_SECRET=${JWT_SECRET}
       - API_KEY_42=${API_KEY_42}
       - POSTGRES_HOST=postgres
@@ -31,7 +30,7 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DATABASE=${POSTGRES_DATABASE}
-      - TYPEORM_LOGGING=true
+      # - TYPEORM_LOGGING=true
       # - TYPEORM_SYNCHRONIZE=true
       - DEBUG=*
       - NODE_ENV=development
@@ -49,13 +48,14 @@ services:
     restart: always
     image: postgres:14-alpine3.15
     environment:
+      - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     ports:
-      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+      - ${POSTGRES_PORT}:5432
     networks:
       - mynet
-    # volumes:
-    #   - ./tmp_postgres_init/:/docker-entrypoint-initdb.d/
+    volumes:
+      - ./tmp_postgres_init/:/docker-entrypoint-initdb.d/
 
   mock-api:
     restart: always

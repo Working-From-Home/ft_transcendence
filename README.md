@@ -16,18 +16,14 @@ API_KEY_42=
 
 # Database settings
 POSTGRES_PORT=5432
-POSTGRES_USER=postgres
-POSTGRES_DATABASE=ft_pong
+POSTGRES_USER=pong
 POSTGRES_PASSWORD=qwerty
+POSTGRES_DATABASE=pong
 
-#PgAdmin
+#PgAdmin container
 PGADMIN_DEFAULT_EMAIL=pong@pong.com
 PGADMIN_DEFAULT_PASSWORD=qwerty
 
-#typeorm 
-# https://stackoverflow.com/questions/62143322/typeorm-config-with-env-variables
-# https://typeorm.io/#/using-ormconfig/using-ormconfigjs
-# https://medium.com/@rcuni8/create-expressjs-server-with-typeorm-and-postgres-using-docker-and-docker-compose-66f1ebc9d94b
 ```
 
 Then build and run all services :
@@ -42,6 +38,18 @@ docker-compose exec frontend zsh
 ```bash
 docker-compose exec backend zsh
 ```
+
+#### Access to ft_pong DB from pgAdmin UI
+- open: http://localhost:8081/
+- Use pgAdmin credentials from .env file (`PGADMIN_DEFAULT_EMAIL` and `PGADMIN_DEFAULT_PASSWORD`)
+- create/add a new server
+  - Give it a name
+  - Open the `Connection` panel:
+    - Host: The docker-compose service name ( in our case `postgres`)
+    - Port: The default postgres port (`5432`)
+    - Username: The value of `POSTGRES_USER` in the `.env` file
+    - Password: The value of `POSTGRES_PASSWORD` in the `.env` file
+  - Hit `Save` and voila.
 
 #### Links
 ###### access our beautiful website

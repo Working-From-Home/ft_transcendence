@@ -22,7 +22,7 @@
 -- Show existing databases
 -- SELECT * FROM pg_database;
 
--- enfer -> mots reserves (doivent etre double quote, sauf si value -> simple quote): user, password, role, message, name, description, type...
+-- enfer -> mots reserves et camelCase (doivent etre double quote, sauf si value -> simple quote): user, password, role, message, name, description, type...
 
 -- generate entities from database :
 -- 		npm i -g typeorm-model-generator

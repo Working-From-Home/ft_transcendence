@@ -10,7 +10,7 @@ export class UserChannel {
     @PrimaryColumn({ type: "integer" })
     channelId: number;
 
-    @Column("enum", { enum: ["admin", "user"], default: () => "'user'" })
+    @Column("enum", { enum: ["admin", "user"], default: "user" })
     role: "admin" | "user";
 
     @Column({ type: 'timestamptz', nullable: true })
