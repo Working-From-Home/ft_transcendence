@@ -14,9 +14,9 @@ export class Achievement {
 
     @ManyToMany(() => User, (user) => user.achievements)
     @JoinTable({
-        joinColumns: [{ name: "'achievementId'", referencedColumnName: "id" }],
-        inverseJoinColumns: [{ name: "'userId'", referencedColumnName: "id" }]
+        name: "user_achievement",
+        joinColumns: [{ name: "achievementId", referencedColumnName: "id" }],
+        inverseJoinColumns: [{ name: "userId", referencedColumnName: "id" }]
     })
     users: User[];
 }
-  

@@ -1,7 +1,8 @@
-import { Entity, Column, ManyToOne, JoinColumn, PrimaryColumn, CreateDateColumn } from "typeorm";
+import { Entity, Column, ManyToOne, JoinColumn, PrimaryColumn, Check } from "typeorm";
 import { User } from "./user.entity";
 
 @Entity()
+@Check(`"applicantId" <> "recipientId"`)
 export class Friendship {
     @PrimaryColumn()
     applicantId: number;

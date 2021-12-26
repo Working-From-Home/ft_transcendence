@@ -1,7 +1,8 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Check } from "typeorm";
 import { User } from "../../users/entities/user.entity";
 
-@Entity("game", { schema: "public" })
+@Entity()
+@Check(`"winnerId" <> "looserId"`)
 export class Game {
     @PrimaryGeneratedColumn({ type: "integer" })
     id: number;

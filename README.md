@@ -45,11 +45,34 @@ docker-compose exec backend zsh
 - create/add a new server
   - Give it a name
   - Open the `Connection` panel:
-    - Host: The docker-compose service name ( in our case `postgres`)
-    - Port: The default postgres port (`5432`)
-    - Username: The value of `POSTGRES_USER` in the `.env` file
-    - Password: The value of `POSTGRES_PASSWORD` in the `.env` file
-  - Hit `Save` and voila.
+    - **Host** : The docker-compose service name of our database ( in our case `postgres`)
+    - **Port** : The value of `POSTGRES_PORT` in the `.env` file (default port is `5432`)
+    - **Username** : The value of `POSTGRES_USER` in the `.env` file
+    - **Password** : The value of `POSTGRES_PASSWORD` in the `.env` file
+  - Hit **`Save`** and voila.
+
+#### Setup debug for backend in vscode
+```bash
+cd backend
+```
+```bash
+mkdir -p .vscode && touch .vscode/launch.json
+```
+copy paste this into `lauch.json` :
+```json
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Attach to node",
+            "type": "node",
+            "request": "attach",
+            "restart": true,
+            "port": 9229
+        }
+    ]
+}
+```
 
 #### Links
 ###### access our beautiful website
