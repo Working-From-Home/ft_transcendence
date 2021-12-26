@@ -55,7 +55,7 @@ services:
     networks:
       - mynet
     volumes:
-      - ./tmp_postgres_init/:/docker-entrypoint-initdb.d/
+      - ./postgres_initdb/:/docker-entrypoint-initdb.d/
 
   mock-api:
     restart: always
