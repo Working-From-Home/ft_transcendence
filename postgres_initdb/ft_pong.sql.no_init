@@ -42,6 +42,11 @@
 -- views and view entities in typeorm
 -- https://github.com/typeorm/typeorm/blob/master/docs/view-entities.md
 -- https://typeorm.io/#/decorator-reference
+-- https://stackoverflow.com/questions/44972918/postgresql-how-to-create-a-boolean-column-from-conditions-within-a-query
+-- https://wanago.io/2021/12/06/views-postgresql-typeorm/
+
+-- typeorm vs postgres convention
+-- https://stackoverflow.com/questions/55248938/typeorm-and-postgres-competing-naming-styles
 
 -- database: ft_pong
 

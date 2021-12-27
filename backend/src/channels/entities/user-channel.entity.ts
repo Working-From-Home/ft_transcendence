@@ -13,6 +13,9 @@ export class UserChannel {
     @Column("enum", { enum: ["admin", "user"], default: "user" })
     role: "admin" | "user";
 
+    @Column({ type: "boolean", default: false })
+    hasLeft: boolean;
+
     @Column({ type: 'timestamptz', nullable: true })
     bannedUntil: Date | null;
 
