@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne, OneToMany, CreateDateColumn, ManyToMany } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne, OneToMany, ManyToMany, JoinTable } from "typeorm";
 import { Avatar } from "./avatar.entity";
 import { Friendship } from "./friendship.entity";
 import { Stats } from "./stats.entity";
@@ -31,7 +31,7 @@ export class User {
     @Column({ type: 'timestamptz', default: () => "CURRENT_TIMESTAMP" })
     createdAt: Date;
 
-    @Column({ type: "boolean" })
+    @Column({ type: "boolean", default: false })
     banned: boolean;
 
     /* OAuth */
@@ -58,6 +58,11 @@ export class User {
     /* Achievements */
 
     @ManyToMany(() => Achievement, (achievement) => achievement.users)
+    @JoinTable({
+        name: "user_achievements",
+        joinColumns: [{ name: "userId", referencedColumnName: "id" }],
+        inverseJoinColumns: [{ name: "achievementId", referencedColumnName: "id" }]
+    })
     achievements: Achievement[];
 
     /* Friendships */
