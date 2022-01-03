@@ -12,15 +12,17 @@ info:
     - https://openapi.tools/
     - https://meta.stoplight.io/docs/prism/ZG9jOjk3-validation-proxy
   contact:
-    email: fake@email.com
-    name: Faked
+    email: 42@42.com
+    name: '42'
 servers:
   - url: 'http://localhost:3000'
-    description: Local dev base url
+    description: local backend
+  - url: 'http://localhost:3001'
+    description: local backend proxy
 paths:
   /auth/signup:
     post:
-      summary: ''
+      summary: Create an account
       operationId: post-signup
       responses:
         '200':
@@ -58,11 +60,12 @@ paths:
                 - email
                 - password
         description: ''
-      tags: []
+      tags:
+        - auth
       security: []
   /auth/signin:
     post:
-      summary: ''
+      summary: Login
       operationId: post-signin
       responses:
         '201':
@@ -97,44 +100,106 @@ paths:
               required:
                 - username
                 - password
-      tags: []
+        description: ''
+      tags:
+        - auth
       security: []
     parameters: []
-  /me:
+  /users:
     get:
-      summary: Get logged user
-      operationId: get-me
-      description: Return info about loged user
-      tags: []
+      summary: List of users
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+                  links:
+                    $ref: '#/components/schemas/Pagination'
+                required:
+                  - users
+                  - meta
+                  - links
         '401':
           $ref: '#/components/responses/401'
-    delete:
-      summary: ''
-      operationId: delete-me
+      operationId: get-users
+      description: |-
+        Return a list of users, two queries parameter can be added to filter by user name and if they are online
+        Online useless ?
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: username
+          description: Find users who approximately match the given name
+        - schema:
+            type: boolean
+          in: query
+          name: online
+          description: To filter online users
+          deprecated: true
+      tags:
+        - users
+  '/users/{id}':
+    parameters:
+      - name: id
+        in: path
+        schema:
+          type: integer
+          format: int64
+        description: An object id
+        required: true
+    get:
+      summary: Get a specific user
+      tags:
+        - users
       responses:
         '200':
-          description: OK
+          description: User Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                Get User Alice Smith:
+                  value:
+                    id: 142
+                    username: Alice
+                    email: alice.smith@gmail.com
+                    online: true
+                    avatar: 'http://localhost:3000/users/142/avatar'
+                    role: admin
         '401':
           $ref: '#/components/responses/401'
-      description: 'Delete me, autodestruction initiated'
-      tags: []
+        '404':
+          description: User Not Found
+      operationId: get-users-id
+      description: Retrieve the user information given a specific id.
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/order_by'
     patch:
-      summary: ''
-      operationId: patch-me
+      summary: Update infos of a specific user
+      operationId: patch-users-id
       responses:
         '204':
           description: No Content
+        '400':
+          $ref: '#/components/responses/400'
         '401':
           $ref: '#/components/responses/401'
-      description: 'Update some of the information, email, password... only email and password right ?'
-      tags: []
+      description: |-
+        Update some of the information, email, password... only email and password right ?
+        To update user's avatar, use PUT /users/{id}/avatar endpoint.
       requestBody:
         content:
           application/json:
@@ -146,22 +211,45 @@ paths:
                   format: password
                 email:
                   type: string
-            examples: {}
-        description: ''
-  /me/avatar:
-    get:
-      summary: Get my avatar
-      tags: []
+      tags:
+        - users
+    delete:
+      summary: Delete user
+      operationId: delete-users-id
       responses:
         '200':
           description: OK
         '401':
           $ref: '#/components/responses/401'
-      operationId: get-me-avatar
-      description: Get my avatar
+      description: |
+        Delete myself, autodestruction initiated.
+        Website owner or website admins can delete any users. Right ?
+      tags:
+        - users
+  '/users/{id}/avatar':
+    parameters:
+      - schema:
+          type: integer
+          minimum: 0
+        name: id
+        in: path
+        required: true
+        description: The user id
+    get:
+      summary: Get avatar photo of a user
+      responses:
+        '200':
+          description: OK
+        '401':
+          $ref: '#/components/responses/401'
+      operationId: get-users-id-avatar
+      parameters: []
+      description: Return the user avatar
+      tags:
+        - users
     put:
-      summary: ''
-      operationId: put-me-avatar
+      summary: Update avatar of currently logged user.
+      operationId: put-users-id-avatar
       responses:
         '200':
           description: OK
@@ -174,13 +262,150 @@ paths:
               type: object
               properties: {}
         description: file must be jpg/jpeg or png
+      description: |-
+        Update avatar of currently logged user.
+        (website admins can't update or delete others users avatars right ?)
+      tags:
+        - users
     delete:
-      summary: Remove current avatar
-      operationId: delete-me-avatar
+      summary: Remove the current avatar
+      operationId: delete-users-id-avatar
       responses:
         '200':
           description: OK
-  /me/friends:
+        '401':
+          description: Unauthorized
+      description: Remove current avatar of logged user.
+      tags:
+        - users
+  '/users/{user_id}/channels':
+    get:
+      summary: Get channels I'm in
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  channels:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Channel'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+                  links:
+                    $ref: '#/components/schemas/Pagination'
+                required:
+                  - channels
+                  - meta
+                  - links
+        '401':
+          $ref: '#/components/responses/401'
+      operationId: put-users-id-channels
+      description: |-
+        Get the list of channels im in.
+        Not really needed because we will need a socket.io even to update channels.
+      deprecated: true
+      tags:
+        - channels
+    post:
+      summary: Create a new channel or dm a specific user
+      operationId: post-users-user_id-channels-channel_id
+      responses:
+        '200':
+          description: |-
+            OK, response not really needed, channels updates will be send via websockets anyway.
+            And the owner will be added in the socket room representing the channel.
+        '401':
+          description: Unauthorized
+        '409':
+          description: Specific to dm. 409 conflict is returned if a dm channel between both users already exists.
+      description: Create a channel or
+      parameters:
+        - schema:
+            type: string
+          in: query
+          description: Used to dm a specific user
+          name: dm_user_id
+      tags:
+        - channels
+    parameters:
+      - schema:
+          type: integer
+          minimum: 0
+        name: user_id
+        in: path
+        required: true
+        description: The user id
+  '/users/{user_id}/channels/{channel_id}':
+    parameters:
+      - schema:
+          type: integer
+          minimum: 0
+        name: user_id
+        in: path
+        required: true
+        description: 'The user '
+      - schema:
+          type: integer
+          minimum: 0
+        name: channel_id
+        in: path
+        required: true
+    delete:
+      summary: Leave a given channel
+      operationId: delete-users-user_id-channels-channel_id
+      responses:
+        '200':
+          description: OK
+        '401':
+          $ref: '#/components/responses/401'
+      description: 'Leave a given channel, if the user who leave is the admin, then the oldest to have joined become admin ? If there is not already an other admin ?'
+      tags:
+        - channels
+    put:
+      summary: Join a given channel
+      operationId: put-users-user_id-channels-channel_id
+      responses:
+        '200':
+          description: OK
+        '401':
+          $ref: '#/components/responses/401'
+      description: |-
+        Subscribe to a channel if public. if private, the password must be provided
+
+        OR maybe delete this route and to all the things in websockets ? what's easier ?
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                  format: password
+      tags:
+        - channels
+    patch:
+      summary: Modify channel
+      operationId: patch-users-user_id-channels-channel_id
+      responses:
+        '200':
+          description: OK
+        '401':
+          $ref: '#/components/responses/401'
+      description: |-
+        Only the owner can add/update/delete password.
+        owner can add admin role to a user.
+        administrator can ban or mute users for a certain amount of time
+
+        OR maybe delete this route and to all the things in websockets ? what's easier ?
+      tags:
+        - channels
+  '/users/{id}/friends':
     get:
       summary: Get friend's list of logged user
       responses:
@@ -226,22 +451,32 @@ paths:
                       last: 'http://localhost:3000/users?page=11&limit=15'
         '401':
           $ref: '#/components/responses/401'
-      operationId: get-me-friends
-      description: Get a list of accepted friends ? maybe ? or accepted and pending ?
-      tags: []
+      operationId: get-users-id-friends
+      description: 'Not really needed, friends updates and will need to pass through sockets.'
+      deprecated: true
+      tags:
+        - friends
     delete:
-      summary: ''
-      operationId: delete-me-friends
+      summary: Delete a friend or a pending invite
+      operationId: delete-users-id-friends
       responses:
         '200':
           description: OK
         '401':
           $ref: '#/components/responses/401'
-      description: Delete a friend
-      tags: []
+      description: 'Delete a friend or pending invite (from both sides, applicant can delete his invite, and recipient can refuse an invite.'
+      parameters:
+        - schema:
+            type: integer
+            minimum: 0
+          in: query
+          name: other_user_id
+          required: true
+      tags:
+        - friends
     put:
       summary: ''
-      operationId: put-me-friends
+      operationId: put-users-id-friends
       responses:
         '204':
           description: No Content
@@ -256,238 +491,27 @@ paths:
               properties:
                 id:
                   type: number
-      tags: []
-  /me/channels:
-    get:
-      summary: Get channels I'm in
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  channels:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Channel'
-                  meta:
-                    $ref: '#/components/schemas/Meta'
-                  links:
-                    $ref: '#/components/schemas/Pagination'
-                required:
-                  - channels
-                  - meta
-                  - links
-        '401':
-          $ref: '#/components/responses/401'
-      operationId: get-me-channels
-      tags: []
-      description: Get the list of channels im in.
-    post:
-      summary: Create a new channel
-      operationId: post-me-channels
-      responses:
-        '200':
-          description: OK
-      description: 'Create, join and administrate a channel'
-      tags: []
-  '/me/channels/{id}':
+      tags:
+        - friends
     parameters:
       - schema:
           type: string
         name: id
         in: path
         required: true
-    delete:
-      summary: Leave a given channel
-      operationId: delete-me-channels-id
-      responses:
-        '200':
-          description: OK
-        '401':
-          $ref: '#/components/responses/401'
-      description: 'Leave a given channel, if the user who leave is the admin, then the oldest to have joined become admin ? If there is not already an other admin ?'
-      tags: []
-    put:
-      summary: Join a given channel
-      operationId: put-me-channels-id
-      responses:
-        '200':
-          description: OK
-        '401':
-          $ref: '#/components/responses/401'
-      description: |-
-        Subscribe to a channel if public. if private, the password must be provided
-
-        OR maybe delete this route and to all the things in websockets ? what's easier ?
-      tags: []
-      parameters: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                password:
-                  type: string
-                  format: password
-    patch:
-      tags: []
-      summary: Modify channel
-      operationId: patch-me-channels-id
-      responses:
-        '200':
-          description: OK
-        '401':
-          $ref: '#/components/responses/401'
-      description: |-
-        Only the owner can add/update/delete password.
-        owner can add admin role to a user.
-        administrator can ban or mute users for a certain amount of time
-
-        Create one two guards in the backend ? to filter admin and owner ?
-
-        OR maybe delete this route and to all the things in websockets ? what's easier ?
-  /me/play:
-    post:
-      summary: Search (matchmaking) or ask someone to play
-      operationId: post-me-play
-      responses:
-        '200':
-          description: OK
-      description: |-
-        Separate matchmaking from websocket easier, or not ?
-
-        https://www.reddit.com/r/gamedev/comments/628h2s/rest_api_for_matchmaking/
-        https://docs.microsoft.com/en-us/rest/api/playfab/client/matchmaking/matchmake?view=playfab-rest
-
-        Once a matchmaking matched or the requested player accepted, then return a une id to initiate the websocket ?  
-
-        OR maybe delete this route and to all the things in websockets ? what's easier ?
-      parameters:
-        - schema:
-            type: string
-          in: query
-          name: userId
-          description: Ask someone to play with
-      tags: []
-  /me/history:
-    get:
-      summary: List of past games
-      tags: []
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  history:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Game'
-                  meta:
-                    $ref: '#/components/schemas/Meta'
-                  links:
-                    $ref: '#/components/schemas/Pagination'
-                required:
-                  - history
-                  - meta
-                  - links
-        '401':
-          $ref: '#/components/responses/401'
-      operationId: get-me-history
-      description: Return a list of games
-  /users:
-    get:
-      summary: List of users
-      tags: []
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  users:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/User'
-                  meta:
-                    $ref: '#/components/schemas/Meta'
-                  links:
-                    $ref: '#/components/schemas/Pagination'
-                required:
-                  - users
-                  - meta
-                  - links
-        '401':
-          $ref: '#/components/responses/401'
-      operationId: get-users
-      description: 'Return a list of users, two queries parameter can be added to filter by user name and if they are online'
-      parameters:
-        - schema:
-            type: string
-          in: query
-          name: username
-          description: Find users who approximately match the given name
-        - schema:
-            type: boolean
-          in: query
-          name: online
-          description: To filter online users
-  '/users/{id}':
-    parameters:
-      - name: id
-        in: path
-        schema:
-          type: integer
-          format: int64
-        description: An object id
-        required: true
-    get:
-      summary: Get a specific user
-      tags: []
-      responses:
-        '200':
-          description: User Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-              examples:
-                Get User Alice Smith:
-                  value:
-                    id: 142
-                    username: Alice
-                    email: alice.smith@gmail.com
-                    online: true
-                    avatar: 'http://localhost:3000/users/142/avatar'
-                    role: admin
-        '401':
-          $ref: '#/components/responses/401'
-        '404':
-          description: User Not Found
-      operationId: get-users-userId
-      description: Retrieve the user information given a specific id.
-      parameters:
-        - $ref: '#/components/parameters/page'
-        - $ref: '#/components/parameters/limit'
-        - $ref: '#/components/parameters/order_by'
   '/users/{id}/history':
     parameters:
       - schema:
-          type: string
+          type: integer
+          minimum: 0
         name: id
         in: path
         required: true
+        description: The user id
     get:
       summary: Get match history of a user
-      tags: []
+      tags:
+        - not needed
       responses:
         '200':
           description: OK
@@ -511,45 +535,27 @@ paths:
         '401':
           $ref: '#/components/responses/401'
       operationId: get-users-id-history
-      description: Return a list of past games from a user.
+      description: |-
+        Return a list of past games from a user.
+        Not needed by correction scale ?
       parameters:
         - $ref: '#/components/parameters/page'
         - $ref: '#/components/parameters/limit'
         - $ref: '#/components/parameters/sort'
-  '/users/{id}/avatar':
-    parameters:
-      - schema:
-          type: string
-        name: id
-        in: path
-        required: true
-    get:
-      summary: Get the avatar of a specific player
-      tags: []
-      responses:
-        '200':
-          description: OK
-          content:
-            image/*:
-              schema:
-                type: string
-                format: binary
-                x-faker: image.image
-        '401':
-          $ref: '#/components/responses/401'
-      operationId: get-users-userId-avatar
-      parameters: []
-      description: Return the user avatar
+      deprecated: true
   '/users/{id}/achievements':
     parameters:
       - schema:
-          type: string
+          type: integer
+          minimum: 0
         name: id
         in: path
         required: true
+        description: The user id
     get:
-      summary: Your GET endpoint
-      tags: []
+      summary: Get user's achivements
+      tags:
+        - not needed
       responses:
         '200':
           description: OK
@@ -573,12 +579,16 @@ paths:
               examples: {}
         '401':
           $ref: '#/components/responses/401'
-      operationId: get-users-userId-achievements
-      description: Return the list of achievements a specific user won
+      operationId: get-users-id-achievements
+      description: |-
+        Return the list of achievements a specific user won.
+        Not needed by scale ! (we will see at the end...)
+      deprecated: true
   /achievements:
     get:
-      summary: Your GET endpoint
-      tags: []
+      summary: Get all existing achievements
+      tags:
+        - not needed
       responses:
         '200':
           description: OK
@@ -619,44 +629,15 @@ paths:
         '401':
           $ref: '#/components/responses/401'
       operationId: get-achievements
-      description: Return the list of all existing achievements
+      description: |-
+        Return the list of all existing achievements.
+        Not needed by scale ! (we will see at the end...)
       parameters:
         - $ref: '#/components/parameters/page'
         - $ref: '#/components/parameters/limit'
         - $ref: '#/components/parameters/order_by'
+      deprecated: true
     parameters: []
-  /rank:
-    get:
-      summary: Get users ordered by rank
-      tags: []
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  users:
-                    type: array
-                    items:
-                      allOf:
-                        - $ref: '#/components/schemas/User'
-                        - $ref: '#/components/schemas/Stats'
-                  meta:
-                    $ref: '#/components/schemas/Meta'
-                  links:
-                    $ref: '#/components/schemas/Pagination'
-                required:
-                  - users
-                  - meta
-                  - links
-              examples: {}
-      operationId: get-rank
-      description: return bla bla
-      parameters:
-        - $ref: '#/components/parameters/page'
-        - $ref: '#/components/parameters/limit'
 components:
   securitySchemes:
     BearerAuthJWT:
@@ -717,6 +698,7 @@ components:
           enum:
             - admin
             - user
+            - owner
           readOnly: true
       required:
         - id
@@ -966,3 +948,9 @@ components:
           examples: {}
 security:
   - BearerAuthJWT: []
+tags:
+  - name: auth
+  - name: channels
+  - name: friends
+  - name: not needed
+  - name: users
