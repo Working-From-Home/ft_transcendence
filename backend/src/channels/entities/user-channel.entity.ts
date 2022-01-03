@@ -1,8 +1,9 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, Check } from "typeorm";
 import { User } from "../../users/entities/user.entity";
 import { Channel } from "./channel.entity";
 
 @Entity()
+@Check(`case when ("bannedUntil" > CURRENT_TIMESTAMP) THEN "hasLeft" IS TRUE END`)
 export class UserChannel {
     @PrimaryColumn({ type: "integer" })
     userId: number;
@@ -21,6 +22,9 @@ export class UserChannel {
 
     @Column({ type: 'timestamptz', nullable: true })
     mutedUntil: Date | null;
+
+    @Column({ type: 'timestamptz', default: () => "CURRENT_TIMESTAMP" })
+    createdAt: Date;
 
     @ManyToOne(() => Channel, (channel) => channel.userChannels, { onDelete: "CASCADE" })
     @JoinColumn()
