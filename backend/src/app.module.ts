@@ -10,6 +10,7 @@ import { AuthModule } from './auth/auth.module';
 import { PongModule } from './pong/pong.module';
 import { Stats } from './users/entities/stats.entity';
 import { Friendship } from './users/entities/friendship.entity';
+import { GameModule } from './game/game.module';
 
 @Module({
   imports: [
@@ -30,7 +31,8 @@ import { Friendship } from './users/entities/friendship.entity';
     }),
     UsersModule,
     AuthModule,
-		PongModule
+		PongModule,
+		GameModule
   ],
   controllers: [AppController],
   providers: [AppService],
