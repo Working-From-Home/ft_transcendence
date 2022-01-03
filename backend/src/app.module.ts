@@ -16,6 +16,7 @@ import { Channel } from './channels/entities/channel.entity';
 import { Message } from './channels/entities/message.entity';
 import { UserChannel } from './channels/entities/user-channel.entity';
 import { Game } from './game/entities/game.entity';
+import { AppGateway } from './app.gateway';
 
 @Module({
   imports: [
@@ -48,6 +49,6 @@ import { Game } from './game/entities/game.entity';
 		PongModule
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, AppGateway],
 })
 export class AppModule {}
