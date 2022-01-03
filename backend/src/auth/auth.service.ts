@@ -76,4 +76,8 @@ export class AuthService {
         const payload = { username: user.username, sub: user.id };
         return this.jwtService.sign(payload);
     }
+
+		verifyJwt(jwt: string): Promise<any> {
+			return this.jwtService.verifyAsync(jwt);
+		}
 }

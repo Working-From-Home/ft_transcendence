@@ -1,35 +1,11 @@
 version: "3.8"
 services:
-  backend:
-    restart: always
-    image: 42-node
-    # depends_on:
-    #   - postgre
-    build:
-      context: ./
-      dockerfile: Dockerfile.42-node
-    environment:
-      - DB_NAME=${DB_NAME}
-      - JWT_SECRET=${JWT_SECRET}
-      - API_KEY_42=${API_KEY_42}
-      - TYPEORM_HOST=postgres
-      - TYPEORM_PORT=${POSTGRES_PORT}
-      - TYPEORM_USERNAME=${POSTGRES_USER}
-      - TYPEORM_PASSWORD=${POSTGRES_PASSWORD}
-      - TYPEORM_DATABASE=${POSTGRES_DATABASE}
-      - TYPEORM_LOGGING=true
-      # - TYPEORM_SYNCHRONIZE=true
-    volumes:
-      - ./backend/:/app
-    ports:
-      - 3000:3000
-    networks:
-      - mynet
-    command: sh -c 'npm install && npm run start:dev'
-
   frontend:
     restart: always
     image: 42-node
+    build:
+      context: ./
+      dockerfile: Dockerfile.42-node
     volumes:
       - ./frontend/:/app
     environment:
@@ -41,17 +17,48 @@ services:
       - mynet
     command: sh -c 'npm install && npm run serve'
 
+  backend:
+    restart: always
+    image: 42-node
+    depends_on:
+      - postgres
+    environment:
+      - JWT_SECRET=${JWT_SECRET}
+      - API_KEY_42=${API_KEY_42}
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DATABASE=${POSTGRES_DATABASE}
+      # - TYPEORM_LOGGING=true
+      # - TYPEORM_SYNCHRONIZE=true
+      - DEBUG=*
+      - NODE_ENV=development
+    volumes:
+      - ./backend/:/app
+    ports:
+      - 3000:3000
+      - 9229:9229
+    networks:
+      - mynet
+    # command: sh -c 'npm install && npm run start:dev'
+    command: sh -c 'npm install && npm run start:dev  --debug 0.0.0.0:9229'
+
   postgres:
     restart: always
     image: postgres:14-alpine3.15
     environment:
+      - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - PGPORT= ${POSTGRES_PORT}
     ports:
-      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+      - 5432:${POSTGRES_PORT}
     networks:
       - mynet
     volumes:
-      - ./tmp_postgres_init/:/docker-entrypoint-initdb.d/
+      - ./postgres_initdb/:/docker-entrypoint-initdb.d/
+
+
 
   mock-api:
     restart: always

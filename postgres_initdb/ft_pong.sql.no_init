@@ -22,12 +22,31 @@
 -- Show existing databases
 -- SELECT * FROM pg_database;
 
--- enfer -> mots reserves (doivent etre double quote, sauf si value -> simple quote): user, password, role, message, name, description, type...
+-- enfer -> mots reserves et camelCase (doivent etre double quote, sauf si value -> simple quote): user, password, role, message, name, description, type...
 
 -- generate entities from database :
 -- 		npm i -g typeorm-model-generator
---		typeorm-model-generator -h postgres -p 5432 -d ft_pong -u postgres -x qwerty -e postgres -o . -s public
+--		typeorm-model-generator -h postgres -p 5432 -d ft_pong -u postgres -x qwerty -e postgres -o .
 
+
+-- postgres and typeorm constraints
+-- https://wanago.io/2021/08/09/constraints-postgresql-typeorm/
+-- https://orkhan.gitbook.io/typeorm/docs/decorator-reference
+-- https://typeorm.io/#/decorator-reference
+
+-- postgres check constrait if + jointure
+-- https://stackoverflow.com/questions/58204886/why-if-clause-is-not-possible-in-postgres-check-constraint
+-- https://stackoverflow.com/questions/27107034/constraint-to-check-values-from-a-remotely-related-table-via-join-etc
+
+
+-- views and view entities in typeorm
+-- https://github.com/typeorm/typeorm/blob/master/docs/view-entities.md
+-- https://typeorm.io/#/decorator-reference
+-- https://stackoverflow.com/questions/44972918/postgresql-how-to-create-a-boolean-column-from-conditions-within-a-query
+-- https://wanago.io/2021/12/06/views-postgresql-typeorm/
+
+-- typeorm vs postgres convention
+-- https://stackoverflow.com/questions/55248938/typeorm-and-postgres-competing-naming-styles
 
 -- database: ft_pong
 

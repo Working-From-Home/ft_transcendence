@@ -12,6 +12,7 @@ import { Friendship } from './entities/friendship.entity';
 import { FriendshipService } from './services/friendship.service';
 import { FriendsController } from './controllers/friends.controller';
 import { StatsController } from './controllers/stats.controller';
+import { Game } from 'src/game/entities/game.entity';
 
 @Module({
     imports: [
@@ -19,7 +20,8 @@ import { StatsController } from './controllers/stats.controller';
             Avatar,
             User,
             Stats,
-            Friendship
+            Friendship,
+            Game
         ])
     ],
     providers: [

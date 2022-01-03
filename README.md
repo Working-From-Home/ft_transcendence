@@ -10,25 +10,20 @@ git clone https://github.com/Working-From-Home/ft_transcendence.git && cd ft_tra
 ```
 Create a `.env` file, template example:
 ```
-DB_NAME=db.sqlite   # will be useless
 JWT_SECRET=my_secret
 # must feed a valid 42 api key -> https://api.intra.42.fr/apidoc/guides/getting_started
 API_KEY_42=
 
 # Database settings
 POSTGRES_PORT=5432
-POSTGRES_USER=postgres
-POSTGRES_DATABASE=ft_pong
+POSTGRES_USER=pong
 POSTGRES_PASSWORD=qwerty
+POSTGRES_DATABASE=pong
 
-#PgAdmin
+#PgAdmin container
 PGADMIN_DEFAULT_EMAIL=pong@pong.com
 PGADMIN_DEFAULT_PASSWORD=qwerty
 
-#typeorm 
-# https://stackoverflow.com/questions/62143322/typeorm-config-with-env-variables
-# https://typeorm.io/#/using-ormconfig/using-ormconfigjs
-# https://medium.com/@rcuni8/create-expressjs-server-with-typeorm-and-postgres-using-docker-and-docker-compose-66f1ebc9d94b
 ```
 
 Then build and run all services :
@@ -42,6 +37,41 @@ docker-compose exec frontend zsh
 ```
 ```bash
 docker-compose exec backend zsh
+```
+
+#### Access to ft_pong DB from pgAdmin UI
+- open: http://localhost:8081/
+- Use pgAdmin credentials from .env file (`PGADMIN_DEFAULT_EMAIL` and `PGADMIN_DEFAULT_PASSWORD`)
+- create/add a new server
+  - Give it a name
+  - Open the `Connection` panel:
+    - **Host** : The docker-compose service name of our database ( in our case `postgres`)
+    - **Port** : The value of `POSTGRES_PORT` in the `.env` file (default port is `5432`)
+    - **Username** : The value of `POSTGRES_USER` in the `.env` file
+    - **Password** : The value of `POSTGRES_PASSWORD` in the `.env` file
+  - Hit **`Save`** and voila.
+
+#### Setup debug for backend in vscode
+```bash
+cd backend
+```
+```bash
+mkdir -p .vscode && touch .vscode/launch.json
+```
+copy paste this into `lauch.json` :
+```json
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Attach to node",
+            "type": "node",
+            "request": "attach",
+            "restart": true,
+            "port": 9229
+        }
+    ]
+}
 ```
 
 #### Links

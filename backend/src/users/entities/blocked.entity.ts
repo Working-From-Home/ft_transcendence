@@ -1,7 +1,8 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, Check } from "typeorm";
 import { User } from './user.entity'
 
 @Entity()
+@Check(`"applicantId" <> "recipientId"`)
 export class Blocked {
     @PrimaryColumn({ type: "integer" })
     applicantId: number;
