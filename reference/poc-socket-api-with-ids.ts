@@ -25,13 +25,11 @@ interface IChannel
 {
   id: number;
   owner: number;
-  admins: number[];
   title: string;
   isDm: boolean;
   isPublic: boolean;
   createdAt: Date;
-  users: number[];
-  mutedUsers: {userId: number, until: Date}[];
+  users: {userId: number, isOwner:boolean, isAdmin: boolean, mutedUntil: Date}[];
   messages: IChannelMessage[]; // maybe not needed if messages are directly pushed into the "advanced chat" ?
 }
 
