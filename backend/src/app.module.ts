@@ -17,6 +17,7 @@ import { Channel } from './channels/entities/channel.entity';
 import { Message } from './channels/entities/message.entity';
 import { UserChannel } from './channels/entities/user-channel.entity';
 import { Game } from './game/entities/game.entity';
+import { UsersInChannel } from './channels/entities/users-in-channel.view.entity';
 import { AppGateway } from './app.gateway';
 
 @Module({
@@ -37,11 +38,11 @@ import { AppGateway } from './app.gateway';
           database: config.get('POSTGRES_DATABASE'),
           entities: [
             User, Stats, Avatar, Friendship, Blocked, Achievement,
-            Channel, Message, UserChannel,
+            Channel, Message, UserChannel, UsersInChannel,
             Game 
           ],
           // logging: 'all',
-          synchronize: true     // shouldn't be used in production: may lose data
+          synchronize: false     // shouldn't be used in production: may lose data
         }
       }
     }),

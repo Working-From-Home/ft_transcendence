@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne, OneToMany, ManyToMany, JoinTable } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne, OneToMany, ManyToMany, JoinTable, Check } from "typeorm";
 import { Avatar } from "./avatar.entity";
 import { Friendship } from "./friendship.entity";
 import { Stats } from "./stats.entity";
@@ -10,6 +10,7 @@ import { Blocked } from "./blocked.entity";
 import { Game } from "../../game/entities/game.entity";
 
 @Entity()
+@Check(`case when ("role" = 'owner' OR "role" = 'admin') THEN banned IS NOT TRUE END`)
 export class User {
     @PrimaryGeneratedColumn()
     id: number;
