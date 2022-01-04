@@ -24,7 +24,6 @@ interface IChannelMessage
 interface IChannel
 {
   id: number;
-  owner: number;
   title: string;
   isDm: boolean;
   isPublic: boolean;
