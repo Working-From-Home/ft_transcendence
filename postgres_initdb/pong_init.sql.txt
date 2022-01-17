@@ -1,0 +1,181 @@
+-- https://stackoverflow.com/questions/22256124/cannot-create-a-database-table-named-user-in-postgresql
+-- string types: https://www.depesz.com/2010/03/02/charx-vs-varcharx-vs-varchar-vs-text/
+-- date time types: https://www.postgresql.org/docs/9.2/datatype-datetime.html
+-- time zones: https://www.postgresql.org/docs/7.2/timezones.html
+-- https://stackoverflow.com/questions/7577389/how-to-elegantly-deal-with-timezones
+-- https://stackoverflow.com/questions/16609724/using-current-time-in-utc-as-default-value-in-postgresql
+-- https://stackoverflow.com/questions/27299234/how-do-i-tell-postgres-a-timestamp-within-a-column-is-utc?rq=1
+-- https://medium.com/building-the-system/how-to-store-dates-and-times-in-postgresql-269bda8d6403
+-- https://wiki.postgresql.org/wiki/BinaryFilesInDB
+
+---- first time
+-- docker-compose exec postgres bash
+-- createdb -U pong pong && psql -U pong -v ON_ERROR_STOP=1 pong < /docker-entrypoint-initdb.d/pong_init.sql
+
+---- delete and recreate db
+-- dropdb -U pong pong && createdb -U pong pong && psql -U pong -v ON_ERROR_STOP=1 pong < /docker-entrypoint-initdb.d/pong_init.sql
+
+-- CREATE DATABASE test_pong
+-- 	WITH
+-- 	OWNER = postgres;
+
+-- Show existing databases
+-- SELECT * FROM pg_database;
+
+-- enfer -> mots reserves et camelCase (doivent etre double quote, sauf si value -> simple quote): user, password, role, message, name, description, type...
+
+-- generate entities from database :
+-- 		npm i -g typeorm-model-generator
+--		typeorm-model-generator -h postgres -p 5432 -d ft_pong -u postgres -x qwerty -e postgres -o .
+
+
+-- postgres and typeorm constraints
+-- https://wanago.io/2021/08/09/constraints-postgresql-typeorm/
+-- https://orkhan.gitbook.io/typeorm/docs/decorator-reference
+-- https://typeorm.io/#/decorator-reference
+
+-- postgres check constrait if + jointure
+-- https://stackoverflow.com/questions/58204886/why-if-clause-is-not-possible-in-postgres-check-constraint
+-- https://stackoverflow.com/questions/27107034/constraint-to-check-values-from-a-remotely-related-table-via-join-etc
+
+
+-- views and view entities in typeorm
+-- https://github.com/typeorm/typeorm/blob/master/docs/view-entities.md
+-- https://typeorm.io/#/decorator-reference
+-- https://stackoverflow.com/questions/44972918/postgresql-how-to-create-a-boolean-column-from-conditions-within-a-query
+-- https://wanago.io/2021/12/06/views-postgresql-typeorm/
+
+-- typeorm vs postgres convention
+-- https://stackoverflow.com/questions/55248938/typeorm-and-postgres-competing-naming-styles
+
+-- database: pong
+
+----------------------------------------------------------------------------
+-- Insert dummy data
+----------------------------------------------------------------------------
+
+
+
+INSERT INTO "user" (username, email, "password", "role", banned) VALUES
+	('bob', 'bob@bob.com'						, 'fake_user_so_invalid_token', 'owner', FALSE),
+	('marie', 'marie@email.com'			, 'fake_user_so_invalid_token', 'admin', FALSE),
+	('jacques', 'jacques@email.com'	, 'fake_user_so_invalid_token', 'user', FALSE),
+	('stef', 'stef@mail.com'				, 'fake_user_so_invalid_token', 'user', FALSE),
+	('alice', 'alice@mail.com'			, 'fake_user_so_invalid_token', 'user', FALSE),
+	('pierre', 'pierre@mail.com'		, 'fake_user_so_invalid_token', 'user', FALSE),
+	('jean', 'jean@mail.com'				, 'fake_user_so_invalid_token', 'user', FALSE),
+	('bad-user', 'bad-user@mail.com', 'fake_user_so_invalid_token', 'user', TRUE),
+	('val', 'val@mail.com'				, 'fake_user_so_invalid_token', 'user', FALSE);
+
+INSERT INTO stats ("userId", "level", victories, losses) VALUES
+	(1, 42, 15,   7),
+	(2, 23, 150, 97),
+	(3,  9,  15, 90),
+	(4,  1,   2,  2),
+	(5,  8,   5,  5),
+	(6,  12,   12,  5),
+	(7,  14,   15,  5),
+	(8,  4,   10,  2),
+	(9,  14,   15,  5);
+
+INSERT INTO achievement (title, "description") VALUES
+	('Tyson Fury', 'Win 30 games in a row.'),
+	('Pilier de bar', 'Play 15 games each day for one month'),
+	('Bienvenu', 'Create an account');
+
+INSERT INTO user_achievements ("userId", "achievementId") VALUES
+	(1, 3),
+	(2, 3),
+	(3, 3),
+	(4, 3),
+	(5, 3),
+
+	(1, 2),
+	(2, 2),
+	(3, 2),
+
+	(1, 1),
+	(2, 1);
+
+INSERT INTO friendship ("applicantId", "recipientId", "status") VALUES
+	(1, 2, 'accepted'),
+	(1, 3, 'accepted'),
+	(1, 4, 'pending'),
+
+	(2, 3, 'pending'),
+	(2, 5, 'accepted'),
+
+	(3, 4, 'accepted'),
+	(3, 5, 'pending'),
+
+	(4, 5, 'accepted'),
+
+	(6, 1, 'accepted'),
+	(6, 3, 'pending');
+
+INSERT INTO blocked ("applicantId", "recipientId") VALUES
+	(1, 5),
+	(2, 4),
+	(7, 1);
+
+INSERT INTO channel ("ownerId", title, "isDm", "password", "createdAt") VALUES
+	(1, 'L equipe'	,	FALSE, NULL, 							'2021-12-08 01:44:32.883044+00'),
+	(2, 'L equipe 2',	FALSE, NULL, 							'2021-12-08 00:44:32.883044+00'),
+	(2, NULL				,	TRUE, NULL,	 							'2021-12-08 11:57:52.883044+00'),
+	(3, 'Anniv Pierre 2019',	FALSE, NULL,			'2019-01-08 11:57:52.883044+00'),
+	(3, 'Anniversaire Pierre 2020',	FALSE, NULL,'2020-01-07 11:58:31.883044+00' );
+
+INSERT INTO user_channel ("userId", "channelId", "role", "hasLeft" "bannedUntil", "mutedUntil", "createdAt") VALUES
+	(1, 1, 'admin', FALSE, NULL, NULL, '2021-12-08 01:44:32.883044+00'), -- owner
+	(2, 1, 'admin', FALSE, NULL, NULL, '2021-12-08 02:05:40.883044+00'),
+	(3, 1, 'user', FALSE, NULL, '2025-12-08 01:45:32.883044+00', '2021-12-08 03:45:01.883044+00' ), -- case when mute has ended...
+
+	(2, 2, 'admin', FALSE, NULL, NULL, '2021-12-08 00:44:32.883044+00'), -- owner
+	(4, 2, 'user', FALSE, NULL, NULL,	'2021-12-08 01:46:32.883044+00'),
+	(5, 2, 'user', TRUE, '3021-12-08 01:45:32.883044+00', NULL, '2021-12-08 01:48:32.883044+00'),
+
+	(2, 3, 'admin', FALSE, NULL, NULL, '2021-12-08 01:56:40.883044+00'), -- owner but useless in private channel
+	(3, 3, 'user', FALSE, NULL, NULL, 	'2021-12-08 01:56:40.883044+00'),
+
+	(3, 4, 'admin', FALSE, NULL, NULL, '2019-01-08 11:57:52.883044+00'), -- owner
+	(1, 4, 'admin', FALSE, NULL, NULL,	'2019-01-08 12:04:14.883044+00'),
+	(2, 4, 'admin', FALSE, NULL, NULL, '2019-01-08 11:59:54.883044+00'),
+
+	(3, 5, 'admin', FALSE, NULL, NULL, 													'2020-01-07 11:58:31.883044+00'), -- owner
+	(1, 5, 'admin', FALSE, NULL, NULL, 													'2020-01-07 16:42:42.883044+00'),
+	(2, 5, 'admin', FALSE, NULL, NULL, 													'2020-01-07 15:06:25.883044+00'),
+	(4, 5, 'user', FALSE, NULL, '2025-12-08 01:45:32.883044+00', '2020-01-08 12:50:02.883044+00');
+
+INSERT INTO "message" ("channelId", "userId", content, "createdAt") VALUES
+	(1, 1, 'bob: hello l equipe ! premier message', '2021-12-08 01:45:32.883044+00'),
+	(1, 2, 'marie: hola, second message', 			'2021-12-08 02:05:35.883044+00'),
+	(1, 3, 'jacques: Hi !, third one', 				'2021-12-08 03:46:01.883044+00'),
+	(1, 1, 'bob: I have muted you jacques :p ! 4','2021-12-08 01:47:42.883044+00'),
+	(1, 2, 'marie: 5',								'2021-12-08 01:49:32.883044+00'),
+	(1, 1, 'bob: 6',								'2021-12-08 01:51:29.883044+00'),
+	(1, 1, 'bob: 7',								'2021-12-08 01:53:11.883044+00'),
+	(1, 1, 'bob: 8',								'2021-12-08 01:54:02.883044+00'),
+
+	(2, 2, 'marie: hello l equipe 2 ! premier message', '2021-12-08 01:45:32.883044+00'),
+	(2, 4, 'stef: hola, second message',				'2021-12-08 01:49:32.883044+00'),
+	(2, 5, 'alice: Hi !, third one',					'2021-12-08 01:50:32.883044+00'),
+	(2, 2, 'bob: 4',													'2021-12-08 01:52:32.883044+00'),
+	(2, 4, 'marie: I have banned alice. 5',		'2021-12-08 01:55:32.883044+00'),
+	(2, 2, 'marie: 6',												'2021-12-08 01:56:32.883044+00'),
+	(2, 2, 'marie: 7',												'2021-12-08 01:56:35.883044+00'),
+	(2, 2, 'marie: 8',												'2021-12-08 01:57:40.883044+00'),
+
+	(3, 2, 'marie: Hi first dm message 1',	'2021-12-08 01:57:40.883044+00'),
+	(3, 3, 'jacques: Hi 2',					'2021-12-08 11:57:40.883044+00'),
+	(3, 3, 'jacques: How are u 3. (last message ever)',			'2021-12-08 11:58:20.883044+00'),
+	
+	(4, 3, 'jacques: Idees de cadeau pour 2019 ?',																			'2019-12-08 11:58:20.883044+00'),
+	(4, 2, 'marie: npm install ft_transcendence, bonne idee non ? (last message ever)',	'2019-12-08 12:05:04.883044+00'),
+	
+	(5, 3, 'jacques: Idees de cadeau pour 2020 ? (last message ever)',			'2020-01-07 11:58:20.883044+00');
+
+INSERT INTO game ("winnerId", "looserId", "winnerScore", "looserScore") VALUES
+	(1, 2, 3, 0),
+	(2, 1, 3, 2),
+	(4, 2, 3, 2),
+	(5, 4, 3, 1);

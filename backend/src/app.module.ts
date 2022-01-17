@@ -10,6 +10,13 @@ import { AuthModule } from './auth/auth.module';
 import { PongModule } from './pong/pong.module';
 import { Stats } from './users/entities/stats.entity';
 import { Friendship } from './users/entities/friendship.entity';
+import { Blocked } from './users/entities/blocked.entity';
+import { Achievement } from './users/entities/achievement.entity';
+import { Channel } from './channels/entities/channel.entity';
+import { Message } from './channels/entities/message.entity';
+import { UserChannel } from './channels/entities/user-channel.entity';
+import { Game } from './game/entities/game.entity';
+import { UsersInChannel } from './channels/entities/users-in-channel.view.entity';
 import { AppGateway } from './app.gateway';
 
 @Module({
@@ -22,10 +29,19 @@ import { AppGateway } from './app.gateway';
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
         return {
-          type: 'sqlite',
-          database: config.get<string>('DB_NAME'),
-          entities: [Avatar, User, Stats, Friendship],
-          synchronize: true     // shouldn't be used in production: may lose data
+          type: 'postgres',
+          host: config.get('POSTGRES_HOST'),
+          port: config.get<number>('POSTGRES_PORT'),
+          username: config.get('POSTGRES_USER'),
+          password: config.get('POSTGRES_PASSWORD'),
+          database: config.get('POSTGRES_DATABASE'),
+          entities: [
+            User, Stats, Avatar, Friendship, Blocked, Achievement,
+            Channel, Message, UserChannel, UsersInChannel,
+            Game 
+          ],
+          // logging: 'all',
+          synchronize: false     // shouldn't be used in production: may lose data
         }
       }
     }),

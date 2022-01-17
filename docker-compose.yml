@@ -1,28 +1,11 @@
 version: "3.8"
 services:
-  backend:
-    restart: always
-    image: 42-node
-    # depends_on:
-    #   - postgre
-    build:
-      context: ./
-      dockerfile: Dockerfile.42-node
-    environment:
-      - DB_NAME=${DB_NAME}
-      - JWT_SECRET=${JWT_SECRET}
-      - API_KEY_42=${API_KEY_42}
-    volumes:
-      - ./backend/:/app
-    ports:
-      - 3000:3000
-    networks:
-      - mynet
-    command: sh -c 'npm install && npm run start:dev'
-
   frontend:
     restart: always
     image: 42-node
+    build:
+      context: ./
+      dockerfile: Dockerfile.42-node
     volumes:
       - ./frontend/:/app
     environment:
@@ -34,15 +17,48 @@ services:
       - mynet
     command: sh -c 'npm install && npm run serve'
 
-  # postgres:
-  #   restart: always
-  #   image: postgres:14-alpine3.15
-  #   environment:
-  #     - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-  #   ports:
-  #     - 5432:5432
-  #   volumes:
-  #     - ./tmp_postgres_init/:/docker-entrypoint-initdb.d/
+  backend:
+    restart: always
+    image: 42-node
+    depends_on:
+      - postgres
+    environment:
+      - JWT_SECRET=${JWT_SECRET}
+      - API_KEY_42=${API_KEY_42}
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DATABASE=${POSTGRES_DATABASE}
+      # - TYPEORM_LOGGING=true
+      # - TYPEORM_SYNCHRONIZE=true
+      - DEBUG=*
+      - NODE_ENV=development
+    volumes:
+      - ./backend/:/app
+    ports:
+      - 3000:3000
+      - 9229:9229
+    networks:
+      - mynet
+    # command: sh -c 'npm install && npm run start:dev'
+    command: sh -c 'npm install && npm run start:dev  --debug 0.0.0.0:9229'
+
+  postgres:
+    restart: always
+    image: postgres:14-alpine3.15
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - PGPORT= ${POSTGRES_PORT}
+    ports:
+      - 5432:${POSTGRES_PORT}
+    networks:
+      - mynet
+    volumes:
+      - ./postgres_initdb/:/docker-entrypoint-initdb.d/
+
+
 
   mock-api:
     restart: always
@@ -54,14 +70,38 @@ services:
     networks:
       - mynet
     # command: prism mock --dynamic -h 0.0.0.0 ./api.oas3.yaml   # simply mock the api reference
-    command: prism proxy ./api.oas3.yaml -h 0.0.0.0 http://backend:3000 --errors      # check and forward backend answer, and mock not 501 not implemented responce from backend 
+    command: prism proxy ./api.oas3.yaml -h 0.0.0.0 http://backend:3000 --errors      # check and forward backend answer, and mock not implemented routes from backend (if backend return 501 status) 
+
+# UI for postgres -> https://hub.docker.com/r/dpage/pgadmin4
+  pgadmin:
+    restart: always
+    image: dpage/pgadmin4
+    ports:
+      - 8081:80
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+    networks:
+      - mynet
+
+# UI to host api reference -> https://hub.docker.com/r/swaggerapi/swagger-ui
+  swagger-ui:
+    restart: always
+    image: swaggerapi/swagger-ui
+    ports:
+      - 8082:8080
+    environment:
+      - API_URL=swagger/api.oas3.yaml
+    volumes:
+      - ./reference:/usr/share/nginx/html/swagger
+
 
   # compodoc:
   #   image: 42-node
   #   volumes:
   #     - ./backend/:/app
   #   ports:
-  #     - 8081:8080
+  #     - 8083:8080
   #   command: "npx @compodoc/compodoc -p tsconfig.json -s"
 
 networks:
