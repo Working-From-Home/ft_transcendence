@@ -60,17 +60,17 @@ services:
 
 
 
-  mock-api:
-    restart: always
-    image: 42-node
-    volumes:
-      - ./reference/:/app
-    ports:
-      - 3001:4010
-    networks:
-      - mynet
-    # command: prism mock --dynamic -h 0.0.0.0 ./api.oas3.yaml   # simply mock the api reference
-    command: prism proxy ./api.oas3.yaml -h 0.0.0.0 http://backend:3000 --errors      # check and forward backend answer, and mock not implemented routes from backend (if backend return 501 status) 
+#   mock-api:
+#     restart: always
+#     image: 42-node
+#     volumes:
+#       - ./reference/:/app
+#     ports:
+#       - 3001:4010
+#     networks:
+#       - mynet
+#     # command: prism mock --dynamic -h 0.0.0.0 ./api.oas3.yaml   # simply mock the api reference
+#     command: prism proxy ./api.oas3.yaml -h 0.0.0.0 http://backend:3000 --errors      # check and forward backend answer, and mock not implemented routes from backend (if backend return 501 status) 
 
 # UI for postgres -> https://hub.docker.com/r/dpage/pgadmin4
   pgadmin:
@@ -85,15 +85,15 @@ services:
       - mynet
 
 # UI to host api reference -> https://hub.docker.com/r/swaggerapi/swagger-ui
-  swagger-ui:
-    restart: always
-    image: swaggerapi/swagger-ui
-    ports:
-      - 8082:8080
-    environment:
-      - API_URL=swagger/api.oas3.yaml
-    volumes:
-      - ./reference:/usr/share/nginx/html/swagger
+#   swagger-ui:
+#     restart: always
+#     image: swaggerapi/swagger-ui
+#     ports:
+#       - 8082:8080
+#     environment:
+#       - API_URL=swagger/api.oas3.yaml
+#     volumes:
+#       - ./reference:/usr/share/nginx/html/swagger
 
 
   # compodoc:
