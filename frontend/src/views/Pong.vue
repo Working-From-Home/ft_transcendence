@@ -15,6 +15,5 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.card {
-}
+
 </style>

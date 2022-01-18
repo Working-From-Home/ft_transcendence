@@ -11,28 +11,53 @@
 				<router-link to="/auth/signup" v-if="!isLoggedIn" class="nav-item">Register</router-link>
 			</ul>
 		</div>
+		<p>Test</p>
+		<p v-for="(user, i) in testUsers" :key="i">
+              {{ user.id }} {{ user.username }}
+        </p>
 		<router-view class="row w-100"/>
+	<mini-chat v-if="isLoggedIn"></mini-chat>
 	</section>
 </template>
 
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
+import MiniChat from "./components/chat/MiniChat.vue";
+import { initSocket, socket } from "./socket";
 
 @Options({
+	data() {
+	  	return {
+			testUsers: [],
+		}
+  	},
+	components: {
+		MiniChat,
+	},
 	computed: {
 		isLoggedIn() {
+			this.testUsers = this.$store.getters.connectedUsers;
+			console.log('this.testUsers', this.testUsers);
 			return this.$store.getters.isAuth;
 		},
 	},
 	created() {
 		this.$store.dispatch('checkLog');
+		if (this.$store.getters.isAuth){
+			initSocket(this.$store.getters.token, this.$store.getters.userID);
+			socket.on("connectedUsers", (...args: any) => {
+				console.log('connectedUsers', args);
+				this.$store.dispatch('initconnectedUsers', {users: args});
+				console.log('connectedUsers', args);
+			});
+		}	
 	},
 	methods: {
 		logout() {
 			this.$store.dispatch('logout');
-		}
-	},
+		},
+	}
 })
 export default class HelloWorld extends Vue {
 

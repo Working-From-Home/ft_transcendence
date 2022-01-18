@@ -53,9 +53,11 @@ export class AppGateway {
 
 	handleDisconnect(socket: Socket) {
 		this.logger.log('disconnection!');
-		const userId = socket.data.user.id;
-		this.connectedUsers = this.connectedUsers.filter((u) => u.id !== userId);
-		socket.emit("userDisconnected", userId);
+		if (socket.data.user) {
+            const userId = socket.data.user.id;
+            this.connectedUsers = this.connectedUsers.filter((u) => u.id !== userId);
+            socket.emit("userDisconnected", userId);
+        }
 		socket.disconnect();
 		console.log(this.connectedUsers);
 	}

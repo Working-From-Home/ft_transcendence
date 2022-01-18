@@ -17,6 +17,7 @@
     "vue-advanced-chat": "https://github.com/antoine92190/vue-advanced-chat/tarball/next",
     "vue-class-component": "^8.0.0-0",
     "vue-router": "^4.0.0-0",
+    "vue-socket.io-extended": "^5.0.0-alpha.5",
     "vuex": "^4.0.0-0"
   },
   "devDependencies": {
