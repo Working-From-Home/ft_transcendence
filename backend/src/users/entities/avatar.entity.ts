@@ -6,7 +6,7 @@ export class Avatar {
     @PrimaryColumn()
     userId: number;
 
-    @OneToOne(type => User, user => user.avatar, { primary: true, onDelete: "CASCADE" })
+    @OneToOne(() => User, (user) => user.avatar, { onDelete: "CASCADE" })
     @JoinColumn({ name: 'userId' })
     user: User;
 
@@ -16,6 +16,6 @@ export class Avatar {
     @Column()
     mimetype: string;
 
-    @Column({ type: 'blob' })
+    @Column({ type: 'bytea' })
     data: Uint8Array;
 }

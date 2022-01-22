@@ -1,12 +1,8 @@
-import { Entity, Column, ManyToOne, JoinColumn, PrimaryColumn, CreateDateColumn } from "typeorm";
+import { Entity, Column, ManyToOne, JoinColumn, PrimaryColumn, Check } from "typeorm";
 import { User } from "./user.entity";
 
-export enum FriendshipStatus {
-    Accepted = 'accepted',
-    Declined = 'declined'
-}
-
 @Entity()
+@Check(`"applicantId" <> "recipientId"`)
 export class Friendship {
     @PrimaryColumn()
     applicantId: number;
@@ -14,11 +10,11 @@ export class Friendship {
     @PrimaryColumn()
     recipientId: number;
 
-    @Column({ default: 'pending'})
-    status: string;
+    @Column({ type: "enum", enum: ["accepted", "pending"], default: "pending" })
+    status: "accepted" | "pending";
 
-    @CreateDateColumn()
-    created_at: Date;
+    @Column({ type: 'timestamptz', default: () => "CURRENT_TIMESTAMP" })
+    createdAt: Date;
 
     @ManyToOne(() => User, user => user.sentFriendRequests, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'applicantId' })
