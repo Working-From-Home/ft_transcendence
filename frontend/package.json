@@ -14,7 +14,7 @@
     "glob-parent": ">=5.1.2",
     "socket.io-client": "^4.4.0",
     "vue": "^3.0.0",
-    "vue-advanced-chat": "https://github.com/antoine92190/vue-advanced-chat/tarball/next",
+    "vue-advanced-chat": "https://github.com/Working-From-Home/vue-advanced-chat/archive/refs/tags/v1.5.2-beta.tar.gz",
     "vue-class-component": "^8.0.0-0",
     "vue-router": "^4.0.0-0",
     "vue-socket.io-extended": "^5.0.0-alpha.5",
