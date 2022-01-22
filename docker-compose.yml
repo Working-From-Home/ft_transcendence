@@ -32,7 +32,7 @@ services:
       - POSTGRES_DATABASE=${POSTGRES_DATABASE}
       # - TYPEORM_LOGGING=true
       # - TYPEORM_SYNCHRONIZE=true
-      - DEBUG=*
+      # - DEBUG=*
       - NODE_ENV=development
     volumes:
       - ./backend/:/app
