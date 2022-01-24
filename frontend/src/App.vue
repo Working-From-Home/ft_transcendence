@@ -24,7 +24,8 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 import MiniChat from "./components/chat/MiniChat.vue";
-import { initSocket, socket } from "./socket";
+// import { initSocket, socket } from "./socket";
+import { io }  from "socket.io-client";
 
 @Options({
 	data() {
@@ -44,18 +45,27 @@ import { initSocket, socket } from "./socket";
 	},
 	created() {
 		this.$store.dispatch('checkLog');
-		if (this.$store.getters.isAuth){
-			initSocket(this.$store.getters.token, this.$store.getters.userID);
-			socket.on("connectedUsers", (...args: any) => {
-				console.log('connectedUsers', args);
-				this.$store.dispatch('initconnectedUsers', {users: args});
-				console.log('connectedUsers', args);
-			});
-		}	
-	},
+		if (this.$store.getters.isAuth == false)
+			return;
+
+		this.socketapp.auth = {
+				token: `${this.$store.getters.token}`
+		};
+		this.socketapp.connect();
+
+		this.socketapp.on("connectedUsers", (...args: any) => {
+			this.$store.dispatch('initconnectedUsers', {users: args});
+			console.log('connectedUsers', args);
+		});
+		this.socketapp.on("connect_error", (err: any) => {
+			console.log(`socket connexion error: ${err}`);
+		});
+
+},
 	methods: {
 		logout() {
 			this.$store.dispatch('logout');
+			this.socketapp.disconnect(); //  to remove an put at the right place too
 		},
 	}
 })

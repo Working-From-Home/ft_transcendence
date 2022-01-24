@@ -74,6 +74,8 @@ copy paste this into `lauch.json` :
 }
 ```
 
+Important -> Variable `DEBUG=*` must be present in docker-compose.yaml (but spam a lot of logs)
+
 #### Links
 ###### access our beautiful website
 - http://localhost:8080

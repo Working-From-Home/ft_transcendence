@@ -12,6 +12,7 @@
     "bootstrap": "^5.1.3",
     "core-js": "^3.6.5",
     "glob-parent": ">=5.1.2",
+    "shared": "file:../shared",
     "socket.io-client": "^4.4.0",
     "vue": "^3.0.0",
     "vue-advanced-chat": "https://github.com/Working-From-Home/vue-advanced-chat/archive/refs/tags/v1.5.2-beta.tar.gz",
