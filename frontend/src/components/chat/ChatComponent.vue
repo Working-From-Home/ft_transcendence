@@ -10,10 +10,16 @@
 			:showReactionEmojis="false"
 			:showAudio="false"
 			:showFiles="false"
+			:room-actions="roomActions"
+			:menu-actions="menuActions"
+			:rooms-list-opened="opened"
 			@send-message="sendMessage"
 			@fetch-messages="fetchMessages"
 			@add-room="addRoom"
-		/>
+			@room-action-handler="menuActionHandler"
+			@menu-action-handler="menuActionHandler"
+		>
+		</chat-window>
 	</div>
 </template>
 
@@ -21,64 +27,72 @@
 import ChatWindow from 'vue-advanced-chat'
 import 'vue-advanced-chat/dist/vue-advanced-chat.css'
 
+
 export default {
 	name: 'Chat',
+	props: {
+		size: String,
+	},
 	components: {
 		ChatWindow
 	},
+	created() {
+		this.$store.dispatch('tmpRooms', {id: this.$store.getters.myUserId});
+		this.rooms = this.$store.getters.getRooms;
+		this.messages = this.rooms.messages;
+	},
 	data() {
 		return {
-			currentUserId: 1234,
-			rooms: [
-				{
-					roomId: 1,
-					roomName: 'Room 1',
-					avatar: 'https://66.media.tumblr.com/avatar_c6a8eae4303e_512.pnj',
-					messages: [],
-					users: [
-						{ _id: 1234, username: 'John Doe' },
-						{ _id: 4321, username: 'John Snow' }
-					]
-				}
-			],
+			currentUserId: this.$store.getters.myUserId,
+			userName: this.$store.getters.myUserName,
+			email: this.$store.getters.myEmail,
+			avatar: this.$store.getters.myAvatar,
+			rooms: [],
+			opened: true, 
 			messages: [],
-			messagesLoaded: false
+			messagesLoaded: false,
+			roomActions: [
+				{ name: 'leaveChannel', title: 'Leave Channel' },
+				{ name: 'destroyChannel', title: 'Destroy Channel' },
+			],
+			menuActions: [
+				{ name: 'muteUser', title: 'Mute User' },
+				{ name: 'kickUser', title: 'Kick User' },
+				{ name: 'banUser', title: 'Ban User' },
+			],
 		}
 	},
 	methods: {
 		fetchMessages({ room = {}, options = {} }) {
-			console.log('test', room);
+			console.log('this.size', this.size)
+			if (this.size === "mini")
+				this.opened = false;
+			if (options.reset)
+				this.messages = [];
+			this.messagesLoaded = false;
 			setTimeout(() => {
-				if (options.reset) {
-					this.messages = this.addMessages()
-				} else {
-					this.messagesLoaded = true
-				}
+				if (room.messages.length > 0)
+					this.messages = room.messages;
+				else 
+					this.messages = [];
+				this.messagesLoaded = true
 			})
 		},
-		addMessages() {
-			const messages = []
-			messages.push({
-					_id: 1,
-					content: `Salut`,
-					senderId: 4321,
-					username: 'John Doe',
-					date: '8 December',
-					timestamp: '10:20'
-				})
-			return messages
-		},
 		sendMessage(message) {
-			this.messages = [
-				...this.messages,
-				{
+			let newMessage = {
 					_id: this.messages.length,
 					content: message.content,
 					senderId: this.currentUserId,
+					username: this.userName,
+					avatar: this.avatar,
 					timestamp: new Date().toString().substring(16, 21),
 					date: new Date().toDateString()
-				}
+			};
+			this.messages = [
+				...this.messages,
+				newMessage
 			]
+			this.$store.dispatch('addMessage', {roomId: message.roomId, newMessage: newMessage});
 		},
 		addRoom(){
 			this.rooms = [
@@ -86,13 +100,43 @@ export default {
 				{
 					roomId: this.rooms.length + 1,
 					roomName: 'Room ' + (this.rooms.length + 1),
-					avatar: 'https://66.media.tumblr.com/avatar_c6a8eae4303e_512.pnj',
+					messages: [],
 					users: [
-						{ _id: 1234, username: 'John Doe' },
+						{ _id: this.currentUserId, username: this.userName },
 						{ _id: 4321, username: 'John Snow' }
 					]
 				}
 			]
+		},
+		menuActionHandler({ action, roomId }) {
+			switch (action.name) {
+				case 'leaveChannel':
+					return this.leaveChannel(roomId)
+				case 'destroyChannel':
+					return this.destroyChannel(roomId)
+				case 'deleteRoom':
+					return this.deleteRoom(roomId)
+			}
+		},
+		leaveChannel(roomId){
+			let rooms = [];
+			//this.rooms = this.$store.dispatch('leaveChannel', {roomId: roomId, UserId: this.currentUserId});
+			this.loadingRooms = true
+			for (var i = 0; i < this.rooms.length; i++){
+				if (this.rooms[i].roomId !== roomId){
+					rooms = [
+						...rooms,
+						this.rooms[i]
+					];
+				}
+			}
+			this.$store.dispatch('fetchRooms', {id: this.$store.getters.myUserId, rooms: rooms});
+			this.rooms = this.$store.getters.getRooms
+			this.loadingRooms = false
+		},
+		destroyChannel(roomId) {
+			console.log('1', this.rooms);
+			this.rooms = [];
 		}
 	}
 }
@@ -103,7 +147,7 @@ body {
 	font-family: 'Quicksand', sans-serif;
 }
 .chat {
-	max-width: 90%;
+	max-width: 100%;
 	margin: 1rem auto;
 }
 </style>

@@ -11,28 +11,61 @@
 				<router-link to="/auth/signup" v-if="!isLoggedIn" class="nav-item">Register</router-link>
 			</ul>
 		</div>
+		<p>Test</p>
+		<p v-for="(user, i) in testUsers" :key="i">
+              {{ user.id }} {{ user.username }}
+        </p>
 		<router-view class="row w-100"/>
+	<mini-chat v-if="isLoggedIn"></mini-chat>
 	</section>
 </template>
 
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
+import MiniChat from "./components/chat/MiniChat.vue";
+// import { initSocket, socket } from "./socket";
+import { io }  from "socket.io-client";
 
 @Options({
+	data() {
+	  	return {
+			testUsers: [],
+		}
+  	},
+	components: {
+		MiniChat,
+	},
 	computed: {
 		isLoggedIn() {
+			this.testUsers = this.$store.getters.connectedUsers;
+			if (this.$store.getters.isAuth) {
+				console.log('this.testUsers', this.testUsers);
+				this.$socketapp.auth = {
+						token: `${this.$store.getters.token}`
+				};
+				this.$socketapp.connect();
+
+				this.$socketapp.on("connectedUsers", (...args: any) => {
+					this.$store.dispatch('initconnectedUsers', {users: args});
+					console.log('connectedUsers', args);
+				});
+				this.$socketapp.on("connect_error", (err: any) => {
+					console.log(`socket connexion error: ${err}`);
+				});
+			}
 			return this.$store.getters.isAuth;
 		},
 	},
 	created() {
 		this.$store.dispatch('checkLog');
-	},
+},
 	methods: {
 		logout() {
 			this.$store.dispatch('logout');
-		}
-	},
+			this.$socketapp.disconnect(); //  to remove an put at the right place too
+		},
+	}
 })
 export default class HelloWorld extends Vue {
 

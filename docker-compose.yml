@@ -8,7 +8,9 @@ services:
       dockerfile: Dockerfile.42-node
     volumes:
       - ./frontend/:/app
+      - ./shared/:/shared
     environment:
+      - NODE_ENV=development
       - BACKEND_HOST=localhost
       - BACKEND_PORT=3000
     ports:
@@ -36,6 +38,7 @@ services:
       - NODE_ENV=development
     volumes:
       - ./backend/:/app
+      - ./shared/:/shared
     ports:
       - 3000:3000
       - 9229:9229

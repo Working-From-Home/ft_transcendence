@@ -58,9 +58,10 @@ interface State {
   },
   computed: {
 	count(): string {
-		this.avatar = 'data:image/png;base64,' + this.$store.getters.myAvatar
+		this.avatar = 'data:image/png;base64,' + this.$store.getters.myAvatar;
+		console.log('avatar', this.avatar)
 		return this.avatar;
-		}
+	}
   },
   methods: {
 	  UndleClick() {
