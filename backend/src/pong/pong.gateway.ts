@@ -100,17 +100,4 @@ export class PongGateway {
 		game._startGame();
 		return game.gameId;
 	}
-
-	// @SubscribeMessage('start')
-	// startGame(client: Socket) {
-	// 	this.logger.log("Game started!");
-	// 	// this.game.setClient(client);
-	// 	// this.game.start();
-	// }
-	
-	// @SubscribeMessage('stop')
-	// stopGame() {
-	// 	this.logger.log("Game stopped!");
-	// 	// this.game.stop();
-	// }
 }

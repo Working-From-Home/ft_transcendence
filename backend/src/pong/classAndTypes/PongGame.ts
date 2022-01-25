@@ -12,7 +12,6 @@ export class PongGame {
 	private _rightPaddle : GameObject;
 	private _ball : GameObject;
 	private _players : {left : IPlayer, right : IPlayer};
-	private _spectators: Array<Socket>;
 	private _isRunning = false;
 	private _server : Server;
 	private _score : number[];
@@ -92,10 +91,11 @@ export class PongGame {
 			this._ball.move();
 			this._movePaddles();
 			this._sendGameState();
-			if (this._isRunning === false)
+			if (this._isRunning === false) {
 				clearInterval(intervalId);
+				this._finishGame();
+			}
 		}, 16);
-		this._finishGame()
 	}
 	
 	private _checkIfScored() {
