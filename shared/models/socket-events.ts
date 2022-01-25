@@ -12,7 +12,6 @@ export interface ISearchChannel
 
 export interface ServerToClientEvents {
 
-	// searchChannelResult: (channels: ISearchChannel[]) => void;
 }
 
 export interface ClientToServerEvents {

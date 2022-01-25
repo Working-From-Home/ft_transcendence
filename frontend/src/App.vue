@@ -39,33 +39,31 @@ import { io }  from "socket.io-client";
 	computed: {
 		isLoggedIn() {
 			this.testUsers = this.$store.getters.connectedUsers;
-			console.log('this.testUsers', this.testUsers);
+			if (this.$store.getters.isAuth) {
+				console.log('this.testUsers', this.testUsers);
+				this.$socketapp.auth = {
+						token: `${this.$store.getters.token}`
+				};
+				this.$socketapp.connect();
+
+				this.$socketapp.on("connectedUsers", (...args: any) => {
+					this.$store.dispatch('initconnectedUsers', {users: args});
+					console.log('connectedUsers', args);
+				});
+				this.$socketapp.on("connect_error", (err: any) => {
+					console.log(`socket connexion error: ${err}`);
+				});
+			}
 			return this.$store.getters.isAuth;
 		},
 	},
 	created() {
 		this.$store.dispatch('checkLog');
-		if (this.$store.getters.isAuth == false)
-			return;
-
-		this.socketapp.auth = {
-				token: `${this.$store.getters.token}`
-		};
-		this.socketapp.connect();
-
-		this.socketapp.on("connectedUsers", (...args: any) => {
-			this.$store.dispatch('initconnectedUsers', {users: args});
-			console.log('connectedUsers', args);
-		});
-		this.socketapp.on("connect_error", (err: any) => {
-			console.log(`socket connexion error: ${err}`);
-		});
-
 },
 	methods: {
 		logout() {
 			this.$store.dispatch('logout');
-			this.socketapp.disconnect(); //  to remove an put at the right place too
+			this.$socketapp.disconnect(); //  to remove an put at the right place too
 		},
 	}
 })

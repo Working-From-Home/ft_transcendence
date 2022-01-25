@@ -4,17 +4,17 @@ import { getRepository, Repository } from 'typeorm'
 import { Channel } from './entities/channel.entity';
 
 // tmp
-// import { ISearchChannel } from 'shared/models/socket-events'
+import { ISearchChannel } from 'shared/models/socket-events'
+import { channel } from 'diagnostics_channel';
 
 @Injectable()
 export class ChatTmpService {
     constructor() {}
 
-    // async searchChannelsByTitle(title: string): Promise<ISearchChannel[]> {
-    async searchChannelsByTitle(title: string): Promise<{id: number, title: string}[]> {
-        return await getRepository(Channel).createQueryBuilder()
+    async searchChannelsByTitle(title: string): Promise<ISearchChannel[]> {
+        return getRepository(Channel).createQueryBuilder("channel")
             .where("title like :name ", {name: `%${title}%`} )
-            .select(['id', 'title'])
+            .select(['channel.id', 'channel.title'])
             .getMany();
-    }
+   }
 }

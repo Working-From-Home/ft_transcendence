@@ -37,7 +37,7 @@ export default defineComponent({
   methods: {
     searchChannels() {
       console.log("results for  " , this.searchTerm);
-      this.socketapp.emit('searchChannel', this.searchTerm ,(resp: any) => {
+      this.$socketapp.emit('searchChannel', this.searchTerm ,(resp: any) => {
         console.log(resp);
       });
     }

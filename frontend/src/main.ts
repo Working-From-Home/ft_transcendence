@@ -13,14 +13,14 @@ import { ServerToClientEvents, ClientToServerEvents} from 'shared/models/socket-
 
 const app = createApp(App);
 
-app.config.globalProperties.socketapp = io("http://localhost:3000/app",{
+app.config.globalProperties.$socketapp = io("http://localhost:3000/app",{
 		autoConnect:false,
 		withCredentials: true,
 	}) as Socket<ServerToClientEvents, ClientToServerEvents>; 
 
 declare module '@vue/runtime-core'{
 	interface ComponentCustomProperties {
-		socketapp: Socket<ServerToClientEvents, ClientToServerEvents>
+		$socketapp: Socket<ServerToClientEvents, ClientToServerEvents>
 	}
 }
 

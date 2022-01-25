@@ -72,9 +72,12 @@ export class AppGateway {
 	// simple poc for shared interfaces objects and events between front and back
 	@SubscribeMessage('searchChannel')
 	handleEvent(client: Socket, title: string) {
-		// client.emit("searchChannelResult", )
-		const x = this.chatService.searchChannelsByTitle(title)
-		console.log(x);
-		return this.chatService.searchChannelsByTitle(title); // can send data via ack (avoiding use of another event)
+		let x = this.chatService.searchChannelsByTitle(title)
+		x.then( (y) => {
+
+			console.log(y);
+			return y
+		})
+		// return this.chatService.searchChannelsByTitle(title); // can send data via ack (avoiding use of another event)
 	}
 }

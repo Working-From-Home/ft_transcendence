@@ -1,6 +1,6 @@
 <template>
 	<div class="btn-group dropup">
-		<!--<button
+		<button
 			type="button"
 			class="btn btn-info  dropdown-toggle"
 			id="dropdownMenuClickableInside"
@@ -12,8 +12,8 @@
 		</button>
 		<div class="dropdown-menu div">
 			<chat-component size="mini" class="comp" aria-labelledby="dropdownMenuClickableInside"></chat-component>
-		</div>-->
-	 <button
+		</div>
+	 <!-- <button
 			type="button"
 			class="btn btn-info"
 			data-bs-toggle="offcanvas" data-bs-target="#demo"
@@ -22,7 +22,7 @@
 		</button>
 		<div class="offcanvas offcanvas-bottom" id="demo">
 			<chat-component size="mini" class="comp" aria-labelledby="dropdownMenuClickableInside"></chat-component>
-		</div>
+		</div> -->
 	</div>
 </template>
 
