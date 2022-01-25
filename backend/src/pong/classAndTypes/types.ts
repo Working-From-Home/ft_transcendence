@@ -3,8 +3,9 @@ export type Vector = {
   y: number;
 };
 
-export type GameState = {
+export interface IGameState {
   leftPaddle : Vector;
   rightPaddle : Vector;
   ball : Vector;
+	score : number[];
 };

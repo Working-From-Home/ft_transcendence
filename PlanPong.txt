@@ -1,0 +1,67 @@
+THE PLAN TO DO PONG:
+
+Matchmaking:
+
+-Connect socket at pongGateway on mounted of the pong view.
+-Button search game ---> join the array gameQueue.
+-when two player or more pop them of the table and make them join a room.
+-Send the roomId to both users, and tell them game found.
+-in front redirect to game/:id with a button ready.
+	limit the time people have to accept
+-Button ready --> send event to server.
+-How to param a game? choose params before ready? Have a loog on caceronzo site.
+-Once both ready, start game.
+-Add this game to ongoing game.
+-How to stream game, send ongoing game to front?
+-Emit game State, pos and score.
+-Once finished add the scores to database, matchHistory of both users.
+
+Piece of code to do:
+
+Maybe connect the Socket in pongView and then pass the socket as props to the child components.
+replace PongCanvas ---> GameView.
+
+| |Pong View, show différente view: -Matchmaking view -with button search Game.
+																											-Searching for a match view.
+																											-Get redirected to pong/${gameId}
+																		-GameView:	-Match found, button ready.
+																								-Ongoing match.
+																		-match finished view: Game stats, and back to matchaking button.
+-Ajouter une route /pong/gameId.
+
+
+| |Set up the Jwt auth in the pong Gateway.
+
+| |Params the diffenrents socket events: 
+	-"joinMatchmaking".Cli to Serv.
+	-"matchFound".Serv to Cli.
+	-"ready".Cli to serv.
+	-"Keydown/up".Cli to serv. volatile.
+	-"GameState".Serv to Cli. volatile.
+	-"GameFinshed".Serv to Cli, maybe in gameState? finished: bool.
+
+| |Watchgame: connect to pong gateway, and emit event "watchGame", GameId.
+-How to not listen to spectator events? Separate rooms, if not in there, no socket.on ?
+
+| |Game:
+	-Add socket off both player, maybe params socket.on in there? would solve problem above.
+	-Handle the two paddles, associate socket to a paddle.
+	-Handle score, when ball leaves the field, add 1 to opposite side.
+	-reset ball pos.
+	-make ball slower at start.
+	-handle game finished.
+
+| |Database:
+	-Define what to save and where, and then how?.
+
+| |Find a way to do the private game.
+	--->do not pass by matchmakingQueue.
+	--->redirect to pongView, waiting for oppopent.
+	--->Once opponent accept, redirect the component to pong view.
+	--->add both to a room like when matchmaking find two player.
+	--->the rest is like usual games.
+
+| |Find a way to make the pong screen responsive.
+
+
+
