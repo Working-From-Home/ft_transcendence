@@ -1,12 +1,16 @@
-import { Vector } from "./types";
+export type Vector = {
+  x: number;
+  y: number;
+};
 
-export interface GameState {
+export interface IGameState {
   leftPaddle : Vector;
   rightPaddle : Vector;
   ball : Vector;
+	score : number[]
 };
 
-export class GameView {
+export class GameCanvas {
     canvas: HTMLCanvasElement;
     private context: CanvasRenderingContext2D | null;
 		//private start: HTMLObjectElement | null;
@@ -16,7 +20,7 @@ export class GameView {
         this.context = this.canvas.getContext('2d');
     }
 
-    drawGameState(gameState : GameState) : void {
+    drawGameState(gameState : IGameState) : void {
         // this.context?.beginPath();
         this.context!.fillStyle = "#F0F8FF";
 				this.context?.clearRect(0,0, 640, 400);

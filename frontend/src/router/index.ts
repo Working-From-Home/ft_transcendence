@@ -1,6 +1,9 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import Home from "../views/Home.vue";
 import store from "../store";
+import PongMatchmaking from '../components/pong/PongMatchmaking.vue'
+import PongGame from '../components/pong/PongGame.vue'
+import PongWelcome from '../components/pong/PongWelcome.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -11,9 +14,22 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/pong",
     name: "Pong",
-	meta: { requiresAuth: true },
+		meta: { requiresAuth: true },
     component: () =>
       import("../views/Pong.vue"),
+			children: [{
+				path:'matchmaking',
+				component: PongMatchmaking
+			},
+			{
+				path:':gameId',
+				component: PongGame,
+			},
+			{
+				path: '',
+				component: PongWelcome
+			}
+			]
   },
   {
     path: "/chat",
