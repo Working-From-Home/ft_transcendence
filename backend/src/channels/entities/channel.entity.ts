@@ -1,4 +1,4 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "../../users/entities/user.entity";
 import { Message } from "./message.entity";
 import { UserChannel } from "./user-channel.entity";
@@ -11,7 +11,6 @@ export class Channel {
     @Column({ type: "boolean" })
     isDm: boolean;
 
-    @Index()
     @Column({ type: "text", nullable: true })
     title: string | null;
 
