@@ -16,7 +16,7 @@ import ChatSearchTmp from "../components/chat/ChatSearchTmp.vue";
     ChatSearchTmp,
   },
 })
-export default class Home extends Vue {
+export default class Chat extends Vue {
 
 }
 </script>

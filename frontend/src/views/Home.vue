@@ -1,11 +1,10 @@
 <template>
-	<card>
-		<div class="home">
+	<div class="home">
 			<not-log v-if="!isLoggedIn"></not-log>
 			<img alt="Vue logo" src="../assets/logo42.png" />
 			<Index/>
-		</div>
-	</card>
+	</div>
+
 </template>
 
 <script lang="ts">
