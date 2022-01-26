@@ -76,20 +76,20 @@ export class PongGateway {
 		game.join(socket);
 	}
 
-	async checkGameQueue() {
+	private async checkGameQueue() {
 		let playersSockets : Socket[];
 
 		if (this.gameQueue.size() < 2)
 			return ;
 		else {
 			playersSockets = this.gameQueue.pop2();
-			const gameId = await this.initPongGame([playersSockets[0].data.userId, playersSockets[1].data.userId])
+			const gameId = await this.createPongGame([playersSockets[0].data.userId, playersSockets[1].data.userId])
 			playersSockets[0].emit("matchFound", gameId);
 			playersSockets[1].emit("matchFound", gameId);
 		}
 	}
 
-	async initPongGame(userIds : number[]) : Promise<string> {
+	private async createPongGame(userIds : number[]) : Promise<string> {
 		const leftUser = await this.usersService.findById(userIds[0]);
 		const rightUser = await this.usersService.findById(userIds[1]);
 
@@ -97,7 +97,10 @@ export class PongGateway {
 		let rightPlayer : IPlayer = {userId : rightUser.id, username : rightUser.username, score : 0};
 		let game = new PongGame(this.server, {left: leftPlayer, right: rightPlayer});
 		this.games.set(game.gameId, game);
-		game._startGame();
+		game._startGame((gameId : string) => {
+			this.logger.log("EndCallback start!");
+			this.games.delete(gameId);
+		});
 		return game.gameId;
 	}
 }
