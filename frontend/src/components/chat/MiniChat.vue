@@ -2,7 +2,7 @@
 	<div class="btn-group dropup">
 		<button
 			type="button"
-			class="btn btn-info  dropdown-toggle"
+			class="btn btn-dark text-white dropdown-toggle"
 			id="dropdownMenuClickableInside"
 			data-bs-toggle="dropdown"
 			aria-expanded="false"
@@ -13,16 +13,6 @@
 		<div class="dropdown-menu div">
 			<chat-component size="mini" class="comp" aria-labelledby="dropdownMenuClickableInside"></chat-component>
 		</div>
-	 <!-- <button
-			type="button"
-			class="btn btn-info"
-			data-bs-toggle="offcanvas" data-bs-target="#demo"
-		>
-			Chat
-		</button>
-		<div class="offcanvas offcanvas-bottom" id="demo">
-			<chat-component size="mini" class="comp" aria-labelledby="dropdownMenuClickableInside"></chat-component>
-		</div> -->
 	</div>
 </template>
 
@@ -42,7 +32,7 @@ export default class Home extends Vue {
 
 <style scoped>
 .dropup {
-	position: absolute;
+	position: fixed;
 	bottom: 0%;
 	right: 25%;
 	margin: 0;
@@ -57,5 +47,13 @@ export default class Home extends Vue {
 .comp {
 	margin: 0;
 	padding: 0;
+}
+
+#dropdownMenuClickableInside {
+	width: 13em;
+	padding: 0.5;
+	border-bottom: 0;
+	border-color: white;
+	border-radius: 5px 5px 0px 0px;
 }
 </style>

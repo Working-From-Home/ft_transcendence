@@ -59,6 +59,13 @@ const routes: Array<RouteRecordRaw> = [
     component: () =>
       import("../views/auth/signIn.vue"),
   },
+  {
+    path: "/admin",
+    name: "admin",
+	meta: { requiresAuth: true },
+    component: () =>
+      import("../views/AdminPannel.vue"),
+  },
   { 
 	path: '/:notFound(.*)',
 	component: () =>

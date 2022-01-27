@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="col-md-8 offset-md-2 gy-5">
     <chat-search-tmp></chat-search-tmp>
-    <chat-component></chat-component>
+    <chat-component ></chat-component>
   </div>
 </template>
 
@@ -16,7 +16,7 @@ import ChatSearchTmp from "../components/chat/ChatSearchTmp.vue";
     ChatSearchTmp,
   },
 })
-export default class Home extends Vue {
+export default class Chat extends Vue {
 
 }
 </script>

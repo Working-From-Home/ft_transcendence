@@ -4,10 +4,15 @@
         <input
           v-model="searchTerm"
           @input="searchChannels()"
-          type="text"
+          type="search"
           placeholder="Search channels"
           class="form-control form-control-lg"
+		  list="my-list-id"
         />
+		 <datalist id="my-list-id">
+			<option v-for="result in results">{{ result }}</option>
+		</datalist>
+		<button type="button" class="btn btn-outline-primary">Add Channel</button>
       </div>
     <ul >
       <li class="list-group-item">A second item</li>
@@ -37,9 +42,11 @@ export default defineComponent({
   methods: {
     searchChannels() {
       console.log("results for  " , this.searchTerm);
-      this.$socketapp.emit('searchChannel', this.searchTerm ,(resp: any) => {
-        console.log(resp);
+      let test = this.$socketapp.emit('searchChannel', this.searchTerm ,(resp: any) => {
+		this.results = resp;
+        console.log("The result:", resp);
       });
+	  console.log("The test:", test);
     }
   },
   computed:{
