@@ -1,23 +1,23 @@
 <template>
-	<card>
-		<h3>PongGame {{ $route.params.gameId }}</h3>
+		<card>
 		<h5>{{ score[0] }} | {{ score[1] }}</h5>
 		<h5 v-if="finished">{{ winner }} won the game!</h5>
-		<div class="canvas-container">
-      <canvas id="canvas" width="640" height="400" tabindex="0"
-					@keydown="handleKeydown"
-          @keyup="handleKeyup"></canvas>
-		</div>
-	</card>
+    <canvas id="canvas" tabindex="0" width="640" height="400"
+				@keydown="handleKeydown"
+        @keyup="handleKeyup">
+		</canvas>
+		</card>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { pongSocket } from '../../views/Pong.vue'
+import Card from '../ui/Card.vue'
 import { IGameState, GameCanvas } from './GameCanvas'
 
 
 export default defineComponent({
+  components: { Card },
 	data() {
 		return {
 			gameCanvas: {} as GameCanvas,
@@ -31,6 +31,13 @@ export default defineComponent({
 	},
 	mounted() {
 		this.gameCanvas = new GameCanvas('#canvas');
+		const gameState = {
+			leftPaddle : {x : 20, y: 160},
+			rightPaddle : {x : 610, y: 160},
+			ball: {x : 315, y: 195},
+			score: [0, 0]
+		}
+		this.gameCanvas.drawGameState(gameState);
 		pongSocket.on("gameState", gameState => {
 			this.score = gameState.score;
 			this.gameCanvas.drawGameState(gameState);
@@ -42,7 +49,8 @@ export default defineComponent({
 		})
 	},
 	unmounted() {
-	pongSocket.off("gameState");
+		pongSocket.off("gameState");
+		pongSocket.emit("leaveGame", this.$route.params.gameId);
 	},
 	methods: {
 		handleKeydown(event : KeyboardEvent) {
@@ -68,8 +76,5 @@ export default defineComponent({
 		canvas {
 			background: #000000;
 			border:1px solid #000000;
-		}
-		.canvas-container {
-			width: 100%;
 		}
 </style>

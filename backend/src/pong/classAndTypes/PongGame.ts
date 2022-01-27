@@ -7,6 +7,8 @@ import { UsersService } from 'src/users/services/users.service';
 import { IPlayer } from "./IPlayer";
 import { IEndCallback } from "./IEndCallback";
 
+//width: 640, height: 400.
+
 export class PongGame {
 	gameId: string;
 	private _leftPaddle : GameObject;
@@ -29,8 +31,8 @@ export class PongGame {
 	
 	join(socket : Socket) : void {
 		socket.join(this.gameId);
-		const userId = socket.data.userId;
 
+		const userId = socket.data.userId;
 		if (userId != this._players.left.userId && userId != this._players.right.userId)
 			return ;
 

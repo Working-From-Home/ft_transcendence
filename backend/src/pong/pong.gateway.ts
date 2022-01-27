@@ -76,6 +76,11 @@ export class PongGateway {
 		game.join(socket);
 	}
 
+	@SubscribeMessage('leaveGame')
+	leaveGame(@MessageBody() gameId : string, @ConnectedSocket() socket : Socket) {
+		socket.leave(gameId);
+	}
+
 	private async checkGameQueue() {
 		let playersSockets : Socket[];
 
@@ -98,7 +103,6 @@ export class PongGateway {
 		let game = new PongGame(this.server, {left: leftPlayer, right: rightPlayer});
 		this.games.set(game.gameId, game);
 		game._startGame((gameId : string) => {
-			this.logger.log("EndCallback start!");
 			this.games.delete(gameId);
 		});
 		return game.gameId;
