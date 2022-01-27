@@ -1,7 +1,7 @@
 <template>
-	<div>
-		<div class="card m-auto mt-5" style="max-width: 840px;">
-			<div class="row g-0">
+	<div class="mt-5">
+		<div class="card m-auto mt-5" style="max-width: 840px; min-height: 400px">
+			<div class="row g-0 my-auto">
 				<div class="col-md-4">
 					<img :src="count" class="img-fluid rounded-start" @click="UndleClick" alt="...">
 					<input

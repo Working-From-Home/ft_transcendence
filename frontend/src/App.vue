@@ -1,6 +1,7 @@
 <template class="container-fluid">
 	<section>
 		<the-header></the-header>
+		<friend-list></friend-list>
 		<div class="row align-items-center">
 			<router-view/>
 		</div>
@@ -13,6 +14,7 @@
 import { Options, Vue } from "vue-class-component";
 import MiniChat from "./components/chat/MiniChat.vue";
 import TheHeader from "./components/TheHeader/TheHeader.vue";
+import FriendList from "./components/OffcanvasFriendsList.vue";
 // import { initSocket, socket } from "./socket";
 import { io }  from "socket.io-client";
 
@@ -20,6 +22,7 @@ import { io }  from "socket.io-client";
 	components: {
 		MiniChat,
 		TheHeader,
+		FriendList,
 	},
 	computed: {
 		isLoggedIn() {
