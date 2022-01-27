@@ -76,5 +76,6 @@ export default defineComponent({
 		canvas {
 			background: #000000;
 			border:1px solid #000000;
+			width: 100%
 		}
 </style>
