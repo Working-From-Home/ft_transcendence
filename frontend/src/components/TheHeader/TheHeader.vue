@@ -47,7 +47,7 @@
 								</a>
 								<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 									<li><router-link to="/profile" class="dropdown-item">My Profile</router-link></li>
-									<li><a class="dropdown-item" href="#">Admin Pannel</a></li>
+									<li><router-link to="/admin" class="dropdown-item">Admin Pannel</router-link></li>
 									<li><hr class="dropdown-divider"></li>
 									<li><router-link class="logout dropdown-item" to="/" @click="logout" v-if="isLoggedIn">Logout </router-link></li>
 								</ul>

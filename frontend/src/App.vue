@@ -2,7 +2,7 @@
 	<section>
 		<the-header></the-header>
 		<div class="row align-items-center">
-			<router-view class="col-md-6 offset-md-3 gy-5"/>
+			<router-view/>
 		</div>
 		<mini-chat v-if="isLoggedIn"></mini-chat>
 	</section>
@@ -23,6 +23,8 @@ import { io }  from "socket.io-client";
 	},
 	computed: {
 		isLoggedIn() {
+			if (this.$route.path === "/chat")
+				return false;
 			return this.$store.getters.isAuth;
 		},
 	},
@@ -37,7 +39,9 @@ export default class HelloWorld extends Vue {
 <style>
 html {
   background: #192531;
+   overflow-x: hidden;
 }
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -46,4 +50,5 @@ html {
   color: rgba(255, 255, 255, 0.884);
   background: #192531;
 }
+
 </style>

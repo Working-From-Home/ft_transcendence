@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="col-md-8 offset-md-2 gy-5">
     <chat-search-tmp></chat-search-tmp>
-    <chat-component></chat-component>
+    <chat-component ></chat-component>
   </div>
 </template>
 
