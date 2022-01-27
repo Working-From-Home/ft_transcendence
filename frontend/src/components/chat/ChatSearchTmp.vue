@@ -4,10 +4,11 @@
         <input
           v-model="searchTerm"
           @input="searchChannels()"
-          type="text"
+          type="search"
           placeholder="Search channels"
           class="form-control form-control-lg"
         />
+		<button type="button" class="btn btn-outline-primary">Add Channel</button>
       </div>
     <ul >
       <li class="list-group-item">A second item</li>
