@@ -19,6 +19,7 @@ import { UserChannel } from './channels/entities/user-channel.entity';
 import { Game } from './game/entities/game.entity';
 import { UsersInChannel } from './channels/entities/users-in-channel.view.entity';
 import { AppGateway } from './app.gateway';
+import { ChannelsModule } from './channels/channels.module';
 
 @Module({
   imports: [
@@ -49,7 +50,8 @@ import { AppGateway } from './app.gateway';
     UsersModule,
     AuthModule,
 		PongModule,
-		GameModule
+		GameModule,
+    ChannelsModule
   ],
   controllers: [AppController],
   providers: [AppService, AppGateway],

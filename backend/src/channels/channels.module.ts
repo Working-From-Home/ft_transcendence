@@ -6,6 +6,7 @@ import { Message } from './entities/message.entity';
 import { UserChannel } from './entities/user-channel.entity';
 import { ChannelsController } from './controllers/channels.controller';
 import { ChannelsService } from './services/channels.service';
+import { ChatTmpService } from './chat.tmp.service';
 
 @Module({
     imports: [
@@ -17,14 +18,14 @@ import { ChannelsService } from './services/channels.service';
         ])
     ],
     providers: [
-
-
-    ChannelsService],
+        ChatTmpService,
+        ChannelsService
+    ],
     controllers: [
-
-    ChannelsController],
+        ChannelsController
+    ],
     exports: [
-
+        ChatTmpService
     ]
 })
 export class ChannelsModule {}

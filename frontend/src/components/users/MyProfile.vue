@@ -1,9 +1,9 @@
 <template>
-	<div>
-		<card class="container">
-			<div class="row align-items-center">
-				<div class="photo col" @click="UndleClick">
-						<img :src="count"/>
+	<div class="mt-5">
+		<div class="card m-auto mt-5" style="max-width: 840px; min-height: 400px">
+			<div class="row g-0 my-auto">
+				<div class="col-md-4">
+					<img :src="count" class="img-fluid rounded-start" @click="UndleClick" alt="...">
 					<input
 						type="file"
 						style="display: none"
@@ -13,15 +13,17 @@
 						@change="changeIMG"/>
 					<base-button @click="defaultIMG"  mode="flat">Image by default</base-button>
 				</div>
-				<div class="col">
-					<p>This is the profile of {{ userName }}</p>
-					<p>Email: {{ email }}</p>
+				<div class="col-md-8 my-auto">
+					<div class="card-body text-black">
+						<h5 class="card-title">Profile of {{ userName }}</h5>
+						<p>Email: {{ email }}</p>
+						<div class="row">
+							<button-del></button-del>
+						</div>
+					</div>
 				</div>
 			</div>
-			<div class="row">
-				<button-del></button-del>
-			</div>
-		</card>
+		</div>
 	</div>
 </template>
 
@@ -58,9 +60,9 @@ interface State {
   },
   computed: {
 	count(): string {
-		this.avatar = 'data:image/png;base64,' + this.$store.getters.myAvatar
+		this.avatar = 'data:image/png;base64,' + this.$store.getters.myAvatar;
 		return this.avatar;
-		}
+	}
   },
   methods: {
 	  UndleClick() {

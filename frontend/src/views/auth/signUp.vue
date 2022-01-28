@@ -4,7 +4,7 @@
 			<p>{{ error }}</p>
 		</base-dialog>
 		<card>
-			<h1>Register</h1>
+			<h1>Sign Up</h1>
 			<sign-up-component @save-data="saveData"></sign-up-component>
 		</card>
 	</div>

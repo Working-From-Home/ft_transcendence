@@ -1,4 +1,4 @@
-import { GameObject } from "./classAndTypes/GameObject";
+import { GameObject } from "./GameObject";
 
 export function checkPaddleWall(paddle : GameObject) : boolean {
     let nextPos = paddle.pos.y + paddle.speed.y;

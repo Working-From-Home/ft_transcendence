@@ -5,6 +5,11 @@ import { AuthService } from './auth/auth.service';
 import { UsersService } from './users/services/users.service'
 import { User } from './users/entities/user.entity';
 
+
+import { ServerToClientEvents, ClientToServerEvents, InterServerEvents} from 'shared/models/socket-events'
+
+import { ChatTmpService } from './channels/chat.tmp.service'
+
 type ConnectedUser = {
 	id: number;
 	username: string;
@@ -13,14 +18,16 @@ type ConnectedUser = {
 
 @WebSocketGateway( { namespace:"/app", cors: { origin: "http://localhost:8080", credentials: true} })
 export class AppGateway {
+	@WebSocketServer()
+	server: Server<ClientToServerEvents, ServerToClientEvents, InterServerEvents>;
 
 	private logger: Logger = new Logger('AppGAteway');
 	private connectedUsers: ConnectedUser[] = [];
-	@WebSocketServer() server: Server;
 
 	constructor(
 		private authService : AuthService,
-		private usersService : UsersService
+		private usersService : UsersService,
+		private chatService : ChatTmpService
 	) {}
 
 
@@ -53,12 +60,18 @@ export class AppGateway {
 
 	handleDisconnect(socket: Socket) {
 		this.logger.log('disconnection!');
-		const userId = socket.data.user.id;
-		this.connectedUsers = this.connectedUsers.filter((u) => u.id !== userId);
-		socket.emit("userDisconnected", userId);
+		if (socket.data.user) {
+            const userId = socket.data.user.id;
+            this.connectedUsers = this.connectedUsers.filter((u) => u.id !== userId);
+            socket.emit("userDisconnected", userId);
+        }
 		socket.disconnect();
 		console.log(this.connectedUsers);
 	}
 
-
+	// simple poc for shared interfaces objects and events between front and back
+	@SubscribeMessage('searchChannel')
+	handleEvent(client: Socket, title: string) {
+		return this.chatService.searchChannelsByTitle(title).then( (x) => { return x })
+	}
 }

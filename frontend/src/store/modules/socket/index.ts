@@ -5,8 +5,7 @@ import getters from './getters';
 export default ({
 	state() {
 		return {
-			rooms: [],
-			messages: [],
+			connectedUsers: [],
 		};
 	},
 	mutations,
