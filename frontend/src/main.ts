@@ -10,8 +10,11 @@ import "bootstrap";
 
 import { io,  Socket }  from "socket.io-client";
 import { ServerToClientEvents, ClientToServerEvents} from 'shared/models/socket-events'
+// import http from "@/http/axios";
+// import { AxiosKey } from "@/http/symbols";
 
 const app = createApp(App);
+// app.provide(AxiosKey, http);
 
 app.config.globalProperties.$socketapp = io("http://localhost:3000/app",{
 		autoConnect:false,
