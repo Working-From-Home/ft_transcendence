@@ -17,11 +17,19 @@ ENV PATH=$PATH:/home/node/.npm-global/bin
 # ARG gid=4305
 
 
+ARG HOST_UID=36435
+ARG HOST_GID=4305
+
+# ARG HOST_UID=998
+# ARG HOST_GID=998
+
+#-g $HOST_GID 
+
 RUN deluser --remove-home node \
-  && addgroup -S node -g 4305 \
-  && adduser -S -G node -u 36435 node \
+  && addgroup -S node -g $HOST_GID \
+  && adduser -u $HOST_UID -g node  -SD -s /bin/sh node \
   && mkdir -p /app \
-  && chown -R node:node /app
+  && chown -R node: /app
 
 USER node
 
@@ -36,6 +44,6 @@ RUN set -eux; \
 		# 	@stoplight/prism-cli;
 
 # WORKDIR /app
-VOLUME  ["/app"]
+# VOLUME  ["/app"]
 
 CMD [ "zsh" ]
