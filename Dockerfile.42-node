@@ -8,19 +8,34 @@ RUN apk add --no-cache curl zsh git emacs vim;
 ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
 ENV PATH=$PATH:/home/node/.npm-global/bin
 
-# node:node is 1000:1000 so good for us
+
+# set up specific uid and gid : https://github.com/nodejs/docker-node/blob/main/docs/BestPractices.md#non-root-user
+
+# ARG user=juligonz
+# ARG group=2019_paris
+# ARG uid=36435
+# ARG gid=4305
+
+
+RUN deluser --remove-home node \
+  && addgroup -S node -g 4305 \
+  && adduser -S -G node -u 36435 node \
+  && mkdir -p /app \
+  && chown -R node:node /app
+
 USER node
 
 ARG OH_MY_ZSH_THEME=cloud
 RUN set -eux; \
 		sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"; \
-		sed -i "s/\(^ZSH_THEME=\).*/\1$OH_MY_ZSH_THEME/" ~/.zshrc; \
-		npm install -g \
-			@nestjs/cli \
-			@vue/cli \
-			typeorm-cli \
-			@stoplight/prism-cli;
+		sed -i "s/\(^ZSH_THEME=\).*/\1$OH_MY_ZSH_THEME/" ~/.zshrc;
+		# npm install -g \
+		# 	@nestjs/cli \
+		# 	@vue/cli \
+		# 	typeorm-cli \
+		# 	@stoplight/prism-cli;
 
-WORKDIR /app
+# WORKDIR /app
+VOLUME  ["/app"]
 
 CMD [ "zsh" ]

@@ -1,4 +1,4 @@
-version: "3.8"
+version: "3.3"
 services:
   frontend:
     restart: always
@@ -55,7 +55,7 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - PGPORT= ${POSTGRES_PORT}
     ports:
-      - 5432:${POSTGRES_PORT}
+      - 5454:${POSTGRES_PORT} # default postgres (5432) port already in use in school's linux dump
     networks:
       - mynet
     volumes:
