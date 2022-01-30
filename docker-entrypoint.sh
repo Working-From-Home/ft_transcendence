@@ -19,14 +19,13 @@ log_error(){
 	logging "${LIGHT_RED}error${RESET}" "$@" >&2
 	exit 1
 }
+log_info "Entrypoint script started..."
 id
+ls -lv
 if [ "$(id -u)" = "0" ]; then
-	log_info "Switch from root:root to node:node, aka $(id -u node):$(id -g node) must be the same uid and gid from your host to work ! "
-	log_info 'If not, then provide arguments HOST_UID and HOST_GID with your uid and gid (man id)'
-	chown -R node:node /app
-	ls -l
-	id
-	exec su-exec node "$0" "$@"
+	log_info "Switch from root:root to node:node, aka $(id -u node):$(id -g node) "
+	chown -R node /app
+ 	exec su-exec node "$0" "$@"
 fi
 
 exec "$@"
