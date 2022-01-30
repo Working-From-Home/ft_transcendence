@@ -19,9 +19,8 @@ log_error(){
 	logging "${LIGHT_RED}error${RESET}" "$@" >&2
 	exit 1
 }
+
 log_info "Entrypoint script started..."
-id
-ls -lv
 if [ "$(id -u)" = "0" ]; then
 	log_info "Switch from root:root to node:node, aka $(id -u node):$(id -g node) "
 	chown -R node /app
