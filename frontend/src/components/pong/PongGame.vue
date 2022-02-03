@@ -46,7 +46,7 @@ export default defineComponent({
 			console.log(`${winner} won!`);
 			this.winner = winner;
 			this.finished = true;
-		})
+		});
 	},
 	unmounted() {
 		pongSocket.off("gameState");
