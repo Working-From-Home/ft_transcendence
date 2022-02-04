@@ -1,4 +1,4 @@
-FROM node:16-alpine3.14
+FROM node:16-alpine3.15
 # node alpine3.15 tag not present, and postgres only support 3.15...
 # waiting for pr to be merged : https://github.com/nodejs/docker-node/pull/1615
 
