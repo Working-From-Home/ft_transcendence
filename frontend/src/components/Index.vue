@@ -9,10 +9,6 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 
-interface State {
-  user: string;
-}
-
 @Options({
 })
 export default class HelloWorld extends Vue {

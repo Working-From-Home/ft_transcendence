@@ -13,14 +13,18 @@
 				<div  class="h-100 p-5 bg-success bg-opacity-75 rounded-3">
 					<h2>Challenge Someone</h2>
 					<p>You can play now</p>
-					<button class="btn btn-outline-light" type="button">Play</button>
+					<router-link to="/pong" class="nav-link active">
+						<button class="btn btn-outline-light" type="button">Play</button>
+					</router-link>
 				</div>
 			</div>
 			<div class="col-md-6">
 					<div class="h-100 p-5 bg-success bg-opacity-75 rounded-3">
 					<h2>Talk to everyone</h2>
 					<p>You can use the chat now</p>
-					<button class="btn btn-outline-light" type="button">Chat</button>
+					<router-link to="/chat" class="nav-link active">
+						<button class="btn btn-outline-light" type="button">Chat</button>
+					</router-link>
 				</div>
 			</div>
     	</div>
