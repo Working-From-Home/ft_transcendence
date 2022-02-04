@@ -34,12 +34,12 @@ RUN set -eux; \
 			@stoplight/prism-cli;
 
 
-# VOLUME  /app
+VOLUME  /app
 WORKDIR /app
 
-# USER root
+USER root
 
-# COPY docker-entrypoint.sh /usr/local/bin
-# ENTRYPOINT ["docker-entrypoint.sh"]
+COPY docker-entrypoint.sh /usr/local/bin
+ENTRYPOINT ["docker-entrypoint.sh"]
 
 CMD [ "zsh" ]
