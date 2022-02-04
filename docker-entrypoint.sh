@@ -23,8 +23,8 @@ log_error(){
 log_info "Entrypoint script started..."
 if [ "$(id -u)" = "0" ]; then
 	log_info "Switch from root:root to node:node, aka $(id -u node):$(id -g node) "
-	chown -R node /app
- 	exec su-exec node "$0" "$@"
+	chown -R node:node /app
+ 	# exec su-exec node "$0" "$@"
 fi
 
 exec "$@"

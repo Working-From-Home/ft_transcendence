@@ -14,6 +14,13 @@ JWT_SECRET=my_secret
 # must feed a valid 42 api key -> https://api.intra.42.fr/apidoc/guides/getting_started
 API_KEY_42=
 
+# Must change thoses if running on 42's linux dump
+# Type the command `id` to get you `uid` and `gid`)
+# Also it only works ouside `NFS`, like `/goinfre` or `/tmp`,
+# thus, it doesn't works inside `/sgoinfre`, or your home `~/`.
+HOST_UID=1000
+HOST_GID=1000
+
 # Database settings
 POSTGRES_PORT=5432
 POSTGRES_USER=pong

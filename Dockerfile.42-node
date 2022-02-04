@@ -1,4 +1,4 @@
-FROM node:16-alpine3.14 
+FROM node:16-alpine3.14
 # node alpine3.15 tag not present, and postgres only support 3.15...
 # waiting for pr to be merged : https://github.com/nodejs/docker-node/pull/1615
 
@@ -9,13 +9,15 @@ ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
 ENV PATH=$PATH:/home/node/.npm-global/bin
 
 # set up specific uid and gid : https://github.com/nodejs/docker-node/blob/main/docs/BestPractices.md#non-root-user
+ARG HOST_UID=1000
+ARG HOST_GID=1000
 
 ARG HOST_UID=36435
 ARG HOST_GID=4305
 
 RUN deluser --remove-home node \
   && addgroup -S node -g $HOST_GID \
-  && adduser -u $HOST_UID -g node -SD -s /bin/sh node \
+  && adduser -u $HOST_UID -G node -SD -s /bin/sh node \
   && mkdir -p /app \
   && chown -R node:node /app
 
@@ -24,20 +26,20 @@ USER node
 ARG OH_MY_ZSH_THEME=cloud
 RUN set -eux; \
 		sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"; \
-		sed -i "s/\(^ZSH_THEME=\).*/\1$OH_MY_ZSH_THEME/" ~/.zshrc;
-		# npm install -g \
-		# 	@nestjs/cli \
-		# 	@vue/cli \
-		# 	typeorm-cli \
-		# 	@stoplight/prism-cli;
+		sed -i "s/\(^ZSH_THEME=\).*/\1$OH_MY_ZSH_THEME/" ~/.zshrc; \
+		npm install -g \
+			@nestjs/cli \
+			@vue/cli \
+			typeorm-cli \
+			@stoplight/prism-cli;
 
 
-VOLUME  /app
+# VOLUME  /app
 WORKDIR /app
 
-USER root
+# USER root
 
-COPY docker-entrypoint.sh /usr/local/bin
-ENTRYPOINT ["docker-entrypoint.sh"]
+# COPY docker-entrypoint.sh /usr/local/bin
+# ENTRYPOINT ["docker-entrypoint.sh"]
 
 CMD [ "zsh" ]
