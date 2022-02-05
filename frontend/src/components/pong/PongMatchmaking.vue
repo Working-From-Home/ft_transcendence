@@ -1,16 +1,19 @@
 <template>
-	<card>
-		<h3>Matchmaking</h3>
-		<base-button v-if="!isSearching" @click="joinMatchmaking">Search Game</base-button>
-		<base-button v-if="isSearching" @click="leaveMatchmaking">Stop searching</base-button>
-		<p v-if="isSearching">Waiting for an opponent...</p>
-	</card>
+	<div>
+		<button class="btn btn-outline-light" v-if="!isSearching" @click="joinMatchmaking">Search Game</button>
+		<button class="btn btn-outline-light" v-if="isSearching" @click="leaveMatchmaking">Stop searching</button>
+		<div v-if="isSearching">
+			<p>
+				Waiting for an opponent...
+			</p>
+			<div class="spinner-border"></div>
+		</div>
+	</div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
 import  BaseButton  from '../ui/BaseButton.vue'
-import { pongSocket } from '../../views/Pong.vue'
 
 export default defineComponent({
 	components: { BaseButton },
@@ -22,16 +25,16 @@ export default defineComponent({
 	methods: {
 		joinMatchmaking() {
 			console.log("joinMatchmaking!");
-			pongSocket.emit("joinMatchmaking");
+			this.$pongSocket.emit("joinMatchmaking");
 			this.isSearching = true;
-			pongSocket.on("matchFound", gameId => {
+			this.$pongSocket.on("matchFound", (gameId : string) => {
 				this.$router.push({ path: `/pong/${gameId}`});
 			})
 		},
 		leaveMatchmaking() {
 			console.log("leaveMatchmaking!");
-			pongSocket.emit("leaveMatchmaking");
-			pongSocket.off("matchFound");
+			this.$pongSocket.emit("leaveMatchmaking");
+			this.$pongSocket.off("matchFound");
 			this.isSearching = false;
 		}
 	},

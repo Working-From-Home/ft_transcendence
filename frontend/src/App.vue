@@ -6,6 +6,7 @@
 			<router-view/>
 		</div>
 		<mini-chat v-if="isLoggedIn && isChatView"></mini-chat>
+		<pong-socket v-if="isLoggedIn"/>
 	</section>
 </template>
 
@@ -14,12 +15,16 @@ import { Options, Vue } from "vue-class-component";
 import MiniChat from "./components/chat/MiniChat.vue";
 import TheHeader from "./components/TheHeader/TheHeader.vue";
 import FriendList from "./components/OffcanvasFriendsList.vue";
+import PongSocket from "./components/pong/PongSocket.vue"
+// import { initSocket, socket } from "./socket";
+import { io }  from "socket.io-client";
 
 @Options({
 	components: {
 		MiniChat,
 		TheHeader,
 		FriendList,
+		PongSocket
 	},
 	computed: {
 		isLoggedIn() {	
