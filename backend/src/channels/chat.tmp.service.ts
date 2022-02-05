@@ -28,11 +28,18 @@ export class ChatTmpService {
       .where("uc.userId = 1")
       .andWhere("uc.hasLeft = FALSE")
       .select([
-        "id",
+        'id',
         '"isDm"',
         'title AS "roomName"',
         'channel.createdAt AS "createdAt"',
       ])
       .getRawMany();
   }
+
+	// async getUsersInChannel(channelId: number): Promise<UsersInChannel[]> {
+  //   return getRepository(UsersInChannel)
+  //     .createQueryBuilder("u")
+  //     .where("u.channelId = 1")
+  //     .getRawMany();
+  // }
 }

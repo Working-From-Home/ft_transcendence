@@ -110,7 +110,7 @@ export interface IChannel {
 	roomName: string | null;
 	createdAt: Date;
 	// owner: User;
-	// messages: Message[] | null;
+	messages: Message[] | null;
 	userChannels: UserChannel[] | null;
 }
 
