@@ -63,7 +63,7 @@ export class AppGateway {
 	// 		console.log("heeee:", y);
 	// 		return y
 	// 	})		);
-	// }
+	}
 
 	private disconnect(socket: Socket) {
 		socket.emit('Error', new UnauthorizedException());
