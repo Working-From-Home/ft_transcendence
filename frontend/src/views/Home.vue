@@ -13,7 +13,8 @@
 				<div  class="h-100 p-5 bg-success bg-opacity-75 rounded-3">
 					<h2>Challenge Someone</h2>
 					<p>You can play now</p>
-					<button class="btn btn-outline-light" type="button">Play</button>
+					<!-- <button class="btn btn-outline-light" type="button">Play</button> -->
+					<router-link to="/pong" class="btn btn-outline-light">Pong</router-link>
 				</div>
 			</div>
 			<div class="col-md-6">

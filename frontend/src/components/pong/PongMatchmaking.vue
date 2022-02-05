@@ -1,10 +1,14 @@
 <template>
-	<card>
-		<h3>Matchmaking</h3>
-		<base-button v-if="!isSearching" @click="joinMatchmaking">Search Game</base-button>
-		<base-button v-if="isSearching" @click="leaveMatchmaking">Stop searching</base-button>
-		<p v-if="isSearching">Waiting for an opponent...</p>
-	</card>
+	<div>
+		<button class="btn btn-outline-light" v-if="!isSearching" @click="joinMatchmaking">Search Game</button>
+		<button class="btn btn-outline-light" v-if="isSearching" @click="leaveMatchmaking">Stop searching</button>
+		<div v-if="isSearching">
+			<p>
+				Waiting for an opponent...
+			</p>
+			<div class="spinner-border"></div>
+		</div>
+	</div>
 </template>
 
 <script lang="ts">

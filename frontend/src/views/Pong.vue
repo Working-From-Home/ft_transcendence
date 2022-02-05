@@ -1,14 +1,12 @@
 <template>
-	<card>
-		<h1>Pong view:</h1>
-		<div v-if="request">
+	<div class="container">
+		<!-- <div v-if="request">
 			<p>you have a game request!:</p>
 			<button @click="answerRequest(true)">accept</button>
 			<button @click="answerRequest(false)">refuse</button>
-		</div>
-		<router-link to='/pong/matchmaking'>matchmaking link</router-link>
+		</div> -->
 		<router-view/>
-	</card>
+	</div>
 </template>
 
 <script lang="ts">

@@ -1,12 +1,14 @@
 <template>
-		<card>
+	<!-- <div class="row justify-content-center p-4"> -->
+	<div class="col-md-10 col-xl-8 m-auto mt-4 p-3 bg-secondary rounded-3">
 		<h5>{{ score[0] }} | {{ score[1] }}</h5>
 		<h5 v-if="finished">{{ winner }} won the game!</h5>
     <canvas id="canvas" tabindex="0" width="640" height="400"
 				@keydown="handleKeydown"
         @keyup="handleKeyup">
 		</canvas>
-		</card>
+	</div>
+	<!-- </div> -->
 </template>
 
 <script lang="ts">
