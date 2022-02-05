@@ -1,3 +1,5 @@
+import { IChannel } from 'shared/models/socket-events';
+
 export default {
 	tmpRooms(context: any, payload: any){
 		let rooms = [
@@ -92,6 +94,8 @@ export default {
 		});
 	},
 	leaveChannel(context: any, payload: any) {
+		let rooms: IChannel[];
+			rooms = [];
 		context.commit('leaveChannel', {
 			roomId: payload.roomId,
 			userId: payload.UserId
