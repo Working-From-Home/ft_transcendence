@@ -13,7 +13,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { pongSocket } from '../../views/Pong.vue'
 import Card from '../ui/Card.vue'
 import { IGameState, GameCanvas } from './GameCanvas'
 
@@ -29,7 +28,7 @@ export default defineComponent({
 		}
 	},
 	created() {
-		pongSocket.emit("joinGame", this.$route.params.gameId);
+		this.$pongSocket.emit("joinGame", this.$route.params.gameId);
 	},
 	mounted() {
 		this.gameCanvas = new GameCanvas('#canvas');
@@ -40,33 +39,33 @@ export default defineComponent({
 			score: [0, 0]
 		}
 		this.gameCanvas.drawGameState(gameState);
-		pongSocket.on("gameState", gameState => {
+		this.$pongSocket.on("gameState", (gameState : IGameState) => {
 			this.score = gameState.score;
 			this.gameCanvas.drawGameState(gameState);
 		});
-		pongSocket.on("gameFinish", winner => {
+		this.$pongSocket.on("gameFinish", (winner : string) => {
 			console.log(`${winner} won!`);
 			this.winner = winner;
 			this.finished = true;
 		});
 	},
 	unmounted() {
-		pongSocket.off("gameState");
-		pongSocket.emit("leaveGame", this.$route.params.gameId);
+		this.$pongSocket.off("gameState");
+		this.$pongSocket.emit("leaveGame", this.$route.params.gameId);
 	},
 	methods: {
 		handleKeydown(event : KeyboardEvent) {
 			if(["ArrowUp","ArrowDown"].indexOf(event.code) > -1) {
         		event.preventDefault();
 				let key = event.code;
-				pongSocket.volatile.emit("keydown", key);
+				this.$pongSocket.volatile.emit("keydown", key);
     		}
 		},
 		handleKeyup(event : KeyboardEvent) {
 			if(["ArrowUp","ArrowDown"].indexOf(event.code) > -1) {
         		event.preventDefault();
 				let key = event.code;
-				pongSocket.emit("keyup", key);
+				this.$pongSocket.emit("keyup", key);
     		}
 		},
 	}

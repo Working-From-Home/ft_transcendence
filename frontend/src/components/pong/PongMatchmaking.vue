@@ -14,7 +14,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import  BaseButton  from '../ui/BaseButton.vue'
-import { pongSocket } from '../../views/Pong.vue'
 
 export default defineComponent({
 	components: { BaseButton },
@@ -26,16 +25,16 @@ export default defineComponent({
 	methods: {
 		joinMatchmaking() {
 			console.log("joinMatchmaking!");
-			pongSocket.emit("joinMatchmaking");
+			this.$pongSocket.emit("joinMatchmaking");
 			this.isSearching = true;
-			pongSocket.on("matchFound", gameId => {
+			this.$pongSocket.on("matchFound", (gameId : string) => {
 				this.$router.push({ path: `/pong/${gameId}`});
 			})
 		},
 		leaveMatchmaking() {
 			console.log("leaveMatchmaking!");
-			pongSocket.emit("leaveMatchmaking");
-			pongSocket.off("matchFound");
+			this.$pongSocket.emit("leaveMatchmaking");
+			this.$pongSocket.off("matchFound");
 			this.isSearching = false;
 		}
 	},

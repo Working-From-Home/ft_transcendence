@@ -26,7 +26,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { pongSocket } from '../../views/Pong.vue'
 import BaseButton from '../ui/BaseButton.vue'
 import PongMatchmaking from './PongMatchmaking.vue'
 
@@ -40,8 +39,8 @@ export default defineComponent({
 	methods: {
 		sendGameRequest(guestId : number) {
 			console.log("send request");
-			pongSocket.emit("gameRequest", guestId);
-			pongSocket.on("matchFound", gameId => {
+			this.$pongSocket.emit("gameRequest", guestId);
+			this.$pongSocket.on("matchFound", gameId => {
 				this.$router.push({ path: `/pong/${gameId}`});
 			})
 		},
