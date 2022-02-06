@@ -21,7 +21,7 @@ export function checkBallCollision(
         ball.pos.x < leftPaddle.pos.x + leftPaddle.width &&
         ball.pos.x > leftPaddle.pos.x
     ) {
-        ball.changeXDirection();
+        setBallDir(ball, leftPaddle, 1);
     }
     else if (
         ball.pos.y + ball.height > rightPaddle.pos.y &&
@@ -29,9 +29,23 @@ export function checkBallCollision(
         ball.pos.x + ball.width > rightPaddle.pos.x &&
         ball.pos.x + ball.width < rightPaddle.pos.x + rightPaddle.width
     ) {
-        ball.changeXDirection();
+        setBallDir(ball, rightPaddle, -1);
     }
     //Wall collision
     if (ball.pos.y <= 0 || ball.pos.y + ball.height >= 400)
         ball.changeYDirection();
+}
+
+function setBallDir(ball : GameObject, paddle : GameObject, dir : number) {
+	const paddleThird = paddle.height / 3;
+
+	if (ball.pos.y + 5 < paddle.pos.y + paddleThird) {
+		ball.speed = {x: 6 * dir, y: -2}
+	}
+	else if (ball.pos.y + 5 < paddle.pos.y + (paddleThird * 2)) {
+		ball.speed = {x: 6 * dir, y: 0}
+	}
+	else {
+		ball.speed = {x: 6 * dir, y: 2}
+	}
 }

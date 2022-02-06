@@ -86,7 +86,6 @@ interface State {
 	computed: {
 		isLoggedIn() {
 			if (this.$store.getters.isAuth) {
-				console.log('this.testUsers', this.testUsers);
 				this.$socketapp.auth = {
 						token: `${this.$store.getters.token}`
 				};

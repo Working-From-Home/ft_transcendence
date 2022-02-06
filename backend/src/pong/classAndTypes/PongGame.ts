@@ -5,6 +5,9 @@ import { GameObject } from "./GameObject";
 import { checkPaddleWall, checkBallCollision } from "./collision";
 import { UsersService } from 'src/users/services/users.service';
 import { IPlayer } from "./IPlayer";
+import { IEndCallback } from "./IEndCallback";
+
+//width: 640, height: 400.
 
 export class PongGame {
 	gameId: string;
@@ -22,14 +25,14 @@ export class PongGame {
 		this.gameId = `${players.left.userId}vs${players.right.userId}`;
 		this._leftPaddle = new GameObject(10, 80, {x : 20, y: 160}, {x : 0, y : 0});
 		this._rightPaddle = new GameObject(10, 80, {x : 610, y: 160}, {x : 0, y : 0});
-		this._ball = new GameObject(10, 10, {x : 315, y: 195}, {x : 6, y : 1});
+		this._ball = new GameObject(10, 10, {x : 315, y: 195}, {x : 2, y : 1});
 		this._score = [0, 0];
 	}
 	
 	join(socket : Socket) : void {
 		socket.join(this.gameId);
-		const userId = socket.data.userId;
 
+		const userId = socket.data.userId;
 		if (userId != this._players.left.userId && userId != this._players.right.userId)
 			return ;
 
@@ -76,13 +79,13 @@ export class PongGame {
 		}
 	}
 
-	_startGame() {
+	_startGame(callback: IEndCallback) {
 		setTimeout(() => {
-			this._gameLoop();
+			this._gameLoop(callback);
 		}, 5000);
 	}
 
-	private _gameLoop() : void {
+	private _gameLoop(callback: IEndCallback) : void {
 		this._isRunning = true;
 		this._sendGameState();
 		const intervalId = setInterval(() => {
@@ -93,7 +96,7 @@ export class PongGame {
 			this._sendGameState();
 			if (this._isRunning === false) {
 				clearInterval(intervalId);
-				this._finishGame();
+				this._finishGame(callback);
 			}
 		}, 16);
 	}
@@ -113,6 +116,7 @@ export class PongGame {
 			return ;
 		}
 		this._ball.pos = {x : 315, y: 195};
+		this._ball.speed = {x : 2, y: 1};
 	}
 
 	private _movePaddles() {
@@ -132,7 +136,7 @@ export class PongGame {
 		this._server.volatile.to(`${this.gameId}`).emit("gameState", gameState);
 	}
 
-	private _finishGame() {
+	private _finishGame(callback: IEndCallback) {
 		let winner : string;
 
 		if (this._score[0] >= 5)
@@ -141,5 +145,6 @@ export class PongGame {
 			winner = this._players.right.username;
 		console.log("gameFinished!");
 		this._server.to(`${this.gameId}`).emit("gameFinish", winner);
+		callback(this.gameId);
 	}
 }
