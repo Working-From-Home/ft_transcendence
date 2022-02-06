@@ -23,12 +23,38 @@
 	</div>
 </template>
 
-<script>
-import ChatWindow from 'vue-advanced-chat'
-import 'vue-advanced-chat/dist/vue-advanced-chat.css'
+<script lang='ts'>
+import { Options, Vue } from "vue-class-component";
+import ChatWindow from 'vue-advanced-chat';
+import 'vue-advanced-chat/dist/vue-advanced-chat.css';
+import { IChannel, Message } from 'shared/models/socket-events';
 
+interface State {
+  currentUserId: string,
+  userName: string,
+  email: string,
+  avatar: string,
+  rooms: IChannel[],
+  opened: boolean,
+  messages: [],
+  messagesLoaded: boolean,
+  loadingRooms: boolean,
+  roomActions: [{ name: 'leaveChannel', title: 'Leave Channel' }, { name: 'destroyChannel', title: 'Destroy Channel' }],
+  menuActions: [
+				{ name: 'muteUser', title: 'Mute User' },
+				{ name: 'kickUser', title: 'Kick User' },
+				{ name: 'banUser', title: 'Ban User' },
+  ],
+};
+interface CustomAction {
+	name: string
+	title: string
+};
+interface CustomOptions {
+	reset: boolean
+}
 
-export default {
+@Options({
 	name: 'Chat',
 	props: {
 		size: String,
@@ -37,20 +63,26 @@ export default {
 		ChatWindow
 	},
 	created() {
+		this.currentUserId = this.$store.getters.myUserId,
+		this.userName = this.$store.getters.myUserName,
+		this.email = this.$store.getters.myEmail,
+		this.avatar = this.$store.getters.myAvatar,
 		this.$store.dispatch('tmpRooms', {id: this.$store.getters.myUserId});
-		this.rooms = this.$store.getters.getRooms;
+		this.fetchRooms();
+		//this.rooms = this.$store.getters.getRooms;
 		this.messages = this.rooms.messages;
 	},
-	data() {
+	data: (): State => {
 		return {
-			currentUserId: this.$store.getters.myUserId,
-			userName: this.$store.getters.myUserName,
-			email: this.$store.getters.myEmail,
-			avatar: this.$store.getters.myAvatar,
+			currentUserId: '',
+			userName: '',
+			email: '',
+			avatar: '',
 			rooms: [],
 			opened: true, 
 			messages: [],
 			messagesLoaded: false,
+			loadingRooms: false as boolean,
 			roomActions: [
 				{ name: 'leaveChannel', title: 'Leave Channel' },
 				{ name: 'destroyChannel', title: 'Destroy Channel' },
@@ -63,7 +95,7 @@ export default {
 		}
 	},
 	methods: {
-		fetchMessages({ room = {}, options = {} }) {
+		fetchMessages({ room = {} as IChannel, options = {} as CustomOptions}) {
 			console.log('this.size', this.size)
 			if (this.size === "mini")
 				this.opened = false;
@@ -71,14 +103,14 @@ export default {
 				this.messages = [];
 			this.messagesLoaded = false;
 			setTimeout(() => {
-				if (room.messages.length > 0)
+				if (room.messages && room.messages.length > 0)
 					this.messages = room.messages;
 				else 
 					this.messages = [];
 				this.messagesLoaded = true
 			})
 		},
-		sendMessage(message) {
+		sendMessage(message: any) {
 			let newMessage = {
 					_id: this.messages.length,
 					content: message.content,
@@ -94,11 +126,34 @@ export default {
 			]
 			this.$store.dispatch('addMessage', {roomId: message.roomId, newMessage: newMessage});
 		},
+		async fetchRooms(){
+			console.log("FetchRooms");
+			await this.$socketapp.emit('searchChannelsByUser', this.$store.getters.userID, (resp: IChannel[]) => {
+				console.log("resp", resp);
+				this.rooms = [];
+				// for (var i = 0; i < 3; i++){
+				// 	this.rooms = [
+				// 		...this.rooms,
+				// 		{
+				// 			roomId: this.rooms.length + 1 as number,
+				// 			roomName: 'Room ' + (this.rooms.length + 1),
+				// 			messages: [],
+				// 			users: [
+				// 				{ _id: this.currentUserId, username: this.userName },
+				// 				{ _id: 4321, username: 'John Snow' }
+				// 			]
+				// 		}
+				// 	]
+				// }
+				this.rooms = resp;
+			});
+			console.log("FetchRooms end");
+		},
 		addRoom(){
 			this.rooms = [
 				...this.rooms,
 				{
-					roomId: this.rooms.length + 1,
+					roomId: this.rooms.length + 1 as number,
 					roomName: 'Room ' + (this.rooms.length + 1),
 					messages: [],
 					users: [
@@ -108,18 +163,19 @@ export default {
 				}
 			]
 		},
-		menuActionHandler({ action, roomId }) {
+		menuActionHandler({ action = {} as CustomAction, roomId = {} as number }) {
 			switch (action.name) {
 				case 'leaveChannel':
 					return this.leaveChannel(roomId)
 				case 'destroyChannel':
-					return this.destroyChannel(roomId)
+					return this.destroyChannel()
 				case 'deleteRoom':
-					return this.deleteRoom(roomId)
+					return this.deleteRoom()
 			}
 		},
-		leaveChannel(roomId){
-			let rooms = [];
+		leaveChannel(roomId: number ){
+			let rooms: IChannel[];
+			rooms = [];
 			//this.rooms = this.$store.dispatch('leaveChannel', {roomId: roomId, UserId: this.currentUserId});
 			this.loadingRooms = true
 			for (var i = 0; i < this.rooms.length; i++){
@@ -134,11 +190,14 @@ export default {
 			this.rooms = this.$store.getters.getRooms
 			this.loadingRooms = false
 		},
-		destroyChannel(roomId) {
+		destroyChannel() {
 			console.log('1', this.rooms);
 			this.rooms = [];
 		}
 	}
+})
+export default class Chat extends Vue {
+
 }
 </script>
 

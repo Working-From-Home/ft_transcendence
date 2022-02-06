@@ -51,6 +51,18 @@ export class AppGateway {
 		socket.emit("connectedUsers", this.connectedUsers);
 		socket.broadcast.emit("userConnected", {id : socket.data.user.id, username : socket.data.user.username});
 		console.log(this.connectedUsers);
+
+		socket.emit('sendChannels', 
+			this.chatService.searchChannelsUsers("1").then( (y) => { 
+				console.log("heeee:", y);
+				return y
+			})
+		);
+	// 	socket.emit('sendUserChannels',
+	// 	this.chatService.("1").then( (y) => { 
+	// 		console.log("heeee:", y);
+	// 		return y
+	// 	})		);
 	}
 
 	private disconnect(socket: Socket) {
@@ -73,5 +85,13 @@ export class AppGateway {
 	@SubscribeMessage('searchChannel')
 	handleEvent(client: Socket, title: string) {
 		return this.chatService.searchChannelsByTitle(title).then( (x) => { return x })
+	}
+
+	@SubscribeMessage('searchChannelsByUser')
+	handleEventChannel(client: Socket, title: string) {
+		return this.chatService.searchChannelsUsers("1").then( (y) => { 
+				console.log(y);
+				return y 
+		}); 
 	}
 }
