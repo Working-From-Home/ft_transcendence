@@ -26,18 +26,18 @@ export class AppGateway {
 	) {}
 
 	async handleConnection(client: AppSocket) {
-		const userId = (await this.authService.getPayloadFromToken(client.handshake.auth.token)).userId;
-		if (userId === null)
+		const payload = await this.authService.getPayloadFromToken(client.handshake.auth.token);
+		if (payload === null)
 		{
-			this.logger.log('User is not authenticated ! Http handshake failed');
+			this.logger.log('The token probably expired. Deal with it bro.');
 			client.emit('error', new UnauthorizedException());
 			client.disconnect();
 			return
 		}
-		this.onlineService.addUser(userId);
-		client.data.userId = userId
+		this.onlineService.addUser(payload.userId);
+		client.data.userId = payload.userId
 		this.atConnection(client)
-		this.logger.log(`User with id ${userId} is online. (${this.onlineService.getTotalOnlineUsers()} online users)`);
+		this.logger.log(`User with id ${payload.userId} is online. (${this.onlineService.getTotalOnlineUsers()} online users)`);
 	}
 	
 	async handleDisconnect(client: AppSocket) {
