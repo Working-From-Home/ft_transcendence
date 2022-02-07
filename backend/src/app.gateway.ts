@@ -37,17 +37,17 @@ export class AppGateway {
 		this.onlineService.addUser(payload.userId);
 		client.data.userId = payload.userId
 		this.atConnection(client)
-		this.logger.log(`User with id ${payload.userId} is online. (${this.onlineService.getTotalOnlineUsers()} online users)`);
+		this.logger.log(`User id ${payload.userId} is online. (${this.onlineService.getTotalOnlineUsers()} online users)`);
 	}
 	
 	async handleDisconnect(client: AppSocket) {
-		if (client.data.userId !== null) {
+		if (client.data.userId) {
 			this.onlineService.removeUser(client.data.userId)
 			client.broadcast.emit("userDisconnected", client.data.userId);
-			this.logger.log(`User with id ${client.data.userId} is offline. (${this.onlineService.getTotalOnlineUsers()} online users)`);
+			this.logger.log(`User id ${client.data.userId} is offline. (${this.onlineService.getTotalOnlineUsers()} online users)`);
 		}
 		else
-			this.logger.log(`User don't have userId set (maybe http handshake failed ?)`);
+			this.logger.log(`Disconnection: http handshake failed for some reason`);
 	}
 	
 	/**
