@@ -21,7 +21,7 @@ export class ChatTmpService {
       .select(["channel.id", "channel.title"])
       .getMany();
   }
-  async searchChannelsUsers(userId: string): Promise<IChannel[]> {
+  async getChannelsOfUser(userId: string): Promise<IChannel[]> {
     return getRepository(Channel)
       .createQueryBuilder("channel")
       .leftJoin("channel.userChannels", "uc")
