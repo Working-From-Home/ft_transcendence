@@ -87,7 +87,7 @@ export class AuthService {
 		}
 
     async getPayloadFromToken(token: string): Promise<JwtPayload> {
-      return await this.jwtService
+      return this.jwtService
         .verifyAsync<JwtPayload>(token)
         .then((payload) => {
           return payload;

@@ -26,7 +26,7 @@ export class AppGateway {
 	) {}
 
 	async handleConnection(client: AppSocket) {
-		const userId = await (await this.authService.getPayloadFromToken(client.handshake.auth.token)).userId;
+		const userId = (await this.authService.getPayloadFromToken(client.handshake.auth.token)).userId;
 		if (userId === null)
 		{
 			this.logger.log('User is not authenticated ! Http handshake failed');
