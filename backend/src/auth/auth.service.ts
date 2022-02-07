@@ -7,6 +7,11 @@ import { User } from '../users/entities/user.entity';
 
 const scrypt = promisify(_scrypt);
 
+interface JwtPayload {
+  userId: number;
+  username: string;
+}
+
 @Injectable()
 export class AuthService {
     constructor(
@@ -73,11 +78,24 @@ export class AuthService {
     }
 
     private generateAccessToken(user: User): string {
-        const payload = { username: user.username, sub: user.id };
+        const payload: JwtPayload = {userId: user.id, username: user.username };
         return this.jwtService.sign(payload);
     }
 
-		verifyJwt(jwt: string): Promise<any> {
-			return this.jwtService.verifyAsync(jwt);
+		verifyJwt(jwt: string): Promise<JwtPayload> {
+			return this.jwtService.verifyAsync<JwtPayload>(jwt);
 		}
+
+    async getPayloadFromToken(token: string): Promise<JwtPayload> {
+      return this.jwtService
+        .verifyAsync<JwtPayload>(token)
+        .then((payload) => {
+          return payload;
+        })
+        .catch((err) =>      {
+            console.log(err)
+            return null
+          }
+        )
+    }
 }
