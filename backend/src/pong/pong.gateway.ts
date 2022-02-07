@@ -99,7 +99,16 @@ export class PongGateway {
 		this.server.to(guestId.toString()).emit("gameRequest", requestId);
 		
 		this.logger.log(`got request: ${requestId}`);
-		this.logger.log(`emit to ${guestId.toString()}`);
+		return requestId;
+	}
+
+	@SubscribeMessage("cancelRequest")
+	cancelGameRequest(@MessageBody() requestId : string, @ConnectedSocket() socket : Socket) {
+		const gameRequest = this.gameRequests.get(requestId);
+		if (!gameRequest || socket.data.userId != gameRequest.hostId)
+			return ;
+		socket.to(gameRequest.guestId.toString()).emit("requestCanceled");
+		this.gameRequests.delete(requestId);
 	}
 
 	@SubscribeMessage('gameRequestAnswer')
