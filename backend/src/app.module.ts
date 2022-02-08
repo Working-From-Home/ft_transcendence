@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
@@ -20,6 +20,8 @@ import { Game } from './game/entities/game.entity';
 import { UsersInChannel } from './channels/entities/users-in-channel.view.entity';
 import { AppGateway } from './app.gateway';
 import { ChannelsModule } from './channels/channels.module';
+import { OnlineService } from './online.service';
+import { AppLoggerMiddleware } from './http.logger.middleware';
 
 @Module({
   imports: [
@@ -54,6 +56,14 @@ import { ChannelsModule } from './channels/channels.module';
     ChannelsModule
   ],
   controllers: [AppController],
-  providers: [AppService, AppGateway],
+  providers: [AppService, AppGateway, OnlineService],
 })
-export class AppModule {}
+// before :
+// export class AppModule {}
+
+// after : (just to log http requests, to remove at the end...)
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(AppLoggerMiddleware).forRoutes('*');
+  }
+}

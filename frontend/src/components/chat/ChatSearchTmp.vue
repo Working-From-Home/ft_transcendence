@@ -21,7 +21,8 @@
 
 <script lang='ts'>
 import { computed, defineComponent } from '@vue/runtime-core';
-import { ISearchChannel } from 'shared/models/socket-events'
+import { ISearchChannel } from 'shared/models/socket-events';
+import ChatService from "../../services/ChatService";
 
 export default defineComponent({
   name: 'ChatSearchTmp',
@@ -33,8 +34,8 @@ export default defineComponent({
   },
   methods: {
     searchChannels() {
-      this.$socketapp.emit('searchChannel', this.searchTerm, (resp: ISearchChannel[]) => {
-        this.results = resp
+      ChatService.searchChannels(this.searchTerm).then((resp) => {
+        this.results = resp;
       });
     }
   },

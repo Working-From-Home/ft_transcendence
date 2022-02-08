@@ -1,20 +1,21 @@
 <template class="container-fluid">
 	<section>
 		<the-header></the-header>
-		<friend-list></friend-list>
+		<friend-list v-if="isLoggedIn"></friend-list>
 		<div class="row align-items-center">
 			<router-view/>
 		</div>
-		<mini-chat v-if="isLoggedIn"></mini-chat>
+		<mini-chat v-if="isLoggedIn && isChatView"></mini-chat>
+		<pong-socket v-if="isLoggedIn"/>
 	</section>
 </template>
-
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 import MiniChat from "./components/chat/MiniChat.vue";
 import TheHeader from "./components/TheHeader/TheHeader.vue";
 import FriendList from "./components/OffcanvasFriendsList.vue";
+import PongSocket from "./components/pong/PongSocket.vue"
 // import { initSocket, socket } from "./socket";
 import { io }  from "socket.io-client";
 
@@ -23,26 +24,29 @@ import { io }  from "socket.io-client";
 		MiniChat,
 		TheHeader,
 		FriendList,
+		PongSocket
 	},
 	computed: {
-		isLoggedIn() {
-			if (this.$route.path === "/chat")
-				return false;
+		isLoggedIn() {	
 			return this.$store.getters.isAuth;
 		},
+		isChatView() {
+			if (this.$route.path === "/chat")
+				return false;
+			return true;
+		}
 	},
 	created() {
 		this.$store.dispatch('checkLog');
 	},
 })
-export default class HelloWorld extends Vue {
-}
+export default class HelloWorld extends Vue {}
 </script>
 
 <style>
 html {
   background: #192531;
-   overflow-x: hidden;
+  overflow-x: hidden;
 }
 
 #app {
@@ -53,5 +57,4 @@ html {
   color: rgba(255, 255, 255, 0.884);
   background: #192531;
 }
-
 </style>

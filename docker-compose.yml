@@ -79,6 +79,8 @@ services:
   pgadmin:
     restart: always
     image: dpage/pgadmin4
+    logging:
+      driver: "none"
     ports:
       - 8081:80
     environment:
