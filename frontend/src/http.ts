@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from "axios";
+import store from "./store";
 
 // The backend api
 const myApi: AxiosInstance = axios.create({
@@ -11,8 +12,11 @@ const myApi: AxiosInstance = axios.create({
 });
 
 // interceptor to manage expired token ?
-// myApi.interceptors.response.use()
-
+// myApi.interceptors.request.use(function (config) {
+// 	const token = store.getState().session.token;
+// 	config.headers.Authorization =  token;
+// 	return config;
+// });
 
 // api 42 ?
 // const ftApi = axios.create({
