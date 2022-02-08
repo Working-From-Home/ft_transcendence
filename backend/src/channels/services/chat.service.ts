@@ -91,7 +91,7 @@ export class ChatService {
     return await this.channelRepo.update(channel, attrs);
   }
 
-  async updateUserChannel(userId: number, channelId: number, attrs: Partial<UserChannel>) {
+  private async updateUserChannel(userId: number, channelId: number, attrs: Partial<UserChannel>) {
     const channelUser = await this.userChannelRepo.findOne({
       where: [{ userId, channelId }]
     });
@@ -105,33 +105,45 @@ export class ChatService {
     return this.updateUserChannel(userId, channelId, { hasLeft: true });
   }
 
-  async addAdmin(channelId: number, userId: number) {
+  async addAdmin(channelId: number, adminId: number, userId: number) {
     await this.findChannelById(channelId);
+    if (!this.isAdmin(adminId, channelId) || this.isOwner(userId, channelId))
+      throw new UnauthorizedException('You cannot promote this user');
     return this.updateUserChannel(userId, channelId, { role: 'admin' });
   }
 
-  async removeAdmin(channelId: number, userId: number) {
+  async removeAdmin(channelId: number, adminId: number, userId: number) {
     await this.findChannelById(channelId);
+    if (!this.isAdmin(adminId, channelId) || this.isOwner(userId, channelId))
+      throw new UnauthorizedException('You cannot remove this admin');
     return this.updateUserChannel(userId, channelId, { role: 'user' });
   }
 
-  async banUser(channelId: number, userId: number, date: Date) {
+  async banUser(channelId: number, adminId: number, userId: number, date: Date) {
     await this.findChannelById(channelId);
-    return this.updateUserChannel(userId, channelId, { bannedUntil: date });
+    if (!this.isAdmin(adminId, channelId) || this.isOwner(userId, channelId))
+      throw new UnauthorizedException('You cannot ban this user');
+    return this.updateUserChannel(userId, channelId, { bannedUntil: date, hasLeft: true });
   }
 
-  async muteUser(channelId: number, userId: number, date: Date) {
+  async muteUser(channelId: number, adminId: number, userId: number, date: Date) {
     await this.findChannelById(channelId);
+    if (!this.isAdmin(adminId, channelId) || this.isOwner(userId, channelId))
+      throw new UnauthorizedException('You cannot mute this user');
     return this.updateUserChannel(userId, channelId, { mutedUntil: date });
   }
 
-  async unbanUser(channelId: number, userId: number) {
+  async unbanUser(channelId: number, adminId: number, userId: number) {
     await this.findChannelById(channelId);
+    if (!this.isAdmin(adminId, channelId) || this.isOwner(userId, channelId))
+      throw new UnauthorizedException('You cannot unban this user');
     return this.updateUserChannel(userId, channelId, { bannedUntil: null });
   }
 
-  async unmuteUser(channelId: number, userId: number) {
+  async unmuteUser(channelId: number, adminId: number, userId: number) {
     await this.findChannelById(channelId);
+    if (!this.isAdmin(adminId, channelId) || this.isOwner(userId, channelId))
+      throw new UnauthorizedException('You cannot unmute this user');
     return this.updateUserChannel(userId, channelId, { mutedUntil: null });
   }
 
