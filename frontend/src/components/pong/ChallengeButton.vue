@@ -31,6 +31,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import { Modal } from "bootstrap"
 
 export default defineComponent({
 	props: {
@@ -39,7 +40,11 @@ export default defineComponent({
 	data() {
 		return {
 			requestId: "",
+			challengeModal: {} as Modal
 		}
+	},
+	mounted() {
+		this.challengeModal = new Modal("#challengeModal");
 	},
 	methods: {
 		sendGameRequest() {
@@ -47,9 +52,17 @@ export default defineComponent({
 			this.$pongSocket.emit("gameRequest", this.guestId, (requestId : string) => {
 				this.requestId = requestId;
 			});
+			this.$pongSocket.on("requestAnswer", (accepted : boolean) => {
+				if (accepted) {
+					console.log("request accepted");
+				} else {
+					console.log("request refused");
+				}
+				this.challengeModal.hide();
+			});
 			this.$pongSocket.on("matchFound", (gameId : string) => {
 				this.$router.push({ path: `/pong/${gameId}`});
-			})
+			});
 		},
 		cancelRequest() {
 			console.log("request canceled");

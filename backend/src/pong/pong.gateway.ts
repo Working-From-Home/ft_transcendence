@@ -121,9 +121,8 @@ export class PongGateway {
 			const gameId = await this.createPongGame([gameRequest.hostId, gameRequest.guestId]);
 			socket.emit("matchFound", gameId);
 			socket.to(gameRequest.hostId.toString()).emit("matchFound", gameId);
-		} else {
-			socket.to(gameRequest.hostId.toString()).emit("requestRefused");
 		}
+		socket.to(gameRequest.hostId.toString()).emit("requestAnswer", body.accepted);
 		this.gameRequests.delete(body.requestId);
 	}
 
