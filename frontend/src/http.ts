@@ -1,15 +1,21 @@
 import axios, { AxiosInstance } from "axios";
 
 // The backend api
-const myApi = axios.create({
+const myApi: AxiosInstance = axios.create({
   baseURL: "http://localhost:3000",
-	headers: {},
+	headers: {
+    'Authorization': '',
+    'Content-type': 'application/json'
+	},
 	withCredentials: undefined
 });
 
+// interceptor to manage expired token ?
+// myApi.interceptors.response.use()
+
 
 // api 42 ?
-// var ftApi = axios.create({
+// const ftApi = axios.create({
 // 	baseURL: "http://some-other/api/v2",
 // 	timeout: 1000,
 // 	headers: {}
