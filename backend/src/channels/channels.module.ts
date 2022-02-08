@@ -7,6 +7,8 @@ import { UserChannel } from './entities/user-channel.entity';
 import { ChannelsController } from './controllers/channels.controller';
 import { ChannelsService } from './services/channels.service';
 import { ChatTmpService } from './chat.tmp.service';
+import { UserChannelService } from './services/user-channel.service';
+import { MessageService } from './services/message.service';
 
 @Module({
     imports: [
@@ -19,7 +21,9 @@ import { ChatTmpService } from './chat.tmp.service';
     ],
     providers: [
         ChatTmpService,
-        ChannelsService
+        ChannelsService,
+        UserChannelService,
+        MessageService
     ],
     controllers: [
         ChannelsController

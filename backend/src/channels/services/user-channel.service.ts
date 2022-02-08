@@ -1,14 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { getRepository, Repository } from 'typeorm';
+import { Channel } from '../entities/channel.entity';
 import { UserChannel } from '../entities/user-channel.entity';
-import { ChannelsService } from './channels.service';
 
 @Injectable()
 export class UserChannelService {
     constructor(
-        @InjectRepository(UserChannel) private repo: Repository<UserChannel>,
-        private readonly channelService: ChannelsService
+        @InjectRepository(UserChannel) private repo: Repository<UserChannel>
     ) {}
 
     async create(userId: number, channelId: number): Promise<UserChannel> {
@@ -42,7 +41,10 @@ export class UserChannelService {
     }
 
     async isOwner(userId: number, channelId: number): Promise<boolean> {
-        const channel = await this.channelService.findById(channelId);
+        const channel = await getRepository(Channel)
+            .createQueryBuilder("channel")
+            .where("channel.id = :id", { id: channelId })
+            .getOne();
         return channel.owner.id === userId;
     }
 
