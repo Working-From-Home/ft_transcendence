@@ -6,7 +6,7 @@ import { AuthService } from './auth/auth.service';
 
 import { ServerToClientEvents, ClientToServerEvents, InterServerEvents, SocketData} from 'shared/models/socket-events'
 
-import { ChatTmpService } from './channels/chat.tmp.service'
+import { ChatService } from './channels/services/chat.service'
 import { OnlineService } from './online.service';
 
 type AppSocket = Socket<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>
@@ -22,7 +22,7 @@ export class AppGateway {
 	constructor(
 		private authService : AuthService,
 		private onlineService: OnlineService,
-		private chatService : ChatTmpService
+		private chatService : ChatService
 	) {}
 
 	async handleConnection(client: AppSocket) {

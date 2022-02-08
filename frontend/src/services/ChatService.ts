@@ -11,8 +11,8 @@ interface ChannelUpdate
 
 class ChatService {
 	/** create a conversation between me and someone */
-	createDm(otherUserId: number): Promise<any> {
-		return http.post(`/dm/${otherUserId}`);
+	createDm(userId: number, otherUserId: number): Promise<any> {
+		return http.post(`/dm/${userId}/${otherUserId}`);
 	}
 	/** create a new channel */
 	createChannel(data: any): Promise<any> {

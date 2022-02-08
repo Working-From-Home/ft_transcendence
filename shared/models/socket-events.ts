@@ -78,7 +78,7 @@ export interface User {
     usersBlocked: Blocked[];
     BlockedBy: Blocked[];
     messages: Message[];
-    userChannels: UserChannel[];
+    userChannels: IUserChannel[];
     channels: IChannel[];
     lossedGames: Game[];
     wonGames: Game[];
@@ -92,7 +92,7 @@ export interface Message {
     user: User;
 }
 
-export interface UserChannel {
+export interface IUserChannel {
     userId: number;
     channelId: number;
     role: "admin" | "user";
@@ -111,7 +111,7 @@ export interface IChannel {
 	createdAt: Date;
 	// owner: User;
 	messages: Message[] | null;
-	userChannels: UserChannel[] | null;
+	userChannels: IUserChannel[] | null;
 }
 
 /// Online events
@@ -127,7 +127,7 @@ interface ClientToServerEventsOnline {}
 /// Chat events
 interface ServerToClientEventsChat {
   sendChannels: (channels: IChannel[]) => void;
-  sendUserChannels: (channelId: number, users: UserChannel[]) => void;
+  sendUserChannels: (channelId: number, users: IUserChannel[]) => void;
 }
 
 interface ClientToServerEventsChat {

@@ -5,10 +5,8 @@ import { Channel } from './entities/channel.entity';
 import { Message } from './entities/message.entity';
 import { UserChannel } from './entities/user-channel.entity';
 import { ChannelsController } from './controllers/channels.controller';
-import { ChannelsService } from './services/channels.service';
-import { ChatTmpService } from './chat.tmp.service';
-import { UserChannelService } from './services/user-channel.service';
-import { MessageService } from './services/message.service';
+import { ChatService } from './services/chat.service';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
     imports: [
@@ -17,19 +15,18 @@ import { MessageService } from './services/message.service';
             UserChannel,
             Channel,
             Game
-        ])
+        ]),
+        UsersModule
     ],
     providers: [
-        ChatTmpService,
-        ChannelsService,
-        UserChannelService,
-        MessageService
+        ChatService,
+
     ],
     controllers: [
         ChannelsController
     ],
     exports: [
-        ChatTmpService
+        ChatService
     ]
 })
 export class ChannelsModule {}
