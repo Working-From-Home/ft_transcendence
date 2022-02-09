@@ -10,6 +10,7 @@ import { AuthModule } from './auth/auth.module';
 import { PongModule } from './pong/pong.module';
 import { Stats } from './users/entities/stats.entity';
 import { Friendship } from './users/entities/friendship.entity';
+import { GameModule } from './game/game.module';
 import { Blocked } from './users/entities/blocked.entity';
 import { Achievement } from './users/entities/achievement.entity';
 import { Channel } from './channels/entities/channel.entity';
@@ -51,6 +52,7 @@ import { AppLoggerMiddleware } from './http.logger.middleware';
     UsersModule,
     AuthModule,
 		PongModule,
+		GameModule,
     ChannelsModule
   ],
   controllers: [AppController],
