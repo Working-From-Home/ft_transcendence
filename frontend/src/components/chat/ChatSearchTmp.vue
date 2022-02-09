@@ -16,6 +16,11 @@
 		</datalist>
 		<button type="button" class="btn btn-outline-primary">Add Channel</button>
       </div>
+     <input
+      v-model="newChanneltitle"
+      placeholder="title" class="form-control form-control-lg" list="my-list-id"
+        />
+      <button type="button" class="btn btn-outline-primary" @click="createChannel">Create</button>
   </div>
 </template>
 
@@ -29,6 +34,7 @@ export default defineComponent({
   data(){
     return {
       searchTerm: '',
+      newChanneltitle: '',
       results: [] as ISearchChannel[]
     }
   },
@@ -37,6 +43,21 @@ export default defineComponent({
       ChatService.searchChannels(this.searchTerm).then((resp) => {
         this.results = resp;
       });
+    },
+    createChannel() {
+      if (!this.newChanneltitle)
+      {
+        alert("pls put a ")
+        return
+      }
+      ChatService.createChannel({title: this.newChanneltitle}).then( resp =>
+      // ChatService.createChannel({title: "fege"}).then( resp =>
+      {
+        console.log(resp)
+      }).catch( err =>
+      {
+        console.log(err)
+      })
     }
   },
   computed:{

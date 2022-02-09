@@ -96,7 +96,6 @@ interface CustomOptions {
 	},
 	methods: {
 		fetchMessages({ room = {} as IChannel, options = {} as CustomOptions}) {
-			console.log('this.size', this.size)
 			if (this.size === "mini")
 				this.opened = false;
 			if (options.reset)
@@ -127,9 +126,7 @@ interface CustomOptions {
 			this.$store.dispatch('addMessage', {roomId: message.roomId, newMessage: newMessage});
 		},
 		async fetchRooms(){
-			console.log("FetchRooms");
 			await this.$socketapp.emit('searchChannelsByUser', this.$store.getters.userID, (resp: IChannel[]) => {
-				console.log("resp", resp);
 				this.rooms = [];
 				// for (var i = 0; i < 3; i++){
 				// 	this.rooms = [
@@ -147,7 +144,6 @@ interface CustomOptions {
 				// }
 				this.rooms = resp;
 			});
-			console.log("FetchRooms end");
 		},
 		addRoom(){
 			this.rooms = [
@@ -191,7 +187,6 @@ interface CustomOptions {
 			this.loadingRooms = false
 		},
 		destroyChannel() {
-			console.log('1', this.rooms);
 			this.rooms = [];
 		}
 	}

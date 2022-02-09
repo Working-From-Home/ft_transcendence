@@ -93,7 +93,6 @@ interface State {
 
 				this.$socketapp.on("connectedUsers", (...args: any) => {
 					this.$store.dispatch('initconnectedUsers', {users: args});
-					console.log('connectedUsers', args);
 				});
 				this.$socketapp.on("connect_error", (err: any) => {
 					console.log(`socket connexion error: ${err}`);
