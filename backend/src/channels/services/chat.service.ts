@@ -2,13 +2,13 @@ import { BadRequestException, Injectable, NotFoundException, UnauthorizedExcepti
 import { IPaginationOptions, paginate, Pagination } from "nestjs-typeorm-paginate";
 import { InjectRepository } from "@nestjs/typeorm";
 import { getManager, getRepository, Repository } from "typeorm";
+import { User } from "src/users/entities/user.entity";
 import { Channel } from "../entities/channel.entity";
 import { Message } from "../entities/message.entity";
 import { UserChannel } from "../entities/user-channel.entity";
 import { CreateChannelDto } from "../dtos/create-channel.dto";
 // tmp
 import { ISearchChannel, IUserChannel, IChannel } from "shared/models/socket-events";
-import { User } from "src/users/entities/user.entity";
 
 @Injectable()
 export class ChatService {
@@ -17,15 +17,6 @@ export class ChatService {
     @InjectRepository(UserChannel) private userChannelRepo: Repository<UserChannel>,
     @InjectRepository(Message) private MessageRepo: Repository<Message>
   ) { }
-
-  /* |/||///\|\/| */
-  /* |          | */
-  /* |  o   O   | */
-  /* |   \ /    | */
-  /* |   www    | */
-  /* |   mmm    | */
-  /*  ----------  */
-  /*   juligonz   */
 
   /* Create */
 

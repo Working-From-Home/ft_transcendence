@@ -60,7 +60,10 @@ export class ChannelsController {
 		@Param('userId') userId: number,
 		@Body() date: Date
 	): Promise<UpdateResult> {
-		return await this.chatService.muteUser(channelId, parseInt(request.user.userId), userId, date)
+		const adminId = parseInt(request.user.userId);
+		if (!date)
+			return await this.chatService.unmuteUser(channelId, adminId, userId);
+		return await this.chatService.muteUser(channelId, adminId, userId, date);
 	}
 
 	@Put('/channels/:channelId/ban/:userId')
@@ -70,7 +73,10 @@ export class ChannelsController {
 		@Param('userId') userId: number,
 		@Body() date: Date
 	): Promise<UpdateResult> {
-		return await this.chatService.banUser(channelId, parseInt(request.user.userId), userId, date);
+		const adminId = parseInt(request.user.userId);
+		if (!date)
+			return await this.chatService.unbanUser(channelId, adminId, userId);
+		return await this.chatService.banUser(channelId, adminId, userId, date);
 	}
 
 	@Put('/channels/:channelId/admin/:userId')
@@ -90,5 +96,4 @@ export class ChannelsController {
 	): Promise<UpdateResult> {
 		return await this.chatService.removeAdmin(channelId, parseInt(request.user.userId), userId);
 	}
-
 }
