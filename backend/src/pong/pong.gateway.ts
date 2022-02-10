@@ -7,7 +7,7 @@ import { GameQueue } from './classAndTypes/GameQueue';
 import { AuthService } from '../auth/auth.service';
 import { UsersService } from '../users/services/users.service';
 import { User } from '../users/entities/user.entity';
-import { IGameRequest } from './classAndTypes/IGameRequest';
+import { IGameSettings, IGameRequest } from './classAndTypes/IGameRequest';
 
 @WebSocketGateway( { namespace: "/pong", cors: { origin: "http://localhost:8080"} })
 export class PongGateway {
@@ -89,17 +89,34 @@ export class PongGateway {
 /*_______Private Game Requests Events:____*/
 
 	@SubscribeMessage('gameRequest')
-	createGameRequest(@MessageBody() guestId : number, @ConnectedSocket() socket : Socket) {
+	createGameRequest(@MessageBody() body : {guestId : number, gameSettings : IGameSettings},
+		@ConnectedSocket() socket : Socket) {
 		const hostId = socket.data.userId;
-		if (hostId == guestId)
+		if (hostId == body.guestId)
 			return ;
 
-		const requestId = `${hostId}to${guestId}`;
-		this.gameRequests.set(requestId, {hostId: hostId, guestId: guestId});
-		this.server.to(guestId.toString()).emit("gameRequest", requestId);
-		
+		const requestId = `${hostId}to${body.guestId}`;
+		this.gameRequests.set(
+				requestId,
+				{
+					hostId: hostId,
+					guestId: body.guestId,
+					gameSettings: body.gameSettings
+				});
+		this.server.to(body.guestId.toString()).emit("gameRequest", requestId);
+
+		this.logger.log(body);
 		this.logger.log(`got request: ${requestId}`);
-		this.logger.log(`emit to ${guestId.toString()}`);
+		return requestId;
+	}
+
+	@SubscribeMessage("cancelRequest")
+	cancelGameRequest(@MessageBody() requestId : string, @ConnectedSocket() socket : Socket) {
+		const gameRequest = this.gameRequests.get(requestId);
+		if (!gameRequest || socket.data.userId != gameRequest.hostId)
+			return ;
+		socket.to(gameRequest.guestId.toString()).emit("requestCanceled");
+		this.gameRequests.delete(requestId);
 	}
 
 	@SubscribeMessage('gameRequestAnswer')
@@ -109,12 +126,11 @@ export class PongGateway {
 		if (!gameRequest || socket.data.userId != gameRequest.guestId)
 			return ;
 		if (body.accepted) {
-			const gameId = await this.createPongGame([gameRequest.hostId, gameRequest.guestId]);
+			const gameId = await this.createPongGame([gameRequest.hostId, gameRequest.guestId], gameRequest.gameSettings);
 			socket.emit("matchFound", gameId);
 			socket.to(gameRequest.hostId.toString()).emit("matchFound", gameId);
-		} else {
-			socket.to(gameRequest.hostId.toString()).emit("requestRefused");
 		}
+		socket.to(gameRequest.hostId.toString()).emit("requestAnswer", body.accepted);
 		this.gameRequests.delete(body.requestId);
 	}
 
@@ -133,13 +149,13 @@ export class PongGateway {
 		}
 	}
 
-	private async createPongGame(userIds : number[]) : Promise<string> {
+	private async createPongGame(userIds : number[], gameSettings? : IGameSettings) : Promise<string> {
 		const leftUser = await this.usersService.findById(userIds[0]);
 		const rightUser = await this.usersService.findById(userIds[1]);
 
 		let leftPlayer : IPlayer = {userId : leftUser.id, username : leftUser.username, score : 0};
 		let rightPlayer : IPlayer = {userId : rightUser.id, username : rightUser.username, score : 0};
-		let game = new PongGame(this.server, {left: leftPlayer, right: rightPlayer});
+		let game = new PongGame(this.server, {left: leftPlayer, right: rightPlayer}, gameSettings);
 		this.games.set(game.gameId, game);
 		game._startGame((gameId : string) => {
 			this.games.delete(gameId);

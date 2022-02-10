@@ -1,29 +1,34 @@
-First main goal:
-|   | Gérer le matchmaking: dans le front lancer matchmaking avec matchmakingView.
-|   | puis dans le back, gérer le truc, emit("matchFound", gameId);
-      puis front, rediriger vers pong/:gameId.
+Things left to in the pong 09/02:
 
-|V|Put asides old pongGateway. --->pong.gateway.copy
-|V|Set up Jwt in pong Gateway.
+| |gérer les déconnexion lors de game request en cours.
+| |sécuriser l'input des private game request. (settings)
+| |améliorer le modal (use boostrap) quand on reçoit une gameRequest.
+
+|V|gérer la personnalisation des games:
+	|V|front: 
+		|V|pop up en deux temps.
+			|V|gérer un form dans le premier temps.
+			|V|envoyer les game params dans le socket event.
+			|V|2ème temps attendre la reponse.
+
+	|V|back:
+		|V|ajouter GameParams dans le construteur pongGame.
+			-->avec params par défaut si possible.
+		|V|gérer les params dans le pongGame.
+		|V|recevoir les gameParams dans l'event gameRequest,
+		|V|associer ces params à la requête.
+		|V|utiliser ces params pour créer la game.
+
+| |gérer le mode specateur:
+	| |créer une method pour avoir l'id de la game en fonction de userId.
 
 
-|V|Remove pongCanvasView.
-|V|Create the pongSocket in Pong.vue and connect it.
-|V|Create nested route pong/matchmaking and component.
-|V|Create nested route pong/:gameId and component.
-		--->https://next.router.vuejs.org/guide/essentials/nested-routes.html
+| |InGameUsers:
+	| |Créer un tableau auquel on ajoute l'id des users en jeux.
+	| |ajouter l'id d'un user quand une game est crée.
+	| |supprimer l'id d'un user quand la game est finie.
 
-front:
-|V|Créer un button searchGame, et emit: "joinMatchmaking".
-|V|afficher searchingGame quand on a cliqué sur le bouton.
-|V|changer le bouton en stop searching.
-		-->isSearching : false.
+| |Donner plus d'infos, que juste le userId au front. (username surtout)
+| |avoir un bouton de redirection à la fin d'une game.
 
-back:
-|V|Subscribe: "joinMatchmaking".
-|V|créer l'array MatchmakingQueue
-|V|On joinMatchmaking, ajouter la Socket à l'array.
-|V|si socket.disconnect: retirer la Socket de l'array.
-|V|checker quand au moins deux joueurs: les retirer de l'array.
-|V|Créer une room, mettre les socket dedans, envoyer MatchFound, gameId.
-| |rediriger vers pong/gameId.
+| |Gérer l'enregistrement des games dans la db.
