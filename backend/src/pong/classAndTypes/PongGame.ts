@@ -14,8 +14,9 @@ export class PongGame {
 	gameId: string;
 	private _leftPaddle : GameObject;
 	private _rightPaddle : GameObject;
+	private _paddleYSpeed : number;
 	private _ball : GameObject;
-	private _ballXspeed : number;
+	private _ballXSpeed : number;
 	private _players : {left : IPlayer, right : IPlayer};
 	private _isRunning = false;
 	private _server : Server;
@@ -25,17 +26,18 @@ export class PongGame {
 	constructor(
 			server : Server,
 			players : {left: IPlayer, right: IPlayer}, 
-			gameSettings : IGameSettings = {speed: 6, paddleSize: 80, score: 5},
+			gameSettings : IGameSettings = {speed: 6, paddleSpeed: 5, score: 5},
 		)
 	{
 		this._server = server;
 		this._players = players;
 		this.gameId = `${players.left.userId}vs${players.right.userId}`;
-		this._leftPaddle = new GameObject(10, gameSettings.paddleSize, {x : 20, y: 160}, {x : 0, y : 0});
-		this._rightPaddle = new GameObject(10, gameSettings.paddleSize, {x : 610, y: 160}, {x : 0, y : 0});
+		this._leftPaddle = new GameObject(10, 80, {x : 20, y: 160}, {x : 0, y : 0});
+		this._rightPaddle = new GameObject(10, 80, {x : 610, y: 160}, {x : 0, y : 0});
 		this._ball = new GameObject(10, 10, {x : 315, y: 195}, {x : 2, y : 1});
 		this._score = [0, 0];
-		this._ballXspeed = gameSettings.speed;
+		this._paddleYSpeed = gameSettings.paddleSpeed;
+		this._ballXSpeed = gameSettings.speed;
 		this._maxScore = gameSettings.score;
 	}
 	
@@ -62,26 +64,26 @@ export class PongGame {
 	private handleKeydown(socket : Socket, key : string) : void {
 		if (key === "ArrowDown") {
 			if (socket.data.userId === this._players.left.userId)
-				this._leftPaddle.speed = {x : 0, y : 5};
+				this._leftPaddle.speed = {x : 0, y : this._paddleYSpeed};
 			else
-				this._rightPaddle.speed = {x : 0, y : 5};
+				this._rightPaddle.speed = {x : 0, y : this._paddleYSpeed};
 		}
 		else if (key === "ArrowUp") {
 			if (socket.data.userId === this._players.left.userId)
-				this._leftPaddle.speed = {x : 0, y : -5};
+				this._leftPaddle.speed = {x : 0, y : -this._paddleYSpeed};
 			else
-				this._rightPaddle.speed = {x : 0, y : -5};
+				this._rightPaddle.speed = {x : 0, y : -this._paddleYSpeed};
 		}
 	}
 
 	private handleKeyup(socket : Socket, key : string) : void {
-		if (key === "ArrowDown" && this._leftPaddle.speed.y !== -5) {
+		if (key === "ArrowDown" && this._leftPaddle.speed.y !== -this._paddleYSpeed) {
 			if (socket.data.userId === this._players.left.userId)
 				this._leftPaddle.speed = {x : 0, y : 0};
 			else
 				this._rightPaddle.speed = {x : 0, y : 0};
 		}
-		else if (key === "ArrowUp" && this._leftPaddle.speed.y !== 5) {
+		else if (key === "ArrowUp" && this._leftPaddle.speed.y !== this._paddleYSpeed) {
 			if (socket.data.userId === this._players.left.userId)
 				this._leftPaddle.speed = {x : 0, y : 0};
 			else
@@ -99,7 +101,7 @@ export class PongGame {
 		this._isRunning = true;
 		this._sendGameState();
 		const intervalId = setInterval(() => {
-			checkBallCollision(this._ball, this._leftPaddle, this._rightPaddle);
+			checkBallCollision(this._ball, this._leftPaddle, this._rightPaddle, this._ballXSpeed);
 			this._checkIfScored();
 			this._ball.move();
 			this._movePaddles();
@@ -114,19 +116,19 @@ export class PongGame {
 	private _checkIfScored() {
 		if (this._ball.pos.x < 0) {
 			this._score[1] += 1;
-			if (this._score[1] >= 5)
+			if (this._score[1] >= this._maxScore)
 				this._isRunning = false;
 		}
 		else if (this._ball.pos.x > 640 - this._ball.width) {
 			this._score[0] += 1;
-			if (this._score[0] >= 5)
+			if (this._score[0] >= this._maxScore)
 				this._isRunning = false;
 		}
 		else {
 			return ;
 		}
 		this._ball.pos = {x : 315, y: 195};
-		this._ball.speed = {x : 2, y: 1};
+		this._ball.speed = {x : 3, y: 0};
 	}
 
 	private _movePaddles() {
@@ -149,7 +151,7 @@ export class PongGame {
 	private _finishGame(callback: IEndCallback) {
 		let winner : string;
 
-		if (this._score[0] >= 5)
+		if (this._score[0] >= this._maxScore)
 			winner = this._players.left.username;
 		else
 			winner = this._players.right.username;

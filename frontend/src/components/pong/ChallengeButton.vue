@@ -25,11 +25,11 @@
   					<option :value=6>normal</option>
   					<option :value=8>fast</option>
 					</select>
-					<p>paddle size:</p>
-					<select class="form-select" v-model="gameSettings.paddleSize">
-  					<option :value=60>small</option>
-  					<option :value=80>normal</option>
-  					<option :value=100>big</option>
+					<p>paddle speed:</p>
+					<select class="form-select" v-model="gameSettings.paddleSpeed">
+  					<option :value=3>slow</option>
+  					<option :value=5>normal</option>
+  					<option :value=7>fast</option>
 					</select>
 					<p>number of point to win:</p>
 					<select class="form-select" v-model="gameSettings.score">
@@ -85,7 +85,7 @@ export default defineComponent({
 	data() {
 		return {
 			requestId: "",
-			gameSettings: {speed: 6, paddleSize: 80, score: 5},
+			gameSettings: {speed: 6, paddleSpeed: 5, score: 5},
 			challengeModal: {} as Modal
 		}
 	},

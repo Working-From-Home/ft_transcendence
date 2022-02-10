@@ -1,23 +1,23 @@
 Things left to in the pong 09/02:
 
-| |gérer les déconnexion en cas de game request en cours.
-
+| |gérer les déconnexion lors de game request en cours.
+| |sécuriser l'input des private game request. (settings)
 | |améliorer le modal (use boostrap) quand on reçoit une gameRequest.
 
-| |gérer la personnalisation des games:
-	| |front: 
+|V|gérer la personnalisation des games:
+	|V|front: 
 		|V|pop up en deux temps.
 			|V|gérer un form dans le premier temps.
 			|V|envoyer les game params dans le socket event.
 			|V|2ème temps attendre la reponse.
 
-	| |back:
-		| |ajouter GameParams dans le construteur pongGame.
+	|V|back:
+		|V|ajouter GameParams dans le construteur pongGame.
 			-->avec params par défaut si possible.
-		| |gérer les params dans le pongGame.
+		|V|gérer les params dans le pongGame.
 		|V|recevoir les gameParams dans l'event gameRequest,
-		| |associer ces params à la requête.
-		| |utiliser ces params pour créer la game.
+		|V|associer ces params à la requête.
+		|V|utiliser ces params pour créer la game.
 
 | |gérer le mode specateur:
 	| |créer une method pour avoir l'id de la game en fonction de userId.

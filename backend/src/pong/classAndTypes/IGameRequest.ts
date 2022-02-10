@@ -1,6 +1,6 @@
 export interface IGameSettings {
 	speed: number,
-	paddleSize: number,
+	paddleSpeed: number,
 	score: number
 }
 
