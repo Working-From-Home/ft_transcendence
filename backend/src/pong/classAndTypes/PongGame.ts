@@ -6,6 +6,7 @@ import { checkPaddleWall, checkBallCollision } from "./collision";
 import { UsersService } from 'src/users/services/users.service';
 import { IPlayer } from "./IPlayer";
 import { IEndCallback } from "./IEndCallback";
+import { IGameSettings } from "./IGameRequest";
 
 //width: 640, height: 400.
 
@@ -14,19 +15,28 @@ export class PongGame {
 	private _leftPaddle : GameObject;
 	private _rightPaddle : GameObject;
 	private _ball : GameObject;
+	private _ballXspeed : number;
 	private _players : {left : IPlayer, right : IPlayer};
 	private _isRunning = false;
 	private _server : Server;
 	private _score : number[];
+	private _maxScore : number;
 
-	constructor(server : Server, players : {left: IPlayer, right: IPlayer}) {
+	constructor(
+			server : Server,
+			players : {left: IPlayer, right: IPlayer}, 
+			gameSettings : IGameSettings = {speed: 6, paddleSize: 80, score: 5},
+		)
+	{
 		this._server = server;
 		this._players = players;
 		this.gameId = `${players.left.userId}vs${players.right.userId}`;
-		this._leftPaddle = new GameObject(10, 80, {x : 20, y: 160}, {x : 0, y : 0});
-		this._rightPaddle = new GameObject(10, 80, {x : 610, y: 160}, {x : 0, y : 0});
+		this._leftPaddle = new GameObject(10, gameSettings.paddleSize, {x : 20, y: 160}, {x : 0, y : 0});
+		this._rightPaddle = new GameObject(10, gameSettings.paddleSize, {x : 610, y: 160}, {x : 0, y : 0});
 		this._ball = new GameObject(10, 10, {x : 315, y: 195}, {x : 2, y : 1});
 		this._score = [0, 0];
+		this._ballXspeed = gameSettings.speed;
+		this._maxScore = gameSettings.score;
 	}
 	
 	join(socket : Socket) : void {

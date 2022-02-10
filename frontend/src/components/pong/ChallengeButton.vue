@@ -1,12 +1,57 @@
 <template>
 <div>
-	<button type="button" class="btn btn btn-danger mx-2" @click="sendGameRequest"
-		data-bs-toggle="modal" data-bs-target="#challengeModal"
+	<button type="button" class="btn btn btn-danger mx-2"
+		data-bs-toggle="modal" data-bs-target="#settingsModal"
 	>
 		challenge
 	</button>
 
-	<!-- Modal -->
+	<!-- game settings Modal -->
+	<div class="modal fade" id="settingsModal" data-bs-backdrop="static">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+
+				<!-- Modal Header -->
+				<div class="modal-header text-black">
+					<h4 class="modal-title">Choose your game settings:</h4>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				</div>
+
+				<!-- Modal body -->
+				<div class="modal-body text-black">
+					<p>ball speed:</p>
+					<select class="form-select" v-model="gameSettings.speed">
+  					<option :value=4>slow</option>
+  					<option :value=6>normal</option>
+  					<option :value=8>fast</option>
+					</select>
+					<p>paddle size:</p>
+					<select class="form-select" v-model="gameSettings.paddleSize">
+  					<option :value=60>small</option>
+  					<option :value=80>normal</option>
+  					<option :value=100>big</option>
+					</select>
+					<p>number of point to win:</p>
+					<select class="form-select" v-model="gameSettings.score">
+  					<option>3</option>
+  					<option>5</option>
+  					<option>8</option>
+					</select>
+				</div>
+
+				<!-- Modal footer -->
+				<div class="modal-footer">
+					<button type="button" class="btn btn-success"
+						data-bs-dismiss="modal"
+						@click="sendGameRequest">
+						Send request
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- waiting response Modal -->
 	<div class="modal fade" id="challengeModal" data-bs-backdrop="static">
 		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content">
@@ -40,6 +85,7 @@ export default defineComponent({
 	data() {
 		return {
 			requestId: "",
+			gameSettings: {speed: 6, paddleSize: 80, score: 5},
 			challengeModal: {} as Modal
 		}
 	},
@@ -49,20 +95,25 @@ export default defineComponent({
 	methods: {
 		sendGameRequest() {
 			console.log("send request");
-			this.$pongSocket.emit("gameRequest", this.guestId, (requestId : string) => {
+			console.log(this.gameSettings);
+			this.$pongSocket.emit("gameRequest",
+				{
+					guestId: this.guestId,
+					gameSettings: this.gameSettings
+				},
+				(requestId : string) => {
 				this.requestId = requestId;
 			});
+
+			this.challengeModal.show();
+
 			this.$pongSocket.on("requestAnswer", (accepted : boolean) => {
-				if (accepted) {
-					console.log("request accepted");
-				} else {
-					console.log("request refused");
-				}
 				this.challengeModal.hide();
 			});
 			this.$pongSocket.on("matchFound", (gameId : string) => {
 				this.$router.push({ path: `/pong/${gameId}`});
 			});
+
 		},
 		cancelRequest() {
 			console.log("request canceled");

@@ -2,7 +2,7 @@
 	<div>
 		<div class="col-md-10 p-4 m-auto mt-4 mb-4 bg-info bg-opacity-75 rounded-3">
 			<h3 class="display-6 fw-bold">Welcome to the pong part of the app!</h3>
-			<challenge-button guestId="10"></challenge-button>
+			<challenge-button :guestId="10"></challenge-button>
 			<p class="m-auto mt-4 col-md-8 fs-4">
 				Pong is one of the first computer games ever created,
 				this simple "tennis like" game features two paddles and a ball,

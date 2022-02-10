@@ -1,21 +1,34 @@
-Private invitation:
+Things left to in the pong 09/02:
 
-|   |main goal: avoir un système d'invitation fonctionnelle.
-|   |
+| |gérer les déconnexion en cas de game request en cours.
 
-|V|trouver où mettre le modal:
-		-->rep:
+| |améliorer le modal (use boostrap) quand on reçoit une gameRequest.
 
-|V|créer le modal.
+| |gérer la personnalisation des games:
+	| |front: 
+		|V|pop up en deux temps.
+			|V|gérer un form dans le premier temps.
+			|V|envoyer les game params dans le socket event.
+			|V|2ème temps attendre la reponse.
 
-|V|afficher le modal quand on reçoit une demande.
+	| |back:
+		| |ajouter GameParams dans le construteur pongGame.
+			-->avec params par défaut si possible.
+		| |gérer les params dans le pongGame.
+		|V|recevoir les gameParams dans l'event gameRequest,
+		| |associer ces params à la requête.
+		| |utiliser ces params pour créer la game.
 
-|V|écouter les boutons accept/refuse.
+| |gérer le mode specateur:
+	| |créer une method pour avoir l'id de la game en fonction de userId.
 
-|V|mettre un modal quand on envoit une demande d'invitation, avec bouton cancel.
 
-|V|implémenter cancel invitation.
-		->côté guest et host.
+| |InGameUsers:
+	| |Créer un tableau auquel on ajoute l'id des users en jeux.
+	| |ajouter l'id d'un user quand une game est crée.
+	| |supprimer l'id d'un user quand la game est finie.
 
-| |implémenter requestAnswer
-	-->handle de event for the host.
+| |Donner plus d'infos, que juste le userId au front. (username surtout)
+| |avoir un bouton de redirection à la fin d'une game.
+
+| |Gérer l'enregistrement des games dans la db.
