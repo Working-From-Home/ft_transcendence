@@ -9,25 +9,17 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
 
 import { io,  Socket }  from "socket.io-client";
-import { ServerToClientEvents, ClientToServerEvents} from 'shared/models/socket-events'
+import http from "@/http";
+import socketApp from "./socketApp";
 
 const app = createApp(App);
 
-app.config.globalProperties.$socketapp = io("http://localhost:3000/app",{
-		autoConnect:false,
-		withCredentials: true,
-	}) as Socket<ServerToClientEvents, ClientToServerEvents>;
-
+app.config.globalProperties.$http = http; // this is axios
+app.config.globalProperties.$socketapp = socketApp;
 app.config.globalProperties.$pongSocket = io("http://localhost:3000/pong",{
 	autoConnect:false,
 	withCredentials: true,
 });
-
-declare module '@vue/runtime-core'{
-	interface ComponentCustomProperties {
-		$socketapp: Socket<ServerToClientEvents, ClientToServerEvents>
-	}
-}
 
 app.use(store);
 app.use(router);

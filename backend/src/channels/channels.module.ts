@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Game } from 'src/game/entities/game.entity';
-import { ChatTmpService } from './chat.tmp.service';
 import { Channel } from './entities/channel.entity';
 import { Message } from './entities/message.entity';
 import { UserChannel } from './entities/user-channel.entity';
+import { ChannelsController } from './controllers/channels.controller';
+import { ChatService } from './services/chat.service';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
     imports: [
@@ -13,16 +15,18 @@ import { UserChannel } from './entities/user-channel.entity';
             UserChannel,
             Channel,
             Game
-        ])
+        ]),
+        UsersModule
     ],
     providers: [
-        ChatTmpService
-    ],
-    controllers: [
+        ChatService,
 
     ],
+    controllers: [
+        ChannelsController
+    ],
     exports: [
-        ChatTmpService
+        ChatService
     ]
 })
 export class ChannelsModule {}

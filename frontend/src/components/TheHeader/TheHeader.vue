@@ -86,7 +86,6 @@ interface State {
 	computed: {
 		isLoggedIn() {
 			if (this.$store.getters.isAuth) {
-				console.log('this.testUsers', this.testUsers);
 				this.$socketapp.auth = {
 						token: `${this.$store.getters.token}`
 				};
@@ -94,7 +93,6 @@ interface State {
 
 				this.$socketapp.on("connectedUsers", (...args: any) => {
 					this.$store.dispatch('initconnectedUsers', {users: args});
-					console.log('connectedUsers', args);
 				});
 				this.$socketapp.on("connect_error", (err: any) => {
 					console.log(`socket connexion error: ${err}`);
