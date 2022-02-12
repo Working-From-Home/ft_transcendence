@@ -34,10 +34,10 @@ export class AppGateway {
 			client.disconnect();
 			return
 		}
-		this.onlineService.addUser(payload.userId);
-		client.data.userId = payload.userId
+		this.onlineService.addUser(payload.sub);
+		client.data.userId = payload.sub
 		this.atConnection(client)
-		this.logger.log(`User id ${payload.userId} is online. (${this.onlineService.getTotalOnlineUsers()} online users)`);
+		this.logger.log(`User id ${payload.sub} is online. (${this.onlineService.getTotalOnlineUsers()} online users)`);
 	}
 	
 	async handleDisconnect(client: AppSocket) {
