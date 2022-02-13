@@ -3,7 +3,7 @@
 	<button type="button" class="btn btn btn-danger mx-2"
 		data-bs-toggle="modal" data-bs-target="#settingsModal"
 	>
-		challenge
+		Challenge
 	</button>
 
 	<!-- game settings Modal -->
@@ -96,7 +96,8 @@ export default defineComponent({
 		sendGameRequest() {
 			console.log("send request");
 			console.log(this.gameSettings);
-			this.$pongSocket.emit("gameRequest",
+			this.$pongSocket.emit(
+				"gameRequest",
 				{
 					guestId: this.guestId,
 					gameSettings: this.gameSettings

@@ -3,7 +3,6 @@ import { clearInterval } from 'timers';
 import { IGameState } from "./types";
 import { GameObject } from "./GameObject";
 import { checkPaddleWall, checkBallCollision } from "./collision";
-import { UsersService } from 'src/users/services/users.service';
 import { IPlayer } from "./IPlayer";
 import { IEndCallback } from "./IEndCallback";
 import { IGameSettings } from "./IGameRequest";
@@ -39,6 +38,13 @@ export class PongGame {
 		this._paddleYSpeed = gameSettings.paddleSpeed;
 		this._ballXSpeed = gameSettings.speed;
 		this._maxScore = gameSettings.score;
+	}
+
+	isPlayer(id : number) : boolean {
+		if (id === this._players.left.userId || id === this._players.right.userId)
+			return true;
+		else
+			return false;
 	}
 	
 	join(socket : Socket) : void {
