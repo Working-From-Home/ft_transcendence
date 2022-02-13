@@ -18,7 +18,7 @@ export class ChannelsController {
 		@Req() request,
 		@Param('destId', ParseIntPipe) destId: number
 	): Promise<Channel> {
-		return await this.chatService.createDm(parseInt(request.user.userId), destId);
+		return await this.chatService.createDm(parseInt(request.user.sub), destId);
 	}
 
 	@Post('/channels')
@@ -26,7 +26,7 @@ export class ChannelsController {
 		@Req() request,
 		@Body() data: CreateChannelDto
 	): Promise<Channel> {
-		return await this.chatService.createChannel(parseInt(request.user.userId), data);
+		return await this.chatService.createChannel(parseInt(request.user.sub), data);
 	}
 
 	@Patch('/channels/:channelId')
@@ -42,7 +42,7 @@ export class ChannelsController {
 		@Req() request,
 		@Param('channelId') channelId: number
 	): Promise<UserChannel> {
-		return await this.chatService.joinChannel(channelId, parseInt(request.user.userId));
+		return await this.chatService.joinChannel(channelId, parseInt(request.user.sub));
 	}
 
 	@Delete('/channels/:channelId')
@@ -50,7 +50,7 @@ export class ChannelsController {
 		@Req() request,
 		@Param('channelId') channelId: number
 	): Promise<UpdateResult> {
-		return await this.chatService.leaveChannel(channelId, parseInt(request.user.userId));
+		return await this.chatService.leaveChannel(channelId, parseInt(request.user.sub));
 	}
 
 	@Put('/channels/:channelId/mute/:userId')
@@ -60,7 +60,7 @@ export class ChannelsController {
 		@Param('userId') userId: number,
 		@Body() date: Date
 	): Promise<UpdateResult> {
-		const adminId = parseInt(request.user.userId);
+		const adminId = parseInt(request.user.sub);
 		if (!date)
 			return await this.chatService.unmuteUser(channelId, adminId, userId);
 		return await this.chatService.muteUser(channelId, adminId, userId, date);
@@ -73,7 +73,7 @@ export class ChannelsController {
 		@Param('userId') userId: number,
 		@Body() date: Date
 	): Promise<UpdateResult> {
-		const adminId = parseInt(request.user.userId);
+		const adminId = parseInt(request.user.sub);
 		if (!date)
 			return await this.chatService.unbanUser(channelId, adminId, userId);
 		return await this.chatService.banUser(channelId, adminId, userId, date);
@@ -85,7 +85,7 @@ export class ChannelsController {
 		@Param('channelId') channelId: number,
 		@Param('userId') userId: number,
 	): Promise<UpdateResult> {
-		return await this.chatService.addAdmin(channelId, parseInt(request.user.userId), userId);
+		return await this.chatService.addAdmin(channelId, parseInt(request.user.sub), userId);
 	}
 
 	@Delete('/channels/:channelId/admin/:userId')
@@ -94,6 +94,6 @@ export class ChannelsController {
 		@Param('channelId') channelId: number,
 		@Param('userId') userId: number,
 	): Promise<UpdateResult> {
-		return await this.chatService.removeAdmin(channelId, parseInt(request.user.userId), userId);
+		return await this.chatService.removeAdmin(channelId, parseInt(request.user.sub), userId);
 	}
 }

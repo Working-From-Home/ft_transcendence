@@ -11,8 +11,20 @@ git clone https://github.com/Working-From-Home/ft_transcendence.git && cd ft_tra
 Create a `.env` file, template example:
 ```
 JWT_SECRET=my_secret
-# must feed a valid 42 api key -> https://api.intra.42.fr/apidoc/guides/getting_started
-API_KEY_42=
+
+# localhost can be replaced by the hostname or ip of the computer to
+# make the website available from others computers.
+# example: http://e2r5p13:3000 or http://10.05.155.14:3000
+BACKEND_SERVER_URI=http://localhost:3000
+
+# Create an app to get some credentials -> https://profile.intra.42.fr/oauth/applications/new
+# must feed valid 42 api credentials-> https://api.intra.42.fr/apidoc/guides/getting_started
+FORTY_TWO_CLIENT_ID=
+FORTY_TWO_SECRET=
+
+# Create google oauth2 credentials here -> https://console.cloud.google.com/apis/credentials
+GOOGLE_CLIENT_ID=
+GOOGLE_SECRET=
 
 # Database settings
 POSTGRES_PORT=5432
@@ -39,6 +51,16 @@ docker-compose exec frontend zsh
 docker-compose exec backend zsh
 ```
 
+#### Setup 42 oAuth
+- Register an app -> https://profile.intra.42.fr/oauth/applications/new
+  - Name the app
+  - Set the redirect uri
+    - If run in local only ->
+- Copy paste `uid` and `secret` in their respective variables inside the `.env` file.
+  - `FT_API_UID`
+  - `FT_API_SECRET`
+
+
 #### Access to ft_pong DB from pgAdmin UI
 - open: http://localhost:8081/
 - Use pgAdmin credentials from .env file (`PGADMIN_DEFAULT_EMAIL` and `PGADMIN_DEFAULT_PASSWORD`)
@@ -61,20 +83,24 @@ mkdir -p .vscode && touch .vscode/launch.json
 copy paste this into `lauch.json` :
 ```json
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Attach to node",
-            "type": "node",
-            "request": "attach",
-            "restart": true,
-            "port": 9229
-        }
-    ]
+	"configurations": [
+		{
+			"name": "Backend",
+			"type": "node",
+			"request": "attach",
+			"restart": true,
+			"port": 9229,
+			"sourceMaps": true,
+			"localRoot": "${workspaceFolder}/backend/dist",
+			"remoteRoot": "/app/dist",
+			"outFiles": ["${workspaceFolder}/backend/dist/**/**.js"],
+			"skipFiles": ["<node_internals>/**/*.js"],
+		},
+	]
 }
 ```
 
-Important -> Variable `DEBUG=*` must be present in docker-compose.yaml (but spam a lot of logs)
+Also, variable `DEBUG=*` can be uncommented in docker-compose.yaml to get more logs
 
 #### Links
 ###### access our beautiful website

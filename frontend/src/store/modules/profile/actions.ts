@@ -9,7 +9,7 @@ export default {
 		const newToken: string = 'Bearer ' + payload.token;
 		fetchData.headers.append('Authorization', newToken);
 
-		let url: string = 'http://localhost:3000/users/' + payload.id;
+		let url: string = process.env.VUE_APP_BACKEND_SERVER_URI + '/users/' + payload.id;
 		fetch(url, fetchData)
 		.then((response) => response.json())
 		.then(data => {
@@ -39,7 +39,7 @@ export default {
 		return context.dispatch('requeteAvatar', {
 			...payload,
 			fetchData: fetchData,
-			url: 'http://localhost:3000/users/' + payload.id + '/avatar'
+			url: process.env.VUE_APP_BACKEND_SERVER_URI + '/users/' + payload.id + '/avatar'
 		});
 	},
 	async uploadProfile(context: any, payload: any) {
@@ -57,7 +57,7 @@ export default {
 		return context.dispatch('requeteAvatar', {
 			...payload,
 			fetchData: fetchData,
-			url: 'http://localhost:3000/users/' + payload.id + '/avatar'
+			url: process.env.VUE_APP_BACKEND_SERVER_URI + '/users/' + payload.id + '/avatar'
 		});
 	},
 	async deleteAvatar(context: any, payload: any) {
@@ -71,7 +71,7 @@ export default {
 		return context.dispatch('requeteAvatar', {
 			...payload,
 			fetchData: fetchData,
-			url: 'http://localhost:3000/users/' + payload.id + '/avatar'
+			url: process.env.VUE_APP_BACKEND_SERVER_URI + '/users/' + payload.id + '/avatar'
 		});
 	},
 	async requeteAvatar(context: any, payload: any){

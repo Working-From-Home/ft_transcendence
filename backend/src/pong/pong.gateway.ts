@@ -33,7 +33,7 @@ export class PongGateway {
 		this.logger.log('new connexion');
 		try {
 			const decodedToken = await this.authService.verifyJwt(socket.handshake.auth.token);
-			const userId = decodedToken.userId;
+			const userId = decodedToken.sub;
 			socket.data.userId = userId;
 			socket.join(userId.toString());
 			this.logger.log(`userId: ${userId} is connected!`);

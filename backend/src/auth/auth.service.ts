@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException, UnauthorizedException} from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException, ForbiddenException} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { randomBytes, scrypt as _scrypt } from "crypto";
 import { promisify } from "util";
@@ -8,8 +8,7 @@ import { User } from '../users/entities/user.entity';
 const scrypt = promisify(_scrypt);
 
 interface JwtPayload {
-  userId: number;
-  username: string;
+  sub: number;
 }
 
 @Injectable()
@@ -28,7 +27,7 @@ export class AuthService {
         }
         const encryptedPasword = await this.encryptPassword(password);
         const user = await this.usersService.create(email, username, encryptedPasword);
-        return { id: user.id, access_token: this.generateAccessToken(user) };
+        return this.generateAccessToken(user);
     }
 
     async signin(username: string, password: string) {
@@ -41,7 +40,7 @@ export class AuthService {
         if (storedHash !== hash.toString('hex')) {
             throw new BadRequestException('bad password');
         }
-        return { id: user.id, access_token: this.generateAccessToken(user) };
+        return this.generateAccessToken(user);
     }
 
     async update(id: number, attrs: Partial<User>) {
@@ -77,25 +76,64 @@ export class AuthService {
         return result;
     }
 
-    private generateAccessToken(user: User): string {
-        const payload: JwtPayload = {userId: user.id, username: user.username };
-        return this.jwtService.sign(payload);
-    }
+  private generateAccessToken(user: User) {
+      const payload: JwtPayload = {sub: user.id };
+      return {
+        id: user.id,
+        access_token: this.jwtService.sign(payload)
+      } 
+  }
 
 		verifyJwt(jwt: string): Promise<JwtPayload> {
 			return this.jwtService.verifyAsync<JwtPayload>(jwt);
 		}
 
-    async getPayloadFromToken(token: string): Promise<JwtPayload> {
-      return this.jwtService
-        .verifyAsync<JwtPayload>(token)
-        .then((payload) => {
-          return payload;
-        })
-        .catch((err) =>      {
-            console.log('lol aha -> ', err)
-            return null
-          }
-        )
+  async getPayloadFromToken(token: string): Promise<JwtPayload> {
+    return this.jwtService
+      .verifyAsync<JwtPayload>(token)
+      .then((payload) => {
+        return payload;
+      })
+      .catch((err) => {
+        console.log('lol aha -> ', err);
+        return null;
+      });
+  }
+
+  refreshToken() {
+    throw new Error('Method not implemented.');
+  }
+
+  logout() {
+    throw new Error('Method not implemented.');
+  }
+
+  async signInWithFortyTwo(req) {
+    throw new Error('Method not implemented.');
+  }
+
+  async signInWithGoogle(req) {
+    if (!req.user) throw new BadRequestException();
+
+    let user: User = (await this.usersService.findBy({ where: [{ googleSub: req.user.sub }] }))[0];
+    if (user) return this.generateAccessToken(user[0]);
+
+    user = (await this.usersService.findBy({ where: [{ email: req.user.email }]}))[0];
+    if (user)
+      throw new ForbiddenException('Your google email is already in use, but your profile is not linked to google.')
+
+    try {
+      let newUser = new User()
+      newUser.username = "noob" + Math.floor(Math.random() * 90000000) + 1
+      newUser.email = req.user.email
+      newUser.googleSub = req.user.sub
+      newUser.googleAccessToken = req.user.accessToken
+
+      newUser = await this.usersService.store(newUser)
+      return this.generateAccessToken(newUser)
+    } catch(err) {
+      throw new Error(err)
     }
+  }
+
 }
