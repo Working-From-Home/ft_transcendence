@@ -23,54 +23,10 @@ export default {
 			mode: 'signUp'
 		});
 	},
-	// async auth(context: any, payload: any) {
-	// 	let url: string = '/auth/signup';
-	// 	if (payload.mode === 'signIn')
-	// 		url = '/auth/signin';
-
-	// 	http.post<AuthResp>(url, payload)
-	// 	.then( resp  => {
-	// 		console.log('axios success:', resp);
-
-	// 		const expiration: number = new Date().getTime() + 3600000;
-	// 		localStorage.setItem('token', resp.data.access_token);
-	// 		localStorage.setItem('userId', resp.data.id.toString());
-	// 		localStorage.setItem('username', payload.username);
-	// 		localStorage.setItem('tokenExpiration', expiration.toString());
-	// 		timer = setTimeout(function() {
-	// 			context.dispatch('logout');
-	// 		}, 3600000);
-
-	// 		context.commit('signIn', {
-	// 			token: resp.data.access_token,
-	// 			userId: resp.data.id
-	// 		})
-			
-	// 		context.dispatch('getProfile', {
-	// 			...payload,
-	// 			id: resp.data.id,
-	// 			token: resp.data.access_token
-	// 		});
-	// 		return resp.data;
-	// 	})
-	// 	.catch( (err: Error | AxiosError) =>
-	// 	{
-	// 		if (axios.isAxiosError(err))  {
-	// 			console.log("type AxiosError:",err.response?.data);
-	// 			return new Promise( reject =>
-	// 				{
-	// 				reject(err.response?.data)
-	// 			})
-	// 			} else {
-	// 			console.log("type Error:",err);
-	// 			throw new Error(err.message)
-	// 		}
-	// 	})
-	// },
 	async auth(context: any, payload: any) {
-		let url: string = 'http://localhost:3000/auth/signup';
+		let url: string = process.env.VUE_APP_BACKEND_SERVER_URI + '/auth/signup';
 		if (payload.mode === 'signIn')
-			url = 'http://localhost:3000/auth/signin';
+			url =  process.env.VUE_APP_BACKEND_SERVER_URI + '/auth/signin';
 
 		const fetchData: FetchData = {
 			method: 'POST',
@@ -150,7 +106,7 @@ export default {
 		})
 	},
 	deleteUser(context: any, payload: any) {
-		let url:string = 'http://localhost:3000/users/' + payload.userId;
+		let url:string = process.env.VUE_APP_BACKEND_SERVER_URI + '/users/' + payload.userId;
 		const fetchData: FetchData = {
 			method: 'DELETE',
 			body: '',

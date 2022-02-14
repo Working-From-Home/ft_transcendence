@@ -11,15 +11,23 @@ import "bootstrap";
 import { io,  Socket }  from "socket.io-client";
 import http from "@/http";
 import socketApp from "./socketApp";
+import { Store } from "vuex";
 
 const app = createApp(App);
 
 app.config.globalProperties.$http = http; // this is axios
 app.config.globalProperties.$socketapp = socketApp;
-app.config.globalProperties.$pongSocket = io("http://localhost:3000/pong",{
+app.config.globalProperties.$store = store;
+app.config.globalProperties.$pongSocket = io( process.env.VUE_APP_BACKEND_SERVER_URI + "/pong",{
 	autoConnect:false,
 	withCredentials: true,
 });
+
+declare module '@vue/runtime-core'{
+	interface ComponentCustomProperties {
+		$store: Store<any>
+	}
+}
 
 app.use(store);
 app.use(router);

@@ -3,7 +3,7 @@ import store from "./store";
 
 // The backend api
 const myApi: AxiosInstance = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: process.env.VUE_APP_BACKEND_SERVER_URI,
 	headers: {
     'Authorization': '',
     'Content-type': 'application/json'
