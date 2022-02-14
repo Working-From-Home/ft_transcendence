@@ -19,8 +19,8 @@ Things left to in the pong 09/02:
 		|V|associer ces params à la requête.
 		|V|utiliser ces params pour créer la game.
 
-| |gérer le mode specateur:
-	| |créer une method pour avoir l'id de la game en fonction de userId.
+|V|gérer le mode specateur:
+	|V|créer une method pour avoir l'id de la game en fonction de userId.
 
 
 | |InGameUsers:

@@ -17,6 +17,7 @@ export class PongGateway {
 	private games : Map<string, PongGame>;
 	private gameQueue : GameQueue;
 	private gameRequests : Map<string, IGameRequest>;
+	private inGameUsers : number[];
 
 	constructor(
 		private authService : AuthService,
@@ -132,6 +133,21 @@ export class PongGateway {
 		}
 		socket.to(gameRequest.hostId.toString()).emit("requestAnswer", body.accepted);
 		this.gameRequests.delete(body.requestId);
+	}
+
+	/*____other events:____________________*/
+
+	@SubscribeMessage("getGameId")
+	async sendGameId(@MessageBody() id : number, @ConnectedSocket() socket : Socket) {
+		this.logger.log(`get game of user id: ${id}`);
+		for (let [key, value] of this.games) {
+			if (value.isPlayer(id)) {
+				this.logger.log(`returned game id: ${key}`)
+				return (key);
+			}
+		}
+		this.logger.log("returned null");
+		return ("");
 	}
 
 	/*____Helper functions:________________*/
