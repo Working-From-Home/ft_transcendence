@@ -1,6 +1,6 @@
 <template>
 <div>
-	<button type="button" class="btn btn btn-danger mx-2"
+	<button type="button" class="btn btn btn-danger m-2"
 		data-bs-toggle="modal" data-bs-target="#settingsModal"
 	>
 		Challenge
