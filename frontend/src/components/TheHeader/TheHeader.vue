@@ -43,7 +43,7 @@
 						<ul id="navbar" class="navbar-nav me-3 d-flex">
 							<li class="nav-item dropdown">
 								<a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
-									{{ userName }}
+									{{ this.$store.getters.myUserName }}
 								</a>
 								<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 									<li><router-link to="/profile" class="dropdown-item">My Profile</router-link></li>
@@ -53,7 +53,7 @@
 								</ul>
 							</li>
 						</ul>
-						<img :src="count" alt="" width="40" class="me-3 d-inline-block align-text-top">
+						<img :src="userAvatar" alt="" width="40" class="me-3 d-inline-block align-text-top">
 					</div>
 				</div>
 			</nav>
@@ -62,27 +62,10 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from "vue";
 import { Options, Vue } from "vue-class-component";
 
-interface State {
-  userid: string,
-  userName: string,
-  avatar: string
-}
-
-@Options({
-	data: (): State => {
-		return {
-			userid: '',
-			userName: '',
-			avatar: '',
-		};
-	},
-	created() {
-		this.userid = this.$store.getters.myUserId;
-		this.userName = this.$store.getters.myUserName;
-		this.avatar = this.$store.getters.myAvatar;
-  	},
+export default defineComponent({
 	computed: {
 		isLoggedIn() {
 			if (this.$store.getters.isAuth) {
@@ -100,9 +83,8 @@ interface State {
 			}
 			return this.$store.getters.isAuth;
 		},
-		count(): string {
-			this.avatar = 'data:image/png;base64,' + this.$store.getters.myAvatar;
-			return this.avatar;
+		userAvatar(): string {
+			return 'data:image/png;base64,' + this.$store.getters.myAvatar;
 		}
 	},
 	methods: {
@@ -112,9 +94,6 @@ interface State {
 		},
 	}
 })
-export default class TheHeader extends Vue {
-
-}
 </script>
 
 <style scoped>
