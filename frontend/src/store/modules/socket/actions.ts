@@ -5,4 +5,8 @@ export default {
 			connectedUsers: payload,
 		})
 	},
+
+	setinGameUsers(context: any, ids : number) {
+		context.commit('setinGameUsers', ids);
+	}
 };

@@ -26,6 +26,7 @@ export class PongGateway {
 		this.gameQueue = new GameQueue;
 		this.games = new Map<string, PongGame>();
 		this.gameRequests = new Map<string, IGameRequest>();
+		this.inGameUsers = [];
 	}
 
 	/*___Connexion/disconnection events:_____*/
@@ -173,9 +174,24 @@ export class PongGateway {
 		let rightPlayer : IPlayer = {userId : rightUser.id, username : rightUser.username, score : 0};
 		let game = new PongGame(this.server, {left: leftPlayer, right: rightPlayer}, gameSettings);
 		this.games.set(game.gameId, game);
+		this.addToInGame(userIds);
 		game._startGame((gameId : string) => {
 			this.games.delete(gameId);
+			this.removeFromInGame(userIds);
 		});
 		return game.gameId;
 	}
+
+	private	addToInGame(userIds : number[]) {
+		this.inGameUsers.push(userIds[0]);
+		this.inGameUsers.push(userIds[1]);
+		this.server.emit("inGameUsers", this.inGameUsers);
+	}
+
+	private removeFromInGame(userIds : number[]) {
+		this.inGameUsers = this.inGameUsers.filter((id) => (id !== userIds[0] && id !== userIds[1]));
+		this.server.emit("inGameUsers", this.inGameUsers);
+	}
 }
+
+
