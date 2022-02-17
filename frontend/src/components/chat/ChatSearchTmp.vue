@@ -1,26 +1,25 @@
 <template>
   <div>
-      <div class="input-group mb-3">
-        <input
-          v-model="searchTerm"
-          @input="searchChannels()"
-          type="search"
-          placeholder="Search channels"
-          class="form-control form-control-lg"
-		  list="my-list-id"
-        />
-		 <datalist id="my-list-id">
-			<option v-for="result in results" :key="result.id">
-        {{ result.title }}
-      </option>
-		</datalist>
-		<button type="button" class="btn btn-outline-primary">Add Channel</button>
-      </div>
-     <input
-      v-model="newChanneltitle"
-      placeholder="title" class="form-control form-control-lg" list="my-list-id"
-        />
-      <button type="button" class="btn btn-outline-primary" @click="createChannel">Create</button>
+      <form @submit.prevent="joinChannel">
+		  <div class="row text-black">
+			<div class="col-9">
+				<input
+					v-model="searchTerm"
+					@input="searchChannels()"
+					type="search"
+					placeholder="Search channels"
+					class="form-control form-control-lg"
+					list="my-list-id"
+				/>
+				<datalist id="my-list-id">
+					<option v-for="result in results" :key="result.id">
+						{{ result.title }}
+					</option>
+				</datalist>
+			</div>
+			<button type="submit" class="col btn btn-outline-primary">Add Channel</button>
+		  </div>
+	   </form>
   </div>
 </template>
 
@@ -34,7 +33,6 @@ export default defineComponent({
   data(){
     return {
       searchTerm: '',
-      newChanneltitle: '',
       results: [] as ISearchChannel[]
     }
   },
@@ -44,20 +42,23 @@ export default defineComponent({
         this.results = resp;
       });
     },
-    createChannel() {
-      if (!this.newChanneltitle)
-      {
-        alert("pls put a ")
-        return
-      }
-      ChatService.createChannel({title: this.newChanneltitle}).then( resp =>
-      // ChatService.createChannel({title: "fege"}).then( resp =>
-      {
-        console.log(resp)
-      }).catch( err =>
-      {
-        console.log(err)
-      })
+    joinChannel() {
+		if (!this.searchTerm) {
+			alert("pls put a nama")
+			return
+		}
+		let results = JSON.parse(JSON.stringify(this.results)) 
+		for (const obj of results) {
+			if (obj["title"] === this.searchTerm) {
+				ChatService.joinChannel(obj["id"]).then( resp => {
+					console.log(resp)
+				}).catch( err => {
+					console.log(err)
+				})
+				return ;
+			}
+		}
+		alert("This channel doesn't exist")
     }
   },
   computed:{

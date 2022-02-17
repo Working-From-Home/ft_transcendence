@@ -214,20 +214,50 @@ export class ChatService {
       .select(["channel.id", "channel.title"])
       .getMany();
   }
-  async getChannelsOfUser(userId: string): Promise<IChannel[]> {
-    return getRepository(Channel)
-      .createQueryBuilder("channel")
-      .leftJoin("channel.userChannels", "uc")
-      .where("uc.userId = 1")
-      .andWhere("uc.hasLeft = FALSE")
-      .select([
-        'id',
-        '"isDm"',
-        'title AS "roomName"',
-        'channel.createdAt AS "createdAt"',
-      ])
-      .getRawMany();
+
+  async getUsersOfChannel(channelId: number) {
+	const y = await getManager().connection.query(
+		`SELECT uc."userId" AS "_id",
+				uc."channelId" AS "channelId",
+				(uc."userId" = c."ownerId") AS "isOwner",
+				(uc."role" = 'admin') AS "isAdmin",
+				uc."mutedUntil" AS "mutedUntil",
+				u.username AS "username"
+		FROM "user_channel" uc
+			INNER JOIN "channel" c ON uc."channelId" = c."id"
+			INNER JOIN "user" u ON uc."userId" = u."id"
+		WHERE "channelId" IN (${channelId}) AND "hasLeft"=FALSE`
+	  );
+	return y;
   }
+  async getMessagesOfChannel(channelId: number) {
+	const y = await getManager().connection.query(
+		`SELECT m."id" AS "_id",
+				m."content" AS "content",
+				u."id" AS "senderId",
+				u."username" AS "username",
+				u."avatar" AS "avatar"
+		FROM "message" m
+			INNER JOIN "channel" c ON uc."channelId" = c."id"
+			INNER JOIN "user" u ON uc."userId" = u."id"
+		WHERE "channelId" IN (${channelId}) AND "hasLeft"=FALSE`
+	  );
+	return y;
+  }
+  async getChannelsOfUser(userId: number): Promise<IChannel[]> {
+	const a = await getManager().connection.query(
+		`SELECT c.id AS "roomId",
+				c."isDm",
+				c.title AS "roomName",
+				c."createdAt"
+		FROM Channel c
+		LEFT JOIN user_channel u
+			ON u."channelId" = c.id
+		WHERE u."userId"=(${userId}) AND u."hasLeft"=FALSE`
+	  );
+	return a;
+  }
+
 
   // async getUsersInChannel(channelId: number): Promise<UsersInChannel[]> {
   //   return getRepository(UsersInChannel)
