@@ -11,7 +11,7 @@ import { OnlineService } from './online.service';
 
 type AppSocket = Socket<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>
 
-@WebSocketGateway( { namespace:"/app", cors: { origin: "http://localhost:8080", credentials: true} })
+@WebSocketGateway( { namespace:"/app", cors: { origin: true, credentials: true} })
 export class AppGateway {
 
 	private logger: Logger = new Logger('AppGAteway');

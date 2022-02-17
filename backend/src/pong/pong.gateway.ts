@@ -9,7 +9,7 @@ import { UsersService } from '../users/services/users.service';
 import { User } from '../users/entities/user.entity';
 import { IGameSettings, IGameRequest } from './classAndTypes/IGameRequest';
 
-@WebSocketGateway( { namespace: "/pong", cors: { origin: "http://localhost:8080"} })
+@WebSocketGateway( { namespace: "/pong", cors: { origin: true, credentials: true} })
 export class PongGateway {
 
 	private logger: Logger = new Logger('PongGateway');

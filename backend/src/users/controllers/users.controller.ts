@@ -20,12 +20,18 @@ import { User } from '../entities/user.entity';
 import { UsersService } from '../services/users.service';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { CurrentUserGuard } from 'src/auth/guards/current-user.guard';
+import { ConfigService } from '@nestjs/config';
 
 @ApiTags('users')
 @Controller('users')
 @UseGuards(JwtAuthGuard)
 export class UsersController {
-    constructor(private usersService: UsersService) {}
+    private base_url = this.config.get<string>('BACKEND_SERVER_URI');
+    
+    constructor(
+        private usersService: UsersService,
+        private config: ConfigService,
+    ){}
 
     @Get()
     @Serialize(UsersPaginationDto)
@@ -34,7 +40,7 @@ export class UsersController {
         @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
     ): Promise<Pagination<User>> {
         limit = limit > 100 ? 100 : limit;
-        return this.usersService.paginate({ page, limit, route: 'http://localhost:3000/users' });
+        return this.usersService.paginate({ page, limit, route: this.base_url + '/users' });
     }
 
     @Get('/:id')
