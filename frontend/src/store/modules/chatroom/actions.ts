@@ -70,21 +70,8 @@ export default {
 		});
 	},
 	fetchRooms(context: any, payload: any){
-		let rooms = payload.rooms;
-
-		let UserRooms = [];
-		var h = 0;
-		for (var i = 0; i < rooms.length ; i++){
-			for (var j = 0; j < rooms[i].users.length; j++) {
-				if (rooms[i].users[j]._id === payload.id){
-					UserRooms[h++] = rooms[i];
-					break;
-				}
-			}
-		}
-		console.log('UserRooms', UserRooms);
 		context.commit('fetchRooms', {
-			rooms: UserRooms,
+			rooms: payload.rooms,
 		})
 	},
 	addMessage(context: any, payload: any) {

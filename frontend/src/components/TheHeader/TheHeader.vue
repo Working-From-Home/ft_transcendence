@@ -1,5 +1,6 @@
 <template>
   <div class="page-header" >
+	  	<div v-if="!connect"></div>
 		<div v-if="!isLoggedIn">
 			<nav class="navbar navbar-expand-lg navbar-light bg-light">
 				<div class="container-fluid ">
@@ -64,10 +65,15 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { Options, Vue } from "vue-class-component";
+import ChatService from "../../services/ChatService";
+import { IChannel, IUserChannel } from "shared/models/socket-events";
 
 export default defineComponent({
 	computed: {
 		isLoggedIn() {
+			return this.$store.getters.isAuth;
+		},
+		connect() {
 			if (this.$store.getters.isAuth) {
 				this.$socketapp.auth = {
 						token: `${this.$store.getters.token}`
@@ -79,6 +85,14 @@ export default defineComponent({
 				});
 				this.$socketapp.on("connect_error", (err: any) => {
 					console.log(`socket connexion error: ${err}`);
+				});
+				this.$socketapp.on("sendChannels", async (resp: IChannel[]) => {
+					for (const obj of resp){
+						obj["users"] = await ChatService.sendUserOfChannels(obj["roomId"]);
+						//obj["messages"] = await ChatService.sendMessagesOfChannels(obj["roomId"]);
+					}
+					console.log(`front`, resp);
+					this.$store.dispatch('fetchRooms', {rooms: resp});
 				});
 			}
 			return this.$store.getters.isAuth;

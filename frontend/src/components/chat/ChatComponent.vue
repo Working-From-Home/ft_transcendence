@@ -19,6 +19,9 @@
 			@room-action-handler="menuActionHandler"
 			@menu-action-handler="menuActionHandler"
 		>
+		<template #rooms-list-search="">
+			<chat-new-room-modal/>
+		</template>
 		</chat-window>
 	</div>
 </template>
@@ -28,6 +31,9 @@ import { Options, Vue } from "vue-class-component";
 import ChatWindow from 'vue-advanced-chat';
 import 'vue-advanced-chat/dist/vue-advanced-chat.css';
 import { IChannel, Message } from 'shared/models/socket-events';
+import ChatSearchTmp from "./ChatSearchTmp.vue";
+import ChatNewRoomModal from "./ChatNewRoomModal.vue";
+import ChatService from "../../services/ChatService";
 
 interface State {
   currentUserId: string,
@@ -60,16 +66,16 @@ interface CustomOptions {
 		size: String,
 	},
 	components: {
-		ChatWindow
+		ChatWindow,
+		ChatSearchTmp,
+		ChatNewRoomModal
 	},
 	created() {
 		this.currentUserId = this.$store.getters.myUserId,
 		this.userName = this.$store.getters.myUserName,
 		this.email = this.$store.getters.myEmail,
 		this.avatar = this.$store.getters.myAvatar,
-		this.$store.dispatch('tmpRooms', {id: this.$store.getters.myUserId});
-		this.fetchRooms();
-		//this.rooms = this.$store.getters.getRooms;
+		this.fetchRooms(),
 		this.messages = this.rooms.messages;
 	},
 	data: (): State => {
@@ -93,6 +99,16 @@ interface CustomOptions {
 				{ name: 'banUser', title: 'Ban User' },
 			],
 		}
+	},
+	computed: {
+		watchRooms() {
+			return this.$store.getters.getRooms
+		}
+	},
+	watch:{
+		watchRooms(value) {
+			this.fetchRooms();
+		},
 	},
 	methods: {
 		fetchMessages({ room = {} as IChannel, options = {} as CustomOptions}) {
@@ -126,26 +142,11 @@ interface CustomOptions {
 			this.$store.dispatch('addMessage', {roomId: message.roomId, newMessage: newMessage});
 		},
 		async fetchRooms(){
-			await this.$socketapp.emit('searchChannelsByUser', this.$store.getters.userID, (resp: IChannel[]) => {
-				this.rooms = [];
-				// for (var i = 0; i < 3; i++){
-				// 	this.rooms = [
-				// 		...this.rooms,
-				// 		{
-				// 			roomId: this.rooms.length + 1 as number,
-				// 			roomName: 'Room ' + (this.rooms.length + 1),
-				// 			messages: [],
-				// 			users: [
-				// 				{ _id: this.currentUserId, username: this.userName },
-				// 				{ _id: 4321, username: 'John Snow' }
-				// 			]
-				// 		}
-				// 	]
-				// }
-				this.rooms = resp;
-			});
+			this.rooms = JSON.parse(JSON.stringify(this.$store.getters.getRooms));
+			//console.log("rooms", this.rooms);
 		},
 		addRoom(){
+			
 			this.rooms = [
 				...this.rooms,
 				{
@@ -170,24 +171,11 @@ interface CustomOptions {
 			}
 		},
 		leaveChannel(roomId: number ){
-			let rooms: IChannel[];
-			rooms = [];
-			//this.rooms = this.$store.dispatch('leaveChannel', {roomId: roomId, UserId: this.currentUserId});
-			this.loadingRooms = true
-			for (var i = 0; i < this.rooms.length; i++){
-				if (this.rooms[i].roomId !== roomId){
-					rooms = [
-						...rooms,
-						this.rooms[i]
-					];
-				}
-			}
-			this.$store.dispatch('fetchRooms', {id: this.$store.getters.myUserId, rooms: rooms});
-			this.rooms = this.$store.getters.getRooms
-			this.loadingRooms = false
+			console.log("id", roomId)
+			ChatService.leaveChannel(roomId);
 		},
 		destroyChannel() {
-			this.rooms = [];
+			//
 		}
 	}
 })
