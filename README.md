@@ -17,6 +17,9 @@ JWT_SECRET=my_secret
 # example: http://e2r5p13:3000 or http://10.05.155.14:3000
 BACKEND_SERVER_URI=http://localhost:3000
 
+# Either development or production
+NODE_ENV=development
+
 # Create an app to get some credentials -> https://profile.intra.42.fr/oauth/applications/new
 # must feed valid 42 api credentials-> https://api.intra.42.fr/apidoc/guides/getting_started
 FORTY_TWO_CLIENT_ID=

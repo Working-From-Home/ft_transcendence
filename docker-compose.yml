@@ -10,7 +10,7 @@ services:
       - ./frontend/:/app
       - ./shared/:/shared
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=${NODE_ENV-development}
       - VUE_APP_BACKEND_SERVER_URI=${BACKEND_SERVER_URI}
     ports:
       - 8080:8080
@@ -38,7 +38,7 @@ services:
       # - TYPEORM_LOGGING=true
       # - TYPEORM_SYNCHRONIZE=true
       # - DEBUG=*
-      - NODE_ENV=development
+      - NODE_ENV=${NODE_ENV-development}
     volumes:
       - ./backend/:/app
       - ./shared/:/shared

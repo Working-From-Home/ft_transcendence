@@ -11,7 +11,7 @@ import { IGameSettings, IGameRequest } from './classAndTypes/IGameRequest';
 import { IGameStats } from './classAndTypes/IGameStats';
 import { GameService } from 'src/game/services/game.service';
 
-@WebSocketGateway( { namespace: "/pong", cors: { origin: "http://localhost:8080"} })
+@WebSocketGateway( { namespace: "/pong", cors: { origin: true, credentials: true} })
 export class PongGateway {
 
 	private logger: Logger = new Logger('PongGateway');

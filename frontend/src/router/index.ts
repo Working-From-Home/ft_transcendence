@@ -9,11 +9,17 @@ const routes: Array<RouteRecordRaw> = [
     path: "/",
     name: "Home",
     component: Home,
+    meta: {
+      title: 'Home'
+    }
   },
   {
     path: "/pong",
     name: "Pong",
-		meta: { requiresAuth: true },
+		meta: {
+      title: 'Pong',
+      requiresAuth: true
+    },
     component: () =>
       import("../views/Pong.vue"),
 			children: [
@@ -30,35 +36,50 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/chat",
     name: "Chat",
-	meta: { requiresAuth: true },
+	  meta: {
+      title: 'Chat',
+      requiresAuth: true
+    },
     component: () =>
       import("../views/Chat.vue"),
   },
   {
     path: "/profile",
     name: "profile",
-	meta: { requiresAuth: true },
+  	meta: {
+      title: 'Profile',
+      requiresAuth: true
+    },
     component: () =>
       import("../views/profiles/Profile.vue"),
   },
   {
     path: "/auth/signup",
     name: "Register",
-	meta: { requiresUnAuth: true },
+	  meta: {
+      title: 'Sign up',
+      requiresUnAuth: true
+    },
     component: () =>
       import("../views/auth/signUp.vue"),
   },
   {
     path: "/auth/signin",
     name: "Log",
-	meta: { requiresUnAuth: true },
+	  meta: {
+      title: 'Sign in',
+      requiresUnAuth: true
+    },
     component: () =>
       import("../views/auth/signIn.vue"),
   },
   {
     path: "/admin",
     name: "admin",
-	meta: { requiresAuth: true },
+	  meta: {
+      title: 'Administration',
+      requiresAuth: true
+    },
     component: () =>
       import("../views/AdminPannel.vue"),
   },
@@ -75,6 +96,7 @@ const router = createRouter({
 });
 
 router.beforeEach(function(to, _, next) {
+  document.title = `Ft_transcendence - ${to.meta.title}`;
 	if (to.meta.requiresAuth && !store.getters.isAuth)
 		next('/');
 	else if (to.meta.requiresUnAuth && store.getters.isAuth)
