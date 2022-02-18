@@ -6,6 +6,7 @@ import { checkPaddleWall, checkBallCollision } from "./collision";
 import { IPlayer } from "./IPlayer";
 import { IEndCallback } from "./IEndCallback";
 import { IGameSettings } from "./IGameRequest";
+import { IGameStats } from "./IGameStats";
 
 //width: 640, height: 400.
 
@@ -155,14 +156,23 @@ export class PongGame {
 	}
 
 	private _finishGame(callback: IEndCallback) {
-		let winner : string;
+		let stats	: IGameStats = {};
 
-		if (this._score[0] >= this._maxScore)
-			winner = this._players.left.username;
-		else
-			winner = this._players.right.username;
-		console.log("gameFinished!");
-		this._server.to(`${this.gameId}`).emit("gameFinish", winner);
-		callback(this.gameId);
+		if (this._score[0] >= this._maxScore) {
+			stats.winnerId = this._players.left.userId;
+			stats.looserId = this._players.right.userId;
+			stats.winnerScore = this._score[0];
+			stats.looserScore = this._score[1];
+			this._server.to(`${this.gameId}`).emit("gameFinish", this._players.left.username);
+		}
+		else {
+			stats.winnerId = this._players.right.userId;
+			stats.looserId = this._players.left.userId;
+			stats.winnerScore = this._score[1];
+			stats.looserScore = this._score[0];
+			this._server.to(`${this.gameId}`).emit("gameFinish", this._players.right.username);
+		}
+
+		callback(this.gameId, stats);
 	}
 }

@@ -16,9 +16,9 @@
 </template>
 
 <script lang="ts">
-import { Options, Vue } from "vue-class-component";
+import { defineComponent } from 'vue'
 
-@Options({
+export default defineComponent({
 	data() {
 		return {
 			requestId: "",
@@ -36,6 +36,9 @@ import { Options, Vue } from "vue-class-component";
 		this.$pongSocket.on("requestCanceled", () => {
 			this.gameRequest = false;
 		})
+		this.$pongSocket.on("inGameUsers", (ids : number[]) => {
+			this.$store.dispatch("setinGameUsers", ids);
+		})
 	},
 	unmounted() {
 		this.$pongSocket.disconnect();
@@ -50,7 +53,7 @@ import { Options, Vue } from "vue-class-component";
 		}
 	}
 })
-export default class PongSocket extends Vue {}
+
 </script>
 
 <style scoped>

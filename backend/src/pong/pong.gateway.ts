@@ -8,6 +8,8 @@ import { AuthService } from '../auth/auth.service';
 import { UsersService } from '../users/services/users.service';
 import { User } from '../users/entities/user.entity';
 import { IGameSettings, IGameRequest } from './classAndTypes/IGameRequest';
+import { IGameStats } from './classAndTypes/IGameStats';
+import { GameService } from 'src/game/services/game.service';
 
 @WebSocketGateway( { namespace: "/pong", cors: { origin: "http://localhost:8080"} })
 export class PongGateway {
@@ -21,11 +23,13 @@ export class PongGateway {
 
 	constructor(
 		private authService : AuthService,
-		private usersService : UsersService
+		private usersService : UsersService,
+		private gameService : GameService
 	) {
 		this.gameQueue = new GameQueue;
 		this.games = new Map<string, PongGame>();
 		this.gameRequests = new Map<string, IGameRequest>();
+		this.inGameUsers = [];
 	}
 
 	/*___Connexion/disconnection events:_____*/
@@ -173,9 +177,25 @@ export class PongGateway {
 		let rightPlayer : IPlayer = {userId : rightUser.id, username : rightUser.username, score : 0};
 		let game = new PongGame(this.server, {left: leftPlayer, right: rightPlayer}, gameSettings);
 		this.games.set(game.gameId, game);
-		game._startGame((gameId : string) => {
+		this.addToInGame(userIds);
+		game._startGame((gameId : string, stats : IGameStats) => {
+			this.gameService.create(stats);
 			this.games.delete(gameId);
+			this.removeFromInGame(userIds);
 		});
 		return game.gameId;
 	}
+
+	private	addToInGame(userIds : number[]) {
+		this.inGameUsers.push(userIds[0]);
+		this.inGameUsers.push(userIds[1]);
+		this.server.emit("inGameUsers", this.inGameUsers);
+	}
+
+	private removeFromInGame(userIds : number[]) {
+		this.inGameUsers = this.inGameUsers.filter((id) => (id !== userIds[0] && id !== userIds[1]));
+		this.server.emit("inGameUsers", this.inGameUsers);
+	}
 }
+
+

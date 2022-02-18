@@ -6,6 +6,7 @@ export default ({
 	state() {
 		return {
 			connectedUsers: [],
+			inGameUsers: [] as number[]
 		};
 	},
 	mutations,

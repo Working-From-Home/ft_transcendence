@@ -1,4 +1,15 @@
-Things left to in the pong 09/02:
+Things left to in the pong:
+
+| |Gérer l'enregistrement des games dans la db.
+	| |définir quoi enregistrer et sous quel forme.
+	| |comprendre comment enregistrer quelque chose dans la db.
+		-->| |lire code de l'app.
+		-->| |jeter un oeil à la doc nestjs.
+		-->| |écrire sur papier un peu de code exemple.
+		-->| |déterminer la logique (appeler service puis repo..)
+	| |coder les fonctions pour enregistrer.
+	| |coder celle pour récupérer les infos.
+	| |Créer une route get('match/:id)
 
 | |gérer les déconnexion lors de game request en cours.
 | |sécuriser l'input des private game request. (settings)
@@ -22,13 +33,13 @@ Things left to in the pong 09/02:
 |V|gérer le mode specateur:
 	|V|créer une method pour avoir l'id de la game en fonction de userId.
 
+| |ajouter un event "leavegame", qui fait quitter la room.
 
-| |InGameUsers:
-	| |Créer un tableau auquel on ajoute l'id des users en jeux.
-	| |ajouter l'id d'un user quand une game est crée.
-	| |supprimer l'id d'un user quand la game est finie.
+
+|V|InGameUsers:
+	|V|Créer un tableau auquel on ajoute l'id des users en jeux.
+	|V|ajouter l'id d'un user quand une game est crée.
+	|V|supprimer l'id d'un user quand la game est finie.
 
 | |Donner plus d'infos, que juste le userId au front. (username surtout)
 | |avoir un bouton de redirection à la fin d'une game.
-
-| |Gérer l'enregistrement des games dans la db.
