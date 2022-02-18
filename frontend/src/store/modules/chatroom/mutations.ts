@@ -1,5 +1,6 @@
+import { IChannel, Message } from 'shared/models/socket-events';
 export default {
-	fetchRooms(state: any, payload: any){
+	fetchRooms(state: any, payload: {rooms: IChannel}){
 		state.rooms = payload.rooms;
 	},
 	addMessage(state: any, payload: any){
