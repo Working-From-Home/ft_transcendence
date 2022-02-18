@@ -1,3 +1,5 @@
+import { IGameStats } from "./IGameStats";
+
 export interface IEndCallback {
-	(gameId : string) : void
+	(gameId : string, stats : IGameStats) : void
 }

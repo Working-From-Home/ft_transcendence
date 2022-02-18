@@ -1,7 +1,7 @@
 <template>
 	<div>
-		<button class="btn btn-outline-light btn-primary" v-if="!isSearching" @click="joinMatchmaking">Search Game</button>
-		<button class="btn btn-outline-light btn-info" v-if="isSearching" @click="leaveMatchmaking">Stop searching</button>
+		<button class="btn btn-outline-light" v-if="!isSearching" @click="joinMatchmaking">Search Game</button>
+		<button class="btn btn-outline-light" v-if="isSearching" @click="leaveMatchmaking">Stop searching</button>
 		<div v-if="isSearching">
 			<p>
 				Waiting for an opponent...
@@ -47,4 +47,5 @@ export default defineComponent({
 </script>
  
  <style scoped>
+
 </style>

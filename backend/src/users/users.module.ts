@@ -38,6 +38,7 @@ import { Game } from 'src/game/entities/game.entity';
     ],
     exports: [
         UsersService,
+				StatsService,
         TypeOrmModule
     ]
 })
