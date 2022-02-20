@@ -26,7 +26,7 @@ export default defineComponent({
 		}
 	},
 	mounted() {
-		this.$pongSocket.auth = { token: `${this.$store.getters.token}`};
+		this.$pongSocket.auth = { token: `${this.$store.getters.tokenRaw}`};
 		this.$pongSocket.connect();
 		this.$pongSocket.on("gameRequest", (requestId : string) => {
 			console.log("got a game request!");

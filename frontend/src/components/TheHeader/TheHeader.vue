@@ -44,7 +44,7 @@
 						<ul id="navbar" class="navbar-nav me-3 d-flex">
 							<li class="nav-item dropdown">
 								<a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
-									{{ this.$store.getters.myUserName }}
+									{{ $store.getters.myEmail + "(idk why become null, need to fix it)" }}
 								</a>
 								<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 									<li><router-link to="/profile" class="dropdown-item">My Profile</router-link></li>
@@ -76,7 +76,7 @@ export default defineComponent({
 		connect() {
 			if (this.$store.getters.isAuth) {
 				this.$socketapp.auth = {
-						token: `${this.$store.getters.token}`
+						token: `${this.$store.getters.tokenRaw}`
 				};
 				this.$socketapp.connect();
 
