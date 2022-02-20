@@ -11,14 +11,14 @@
 </template>
 
 <script lang="ts">
-import { Options, Vue } from "vue-class-component";
+import { defineComponent } from "vue";
 import SignInComponent from "../../components/auth/SignIn.vue";
 
 interface State {
-  error: string;
+  error: string | null;
 }
 
-@Options({
+export default defineComponent({
 	components: {
 		SignInComponent,
 	},
@@ -32,7 +32,7 @@ interface State {
 	  try {
         await this.$store.dispatch('signIn', data);
         this.$router.replace('/');
-	  } catch (err) {
+	  } catch (err: any) {
 		this.error = err.message || 'Failed to authenticate, try later.';
 	  }
     },
@@ -44,9 +44,6 @@ interface State {
 	}
   },
 })
-export default class signIn extends Vue {
-	
-}
 </script>
 
 

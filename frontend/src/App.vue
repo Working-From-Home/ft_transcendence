@@ -37,7 +37,7 @@ import { io }  from "socket.io-client";
 		}
 	},
 	created() {
-		this.$store.dispatch('checkLog');
+		this.$store.dispatch('initStore');
 	},
 })
 export default class HelloWorld extends Vue {}

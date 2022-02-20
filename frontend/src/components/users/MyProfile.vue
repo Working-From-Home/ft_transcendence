@@ -77,7 +77,7 @@ interface State {
 				token: this.$store.getters.token,
 			});
 			this.avatar = this.$store.getters.myAvatar;
-		} catch (err) {
+		} catch (err: any) {
 			this.error = err.message || 'Failed to authenticate, try later.';
 		}
 	  },
