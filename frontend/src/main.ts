@@ -26,7 +26,7 @@ app.config.globalProperties.$pongSocket = io( process.env.VUE_APP_BACKEND_SERVER
 
 app
 // .provide("$store", store)
-.use(store, key) // useful ?
+  .use(store, key) // useful ?
   .use(createPinia()) 
   .use(router)
   .component('card', Card)

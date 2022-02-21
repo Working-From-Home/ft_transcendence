@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import Home from "../views/Home.vue";
-import store from "../store";
 import PongGame from '../components/pong/PongGame.vue'
 import PongHome from '../components/pong/PongHome.vue'
+import { useAuthStore } from "@/store/modules/auth/auth";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -96,10 +96,11 @@ const router = createRouter({
 });
 
 router.beforeEach(function(to, _, next) {
+  const authStore = useAuthStore();
   document.title = `Ft_transcendence - ${to.meta.title}`;
-	if (to.meta.requiresAuth && !store.getters.isAuth)
+  if (to.meta.requiresAuth && !authStore.isLoggedIn)
 		next('/');
-	else if (to.meta.requiresUnAuth && store.getters.isAuth)
+	else if (to.meta.requiresUnAuth && authStore.isLoggedIn)
 		next('/');
 	else
 		next();

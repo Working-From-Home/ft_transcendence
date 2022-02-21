@@ -1,7 +1,7 @@
 <template>
   <div class="page-header" >
 	  	<div v-if="!connect"></div>
-		<div v-if="!isLoggedIn">
+		<div v-if="!authStore.isLoggedIn">
 			<nav class="navbar navbar-expand-lg navbar-light bg-light">
 				<div class="container-fluid ">
 					<router-link to="/" class="navbar-brand me-auto mb-2 mb-lg-0">FT_Transcendence</router-link>
@@ -21,7 +21,7 @@
 				</div>
 			</nav>
 		</div>
-		<div v-if="isLoggedIn">
+		<div v-if="authStore.isLoggedIn">
 			<nav class="navbar navbar-expand-lg navbar-light bg-light">
 				<div class="container-fluid">
 					<router-link to="/" class="navbar-brand">FT_Transcendence</router-link>
@@ -50,7 +50,7 @@
 									<li><router-link to="/profile" class="dropdown-item">My Profile</router-link></li>
 									<li><router-link to="/admin" class="dropdown-item">Admin Pannel</router-link></li>
 									<li><hr class="dropdown-divider"></li>
-									<li><router-link class="logout dropdown-item" to="/" @click="logout" v-if="isLoggedIn">Logout </router-link></li>
+									<li v-if="authStore.isLoggedIn"><router-link class="logout dropdown-item" to="/" @click="logout">Logout </router-link></li>
 								</ul>
 							</li>
 						</ul>
@@ -64,19 +64,21 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { Options, Vue } from "vue-class-component";
 import ChatService from "../../services/ChatService";
 import { IChannel, IUserChannel } from "shared/models/socket-events";
+import { useAuthStore } from "@/store/modules/auth/auth";
 
 export default defineComponent({
+	setup() {
+		const authStore = useAuthStore();
+
+		return { authStore };
+	},
 	computed: {
-		isLoggedIn() {
-			return this.$store.getters.isAuth;
-		},
-		connect() {
-			if (this.$store.getters.isAuth) {
+		connect(): boolean {
+			if (this.authStore.isLoggedIn) {
 				this.$socketapp.auth = {
-						token: `${this.$store.getters.tokenRaw}`
+						token: `${this.authStore.token}`
 				};
 				this.$socketapp.connect();
 
@@ -95,7 +97,7 @@ export default defineComponent({
 					this.$store.dispatch('fetchRooms', {rooms: resp});
 				});
 			}
-			return this.$store.getters.isAuth;
+			return this.authStore.isLoggedIn;
 		},
 		userAvatar(): string {
 			return 'data:image/png;base64,' + this.$store.getters.myAvatar;
@@ -103,7 +105,7 @@ export default defineComponent({
 	},
 	methods: {
 		logout() {
-			this.$store.dispatch('logout');
+			this.authStore.logout();
 			this.$socketapp.disconnect(); //  to remove an put at the right place too
 		},
 	}

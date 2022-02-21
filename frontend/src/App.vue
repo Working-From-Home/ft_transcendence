@@ -1,46 +1,35 @@
 <template class="container-fluid">
 	<section>
 		<the-header></the-header>
-		<friend-list v-if="isLoggedIn"></friend-list>
+		<friend-list v-if="authStore.isLoggedIn"></friend-list>
 		<div class="row align-items-center">
 			<router-view/>
 		</div>
-		<mini-chat v-if="isLoggedIn && isChatView"></mini-chat>
-		<pong-socket v-if="isLoggedIn"/>
+		<mini-chat v-if="authStore.isLoggedIn && !isChatView"></mini-chat>
+		<pong-socket v-if="authStore.isLoggedIn"/>
 	</section>
 </template>
 
-<script lang="ts">
-import { Options, Vue } from "vue-class-component";
+<script setup lang="ts">
 import MiniChat from "./components/chat/MiniChat.vue";
 import TheHeader from "./components/TheHeader/TheHeader.vue";
 import FriendList from "./components/OffcanvasFriendsList.vue";
 import PongSocket from "./components/pong/PongSocket.vue"
-// import { initSocket, socket } from "./socket";
-import { io }  from "socket.io-client";
+import { useAuthStore } from "@/store/modules/auth/auth";
+import { useRoute } from "vue-router";
+import { computed } from "vue";
 
-@Options({
-	components: {
-		MiniChat,
-		TheHeader,
-		FriendList,
-		PongSocket
-	},
-	computed: {
-		isLoggedIn() {	
-			return this.$store.getters.isAuth;
-		},
-		isChatView() {
-			if (this.$route.path === "/chat")
-				return false;
-			return true;
-		}
-	},
-	created() {
-		this.$store.dispatch('initStore');
-	},
+const authStore = useAuthStore();
+const route = useRoute();
+
+authStore.initStore();
+
+const isChatView = computed( () => {
+	if (route.path === "/chat")
+		return true;
+	return false;
 })
-export default class HelloWorld extends Vue {}
+
 </script>
 
 <style>

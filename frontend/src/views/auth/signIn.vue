@@ -11,6 +11,7 @@
 </template>
 
 <script lang="ts">
+import { useAuthStore } from "@/store/modules/auth/auth";
 import { defineComponent } from "vue";
 import SignInComponent from "../../components/auth/SignIn.vue";
 
@@ -27,10 +28,14 @@ export default defineComponent({
 			error: ''
 		};
 	},
+	setup() {
+		const authStore = useAuthStore();
+		return { authStore };
+	},
   methods: {
     async saveData(data: any) {
 	  try {
-        await this.$store.dispatch('signIn', data);
+        await this.authStore.signIn(data);
         this.$router.replace('/');
 	  } catch (err: any) {
 		this.error = err.message || 'Failed to authenticate, try later.';

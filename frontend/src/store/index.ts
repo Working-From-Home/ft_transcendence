@@ -5,7 +5,6 @@ import pongModule from './modules/pong';
 import chatroomModule from './modules/chatroom';
 import profileModule from './modules/profile';
 import socketModule from './modules/socket';
-import { authModule } from './modules/auth/auth';
 
 const debug = process.env.NODE_ENV !== 'production';
 const plugins = debug ? [createLogger()] : [];
@@ -14,7 +13,6 @@ export default createStore({
   modules: {
     pong: pongModule,
     chatroom: chatroomModule,
-    auth: authModule,
     profile: profileModule,
     socket: socketModule,
   },

@@ -11,6 +11,7 @@
 </template>
 
 <script lang="ts">
+import { useAuthStore } from "@/store/modules/auth/auth";
 import { defineComponent } from "vue";
 import SignUpComponent from "../../components/auth/SignUp.vue";
 
@@ -22,6 +23,11 @@ export default defineComponent({
   components: {
     SignUpComponent,
   },
+	setup() {
+		const authStore = useAuthStore();
+
+		return { authStore };
+	},
   data: (): State => {
 	  return {
 		  error: '',
@@ -30,7 +36,7 @@ export default defineComponent({
   methods: {
     async saveData(data: any) {
 	  try {
-        await this.$store.dispatch('signUp', data);
+        await this.authStore.signUp(data);
         this.$router.replace('/');
 	  } catch (err: any) {
 		console.log('Sign Up Do i land here:');

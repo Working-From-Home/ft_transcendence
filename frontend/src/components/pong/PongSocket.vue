@@ -16,6 +16,7 @@
 </template>
 
 <script lang="ts">
+import { useAuthStore } from '@/store/modules/auth/auth';
 import { defineComponent } from 'vue'
 
 export default defineComponent({
@@ -25,8 +26,12 @@ export default defineComponent({
 			gameRequest: false
 		}
 	},
+	setup() {
+		const authStore = useAuthStore();
+		return { authStore };
+	},
 	mounted() {
-		this.$pongSocket.auth = { token: `${this.$store.getters.tokenRaw}`};
+		this.$pongSocket.auth = { token: `${this.authStore.token}`};
 		this.$pongSocket.connect();
 		this.$pongSocket.on("gameRequest", (requestId : string) => {
 			console.log("got a game request!");
