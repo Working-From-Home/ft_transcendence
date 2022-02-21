@@ -1,20 +1,17 @@
 import axios, { AxiosInstance } from "axios";
-import store from "./store";
+import { useAuthStore } from "./store/modules/auth/auth";
 
 // The backend api
 const myApi: AxiosInstance = axios.create({
   baseURL: process.env.VUE_APP_BACKEND_SERVER_URI,
 	headers: {
-    'Authorization': '',
     'Content-type': 'application/json'
 	},
 	withCredentials: undefined
 });
 
 myApi.interceptors.request.use( config => {
-	const token = store.getters['token'];
-	if (token)
-		config.headers!['Authorization'] = 'Bearer ' + token
+	config.headers!['Authorization'] = useAuthStore().tokenBearer;
 	return config;
 });
 

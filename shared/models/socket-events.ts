@@ -10,7 +10,7 @@ export interface ISearchChannel
 	title: string;
 }
 
-export class Game {
+export interface Game {
     id: number;
     winnerScore: number;
     looserScore: number;

@@ -11,7 +11,7 @@
 						<p>Are you sure you want to delete your account?</p>
 					</div>
 					<div class="modal-footer">
-						<base-button type="button" class="btn red" @click="deleteUser">Yes</base-button>
+						<base-button type="button" class="btn red" @click="deleteAccount">Yes</base-button>
 					</div>
 				</div>
 			</div>
@@ -20,42 +20,19 @@
 	</base-button>
 </template>
 
-<script lang="ts">
-import { Options, Vue } from "vue-class-component";
+<script setup lang="ts">
+import { useAuthStore } from "@/store/modules/auth/auth";
+import { useRouter } from "vue-router";
 import BaseButton from "../ui/BaseButton.vue";
 
-interface State {
-  open: boolean
-}
+const authStore = useAuthStore();
+const router = useRouter();
 
-@Options({
-  components: { BaseButton },
-  data: (): State => {
-		return {
-			open: false,
-		};
-	},
-  methods: {
-	  async deleteUser() {
-		  const formData = {
-			userId: this.$store.getters.userID,
-			token: this.$store.getters.token,
-		};
-		await this.$store.dispatch('deleteUser', formData);
-		this.$store.dispatch('logout');
-		this.$router.replace('/');
-	  },
-	  openModal() {
-		  this.open = true;
-	  },
-	  closeModal() {
-		  this.open = false;
-	  }
-  },
-})
-export default class ButtonDel extends Vue {
+function deleteAccount() {
+	authStore.deleteAccount();
+	router.replace('/');
+};
 
-}
 </script>
 
 <style scoped>

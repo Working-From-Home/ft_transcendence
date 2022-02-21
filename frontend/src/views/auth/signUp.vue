@@ -11,17 +11,23 @@
 </template>
 
 <script lang="ts">
-import { Options, Vue } from "vue-class-component";
+import { useAuthStore } from "@/store/modules/auth/auth";
+import { defineComponent } from "vue";
 import SignUpComponent from "../../components/auth/SignUp.vue";
 
 interface State {
-  error: string;
+  error: string | null;
 }
 
-@Options({
+export default defineComponent({
   components: {
     SignUpComponent,
   },
+	setup() {
+		const authStore = useAuthStore();
+
+		return { authStore };
+	},
   data: (): State => {
 	  return {
 		  error: '',
@@ -30,9 +36,9 @@ interface State {
   methods: {
     async saveData(data: any) {
 	  try {
-        await this.$store.dispatch('signUp', data);
+        await this.authStore.signUp(data);
         this.$router.replace('/');
-	  } catch (err) {
+	  } catch (err: any) {
 		console.log('Sign Up Do i land here:');
 		this.error = err.message || 'Failed to authenticate, try later.';
 	  }
@@ -42,9 +48,6 @@ interface State {
 	}
   },
 })
-export default class signUp extends Vue {
-	
-}
 </script>
 
 <style scoped>

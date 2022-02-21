@@ -7,7 +7,7 @@
 				<Index class="m-auto mt-5 col-md-8 fs-4"/>
 			</div>
 		</div>
-		<div v-if="isLoggedIn" class="row align-items col-md-10 m-auto">
+		<div v-if="authStore.isLoggedIn" class="row align-items col-md-10 m-auto">
 			<div class="col-md-6">
 				<div  class="h-100 p-5 bg-success bg-opacity-75 rounded-3">
 					<h2>Challenge Someone</h2>
@@ -29,23 +29,12 @@
 
 </template>
 
-<script lang="ts">
-import { Options, Vue } from "vue-class-component";
+<script setup lang="ts">
+import { useAuthStore } from "@/store/modules/auth/auth";
 import Index from "../components/Index.vue";
 
-@Options({
-  components: {
-    Index
-  },
-  computed: {
-		isLoggedIn() {
-			return this.$store.getters.isAuth;
-		},
-	},
-})
-export default class Home extends Vue {
+const authStore = useAuthStore();
 
-}
 </script>
 
 <style scoped>

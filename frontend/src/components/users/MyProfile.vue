@@ -28,6 +28,8 @@
 </template>
 
 <script lang="ts">
+import { useAuthStore } from "@/store/modules/auth/auth";
+import { defineComponent, HtmlHTMLAttributes, ref } from "vue";
 import { Options, Vue } from "vue-class-component";
 import BaseButton from "../ui/BaseButton.vue";
 import ButtonDel from "./ButtonDel.vue";
@@ -39,7 +41,7 @@ interface State {
   avatar: string
 }
 
-@Options({
+export default defineComponent({
   components: {
     ButtonDel,
     BaseButton,
@@ -50,6 +52,15 @@ interface State {
 			userName: '',
 			email: '',
 			avatar: '',
+		};
+	},
+	setup() {
+		const authStore = useAuthStore();
+		const fileInput = ref<HTMLInputElement>();
+
+		return {
+			authStore,
+			fileInput,
 		};
 	},
   created() {
@@ -66,33 +77,31 @@ interface State {
   },
   methods: {
 	  UndleClick() {
-  		this.$refs.fileInput.click()
+			this.fileInput?.click()
 	  },
 	  async changeIMG(event: any) {
 		const files = event.target.files;
 		try {
        		await this.$store.dispatch('uploadProfile', {
 				img: files[0],
-				id: this.$store.getters.userID,
-				token: this.$store.getters.token,
+				id: this.authStore.userId,
+				token: this.authStore.token,
 			});
 			this.avatar = this.$store.getters.myAvatar;
-		} catch (err) {
-			this.error = err.message || 'Failed to authenticate, try later.';
+		} catch (err: any) {
+			// typing pas content. error don't exists
+			// this.error = err.message || 'Failed to authenticate, try later.';
 		}
 	  },
 	  async defaultIMG() {
 		await this.$store.dispatch('deleteAvatar', {
-			id: this.$store.getters.userID,
-			token: this.$store.getters.token,
+			id: this.authStore.userId,
+			token: this.authStore.token,
 		});
 		this.avatar = this.$store.getters.myAvatar;
 	  },
   }
 })
-export default class MyProfile extends Vue {
-
-}
 </script>
 
 <style scoped>

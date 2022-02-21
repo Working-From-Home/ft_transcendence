@@ -11,7 +11,7 @@ export class CurrentUserGuard implements CanActivate {
     canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
         const request = context.switchToHttp().getRequest();
         const paramId: number = request.params.id;
-        const currentUserId: number = request.user.userId;
+        const currentUserId: number = request.user.sub;
         if (paramId != currentUserId) {
             throw new ForbiddenException('this is not your account!')
         }

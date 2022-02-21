@@ -1,14 +1,12 @@
 import {
-    Body,
     Controller,
     DefaultValuePipe,
     Delete,
     Get,
-    NotImplementedException,
     Param,
     ParseIntPipe,
-    Patch,
     Query,
+    Req,
     UseGuards
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
@@ -50,11 +48,10 @@ export class UsersController {
         return user;
     }
 
-    @Delete('/:id')
-    @UseGuards(CurrentUserGuard)
+    @Delete()
     @Serialize(UserDto)
-    async deleteAccount(@Param('id') id: string): Promise<User> {
-        const user = await this.usersService.findById(parseInt(id));
+    async deleteAccount(@Req() request): Promise<User> {
+        const user = await this.usersService.findById(parseInt(request.user.sub));
         return await this.usersService.remove(user);
     }
 }
