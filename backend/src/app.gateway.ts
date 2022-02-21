@@ -11,7 +11,7 @@ import { OnlineService } from './online.service';
 
 type AppSocket = Socket<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>
 
-@WebSocketGateway( { namespace:"/app", cors: { origin: "http://localhost:8080", credentials: true} })
+@WebSocketGateway( { namespace:"/app", cors: { origin: true, credentials: true} })
 export class AppGateway {
 
 	private logger: Logger = new Logger('AppGAteway');
@@ -34,10 +34,10 @@ export class AppGateway {
 			client.disconnect();
 			return
 		}
-		this.onlineService.addUser(payload.userId);
-		client.data.userId = payload.userId
+		this.onlineService.addUser(payload.sub);
+		client.data.userId = payload.sub
 		this.atConnection(client)
-		this.logger.log(`User id ${payload.userId} is online. (${this.onlineService.getTotalOnlineUsers()} online users)`);
+		this.logger.log(`User id ${payload.sub} is online. (${this.onlineService.getTotalOnlineUsers()} online users)`);
 	}
 	
 	async handleDisconnect(client: AppSocket) {
@@ -65,7 +65,7 @@ export class AppGateway {
 		client.broadcast.emit("userConnected", userId);
 		this.server.emit('numberOfOnlineUsers', this.onlineService.getTotalOnlineUsers())
 		// chat
-		this.chatService.getChannelsOfUser("1").then( (y) => { 
+		this.chatService.getChannelsOfUser(userId).then( (y) => {
 			client.emit('sendChannels', y);
 		})
 		// friend requests, and other
@@ -78,9 +78,18 @@ export class AppGateway {
 	}
 
 	@SubscribeMessage('searchChannelsByUser')
-	handleEventChannel(client: AppSocket, title: string) {
-		return this.chatService.getChannelsOfUser("1").then( (y) => { 
-				// console.log(y);
+	handleEventChannel(client: AppSocket, userId: number) {
+		return this.chatService.getChannelsOfUser(userId).then( (y) => { return y }); 
+	}
+	@SubscribeMessage('sendUserOfChannels')
+	handleEventUsersInChannel(client: AppSocket, channelId: number) {
+		return this.chatService.getUsersOfChannel(channelId).then( (y) => { 
+				return y
+		}); 
+	}
+	@SubscribeMessage('sendMessagesOfChannels')
+	handleEventMessagesInChannel(client: AppSocket, channelId: number) {
+		return this.chatService.getMessagesOfChannel(channelId).then( (y) => { 
 				return y
 		}); 
 	}

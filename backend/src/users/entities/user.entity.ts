@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne, OneToMany, ManyToMany, JoinTable, Check } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne, OneToMany, ManyToMany, JoinTable, Check, Index } from "typeorm";
 import { Avatar } from "./avatar.entity";
 import { Friendship } from "./friendship.entity";
 import { Stats } from "./stats.entity";
@@ -23,8 +23,8 @@ export class User {
     @Column({ unique: true })
     username: string;
 
-    @Column()
-    password: string;
+    @Column({nullable: true })
+    password: string | null;
 
     @Column({ type: "enum", enum: ["owner", "admin", "user"], default: "user" })
     role: "owner" | "admin" | "user";
@@ -42,9 +42,20 @@ export class User {
 
     @Column({ type: "text", nullable: true })
     twoFaSecret: string | null;
+    
+    @Index()
+    @Column({ type: "text", unique: true, nullable: true})
+    googleSub: string | null;
 
     @Column({ type: "text", nullable: true })
-    oauthToken: string | null;
+    googleAccessToken: string | null;
+
+    @Index()
+    @Column({ type: "text", unique: true, nullable: true })
+    fortyTwoSub: string | null;
+
+    @Column({ type: "text", nullable: true })
+    fortyTwoAccessToken: string | null;
 
     /* Avatar */
 

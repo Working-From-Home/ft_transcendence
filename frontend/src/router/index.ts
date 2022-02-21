@@ -1,19 +1,25 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import Home from "../views/Home.vue";
-import store from "../store";
 import PongGame from '../components/pong/PongGame.vue'
 import PongHome from '../components/pong/PongHome.vue'
+import { useAuthStore } from "@/store/modules/auth/auth";
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
     name: "Home",
     component: Home,
+    meta: {
+      title: 'Home'
+    }
   },
   {
     path: "/pong",
     name: "Pong",
-		meta: { requiresAuth: true },
+		meta: {
+      title: 'Pong',
+      requiresAuth: true
+    },
     component: () =>
       import("../views/Pong.vue"),
 			children: [
@@ -30,14 +36,20 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/chat",
     name: "Chat",
-	meta: { requiresAuth: true },
+	  meta: {
+      title: 'Chat',
+      requiresAuth: true
+    },
     component: () =>
       import("../views/Chat.vue"),
   },
   {
     path: "/profile",
     name: "profile",
-	meta: { requiresAuth: true },
+  	meta: {
+      title: 'Profile',
+      requiresAuth: true
+    },
     component: () =>
       import("../views/profiles/Profile.vue"),
   },
@@ -59,21 +71,30 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/auth/signup",
     name: "Register",
-	meta: { requiresUnAuth: true },
+	  meta: {
+      title: 'Sign up',
+      requiresUnAuth: true
+    },
     component: () =>
       import("../views/auth/signUp.vue"),
   },
   {
     path: "/auth/signin",
     name: "Log",
-	meta: { requiresUnAuth: true },
+	  meta: {
+      title: 'Sign in',
+      requiresUnAuth: true
+    },
     component: () =>
       import("../views/auth/signIn.vue"),
   },
   {
     path: "/admin",
     name: "admin",
-	meta: { requiresAuth: true },
+	  meta: {
+      title: 'Administration',
+      requiresAuth: true
+    },
     component: () =>
       import("../views/AdminPannel.vue"),
   },
@@ -90,9 +111,11 @@ const router = createRouter({
 });
 
 router.beforeEach(function(to, _, next) {
-	if (to.meta.requiresAuth && !store.getters.isAuth)
+  const authStore = useAuthStore();
+  document.title = `Ft_transcendence - ${to.meta.title}`;
+  if (to.meta.requiresAuth && !authStore.isLoggedIn)
 		next('/');
-	else if (to.meta.requiresUnAuth && store.getters.isAuth)
+	else if (to.meta.requiresUnAuth && authStore.isLoggedIn)
 		next('/');
 	else
 		next();

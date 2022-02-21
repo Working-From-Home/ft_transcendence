@@ -10,7 +10,7 @@ export interface ISearchChannel
 	title: string;
 }
 
-export class Game {
+export interface Game {
     id: number;
     winnerScore: number;
     looserScore: number;
@@ -85,10 +85,11 @@ export interface User {
 }
 
 export interface Message {
-    id: number;
+    _id: number;
     content: string;
     createdAt: Date;
     channel: IChannel;
+	senderId: number;
     user: User;
 }
 
@@ -96,22 +97,17 @@ export interface IUserChannel {
     userId: number;
     channelId: number;
     role: "admin" | "user";
-    hasLeft: boolean;
-    bannedUntil: Date | null;
     mutedUntil: Date | null;
-    createdAt: Date;
-    channel: IChannel;
-    user: User;
 }
 
 export interface IChannel {
-	id: number;
+	roomId: number;
 	isDm: boolean;
-	roomName: string | null;
+	//roomName: string | null;
 	createdAt: Date;
-	// owner: User;
+	owner: User;
 	messages: Message[] | null;
-	userChannels: IUserChannel[] | null;
+	users: IUserChannel[] | null;
 }
 
 /// Online events
@@ -133,6 +129,8 @@ interface ServerToClientEventsChat {
 interface ClientToServerEventsChat {
   searchChannel: (title: string, callback: (channels: ISearchChannel[]) => void) => void;
   sendMessage: (channelId: number, content: string) => void; // maybe not string if we keep emoji...
+  sendUserOfChannels: (channelId: number, callback: (channels: IUserChannel[]) => void) => void;
+  sendMessagesOfChannels: (channelId: number, callback: (channels: Message[]) => void) => void;
 }
 
 // Common

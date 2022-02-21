@@ -1,6 +1,6 @@
 import http from "@/http"
 import socket from "@/socketApp"
-import { ISearchChannel } from "shared/models/socket-events";
+import { ISearchChannel, IUserChannel } from "shared/models/socket-events";
 
 interface ChannelUpdate {
 	title: string;
@@ -49,6 +49,13 @@ class ChatService {
 	searchChannels(term: string): Promise<ISearchChannel[]> {
 		return new Promise(resolve => {
 			socket.emit('searchChannel', term, (resp: ISearchChannel[]) => {
+				resolve(resp)
+			})
+		})
+	}
+	sendUserOfChannels(term: number): Promise<IUserChannel[]> {
+		return new Promise(resolve => {
+			socket.emit('sendUserOfChannels', term, (resp: IUserChannel[]) => {
 				resolve(resp)
 			})
 		})
