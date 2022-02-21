@@ -42,6 +42,21 @@ const routes: Array<RouteRecordRaw> = [
       import("../views/profiles/Profile.vue"),
   },
   {
+    path: "/users/:userid",
+    name: "userProfile",
+	meta: { requiresAuth: true },
+    component: () =>
+      import("../views/profiles/Profile.vue"),
+  },
+
+  {
+    path: "/edit-profile",
+    name: "editProfile",
+	meta: { requiresAuth: true },
+    component: () =>
+      import("../views/profiles/EditProfile.vue"),
+  },
+  {
     path: "/auth/signup",
     name: "Register",
 	meta: { requiresUnAuth: true },
