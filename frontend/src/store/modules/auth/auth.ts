@@ -1,7 +1,7 @@
 import { UserLog, UserUp, FetchData } from '@/store/modules/auth/type';
 import { toNumber } from '@vue/shared';
 import { defineStore } from 'pinia';
-import api from '@/services/AuthServices';
+import api from '@/services/AuthService';
 
 import vuexStore from '@/store';
 
@@ -96,24 +96,26 @@ export const useAuthStore = defineStore('auth', {
       this.tokenExpiration = '';
       this.userId = null;
     },
-    deleteUser() {
-      let url: string = process.env.VUE_APP_BACKEND_SERVER_URI + '/users/' + this.userId;
-      const fetchData: FetchData = {
-        method: 'DELETE',
-        body: '',
-        headers: new Headers(),
-      };
-      const newToken: string = 'Bearer ' + this.token;
-      fetchData.headers.append('Authorization', newToken);
-      fetch(url, fetchData)
-        .then((response) => response.json())
-        .then((data) => {
-          console.log('Success delete:', data);
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-          throw error;
-        });
+    async deleteAccount() {
+      await api.deleteAccount(); // deal the response or balec ?
+      this.logout();
+      // let url: string = process.env.VUE_APP_BACKEND_SERVER_URI + '/users/' + this.userId;
+      // const fetchData: FetchData = {
+      //   method: 'DELETE',
+      //   body: '',
+      //   headers: new Headers(),
+      // };
+      // const newToken: string = 'Bearer ' + this.token;
+      // fetchData.headers.append('Authorization', newToken);
+      // fetch(url, fetchData)
+      //   .then((response) => response.json())
+      //   .then((data) => {
+      //     console.log('Success delete:', data);
+      //   })
+      //   .catch((error) => {
+      //     console.error('Error:', error);
+      //     throw error;
+      //   });
     },
   },
 });

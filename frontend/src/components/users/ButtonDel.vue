@@ -11,7 +11,7 @@
 						<p>Are you sure you want to delete your account?</p>
 					</div>
 					<div class="modal-footer">
-						<base-button type="button" class="btn red" @click="deleteUser">Yes</base-button>
+						<base-button type="button" class="btn red" @click="deleteAccount">Yes</base-button>
 					</div>
 				</div>
 			</div>
@@ -28,10 +28,9 @@ import BaseButton from "../ui/BaseButton.vue";
 const authStore = useAuthStore();
 const router = useRouter();
 
-function deleteUser() {
-	authStore.deleteUser();
-	authStore.logout();
-	router.replace('/');	
+function deleteAccount() {
+	authStore.deleteAccount();
+	router.replace('/');
 };
 
 </script>

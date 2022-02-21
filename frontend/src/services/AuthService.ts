@@ -23,5 +23,8 @@ class AuthService {
 	logout(){
 		return http.post('/auth/logout')
 	}
+	deleteAccount() {
+		return http.delete('/users');
+	}
 }
 export default new AuthService();

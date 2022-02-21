@@ -105,11 +105,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-*:hover {
-  outline: 1px blue solid;
-}
-
-
 h3 {
   margin: 40px 0 0;
 }

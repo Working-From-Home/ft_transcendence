@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-import store from "./store";
+import { useAuthStore } from "./store/modules/auth/auth";
 
 // The backend api
 const myApi: AxiosInstance = axios.create({
@@ -11,9 +11,7 @@ const myApi: AxiosInstance = axios.create({
 });
 
 myApi.interceptors.request.use( config => {
-	const token = store.getters['tokenBearer'];
-	if (token)
-		config.headers!['Authorization'] = token
+	config.headers!['Authorization'] = useAuthStore().tokenBearer;
 	return config;
 });
 
