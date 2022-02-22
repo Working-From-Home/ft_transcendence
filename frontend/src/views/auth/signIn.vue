@@ -33,13 +33,16 @@ export default defineComponent({
 		return { authStore };
 	},
   methods: {
-    async saveData(data: any) {
-	  try {
-        await this.authStore.signIn(data);
-        this.$router.replace('/');
-	  } catch (err: any) {
-		this.error = err.message || 'Failed to authenticate, try later.';
-	  }
+    async saveData(data: {username: string, password: string}) {
+			try {
+				const err = await this.authStore.signIn(data.username, data.password);
+				if (err)
+					this.error = err.message;
+				else
+					this.$router.replace('/');
+			} catch (err: any) {
+				this.error = 'Opps, Something went very wrong';
+	  	}
     },
     switchAuthMode() {
 		this.$router.replace('auth/signup');

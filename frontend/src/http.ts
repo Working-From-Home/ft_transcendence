@@ -17,6 +17,7 @@ myApi.interceptors.request.use( config => {
 
 
 
+//https://thedutchlab.com/blog/using-axios-interceptors-for-refreshing-your-api-token
 // interceptor to manage expired token ?
 // myApi.interceptors.response.use(
 //   response => {

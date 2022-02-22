@@ -35,13 +35,15 @@ export default defineComponent({
   },
   methods: {
     async saveData(data: any) {
-	  try {
-        await this.authStore.signUp(data);
-        this.$router.replace('/');
-	  } catch (err: any) {
-		console.log('Sign Up Do i land here:');
-		this.error = err.message || 'Failed to authenticate, try later.';
-	  }
+			try {
+				const err = await this.authStore.signUp(data.username, data.email, data.password);
+				if (err)
+					this.error = err.message;
+				else
+					this.$router.replace('/');
+			} catch (err: any) {
+				this.error = 'Opps, Something went very wrong';
+	  	}
     },
 	handleError() {
 		this.error = null;
