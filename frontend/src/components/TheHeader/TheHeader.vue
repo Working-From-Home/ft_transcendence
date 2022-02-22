@@ -94,7 +94,7 @@ export default defineComponent({
 				this.$socketapp.on("sendChannels", async (resp: IChannel[]) => {
 					for (const obj of resp){
 						obj["users"] = await ChatService.sendUserOfChannels(obj["roomId"]);
-						//obj["messages"] = await ChatService.sendMessagesOfChannels(obj["roomId"]);
+						obj["messages"] = await ChatService.sendMessagesOfChannels(obj["roomId"]);
 					}
 					console.log(`front`, resp);
 					this.$store.dispatch('fetchRooms', {rooms: resp});
