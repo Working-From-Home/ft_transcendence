@@ -60,14 +60,10 @@ export const useAuthStore = defineStore('auth', {
         vuexStore.commit('initAvatar', { avatar: avatar });
       }
     },
-    logout() {
-      this.clearState();
-      localStorage.clear();
-    },
     setState(token: string, userId: number) {
       this.token = token;
       this.userId = userId;
-
+      
       localStorage.setItem('token', token);
       localStorage.setItem('userId', userId.toString());
     },
@@ -75,9 +71,15 @@ export const useAuthStore = defineStore('auth', {
       this.token = '';
       this.userId = null;
     },
+    async logout() {
+      await api.logout();
+      this.clearState();
+      localStorage.clear();
+    },
     async deleteAccount() {
       await api.deleteAccount(); // deal the response or balec ?
-      this.logout();
+      this.clearState();
+      localStorage.clear();
     },
   },
 });
