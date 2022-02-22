@@ -112,7 +112,7 @@ export interface IChannel {
 
 /// Online events
 interface ServerToClientEventsOnline {
-  connectedUsers: (users: { id: number }[]) => void;
+  connectedUsers: (users: number[]) => void;
   userConnected: (userId: number ) => void;
   userDisconnected: (userId: number ) => void;
   numberOfOnlineUsers: (nbUsers: number ) => void;

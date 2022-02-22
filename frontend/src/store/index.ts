@@ -1,7 +1,6 @@
 import { createLogger, createStore, Store, useStore as baseUseStore } from 'vuex';
 import { InjectionKey } from 'vue';
 
-import pongModule from './modules/pong';
 import chatroomModule from './modules/chatroom';
 import profileModule from './modules/profile';
 import socketModule from './modules/socket';
@@ -11,7 +10,6 @@ const plugins = debug ? [createLogger()] : [];
 
 export default createStore({
   modules: {
-    pong: pongModule,
     chatroom: chatroomModule,
     profile: profileModule,
     socket: socketModule,

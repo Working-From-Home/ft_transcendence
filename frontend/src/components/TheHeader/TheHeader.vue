@@ -67,12 +67,14 @@ import { defineComponent } from "vue";
 import ChatService from "../../services/ChatService";
 import { IChannel, IUserChannel } from "shared/models/socket-events";
 import { useAuthStore } from "@/store/modules/auth/auth";
+import { useUsersStatusStore } from "@/store/modules/socket/usersStatus";
 
 export default defineComponent({
 	setup() {
 		const authStore = useAuthStore();
+		const usersStatusStore = useUsersStatusStore();
 
-		return { authStore };
+		return { authStore, usersStatusStore };
 	},
 	computed: {
 		connect(): boolean {
@@ -82,8 +84,9 @@ export default defineComponent({
 				};
 				this.$socketapp.connect();
 
-				this.$socketapp.on("connectedUsers", (...args: any) => {
-					this.$store.dispatch('initconnectedUsers', {users: args});
+				this.$socketapp.on("connectedUsers", (userIds: number[]) => {
+					console.log(`userIds: ${userIds}`);
+					this.usersStatusStore.setOnlineUsers(userIds);
 				});
 				this.$socketapp.on("connect_error", (err: any) => {
 					console.log(`socket connexion error: ${err}`);

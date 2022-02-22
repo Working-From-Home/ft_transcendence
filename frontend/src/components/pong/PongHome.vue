@@ -22,16 +22,21 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import { useUsersStatusStore } from '@/store/modules/socket/usersStatus'
 import PongMatchmaking from './PongMatchmaking.vue'
 import ChallengeButton from './ChallengeButton.vue'
 import WatchButton from './WatchButton.vue'
 
 export default defineComponent({
   components: { PongMatchmaking, ChallengeButton, WatchButton },
+	setup() {
+		const usersStatusStore = useUsersStatusStore();
+		return { usersStatusStore };
+	},
 	mounted() {
 		const id = this.$store.getters.myUserId;
 		console.log(`yo: ${id}`);
-		if (!this.$store.getters.inGameUsers.includes(id))
+		if (!this.usersStatusStore.getinGameusers.includes(id))
 			return ;
 		
 		this.$pongSocket.emit("getGameId", id, (gameId : string) => {
