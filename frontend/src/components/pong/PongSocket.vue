@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import { useAuthStore } from '@/store/modules/auth/auth';
-import { useUsersStatusStore } from '@/store/modules/socket/usersStatus';
+import { useStatusStore } from '@/store/modules/status/status';
 import { defineComponent } from 'vue'
 
 export default defineComponent({
@@ -29,9 +29,9 @@ export default defineComponent({
 	},
 	setup() {
 		const authStore = useAuthStore();
-		const usersStatusStore = useUsersStatusStore();
+		const statusStore = useStatusStore();
 
-		return { authStore, usersStatusStore };
+		return { authStore, statusStore };
 	},
 	mounted() {
 		this.$pongSocket.auth = { token: `${this.authStore.token}`};
@@ -45,7 +45,7 @@ export default defineComponent({
 			this.gameRequest = false;
 		})
 		this.$pongSocket.on("inGameUsers", (ids : number[]) => {
-			this.usersStatusStore.setInGameUsers(ids);
+			this.statusStore.setInGameUsers(ids);
 		})
 	},
 	unmounted() {

@@ -22,7 +22,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { useUsersStatusStore } from '@/store/modules/socket/usersStatus'
+import { useStatusStore } from '@/store/modules/status/status'
 import PongMatchmaking from './PongMatchmaking.vue'
 import ChallengeButton from './ChallengeButton.vue'
 import WatchButton from './WatchButton.vue'
@@ -30,13 +30,13 @@ import WatchButton from './WatchButton.vue'
 export default defineComponent({
   components: { PongMatchmaking, ChallengeButton, WatchButton },
 	setup() {
-		const usersStatusStore = useUsersStatusStore();
-		return { usersStatusStore };
+		const statusStore = useStatusStore();
+		return { statusStore };
 	},
 	mounted() {
 		const id = this.$store.getters.myUserId;
 		console.log(`yo: ${id}`);
-		if (!this.usersStatusStore.getinGameusers.includes(id))
+		if (!this.statusStore.getinGameusers.includes(id))
 			return ;
 		
 		this.$pongSocket.emit("getGameId", id, (gameId : string) => {

@@ -5,7 +5,7 @@ export interface State {
 	inGameUsers : number[];
 }
 
-export const useUsersStatusStore = defineStore('usersStatus', {
+export const useStatusStore = defineStore('status', {
 	state : (): State => ({
 		onlineUsers : [],
 		inGameUsers : []
