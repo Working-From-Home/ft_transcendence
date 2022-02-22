@@ -3,12 +3,12 @@ Things left to in the pong:
 Game request:
 | |gérer les déconnexion lors de game request en cours.
 | |sécuriser l'input des private game request. (settings)
-| |bloquer les demandes à un user en jeu.
+|V|bloquer les demandes à un user en jeu.
 
 inGame/multi onglet:
 | |User en jeu ne peux rejoindre le matchmaking.
 | |ajouter un event "leavegame", qui fait quitter la room.
-| |côté front, pong view, if (inGame) -> redirect to the game. in mounted maybe.
+|V|côté front, pong view, if (inGame) -> redirect to the game. in mounted maybe.
 
 UI:
 | |améliorer le modal (utiliser boostrap) quand on reçoit une gameRequest.
