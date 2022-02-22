@@ -31,6 +31,7 @@ export interface IUserChannel {
 export interface IChannel {
 	roomId: number;
 	isDm: boolean;
+	avatar: String
 	roomName: string;
 	createdAt: Date;
 	owner: IUserChannel;
