@@ -4,15 +4,9 @@ import { AppGateway } from './app.gateway';
 import { AuthService } from './auth/auth.service';
 import { UsersService } from './users/services/users.service';
 
-interface ConnectedUser {
-  id: number;
-  // username: string;
-  //	socket_ids?: string[];
-};
-
 @Injectable()
 export class OnlineService {
-  private users: ConnectedUser[] = [];
+  private userIds: number[] = [];
 
   constructor(
     private authService: AuthService,
@@ -20,26 +14,25 @@ export class OnlineService {
   ) {}
 
   addUser(userId: number) {
-      this.users.push({id : userId});
-  }
-    
+      this.userIds.push(userId);
+	}
   // need to fix it. What we do then ? one socket per client or multiple per client ?
   removeUser(userId: number) {
-    this.users = this.users.filter((u) => u.id !== userId);
+    this.userIds = this.userIds.filter((id) => id !== userId);
   }
 
-  getOnlineUsers(): ConnectedUser[]
+  getOnlineUsers(): number[]
   {
-    return this.users
+    return this.userIds
   }
 
   // for now, is more about the number of socket connexions than the actual number of users online...
   getTotalOnlineUsers(): number
   {
-    return this.users.length;
+    return this.userIds.length;
   }
 
   isOnline(userId: number): boolean {
-    return this.users.find((u) => u.id === userId) !== null;
+    return this.userIds.find((id) => id === userId) !== null;
   }
 }

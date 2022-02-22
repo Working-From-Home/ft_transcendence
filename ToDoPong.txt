@@ -1,19 +1,21 @@
 Things left to in the pong:
 
+| |passer le socket store sous pinia.
+
 Game request:
-| |gérer les déconnexion lors de game request en cours.
-| |sécuriser l'input des private game request. (settings)
+4| |gérer les déconnexion lors de game request en cours.
+5| |sécuriser l'input des private game request. (settings)
 |V|bloquer les demandes à un user en jeu.
 
 inGame/multi onglet:
-| |User en jeu ne peux rejoindre le matchmaking.
-| |ajouter un event "leavegame", qui fait quitter la room.
+|V|User en jeu ne peux rejoindre le matchmaking.
+|V|ajouter un event "leavegame", qui fait quitter la room.
 |V|côté front, pong view, if (inGame) -> redirect to the game. in mounted maybe.
 
 UI:
-| |améliorer le modal (utiliser boostrap) quand on reçoit une gameRequest.
-| |Donner plus d'infos, que juste le userId au front. (username surtout)
-| |avoir un bouton de redirection à la fin d'une game.
+1| |améliorer le modal (utiliser boostrap) quand on reçoit une gameRequest.
+2| |Donner plus d'infos, que juste le userId au front. (username surtout)
+3| |avoir un bouton de redirection à la fin d'une game.
 
 __________Done things:_____________
 
