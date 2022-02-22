@@ -35,7 +35,6 @@ export class PongGateway {
 	/*___Connexion/disconnection events:_____*/
 
 	async handleConnection(socket: Socket) {
-		this.logger.log('new connexion');
 		try {
 			const decodedToken = await this.authService.verifyJwt(socket.handshake.auth.token);
 			const userId = decodedToken.sub;
@@ -56,7 +55,6 @@ export class PongGateway {
  
 	handleDisconnect(socket: Socket) {
 		this.gameQueue.remove(socket);
-		this.logger.log('disconnection!');
 	}
 
 /*________Matchmaking Events: ____________*/
@@ -64,6 +62,10 @@ export class PongGateway {
 	@SubscribeMessage('joinMatchmaking')
 	joinMatchmaking(@ConnectedSocket() socket : Socket) {
 		this.logger.log(`id: ${socket.data.userId} join matchmaking`);
+		if (this.inGameUsers.includes(socket.data.userId)) {
+			this.logger.log(`id: ${socket.data.userId} is already in game`);
+			return ;
+		}
 		this.gameQueue.add(socket);
 		this.checkGameQueue();
 	}
@@ -98,6 +100,8 @@ export class PongGateway {
 		@ConnectedSocket() socket : Socket) {
 		const hostId = socket.data.userId;
 		if (hostId == body.guestId)
+			return ;
+		if (this.inGameUsers.includes(body.guestId))
 			return ;
 
 		const requestId = `${hostId}to${body.guestId}`;

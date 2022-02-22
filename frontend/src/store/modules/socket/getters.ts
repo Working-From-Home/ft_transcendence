@@ -4,5 +4,5 @@ export default {
 	},
 	inGameUsers(state : any) : number[] {
 		return state.inGameUsers;
-	}
+	},
 };
