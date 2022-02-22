@@ -32,7 +32,6 @@ export const useAuthStore = defineStore('auth', {
       } catch (err) {
         const e = err as AxiosError<IError>;
         if (axios.isAxiosError(e)) return e.response?.data;
-        console.log("SignIn: ", err);
       }
     },
     async signUp(username: string, email: string, password: string) {
@@ -44,7 +43,6 @@ export const useAuthStore = defineStore('auth', {
       } catch (err) {
         const e = err as AxiosError<IError>;
         if (axios.isAxiosError(e)) return e.response?.data;
-        console.log("SignUp: ", err);
       }
     },
     initStore() {
@@ -63,7 +61,7 @@ export const useAuthStore = defineStore('auth', {
     setState(token: string, userId: number) {
       this.token = token;
       this.userId = userId;
-      
+
       localStorage.setItem('token', token);
       localStorage.setItem('userId', userId.toString());
     },
@@ -71,10 +69,12 @@ export const useAuthStore = defineStore('auth', {
       this.token = '';
       this.userId = null;
     },
-    async logout() {
-      await api.logout();
-      this.clearState();
-      localStorage.clear();
+    logout() {
+      api.logout()
+      .finally(() => {
+        this.clearState();
+        localStorage.clear();
+      });
     },
     async deleteAccount() {
       await api.deleteAccount(); // deal the response or balec ?
