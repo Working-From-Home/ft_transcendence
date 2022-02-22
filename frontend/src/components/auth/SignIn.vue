@@ -64,8 +64,8 @@ interface State {
 			return;
 
 		const formData = {
-			username: this.username.val,
-			password: this.password.val,
+			username: this.username.val as string,
+			password: this.password.val as string,
 		};
 		await this.$emit('save-data', formData);
 	},
