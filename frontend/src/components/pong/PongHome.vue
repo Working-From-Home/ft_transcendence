@@ -30,6 +30,7 @@ export default defineComponent({
   components: { PongMatchmaking, ChallengeButton, WatchButton },
 	mounted() {
 		const id = this.$store.getters.myUserId;
+		console.log(`yo: ${id}`);
 		if (!this.$store.getters.inGameUsers.includes(id))
 			return ;
 		

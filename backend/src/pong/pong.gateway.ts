@@ -40,7 +40,8 @@ export class PongGateway {
 			const userId = decodedToken.sub;
 			socket.data.userId = userId;
 			socket.join(userId.toString());
-			this.logger.log(`userId: ${userId} is connected!`);
+			this.server.emit("inGameUsers", this.inGameUsers);
+			this.logger.log(`userId: ${userId} is connected to pong!`);
 		}
 		catch {
 			this.logger.log("fail identify");
