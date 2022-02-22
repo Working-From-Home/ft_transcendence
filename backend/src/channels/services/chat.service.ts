@@ -231,18 +231,18 @@ export class ChatService {
 	return y;
   }
   async getMessagesOfChannel(channelId: number) {
-	const y = await getManager().connection.query(
-		`SELECT m."id" AS "_id",
-				m."content" AS "content",
-				u."id" AS "senderId",
-				u."username" AS "username",
-				u."avatar" AS "avatar"
-		FROM "message" m
-			INNER JOIN "channel" c ON uc."channelId" = c."id"
-			INNER JOIN "user" u ON uc."userId" = u."id"
-		WHERE "channelId" IN (${channelId}) AND "hasLeft"=FALSE`
-	  );
-	return y;
+	return getRepository(Message)
+       .createQueryBuilder("m")
+	   .innerJoin("m.user", "u")
+	   .innerJoin("m.channel", "channel")
+       .where('channel.id = "channelId"')
+	   .select([
+		   'm.id AS "_id"', 
+	   	   'm.content AS "content"',
+		   'u.id AS "senderId"',
+		   'u.username AS "username"',
+		])
+       .getRawMany();
   }
   async getChannelsOfUser(userId: number): Promise<IChannel[]> {
 	const a = await getManager().connection.query(
