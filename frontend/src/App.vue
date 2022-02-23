@@ -1,38 +1,40 @@
 <template class="container-fluid">
-	<section>
-		<the-header></the-header>
-		<friend-list v-if="authStore.isLoggedIn"></friend-list>
-		<div class="row align-items-center">
-			<router-view/>
-		</div>
-		<mini-chat v-if="authStore.isLoggedIn && !isChatView"></mini-chat>
-		<pong-socket v-if="authStore.isLoggedIn"/>
-	</section>
+  <section>
+    <the-header></the-header>
+    <friend-list v-if="authStore.isLoggedIn"></friend-list>
+    <div class="row align-items-center">
+      <router-view v-slot="{ Component }">
+        <transition name="fade" mode="out-in">
+          <component :is="Component" />
+        </transition>
+      </router-view>
+    </div>
+    <mini-chat v-if="authStore.isLoggedIn && !isChatView"></mini-chat>
+    <pong-socket v-if="authStore.isLoggedIn" />
+  </section>
 </template>
 
 <script setup lang="ts">
-import MiniChat from "./components/chat/MiniChat.vue";
-import TheHeader from "./components/TheHeader/TheHeader.vue";
-import FriendList from "./components/OffcanvasFriendsList.vue";
-import PongSocket from "./components/pong/PongSocket.vue"
-import { useAuthStore } from "@/store/modules/auth/auth";
-import { useRoute } from "vue-router";
-import { computed } from "vue";
+import MiniChat from './components/chat/MiniChat.vue';
+import TheHeader from './components/TheHeader/TheHeader.vue';
+import FriendList from './components/OffcanvasFriendsList.vue';
+import PongSocket from './components/pong/PongSocket.vue';
+import { useAuthStore } from '@/store/modules/auth/auth';
+import { useRoute } from 'vue-router';
+import { computed } from 'vue';
 
 const authStore = useAuthStore();
 const route = useRoute();
 
 authStore.initStore();
 
-const isChatView = computed( () => {
-	if (route.path === "/chat")
-		return true;
-	return false;
-})
-
+const isChatView = computed(() => {
+  if (route.path === '/chat') return true;
+  return false;
+});
 </script>
 
-<style>
+<style lang="scss">
 html {
   background: #192531;
   overflow-x: hidden;
@@ -45,5 +47,15 @@ html {
   text-align: center;
   color: rgba(255, 255, 255, 0.884);
   background: #192531;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.1s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

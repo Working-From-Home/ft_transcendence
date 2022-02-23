@@ -11,10 +11,10 @@
 					<div class="collapse navbar-collapse justify-content-end" id="navbarNav">
 						<ul id="navbar" class="navbar-nav">
 							<li class="nav-item">
-								<router-link to="/auth/signin" class="nav-link active">Signin</router-link>
+								<router-link :to="{name: 'signin'}" class="nav-link active">Sign in</router-link>
 							</li>
 							<li class="nav-item">
-								<router-link to="/auth/signup" class="nav-link active">Signup</router-link>
+								<router-link :to="{name: 'signup'}" class="nav-link active">Sign up</router-link>
 							</li>
 						</ul>
 					</div>
@@ -112,9 +112,40 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+
+@import "@/../node_modules/bootstrap/scss/functions";
+@import "@/../node_modules/bootstrap/scss/variables";
+@import "@/../node_modules/bootstrap/scss/mixins";
+
+$active-link:  #42b983;
 
 #navbar a.router-link-exact-active {
-  color: #42b983;
+	color: $active-link;
 }
+@include media-breakpoint-up(lg) {
+	#navbar{
+		a.router-link-exact-active,
+		a.router-link-exact-active:hover {
+			border-bottom: 5px solid $active-link;
+			border-bottom-left-radius: 5px;
+			border-bottom-right-radius: 5px;
+		}
+		a {
+			border-bottom: 2px solid transparent;
+		}
+		a:hover {
+			border-bottom: 2px solid $active-link;
+
+		}
+	}
+}
+@include media-breakpoint-down(lg) {
+	#navbar a.router-link-exact-active {
+		border: 2px solid $active-link;
+		border-radius: 0.92em;
+	}
+}
+
+
 </style>
