@@ -27,7 +27,8 @@ export const useCurrentUserStore = defineStore('currentUser', {
     getAvatarBase64(): string {
       const reader = new FileReader;
       // reader.readAsDataURL(this.avatar?.data.buffer);
-      return `data:${this.avatar?.data.}`
+      // return `data:${this.avatar?.data.}`
+      return ``
     }
   },
   actions: {
