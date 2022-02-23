@@ -30,4 +30,15 @@ export class GameService {
 		});
 		return await this.repo.save(game);
 	}
+
+	async getGames(userId: number) : Promise<Game[]> {
+		const user = await this.usersService.findById(userId);
+		return this.repo.find({
+			where: [
+				{ looser: user },
+				{ winner: user }
+			],
+			relations: ['winner', 'looser']
+		});
+	}
 }

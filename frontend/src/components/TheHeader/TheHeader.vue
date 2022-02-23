@@ -67,12 +67,14 @@ import { defineComponent } from "vue";
 import ChatService from "../../services/ChatService";
 import { IChannel, IUserChannel } from "shared/models/socket-events";
 import { useAuthStore } from "@/store/modules/auth/auth";
+import { useStatusStore } from "@/store/modules/status/status";
 
 export default defineComponent({
 	setup() {
 		const authStore = useAuthStore();
+		const statusStore = useStatusStore();
 
-		return { authStore };
+		return { authStore, statusStore };
 	},
 	computed: {
 		connect(): boolean {
@@ -82,8 +84,9 @@ export default defineComponent({
 				};
 				this.$socketapp.connect();
 
-				this.$socketapp.on("connectedUsers", (...args: any) => {
-					this.$store.dispatch('initconnectedUsers', {users: args});
+				this.$socketapp.on("connectedUsers", (userIds: number[]) => {
+					console.log(`userIds: ${userIds}`);
+					this.statusStore.setOnlineUsers(userIds);
 				});
 				this.$socketapp.on("connect_error", (err: any) => {
 					console.log(`socket connexion error: ${err}`);
@@ -91,7 +94,7 @@ export default defineComponent({
 				this.$socketapp.on("sendChannels", async (resp: IChannel[]) => {
 					for (const obj of resp){
 						obj["users"] = await ChatService.sendUserOfChannels(obj["roomId"]);
-						//obj["messages"] = await ChatService.sendMessagesOfChannels(obj["roomId"]);
+						obj["messages"] = await ChatService.sendMessagesOfChannels(obj["roomId"]);
 					}
 					console.log(`front`, resp);
 					this.$store.dispatch('fetchRooms', {rooms: resp});
