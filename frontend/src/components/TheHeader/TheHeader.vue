@@ -11,10 +11,10 @@
 					<div class="collapse navbar-collapse justify-content-end" id="navbarNav">
 						<ul id="navbar" class="navbar-nav">
 							<li class="nav-item">
-								<router-link to="/auth/signin" class="nav-link active">Signin</router-link>
+								<router-link :to="{name: 'signin'}" class="nav-link active">Sign in</router-link>
 							</li>
 							<li class="nav-item">
-								<router-link to="/auth/signup" class="nav-link active">Signup</router-link>
+								<router-link :to="{name: 'signup'}" class="nav-link active">Sign up</router-link>
 							</li>
 						</ul>
 					</div>
@@ -67,12 +67,14 @@ import { defineComponent } from "vue";
 import ChatService from "../../services/ChatService";
 import { IChannel, IUserChannel } from "shared/models/socket-events";
 import { useAuthStore } from "@/store/modules/auth/auth";
+import { useStatusStore } from "@/store/modules/status/status";
 
 export default defineComponent({
 	setup() {
 		const authStore = useAuthStore();
+		const statusStore = useStatusStore();
 
-		return { authStore };
+		return { authStore, statusStore };
 	},
 	computed: {
 		connect(): boolean {
@@ -82,8 +84,9 @@ export default defineComponent({
 				};
 				this.$socketapp.connect();
 
-				this.$socketapp.on("connectedUsers", (...args: any) => {
-					this.$store.dispatch('initconnectedUsers', {users: args});
+				this.$socketapp.on("connectedUsers", (userIds: number[]) => {
+					console.log(`userIds: ${userIds}`);
+					this.statusStore.setOnlineUsers(userIds);
 				});
 				this.$socketapp.on("connect_error", (err: any) => {
 					console.log(`socket connexion error: ${err}`);
@@ -91,7 +94,7 @@ export default defineComponent({
 				this.$socketapp.on("sendChannels", async (resp: IChannel[]) => {
 					for (const obj of resp){
 						obj["users"] = await ChatService.sendUserOfChannels(obj["roomId"]);
-						//obj["messages"] = await ChatService.sendMessagesOfChannels(obj["roomId"]);
+						obj["messages"] = await ChatService.sendMessagesOfChannels(obj["roomId"]);
 					}
 					console.log(`front`, resp);
 					this.$store.dispatch('fetchRooms', {rooms: resp});
@@ -112,9 +115,40 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+
+@import "@/../node_modules/bootstrap/scss/functions";
+@import "@/../node_modules/bootstrap/scss/variables";
+@import "@/../node_modules/bootstrap/scss/mixins";
+
+$active-link:  #42b983;
 
 #navbar a.router-link-exact-active {
-  color: #42b983;
+	color: $active-link;
 }
+@include media-breakpoint-up(lg) {
+	#navbar{
+		a.router-link-exact-active,
+		a.router-link-exact-active:hover {
+			border-bottom: 5px solid $active-link;
+			border-bottom-left-radius: 5px;
+			border-bottom-right-radius: 5px;
+		}
+		a {
+			border-bottom: 2px solid transparent;
+		}
+		a:hover {
+			border-bottom: 2px solid $active-link;
+
+		}
+	}
+}
+@include media-breakpoint-down(lg) {
+	#navbar a.router-link-exact-active {
+		border: 2px solid $active-link;
+		border-radius: 0.92em;
+	}
+}
+
+
 </style>

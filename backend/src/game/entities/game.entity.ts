@@ -23,6 +23,4 @@ export class Game {
     @ManyToOne(() => User, (user) => user.lossedGames, { onDelete: "SET NULL" })
     @JoinColumn()
     looser: User;
-
 }
-  

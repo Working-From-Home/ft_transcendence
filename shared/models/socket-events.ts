@@ -9,110 +9,39 @@ export interface ISearchChannel
 	id: number;
 	title: string;
 }
-
-export interface Game {
-    id: number;
-    winnerScore: number;
-    looserScore: number;
-    createdAt: Date;
-    looser: User;
-    winner: User;
-}
-
-export interface Friendship {
-    applicantId: number;
-    recipientId: number;
-    status: "accepted" | "pending";
-    createdAt: Date;
-    applicant: User;
-    recipient: User;
-}
-
-export interface Stats {
-    userId: number;
-    user: User;
-    level: number;
-    victories: number;
-    losses: number;
-}
-
-export interface Achievement {
-    id: number;
-    title: string;
-    description: string;
-    users: User[];
-}
-
-export interface Avatar {
-    userId: number;
-    user: User;
-    filename: string;
-    mimetype: string;
-    data: Uint8Array;
-}
-
-export interface Blocked {
-    applicantId: number;
-    recipientId: number;
-    createdAt: Date;
-    applicant: User;
-    recipient: User;
-}
-
-export interface User {
-    id: number;
-    email: string;
-    username: string;
-    password: string;
-    role: "owner" | "admin" | "user";
-    createdAt: Date;
-    banned: boolean;
-    twoFaEnabled: boolean;
-    twoFaSecret: string | null;
-    oauthToken: string | null;
-    avatar: Avatar;
-    stats: Stats;
-    achievements: Achievement[];
-    sentFriendRequests: Friendship[];
-    receivedFriendRequests: Friendship[];
-    usersBlocked: Blocked[];
-    BlockedBy: Blocked[];
-    messages: Message[];
-    userChannels: IUserChannel[];
-    channels: IChannel[];
-    lossedGames: Game[];
-    wonGames: Game[];
-}
-
-export interface Message {
+export interface IMessage {
     _id: number;
+	username: string;
     content: string;
-    createdAt: Date;
+	createdAt: string;
+    date: string;
     channel: IChannel;
 	senderId: number;
-    user: User;
 }
 
 export interface IUserChannel {
-    userId: number;
+    _id: number;
+	username: string;
     channelId: number;
-    role: "admin" | "user";
+	isOwner: boolean;
+    isAdmin: "admin" | "user";
     mutedUntil: Date | null;
 }
 
 export interface IChannel {
 	roomId: number;
 	isDm: boolean;
-	//roomName: string | null;
+	avatar: String
+	roomName: string;
 	createdAt: Date;
-	owner: User;
-	messages: Message[] | null;
+	owner: IUserChannel;
+	messages: IMessage[] | null;
 	users: IUserChannel[] | null;
 }
 
 /// Online events
 interface ServerToClientEventsOnline {
-  connectedUsers: (users: { id: number }[]) => void;
+  connectedUsers: (users: number[]) => void;
   userConnected: (userId: number ) => void;
   userDisconnected: (userId: number ) => void;
   numberOfOnlineUsers: (nbUsers: number ) => void;
@@ -130,7 +59,7 @@ interface ClientToServerEventsChat {
   searchChannel: (title: string, callback: (channels: ISearchChannel[]) => void) => void;
   sendMessage: (channelId: number, content: string) => void; // maybe not string if we keep emoji...
   sendUserOfChannels: (channelId: number, callback: (channels: IUserChannel[]) => void) => void;
-  sendMessagesOfChannels: (channelId: number, callback: (channels: Message[]) => void) => void;
+  sendMessagesOfChannels: (channelId: number, callback: (channels: IMessage[]) => void) => void;
 }
 
 // Common
