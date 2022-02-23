@@ -8,7 +8,8 @@
         <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1 h-00">
           <Transition name="fade-form" mode="out-in">
             <LoginForm v-if="selectForm == AuthMode.Login" @change-form="selectForm = AuthMode.Register" />
-            <RegisterForm v-else-if="selectForm == AuthMode.Register" @change-form="selectForm = AuthMode.Login" />
+            <RegisterForm v-else-if="selectForm == AuthMode.Register" @change-form=" (v) => selectForm = v" />
+            <RegisterFormOptional v-else-if="selectForm == AuthMode.RegisterOptional"/>
           </Transition>
         </div>
       </div>
@@ -19,7 +20,8 @@
 <script setup lang="ts">
 import LoginForm from '@/components/auth/LoginForm.vue';
 import RegisterForm from '@/components/auth/RegisterForm.vue';
-import { PropType, ref } from 'vue';
+import RegisterFormOptional from '@/components/auth/RegisterFormOptional.vue';
+import { PropType } from 'vue';
 import { AuthMode } from './auth.interface';
 
 defineProps({

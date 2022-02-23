@@ -67,7 +67,7 @@ const passwordConfirm = ref('');
 const register = async () => {
   const e = await authStore.signUp(username.value, email.value, password.value);
   if (e) alert(`${e.message}`);
-  else router.push('/');
+  else emit('changeForm', AuthMode.RegisterOptional);
 };
 </script>
 
