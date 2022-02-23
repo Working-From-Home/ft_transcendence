@@ -60,14 +60,6 @@ const routes: Array<RouteRecordRaw> = [
     component: () =>
       import("../views/profiles/Profile.vue"),
   },
-
-  {
-    path: "/edit-profile",
-    name: "editProfile",
-	meta: { requiresAuth: true },
-    component: () =>
-      import("../views/profiles/EditProfile.vue"),
-  },
   {
     path: "/auth/signup",
     name: "Register",
