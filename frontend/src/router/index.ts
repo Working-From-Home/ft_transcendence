@@ -2,7 +2,9 @@ import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import Home from "../views/Home.vue";
 import PongGame from '../components/pong/PongGame.vue'
 import PongHome from '../components/pong/PongHome.vue'
+import Auth from "@/views/auth/auth.vue";
 import { useAuthStore } from "@/store/modules/auth/auth";
+import { AuthMode } from "@/views/auth/auth.interface";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -54,24 +56,25 @@ const routes: Array<RouteRecordRaw> = [
       import("../views/profiles/Profile.vue"),
   },
   {
-    path: "/auth/signup",
-    name: "Register",
+    name: 'signup',
+    path: '/signup',
+    alias: ['/sign-up', '/register'],
 	  meta: {
-      title: 'Sign up',
+      title: 'Register',
       requiresUnAuth: true
     },
-    component: () =>
-      import("../views/auth/signUp.vue"),
-  },
+    component: Auth,
+    props: { selectForm: AuthMode.Register}  },
   {
-    path: "/auth/signin",
-    name: "Log",
+    name: 'signin',
+    path: '/signin',
+    alias: ['/sign-in', '/login'],
 	  meta: {
-      title: 'Sign in',
+      title: 'Login',
       requiresUnAuth: true
     },
-    component: () =>
-      import("../views/auth/signIn.vue"),
+    component: Auth,
+    props: { selectForm: AuthMode.Login}
   },
   {
     path: "/admin",
