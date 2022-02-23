@@ -8,22 +8,51 @@
     </div> -->
       <!-- Username tmp-->
       <div class="form-floating mb-4">
-        <input v-model="username" type="text" class="form-control" id="username" placeholder="" required autofocus />
+        <input
+          v-model="username"
+          type="text"
+          class="form-control"
+          id="username"
+          placeholder=""
+          required
+          autofocus
+        />
         <label for="username" class="text-black">Username</label>
       </div>
 
       <!-- Password input -->
       <div class="form-floating mb-4">
-        <input v-model="password" type="password" class="form-control" id="password" placeholder="" required />
+        <input
+          v-model="password"
+          type="password"
+          class="form-control"
+          id="password"
+          placeholder=""
+          required
+        />
         <label for="password" class="text-black">Password</label>
+      </div>
+      <!-- Error from backend -->
+      <!-- <div :hidden="errorMessage == ''" class="alert alert-danger" role="alert" > -->
+      <div
+        :style="{ visibility: errorMessage ? 'visible' : 'hidden' }"
+        class="alert alert-danger"
+        role="alert"
+      >
+        {{ errorMessage }}
       </div>
 
       <!-- Submit button -->
-      <button type="submit" class="btn btn-primary btn-lg btn-block">Sign in</button>
+      <button type="submit" class="btn btn-primary btn-lg btn-block">
+        Sign in
+      </button>
     </form>
     <!-- OAuth -->
     <hr class="hr-text" data-content="Or continue with" />
-    <a class="btn btn-default btn-oauth rounded-circle rounded-circle" role="button">
+    <a
+      class="btn btn-default btn-oauth rounded-circle rounded-circle"
+      role="button"
+    >
       <font-awesome-icon :icon="['fab', 'google']" color="white" size="5x" />
     </a>
     <a class="btn btn-default btn-oauth" role="button">
@@ -31,7 +60,9 @@
     </a>
     <p>
       Don't have an account yet ?
-      <a class="link-info" @click="emit('changeForm', AuthMode.Register)">Register here</a>
+      <router-link :to="{ name: 'signup' }" class="link-info"
+        >Register here</router-link
+      >
     </p>
   </div>
 </template>
@@ -60,14 +91,21 @@ const router = useRouter();
 const username = ref('');
 const password = ref('');
 
+const errorMessage = ref('');
+
 const login = async () => {
   const e = await authStore.signIn(username.value, password.value);
-  if (e) alert(`${e.message}`);
+  if (e) errorMessage.value = e.message;
   else router.push('/');
 };
 </script>
 
 <style lang="scss" scoped>
+// Inspect
+*:hover {
+  outline: 1px blue solid;
+}
+
 // utils
 @mixin filter-invert($n: 100%) {
   -webkit-filter: invert($n); /* safari 6.0 - 9.0 */
