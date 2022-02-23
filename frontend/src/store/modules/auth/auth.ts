@@ -1,6 +1,7 @@
 import { toNumber } from '@vue/shared';
 import { defineStore } from 'pinia';
 import api from '@/services/AuthService';
+import { useCurrentUserStore } from '@/store/currentUser';
 
 import vuexStore from '@/store';
 import { IError } from '@/models/IError';
@@ -24,10 +25,12 @@ export const useAuthStore = defineStore('auth', {
   },
   actions: {
     async signIn(username: string, password: string): Promise<IError | undefined> {
+      const currentUserStore = useCurrentUserStore();
       try {
         const resp = await api.signInLocal(username, password);
         this.setState(resp.data.access_token, resp.data.id);
 
+        currentUserStore.initStore(resp.data.id); // wip
         vuexStore.dispatch('getProfile', { id: resp.data.id, token: resp.data.access_token });
       } catch (err) {
         const e = err as AxiosError<IError>;
@@ -35,10 +38,12 @@ export const useAuthStore = defineStore('auth', {
       }
     },
     async signUp(username: string, email: string, password: string) {
+      const currentUserStore = useCurrentUserStore();
       try {
         const resp = await api.signUpLocal(email, username, password);
         this.setState(resp.data.access_token, resp.data.id);
 
+        currentUserStore.initStore(resp.data.id); // wip
         vuexStore.dispatch('getProfile', { id: resp.data.id, token: resp.data.access_token });
       } catch (err) {
         const e = err as AxiosError<IError>;
