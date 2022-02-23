@@ -1,7 +1,5 @@
 import http from '@/http';
 import { ISignedIn } from '@/models/ISignedIn';
-import { IError } from '@/models/IError';
-
 
 class AuthService {
   signInLocal(username: string, password: string) {
