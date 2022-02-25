@@ -11,7 +11,7 @@ export interface State {
   userId: number | null;
   email: string;
   username: string;
-  avatar: ImageData | null; //  string base64 ? 
+  avatar: string; //  string base64 ? 
   // avatar: File;
   //friends, pending requests, etc ?...
 }
@@ -21,7 +21,7 @@ export const useCurrentUserStore = defineStore('currentUser', {
     userId: null,
     username: '',
     email: '',
-    avatar: null,
+    avatar: '',
   }),
   getters: {
     getAvatarBase64(): string {
@@ -37,13 +37,13 @@ export const useCurrentUserStore = defineStore('currentUser', {
         const resp = await UserService.getUserById(myUserId);
         const resp2 = await UserService.getAvatarOfUser(myUserId);
 
-        this.setStore(resp.data, resp2.data);
+        this.setStore(resp.data, resp2);
       } catch (err) {
         const e = err as AxiosError<IError>;
         if (axios.isAxiosError(e)) return e.response?.data;
       }
     },
-    setStore(user: IUser, avatar: ImageData) {
+    setStore(user: IUser, avatar: string) {
       this.userId = user.id;
       this.username = user.username;
       this.email = user.email;

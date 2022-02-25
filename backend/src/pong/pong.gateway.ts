@@ -80,13 +80,14 @@ export class PongGateway {
 /*______Joining Game Events:_____________*/
 
 	@SubscribeMessage('joinGame')
-	joinGame(@MessageBody() gameId : string, @ConnectedSocket() socket : Socket) {
+	joinGame(@MessageBody() gameId : string, @ConnectedSocket() socket : Socket) : number[] {
 		const game = this.games.get(gameId);
-		if (!game) {
-			socket.emit("Error", "No game corresponding to this Id");
-			return ;
+		if (!game)
+		{
+			this.logger.log("yo")
+			return [11, 12];
 		}
-		game.join(socket);
+		return game.join(socket);
 	}
 
 	@SubscribeMessage('leaveGame')
