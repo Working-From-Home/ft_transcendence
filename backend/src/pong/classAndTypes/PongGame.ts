@@ -48,12 +48,13 @@ export class PongGame {
 			return false;
 	}
 	
-	join(socket : Socket) : void {
+	join(socket : Socket) : number[] {
 		socket.join(this.gameId);
+		const playersId = [this._players.left.userId, this._players.right.userId];
 
 		const userId = socket.data.userId;
 		if (userId != this._players.left.userId && userId != this._players.right.userId)
-			return ;
+			return playersId;
 
 		if (userId == this._players.left.userId)
 			this._players.left.socket = socket;
@@ -66,6 +67,8 @@ export class PongGame {
 		socket.on('keyup', (key) => {
 			this.handleKeyup(socket, key);
 		});
+
+		return playersId;
 	}
 
 	private handleKeydown(socket : Socket, key : string) : void {
