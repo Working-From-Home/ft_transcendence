@@ -10,12 +10,20 @@ const route = useRoute();
 const fileInput = ref<HTMLInputElement>();
 const avatar = ref<string>('');
 
-const isMine = computed<boolean>(() => route.path === '/profile');
+const props = defineProps({
+  userId: {
+    type: Number,
+    required: true
+  },
+  isOwner: {
+    type: Boolean,
+    required: true
+  }
+});
+
 const base64 = computed<string>(() => 'data:image/png;base64,' + avatar.value);
 
-let url: string = process.env.VUE_APP_BACKEND_SERVER_URI + '/users/';
-url += route.path === '/profile' ? authStore.userId : route.params.userid;
-url += '/avatar';
+let url: string = process.env.VUE_APP_BACKEND_SERVER_URI + '/users/' + props.userId + '/avatar';
 
 http
   .get(url, { responseType: 'arraybuffer' })
@@ -35,8 +43,7 @@ function formatImage(data: ArrayBuffer) {
 	var len = bytes.byteLength;
 	for (var i = 0; i < len; i++)
 		binary += String.fromCharCode(bytes[i]);
-	let newAvatar = window.btoa(binary);
-	return newAvatar;
+	return window.btoa(binary);
 }
 
 function uploadAvatar(event: any) {
@@ -60,18 +67,17 @@ function restoreAvatar() {
 			)
 		)
 }
-
 </script>
 
 <template>
-	<div class="image-wrapper m-auto" :class="isMine && 'clickable'" @click="uploadFile">
+	<div class="image-wrapper m-auto" :class="props.isOwner && 'clickable'" @click="uploadFile">
 		<img
 			:src="base64"
 			class="img-fluid rounded-start cropped"
 			alt="avatar"
 		/>
 		<input
-			v-if="isMine"
+			v-if="props.isOwner"
 			type="file"
 			style="display: none"
 			ref="fileInput"
@@ -80,7 +86,7 @@ function restoreAvatar() {
 			@change="uploadAvatar"
 		/>
 	</div>
-	<button @click="restoreAvatar">remove</button>
+	<button v-if="props.isOwner" @click="restoreAvatar">remove</button>
 </template>
 
 <style scoped>
