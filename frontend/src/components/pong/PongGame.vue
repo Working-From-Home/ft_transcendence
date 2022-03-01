@@ -1,8 +1,16 @@
 <template>
 	<!-- <div class="row justify-content-center p-4"> -->
-	<div class="col-md-10 col-xl-8 m-auto mt-4 p-3 bg-secondary rounded-3">
-		<h5>{{ score[0] }} | {{ score[1] }}</h5>
-		<h5 v-if="finished">{{ winner }} won the game!</h5>
+	<div class="col-md-10 col-xl-8 m-auto mt-4 p-3 rounded-3">
+		<div class="row mb-2">
+			<player-info v-if="gotPlayerIds" class="col"
+				:userId="playerIds[0]" side="left" :score="score[0]"/>
+			<div class="row col">
+				<h1 class="col">{{score[0]}}</h1>
+				<h1 class="col">{{score[1]}}</h1>
+			</div>
+			<player-info v-if="gotPlayerIds" class="col"
+				:userId="playerIds[1]" side="right" :score="score[1]"/>
+		</div>
     <canvas id="canvas" tabindex="0" width="640" height="400"
 				@keydown="handleKeydown"
         @keyup="handleKeyup">
@@ -14,21 +22,34 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import Card from '../ui/Card.vue'
+import PlayerInfo from './PlayerInfo.vue'
 import { IGameState, GameCanvas } from './GameCanvas'
 
 
 export default defineComponent({
-  components: { Card },
+  components: { Card, PlayerInfo },
 	data() {
 		return {
 			gameCanvas: {} as GameCanvas,
+			playerIds: [] as number[],
 			score: [0, 0],
 			finished: false,
 			winner: ''
 		}
 	},
 	created() {
-		this.$pongSocket.emit("joinGame", this.$route.params.gameId);
+		this.$pongSocket.emit(
+			"joinGame",
+			this.$route.params.gameId,
+			(playerIds : number[]) => {
+				if (playerIds.length === 0)
+				{
+					console.log(`game with id: ${this.$route.params.gameId} doesn't exist`);
+					this.$router.push({path: '/pong'});
+				}
+				console.log(`players id: ${playerIds}`);
+				this.playerIds = playerIds;
+		});
 	},
 	mounted() {
 		this.gameCanvas = new GameCanvas('#canvas');
@@ -68,6 +89,14 @@ export default defineComponent({
 				this.$pongSocket.emit("keyup", key);
     		}
 		},
+	},
+	computed: {
+		gotPlayerIds() {
+			if (this.playerIds.length === 0)
+				return false;
+			else
+				return true;
+		}
 	}
 })
 
@@ -75,8 +104,7 @@ export default defineComponent({
  
  <style scoped>
 		canvas {
-			background: #000000;
-			border:1px solid #000000;
+			border:1px solid #F0FFFF;
 			width: 100%
 		}
 </style>

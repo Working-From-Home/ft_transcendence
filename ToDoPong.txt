@@ -1,6 +1,6 @@
 Things left to in the pong:
 
-| |passer le socket store sous pinia.
+|v|passer le socket store sous pinia.
 
 Game request:
 4| |gérer les déconnexion lors de game request en cours.
