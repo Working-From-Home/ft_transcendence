@@ -1,4 +1,4 @@
-<template class="container-fluid">
+<template class="container-fluid-sm">
   <section>
     <the-header></the-header>
     <friend-list v-if="authStore.isLoggedIn"></friend-list>
@@ -32,6 +32,7 @@ const isChatView = computed(() => {
   if (route.path === '/chat') return true;
   return false;
 });
+
 </script>
 
 <style lang="scss">

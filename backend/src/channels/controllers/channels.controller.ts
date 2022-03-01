@@ -7,11 +7,16 @@ import { ChatService } from '../services/chat.service';
 import { CreateChannelDto } from '../dtos/create-channel.dto';
 import { UserChannel } from '../entities/user-channel.entity';
 import { UpdateResult } from 'typeorm';
+import { AppGateway } from 'src/app.gateway';
+import { OnlineService } from 'src/online.service';
+import { IChannel } from 'shared/models/socket-events';
 
 @Controller()
 @UseGuards(JwtAuthGuard)
 export class ChannelsController {
-	constructor(private chatService: ChatService) { }
+	constructor(private chatService: ChatService,
+				private readonly appGateway: AppGateway
+				) { }
 
 	@Post('/dm/:destId')
 	async createDm(
@@ -26,7 +31,13 @@ export class ChannelsController {
 		@Req() request,
 		@Body() data: CreateChannelDto
 	): Promise<Channel> {
-		return await this.chatService.createChannel(parseInt(request.user.sub), data);
+		const user = this.appGateway.server.in(`user:${request.user.sub}` );
+		let newChannel = await this.chatService.createChannel(parseInt(request.user.sub), data);
+		user.socketsJoin(`channel:${newChannel.id}`);
+		this.chatService.getChannel(newChannel.id).then( (y) => {
+		 	this.appGateway.server.in("channel:" + newChannel.id).emit("sendChannel", y);
+		})
+		return newChannel;
 	}
 
 	@Patch('/channels/:channelId')
@@ -42,7 +53,14 @@ export class ChannelsController {
 		@Req() request,
 		@Param('channelId') channelId: number
 	): Promise<UserChannel> {
-		return await this.chatService.joinChannel(channelId, parseInt(request.user.sub));
+		let newUserChannel : UserChannel;
+		newUserChannel = await this.chatService.joinChannel(channelId, parseInt(request.user.sub));
+		const user = this.appGateway.server.in(`user:${request.user.sub}` );
+		user.socketsJoin(`channel:${channelId}`);
+		this.chatService.getChannel(channelId).then( (y) => {
+		 	this.appGateway.server.in("channel:" + channelId).emit("sendChannel", y);
+		})
+		return newUserChannel;
 	}
 
 	@Delete('/channels/:channelId')
@@ -50,7 +68,21 @@ export class ChannelsController {
 		@Req() request,
 		@Param('channelId') channelId: number
 	): Promise<UpdateResult> {
-		return await this.chatService.leaveChannel(channelId, parseInt(request.user.sub));
+		this.chatService.tmpHASLEFTgetUsersOfChannel(channelId).then( (y) => {
+			console.log("user av", y)
+		})
+		let updateResult = await this.chatService.leaveChannel(channelId, parseInt(request.user.sub));
+		console.log("updateResult", updateResult)
+		const user = this.appGateway.server.in(`user:${request.user.sub}` );
+		user.socketsJoin(`channel:${channelId}`);
+		this.chatService.tmpHASLEFTgetUsersOfChannel(channelId).then( (y) => {
+			console.log("user ap", y)
+		})
+		this.chatService.getChannel(channelId).then( (y) => {
+			console.log("y", y)
+		 	this.appGateway.server.in("channel:" + channelId).emit("sendChannel", y);
+		})
+		return updateResult;
 	}
 
 	@Put('/channels/:channelId/mute/:userId')

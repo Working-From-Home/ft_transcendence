@@ -22,7 +22,6 @@ import { AppGateway } from './app.gateway';
 import { ChannelsModule } from './channels/channels.module';
 import { OnlineService } from './online.service';
 import { AppLoggerMiddleware } from './http.logger.middleware';
-
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -57,6 +56,7 @@ import { AppLoggerMiddleware } from './http.logger.middleware';
   ],
   controllers: [AppController],
   providers: [AppService, AppGateway, OnlineService],
+  exports: [AppGateway, OnlineService],
 })
 // before :
 // export class AppModule {}
