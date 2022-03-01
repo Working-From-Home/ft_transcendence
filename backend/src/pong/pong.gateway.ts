@@ -39,7 +39,7 @@ export class PongGateway {
 			const decodedToken = await this.authService.verifyJwt(socket.handshake.auth.token);
 			const userId = decodedToken.sub;
 			socket.data.userId = userId;
-			socket.join(userId.toString());
+			socket.join("pong" + userId.toString());
 			this.server.emit("inGameUsers", this.inGameUsers);
 			this.logger.log(`userId: ${userId} is connected to pong!`);
 		}
@@ -51,11 +51,19 @@ export class PongGateway {
 
 	private disconnect(socket: Socket) {
 		socket.emit('Error', new UnauthorizedException());
+		/*if (emitting request) --> cancel request*/
 		socket.disconnect();
 	}
  
 	handleDisconnect(socket: Socket) {
+		let requestId : string;
+
 		this.gameQueue.remove(socket);
+		if (requestId = this.isRequesting(socket.data.userId)) {
+			const gameRequest = this.gameRequests.get(requestId);
+			socket.to("pong" + gameRequest.guestId.toString()).emit("requestCanceled");
+			this.gameRequests.delete(requestId);
+		}
 	}
 
 /*________Matchmaking Events: ____________*/
@@ -114,9 +122,8 @@ export class PongGateway {
 					guestId: body.guestId,
 					gameSettings: body.gameSettings
 				});
-		this.server.to(body.guestId.toString()).emit("gameRequest", requestId);
+		this.server.to("pong" + body.guestId.toString()).emit("gameRequest", {hostId, requestId});
 
-		this.logger.log(body);
 		this.logger.log(`got request: ${requestId}`);
 		return requestId;
 	}
@@ -126,7 +133,7 @@ export class PongGateway {
 		const gameRequest = this.gameRequests.get(requestId);
 		if (!gameRequest || socket.data.userId != gameRequest.hostId)
 			return ;
-		socket.to(gameRequest.guestId.toString()).emit("requestCanceled");
+		socket.to("pong" + gameRequest.guestId.toString()).emit("requestCanceled");
 		this.gameRequests.delete(requestId);
 	}
 
@@ -139,9 +146,9 @@ export class PongGateway {
 		if (body.accepted) {
 			const gameId = await this.createPongGame([gameRequest.hostId, gameRequest.guestId], gameRequest.gameSettings);
 			socket.emit("matchFound", gameId);
-			socket.to(gameRequest.hostId.toString()).emit("matchFound", gameId);
+			socket.to("pong" + gameRequest.hostId.toString()).emit("matchFound", gameId);
 		}
-		socket.to(gameRequest.hostId.toString()).emit("requestAnswer", body.accepted);
+		socket.to("pong" + gameRequest.hostId.toString()).emit("requestAnswer", body.accepted);
 		this.gameRequests.delete(body.requestId);
 	}
 
@@ -201,6 +208,15 @@ export class PongGateway {
 	private removeFromInGame(userIds : number[]) {
 		this.inGameUsers = this.inGameUsers.filter((id) => (id !== userIds[0] && id !== userIds[1]));
 		this.server.emit("inGameUsers", this.inGameUsers);
+	}
+
+	private isRequesting(id : number) : string {
+		for (let [key, value] of this.gameRequests) {
+			if (value.hostId == id) {
+				return key;
+			}
+		}
+		return null;
 	}
 }
 
