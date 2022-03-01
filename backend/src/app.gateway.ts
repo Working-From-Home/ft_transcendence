@@ -3,7 +3,6 @@ import { ConnectedSocket, MessageBody,SubscribeMessage, WebSocketGateway, WebSoc
 import { Server, Socket } from 'socket.io';
 import { AuthService } from './auth/auth.service';
 
-
 import { ServerToClientEvents, ClientToServerEvents, InterServerEvents, SocketData} from 'shared/models/socket-events'
 
 import { ChatService } from './channels/services/chat.service'
@@ -17,7 +16,6 @@ export class AppGateway {
 	private logger: Logger = new Logger('AppGAteway');
 	@WebSocketServer()
 	server: Server<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>;
-
 
 	constructor(
 		private authService : AuthService,
@@ -64,8 +62,12 @@ export class AppGateway {
 		client.emit("connectedUsers", this.onlineService.getOnlineUsers());
 		client.broadcast.emit("userConnected", userId);
 		this.server.emit('numberOfOnlineUsers', this.onlineService.getTotalOnlineUsers())
+		client.join("user:" + userId);
 		// chat
 		this.chatService.getChannelsOfUser(userId).then( (y) => {
+			for (const obj of y){
+				client.join("channel:" + obj["roomId"]);
+			}
 			client.emit('sendChannels', y);
 		})
 		// friend requests, and other

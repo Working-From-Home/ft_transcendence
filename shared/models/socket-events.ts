@@ -11,7 +11,7 @@ export interface ISearchChannel
 }
 export interface IMessage {
     _id: number;
-	username: string;
+	username: string | null;
     content: string;
 	createdAt: string;
     date: string;
@@ -31,12 +31,11 @@ export interface IUserChannel {
 export interface IChannel {
 	roomId: number;
 	isDm: boolean;
-	avatar: String
 	roomName: string;
 	createdAt: Date;
 	owner: IUserChannel;
 	messages: IMessage[] | null;
-	users: IUserChannel[] | null;
+	users: IUserChannel[];
 }
 
 /// Online events
@@ -52,6 +51,7 @@ interface ClientToServerEventsOnline {}
 /// Chat events
 interface ServerToClientEventsChat {
   sendChannels: (channels: IChannel[]) => void;
+  sendChannel: (channels: IChannel) => void;
   sendUserChannels: (channelId: number, users: IUserChannel[]) => void;
 }
 
