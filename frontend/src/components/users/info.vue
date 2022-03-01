@@ -1,18 +1,23 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import ButtonDel from './ButtonDel.vue';
-import UserService from "@/services/UserService";
+import { onUpdated, ref } from 'vue';
+import UserService from '@/services/UserService';
+import { useAuthStore } from '@/store/modules/auth/auth';
+import ChallengeButton from '@/components/pong/ChallengeButton.vue';
+import ButtonDel from '@/components/users/ButtonDel.vue';
+import ButtonAdd from '@/components/users/ButtonAdd.vue';
 
 const props = defineProps({
   userId: {
     type: Number,
-    required: true
+    required: true,
   },
   isOwner: {
     type: Boolean,
-    required: true
-  }
+    required: true,
+  },
 });
+
+const authStore = useAuthStore();
 
 const username = ref<string>('');
 const email = ref<string>('');
@@ -21,8 +26,14 @@ const level = ref<number>(0);
 const victories = ref<number>(0);
 const losses = ref<number>(0);
 
-UserService.getUserById(props.userId)
-  .then(
+getUserData(props.userId);
+
+onUpdated(() => {
+  getUserData(props.userId);
+});
+
+function getUserData(id: number) {
+  UserService.getUserById(id).then(
     (response: any) => (
       (username.value = response.data.username),
       (email.value = response.data.email),
@@ -30,27 +41,28 @@ UserService.getUserById(props.userId)
       (level.value = response.data.statistics.level),
       (victories.value = response.data.statistics.victories),
       (losses.value = response.data.statistics.losses)
-    )
+    ),
   );
+}
 </script>
 
 <template>
-  <div class="text-black">
-    <h2 class="pb-2">{{ username }}</h2>
-    <div class="row pt-3 gx-3">
-      <div class="col-4">victories: {{ victories }}</div>
-      <div class="col-4">losses: {{ losses }}</div>
-      <div class="col-4">level: {{ level }}</div>
+  <div class="px-3 pt-3 pb-1">
+    <h2 class="pb-3">{{ username }}</h2>
+    <div class="row gx-3 pb-2">
+      <div class="col-12 col-md-4">victories:&nbsp&nbsp{{ victories }}</div>
+      <div class="col-12 col-md-4">losses:&nbsp&nbsp{{ losses }}</div>
+      <div class="col-12 col-md-4">level:&nbsp&nbsp{{ level }}</div>
     </div>
-    <div v-if="props.isOwner" class="row pt-5">
-      <button-del></button-del>
+    <div v-if="props.isOwner" class="m-4">
+      <ButtonDel></ButtonDel>
     </div>
-    <div v-if="!props.isOwner" class="row pt-5">
-      <div class="col-5 offset-1">
-        <button>Send friend request</button>
-      </div>
-      <div class="col-5 offset-1">
-        <button>Challenge</button>
+    <div v-if="!props.isOwner" class="row m-4"> 
+      <!-- <div class="col mx-1">
+        <ButtonAdd :userId="userId"></ButtonAdd>
+      </div> -->
+      <div class="col mx-1">
+        <ChallengeButton :guestId="props.userId">Challenge</ChallengeButton>
       </div>
     </div>
   </div>

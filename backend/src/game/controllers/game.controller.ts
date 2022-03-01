@@ -10,9 +10,9 @@ export class GameController {
 
 
 	@Get('/:userId')
-	getUserGames(@Param('userId', ParseIntPipe) userId: number)
+	async getUserGames(@Param('userId', ParseIntPipe) userId: number)
 		: Promise<Game[]>
 	{
-		return this.gameService.getGames(userId);
+		return await this.gameService.getGames(userId);
 	}
 }

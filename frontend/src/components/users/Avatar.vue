@@ -1,109 +1,108 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
-import { useRoute } from 'vue-router';
-import { useAuthStore } from '@/store/modules/auth/auth';
-import ButtonDel from './ButtonDel.vue';
-import http from '@/http';
-
-const authStore = useAuthStore();
-const route = useRoute();
-const fileInput = ref<HTMLInputElement>();
-const avatar = ref<string>('');
+import { onUpdated, ref } from 'vue';
+import UserService from '@/services/UserService';
 
 const props = defineProps({
   userId: {
     type: Number,
-    required: true
+    required: true,
   },
   isOwner: {
     type: Boolean,
-    required: true
-  }
+    required: true,
+  },
 });
 
-const base64 = computed<string>(() => 'data:image/png;base64,' + avatar.value);
+const fileInput = ref<HTMLInputElement>();
+const avatar = ref<string>('');
 
-let url: string = process.env.VUE_APP_BACKEND_SERVER_URI + '/users/' + props.userId + '/avatar';
+UserService.getAvatarOfUser(props.userId).then((av) => (avatar.value = av));
 
-http
-  .get(url, { responseType: 'arraybuffer' })
-  .then(
-    (response) => (
-			avatar.value = formatImage(response.data)
-    )
-  );
+onUpdated(() => {
+  UserService.getAvatarOfUser(props.userId).then((av) => (avatar.value = av));
+});
 
 function uploadFile() {
-	fileInput.value?.click();
-}
-
-function formatImage(data: ArrayBuffer) {
-	var binary = '';
-	var bytes = new Uint8Array(data);
-	var len = bytes.byteLength;
-	for (var i = 0; i < len; i++)
-		binary += String.fromCharCode(bytes[i]);
-	return window.btoa(binary);
+  fileInput.value?.click();
 }
 
 function uploadAvatar(event: any) {
-	const formData = new FormData();
-	formData.append('image', event.target.files[0]);
-	http
-		.put(url, formData, { responseType: 'arraybuffer' })
-		.then(
-			(response) => (
-				avatar.value = formatImage(response.data)
-			)
-		)
+  UserService.setMyAvatar(props.userId, event.target.files[0]).then(
+    (response) => (avatar.value = response),
+  );
 }
 
 function restoreAvatar() {
-	http
-		.delete(url)
-		.then(
-			(response) => (
-				avatar.value = formatImage(response.data)
-			)
-		)
+  UserService.resetDefaultAvatar(props.userId).then(
+    (response) => (avatar.value = response),
+  );
 }
 </script>
 
 <template>
-	<div class="image-wrapper m-auto" :class="props.isOwner && 'clickable'" @click="uploadFile">
-		<img
-			:src="base64"
-			class="img-fluid rounded-start cropped"
-			alt="avatar"
-		/>
-		<input
-			v-if="props.isOwner"
-			type="file"
-			style="display: none"
-			ref="fileInput"
-			accept="image/*"
-			name="uploaded_file"
-			@change="uploadAvatar"
-		/>
-	</div>
-	<button v-if="props.isOwner" @click="restoreAvatar">remove</button>
+  <img
+    :src="avatar"
+    class="img-fluid rounded mx-auto"
+    :class="props.isOwner && 'clickable'"
+    data-bs-toggle="modal"
+    data-bs-target="#editAvatar"
+    alt="avatar"
+  />
+
+  <div
+    v-if="props.isOwner"
+    class="modal fade"
+    id="editAvatar"
+    data-bs-backdrop="static"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header text-black">
+          <h4 class="modal-title">Edit your avatar</h4>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+          ></button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body text-black">
+          <p>What do you want to do ?</p>
+          <button
+            type="button"
+            class="btn btn-outline-success mx-3"
+            data-bs-dismiss="modal"
+            @click="uploadFile"
+          >
+            Upload a new avatar
+          </button>
+          <input
+            v-if="props.isOwner"
+            type="file"
+            style="display: none"
+            ref="fileInput"
+            accept="image/*"
+            name="uploaded_file"
+            @change="uploadAvatar"
+          />
+          <button
+            type="button"
+            class="btn btn-outline-danger mx-3"
+            data-bs-dismiss="modal"
+            @click="restoreAvatar"
+          >
+            restore my default avatar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style scoped>
-.image-wrapper {
-  width: 18vw;
-  height: 18vw;
-  overflow: none;
-}
-
 .clickable {
   cursor: pointer;
-}
-
-.cropped {
-  /* object-fit: none; Do not scale the image */
-  object-position: center;
-  width: 100%;
-  width: 100%;
 }
 </style>

@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { onUpdated, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useAuthStore } from '@/store/modules/auth/auth';
-import Avatar from "@/components/users/Avatar.vue";
-import Info from "@/components/users/Info.vue";
-import History from "@/components/users/History.vue";
+import Avatar from '@/components/users/Avatar.vue';
+import Info from '@/components/users/Info.vue';
+import History from '@/components/users/History.vue';
 
 const authStore = useAuthStore();
 const route = useRoute();
@@ -15,21 +15,39 @@ const isOwner = ref<boolean>(false);
 userId.value = +route.params.userid;
 isOwner.value = userId.value === authStore.userId;
 
+onUpdated(() => {
+  userId.value = +route.params.userid;
+  isOwner.value = userId.value === authStore.userId;
+});
 </script>
 
-<template>  
-  <div class="container py-5 px-5 bg-info">
-    <div class="row">
-      <div class="col col-sm-12 col-md-3 rounded bg-white">
-        <avatar :userId="userId" :isOwner="isOwner"></avatar>
+<template>
+  <div class="container my-5 px-5">
+    <!-- row 1 -->
+    <div class="row gx-3 gy-3">
+      <!-- avatar -->
+      <div class="col-12 col-ms-12 col-md-3">
+        <div
+          class="bg-light rounded d-flex flex-column justify-content-center"
+          style="height: 100%"
+        >
+          <avatar :userId="userId" :isOwner="isOwner"></avatar>
+        </div>
       </div>
-      <div class="col col-sm-12 col-md-8 offset-md-1 rounded bg-white">
-        <info :userId="userId" :isOwner="isOwner"></info>
+      <!-- info card -->
+      <div class="col pt-ms-3">
+        <div class="bg-light rounded text-black" style="height: 100%">
+          <info :userId="userId" :isOwner="isOwner"></info>
+        </div>
       </div>
     </div>
-    <div class="row pt-2">
-      <div class="col rounded bg-white">
-        <history></history>
+    <!-- row 2 -->
+    <div class="row g-3">
+      <!-- match history -->
+      <div class="col pt-3">
+        <div class="bg-light rounded text-black" style="height: 100%">
+          <history :userId="userId"></history>
+        </div>
       </div>
     </div>
   </div>

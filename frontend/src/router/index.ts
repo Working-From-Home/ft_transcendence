@@ -5,7 +5,7 @@ import PongHome from '../components/pong/PongHome.vue'
 import Auth from "@/views/auth/auth.vue";
 import { useAuthStore } from "@/store/modules/auth/auth";
 import { AuthMode } from "@/views/auth/auth.interface";
-import Profile from "@/views/profiles/Profile.vue"
+import Profile from "@/views/profile/Profile.vue"
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -47,18 +47,8 @@ const routes: Array<RouteRecordRaw> = [
       import("../views/Chat.vue"),
   },
   {
-    path: "/profile", // TEMPORARY
     name: "profile",
-  	meta: {
-      title: 'Profile',
-      requiresAuth: true
-    },
-    component: () =>
-      import("../views/profiles/Profile.vue"),
-  },
-  {
     path: "/users/:userid",
-    name: "userProfile",
 	  meta: { requiresAuth: true },
     component: Profile,
   },
