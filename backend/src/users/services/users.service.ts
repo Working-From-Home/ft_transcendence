@@ -32,13 +32,13 @@ export class UsersService {
     }
 
     async findById(id: number): Promise<User> {
-        const user = await this.repo.findOne(id);
+        const user = await this.repo.findOne({ where: { id }, relations: ['stats'] });
         if (!user) { throw new NotFoundException('user not found'); }
         return user;
     }
 
     async findByIds(ids: number[]): Promise<User[]> {
-        const users = await this.repo.findByIds(ids);
+        const users = await this.repo.findByIds(ids, { relations: ['stats'] });
         return users;
     }
 
@@ -74,7 +74,7 @@ export class UsersService {
 
     async paginate(options: IPaginationOptions): Promise<Pagination<User>> {
         const queryBuilder = this.repo.createQueryBuilder('user');
-        queryBuilder.orderBy('user.username', 'DESC');
+        queryBuilder.orderBy('user.id', 'ASC');
         return paginate<User>(queryBuilder, options);
     }
 

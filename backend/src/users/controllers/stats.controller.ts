@@ -23,7 +23,6 @@ export class StatsController {
     ) {}
 
     @Get()
-    @UseGuards(CurrentUserGuard)
     async getStats(@Param('id', ParseIntPipe) id: number) {
         const user = await this.usersService.getUserWithStats(id);
         return user.stats;

@@ -47,7 +47,7 @@
 									{{ $store.getters.myEmail + "(idk why become null, need to fix it)" }}
 								</a>
 								<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-									<li><router-link to="/profile" class="dropdown-item">My Profile</router-link></li>
+									<li><router-link :to="{ name: 'profile', params: { userid: authStore.userId }}" class="dropdown-item">Profile</router-link></li>
 									<li><router-link to="/admin" class="dropdown-item">Admin Pannel</router-link></li>
 									<li><hr class="dropdown-divider"></li>
 									<li v-if="authStore.isLoggedIn"><router-link class="logout dropdown-item" to="/" @click="logout">Logout </router-link></li>

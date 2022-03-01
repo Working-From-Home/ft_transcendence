@@ -8,7 +8,10 @@ export default {
 			userId: null,
 			username: null,
 			email: null,
-			avatar: null
+			avatar: null,
+			level: 0,
+			victories: 0,
+			losses: 0
 		};
 	},
 	mutations,

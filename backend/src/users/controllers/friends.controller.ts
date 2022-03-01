@@ -39,6 +39,8 @@ export class FriendsController {
             users = await this.friendshipService.getFriends(userId);
         } else if (status === 'pending') {
             users = await this.friendshipService.getPendings(userId);
+        } else if (status === 'sent') {
+            users = await this.friendshipService.getSentRequests(userId);
         } else {
             throw new BadRequestException('bad status');
         }
@@ -50,7 +52,7 @@ export class FriendsController {
     @Serialize(FriendshipDto)
     async initiateFriendship(
         @Param('id', ParseIntPipe) applicantId: number,
-        @Param('recipientId', ParseIntPipe) recipientId: number,
+        @Param('recipientId', ParseIntPipe) recipientId: number
     ): Promise<Friendship> {
         if (await this.friendshipService.twoWaySearch(applicantId, recipientId)) {
             throw new BadRequestException('the relationship already exists');
@@ -77,7 +79,7 @@ export class FriendsController {
         @Param('id', ParseIntPipe) lhsId: number,
         @Param('friendId', ParseIntPipe) rhsId: number
     ): Promise<Friendship> {
-        const friendship = await this.friendshipService.twoWaySearch(lhsId, rhsId);
+        const friendship = await this.friendshipService.twoWaySearch(lhsId, rhsId, "accepted");
         if (!friendship) { throw new NotFoundException('request not found'); }
         return await this.friendshipService.remove(friendship);
     }
