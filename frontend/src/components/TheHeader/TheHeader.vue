@@ -68,13 +68,14 @@ import ChatService from "../../services/ChatService";
 import { IChannel, IUserChannel } from "shared/models/socket-events";
 import { useAuthStore } from "@/store/modules/auth/auth";
 import { useStatusStore } from "@/store/modules/status/status";
+import { useChatRoomsStore } from '@/store/modules/chatroom/chatroom'
 
 export default defineComponent({
 	setup() {
 		const authStore = useAuthStore();
 		const statusStore = useStatusStore();
-
-		return { authStore, statusStore };
+		const chatRoomsStore = useChatRoomsStore();
+		return { authStore, statusStore, chatRoomsStore };
 	},
 	computed: {
 		connect(): boolean {
@@ -96,8 +97,14 @@ export default defineComponent({
 						obj["users"] = await ChatService.sendUserOfChannels(obj["roomId"]);
 						obj["messages"] = await ChatService.sendMessagesOfChannels(obj["roomId"]);
 					}
-					console.log(`front`, resp);
-					this.$store.dispatch('fetchRooms', {rooms: resp});
+					//console.log(`front`, resp);
+					this.chatRoomsStore.fetchRooms(resp);
+				});
+				this.$socketapp.on("sendChannel", async (resp: IChannel) => {
+					resp["users"] = await ChatService.sendUserOfChannels(resp["roomId"]);
+					resp["messages"] = await ChatService.sendMessagesOfChannels(resp["roomId"]);
+					//console.log(`One Room`, resp);
+					this.chatRoomsStore.fetchRoom(resp);
 				});
 			}
 			return this.authStore.isLoggedIn;

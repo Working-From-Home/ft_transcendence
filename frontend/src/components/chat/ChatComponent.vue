@@ -1,11 +1,12 @@
 <template>
 	<div class="chat">
-		<chat-window
+		<chat-window as any
 			height="calc(100vh - 130px)"
 			:current-user-id="currentUserId"
-			:rooms="rooms"
+			:rooms="(storeRoom as any)"
+			:rooms-order="'desc'"
 			:rooms-loaded="true"
-			:messages="messages"
+			:messages="(messages as any)"
 			:messages-loaded="messagesLoaded"
 			:showReactionEmojis="false"
 			:showAudio="false"
@@ -16,7 +17,6 @@
 			:rooms-list-opened="opened"
 			@send-message="sendMessage"
 			@fetch-messages="fetchMessages"
-			@add-room="addRoom"
 			@room-action-handler="menuActionHandler"
 			@menu-action-handler="menuActionHandler"
 			@message-action-handler="menuMessageHandler"
@@ -35,38 +35,24 @@
 		</template>
 		</chat-window>
 		<chat-new-room-modal/>
+		<chat-info-user-modal :modalMessageUserId="modalMessageUserId" :menuMessageModal="menuMessageModal"/>
 	</div>
 </template>
 
 <script lang='ts'>
 import ChatWindow from 'vue-advanced-chat';
 import 'vue-advanced-chat/dist/vue-advanced-chat.css';
-import { IChannel, IMessage } from 'shared/models/socket-events';
+import { IChannel, IMessage, IUserChannel } from 'shared/models/socket-events';
 import ChatSearchTmp from "./ChatSearchTmp.vue";
 import ChatNewRoomModal from "./ChatNewRoomModal.vue";
+import ChatInfoUserModal from "./ChatInfoUserModal.vue";
 import ChatService from "../../services/ChatService";
 import { computed, defineComponent } from '@vue/runtime-core';
+import { useChatRoomsStore } from '@/store/modules/chatroom/chatroom'
+import { useAuthStore } from "@/store/modules/auth/auth";
+import { toNumber } from '@vue/shared';
+import { Modal } from "bootstrap";
 
-interface State {
-  currentUserId: number,
-  rooms: IChannel[],
-  opened: boolean,
-  messages: IMessage[],
-  messagesLoaded: boolean,
-  loadingRooms: boolean,
-  roomActions: [{ name: 'leaveChannel', title: 'Leave Channel' }, { name: 'destroyChannel', title: 'Destroy Channel' }],
-  menuActions: [
-				{ name: 'muteUser', title: 'Mute User' },
-				{ name: 'kickUser', title: 'Kick User' },
-				{ name: 'banUser', title: 'Ban User' },
-  ],
-  messageactions: [
-					{
-						name: 'More informations',
-						title: 'More informations'
-					},
-  ]
-};
 interface CustomAction {
 	name: string
 	title: string
@@ -76,6 +62,11 @@ interface CustomOptions {
 }
 
 export default defineComponent({
+	setup() {
+		const chatRoomsStore = useChatRoomsStore();
+		const AuthStore = useAuthStore();
+		return { AuthStore, chatRoomsStore, storeRoom: computed(() => chatRoomsStore.getRooms) };
+	},
 	name: 'Chat',
 	props: {
 		size: String,
@@ -83,20 +74,21 @@ export default defineComponent({
 	components: {
 		ChatWindow,
 		ChatSearchTmp,
-		ChatNewRoomModal
+		ChatNewRoomModal,
+		ChatInfoUserModal
 	},
 	created() {
-		this.currentUserId = this.$store.getters.myUserId,
-		this.fetchRooms(),
-		this.messages = [];
+		this.currentUserId = toNumber(localStorage.getItem('userId'))
 	},
-	data: (): State => {
+	data(){
 		return {
-			currentUserId: -1,
-			rooms: [],
-			opened: true, 
-			messages: [],
-			messagesLoaded: false,
+			currentUserId: -1 as number,
+			currentUser: null as IUserChannel | null,
+			currentRoom: null as IChannel | null,
+			rooms: [] as IChannel[] | [],
+			opened: true as boolean, 
+			messages: [] as IMessage[],
+			messagesLoaded: false as boolean,
 			loadingRooms: false as boolean,
 			roomActions: [
 				{ name: 'leaveChannel', title: 'Leave Channel' },
@@ -113,21 +105,25 @@ export default defineComponent({
 					title: 'More informations'
 				},
 			],
+			menuMessageModal: {} as Modal,
+			modalMessageUserId: -1 as number
 		}
 	},
+	mounted() {
+		this.menuMessageModal = new Modal("#menuMessageModal");
+	},
 	computed: {
-		watchRooms() {
-			return this.$store.getters.getRooms
-		},
 		isChatView() {
 			if (this.$route.path === "/chat")
 				return true;
 			return false;
-		}
-	},
-	watch:{
-		watchRooms(value) {
-			this.fetchRooms();
+		},
+		isMuted() {
+			while (this.currentUser === null)
+				;
+			if (this.currentUser["mutedUntil"] === null)
+				return false;
+			return true;
 		},
 	},
 	methods: {
@@ -135,6 +131,13 @@ export default defineComponent({
 			this.$router.push('/chat');
 		},
 		fetchMessages({ room = {} as IChannel, options = {} as CustomOptions}) {
+			this.currentRoom = room;
+			for (const obj of room["users"]){
+				if (obj["_id"] === this.currentUserId){
+					this.currentUser = obj
+					break;
+				}
+			}
 			if (this.size === "mini")
 				this.opened = false;
 			if (options.reset)
@@ -162,63 +165,18 @@ export default defineComponent({
 			let y = new Date().toString().substring(16, 21)
 			newMessage = {
 					_id: this.messages.length,
-					username: this.$store.getters.myUserName,
+					username: localStorage.getItem('username'),
 					content: message.content,
 					createdAt: new Date().toString().substring(16, 21),
 					date: new Date().toDateString(),
 					channel: room,
-					senderId: this.$store.getters.myUserId
+					senderId: this.currentUserId
 			};
 			this.messages = [
 				...this.messages,
 				newMessage
 			]
-			this.$store.dispatch('addMessage', {roomId: message.roomId, newMessage: newMessage});
-		},
-		async fetchRooms(){
-			this.rooms = JSON.parse(JSON.stringify(this.$store.getters.getRooms));
-			//console.log("rooms", this.rooms);
-		},
-		addRoom(){
-			let newRoom: IChannel;
-			newRoom = {
-				roomId: this.rooms.length + 1 as number,
-				roomName: 'Room ' + (this.rooms.length + 1),
-				avatar: "",
-				isDm: false,
-				messages: [],
-				createdAt: new Date(),
-				owner: { 
-						_id: this.$store.getters.myUserId, 
-						username: this.$store.getters.myUserName,
-						channelId: this.rooms.length + 1,
-						isOwner: true,
-						isAdmin: "admin",
-						mutedUntil: null
-				},
-				users: [
-					{ 
-						_id: this.$store.getters.myUserId, 
-						username: this.$store.getters.myUserName,
-						channelId: this.rooms.length + 1,
-						isOwner: true,
-						isAdmin: "admin",
-						mutedUntil: null
-					},
-					{ 	
-						_id: 4321,
-						username: 'John Snow',
-						channelId: this.rooms.length + 1,
-						isOwner: false,
-						isAdmin: "user",
-						mutedUntil: null
-					}
-				]
-			};
-			this.rooms = [
-				...this.rooms,
-				newRoom
-			]
+			this.chatRoomsStore.addMessage(newMessage, message.roomId);
 		},
 		menuActionHandler({ action = {} as CustomAction, roomId = {} as number }) {
 			switch (action.name) {
@@ -235,10 +193,15 @@ export default defineComponent({
 		destroyChannel() {
 			//
 		},
-		menuMessageHandler({ action = {} as CustomAction, roomId = {} as number }) {
+		menuMessageHandler({ action = {} as CustomAction, roomId = {} as number, message = {} as IMessage }) {
 			switch (action.name) {
-				case 'More informations':
-					return $('#my-modal').modal('show');;
+				case 'More informations':{
+					if (this.$route.path === "/chat"){
+						this.modalMessageUserId = message["senderId"]
+						return this.menuMessageModal.show();
+					}
+					this.$router.push('/chat');
+				}
 			}
 		},
 	}

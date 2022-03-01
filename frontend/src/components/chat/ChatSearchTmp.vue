@@ -61,9 +61,6 @@ export default defineComponent({
 		alert("This channel doesn't exist")
     }
   },
-  computed:{
-    created() {}
-  },
 })
 
 </script>

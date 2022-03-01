@@ -7,7 +7,6 @@ import { Channel } from "../entities/channel.entity";
 import { Message } from "../entities/message.entity";
 import { UserChannel } from "../entities/user-channel.entity";
 import { CreateChannelDto } from "../dtos/create-channel.dto";
-// tmp
 import { ISearchChannel, IUserChannel, IChannel } from "shared/models/socket-events";
 
 @Injectable()
@@ -57,7 +56,6 @@ export class ChatService {
       owner.channelId = newChannel.id;
       owner.role = 'admin';
       await entityManager.save(owner);
-
       return newChannel;
     });
   }
@@ -226,10 +224,29 @@ export class ChatService {
 		FROM "user_channel" uc
 			INNER JOIN "channel" c ON uc."channelId" = c."id"
 			INNER JOIN "user" u ON uc."userId" = u."id"
-		WHERE "channelId" IN (${channelId}) AND "hasLeft"=FALSE`
+		WHERE "channelId" IN (${channelId}) AND uc."hasLeft"=FALSE`
 	  );
 	return y;
   }
+
+//A supprimer, pour faire des tests pour filtrer avec hasLeft
+ async tmpHASLEFTgetUsersOfChannel(channelId: number) {
+	const y = await getManager().connection.query(
+		`SELECT uc."userId" AS "_id",
+				uc."channelId" AS "channelId",
+				(uc."userId" = c."ownerId") AS "isOwner",
+				(uc."role" = 'admin') AS "isAdmin",
+				uc."mutedUntil" AS "mutedUntil",
+				u.username AS "username",
+				uc."hasLeft"
+		FROM "user_channel" uc
+			INNER JOIN "channel" c ON uc."channelId" = c."id"
+			INNER JOIN "user" u ON uc."userId" = u."id"
+		WHERE "channelId" IN (${channelId}) AND uc."hasLeft"=FALSE`
+	  );
+	return y;
+  }
+
   async getMessagesOfChannel(channelId: number) {
 	return getRepository(Message)
        .createQueryBuilder("m")
@@ -254,6 +271,17 @@ export class ChatService {
 		LEFT JOIN user_channel u
 			ON u."channelId" = c.id
 		WHERE u."userId"=(${userId}) AND u."hasLeft"=FALSE`
+	  );
+	return a;
+  }
+  async getChannel(channelId: number): Promise<IChannel> {
+	const a = await getManager().connection.query(
+		`SELECT c.id AS "roomId",
+				c."isDm",
+				c.title AS "roomName",
+				c."createdAt"
+		FROM Channel c
+		WHERE c."id"=(${channelId})`
 	  );
 	return a;
   }
