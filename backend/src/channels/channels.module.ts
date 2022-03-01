@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Game } from 'src/game/entities/game.entity';
 import { Channel } from './entities/channel.entity';
@@ -7,7 +7,9 @@ import { UserChannel } from './entities/user-channel.entity';
 import { ChannelsController } from './controllers/channels.controller';
 import { ChatService } from './services/chat.service';
 import { UsersModule } from 'src/users/users.module';
-
+import { AppGateway } from 'src/app.gateway';
+import { AppModule } from 'src/app.module';
+import { AuthModule } from 'src/auth/auth.module';
 @Module({
     imports: [
         TypeOrmModule.forFeature([
@@ -16,17 +18,18 @@ import { UsersModule } from 'src/users/users.module';
             Channel,
             Game
         ]),
-        UsersModule
+        UsersModule,
+		AuthModule,
+		forwardRef(() => AppModule),
     ],
     providers: [
         ChatService,
-
     ],
     controllers: [
         ChannelsController
     ],
     exports: [
-        ChatService
+        ChatService,
     ]
 })
 export class ChannelsModule {}

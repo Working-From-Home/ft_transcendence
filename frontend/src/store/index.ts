@@ -1,7 +1,6 @@
 import { createLogger, createStore, Store, useStore as baseUseStore } from 'vuex';
 import { InjectionKey } from 'vue';
 
-import chatroomModule from './modules/chatroom';
 import profileModule from './modules/profile';
 
 const debug = process.env.NODE_ENV !== 'production';
@@ -9,7 +8,6 @@ const plugins = debug ? [createLogger()] : [];
 
 export default createStore({
   modules: {
-    chatroom: chatroomModule,
     profile: profileModule,
   },
   strict: debug,
