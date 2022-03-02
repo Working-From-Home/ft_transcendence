@@ -52,6 +52,7 @@ interface ClientToServerEventsOnline {}
 interface ServerToClientEventsChat {
   sendChannels: (channels: IChannel[]) => void;
   sendChannel: (channels: IChannel) => void;
+  leaveChannel: (channelId: number) => void;
   sendUserChannels: (channelId: number, users: IUserChannel[]) => void;
 }
 
