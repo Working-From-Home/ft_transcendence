@@ -64,26 +64,17 @@ export class ChannelsController {
 	}
 
 	@Delete('/channels/:channelId')
-	async leaveChannel(
-		@Req() request,
-		@Param('channelId') channelId: number
-	): Promise<UpdateResult> {
-		this.chatService.tmpHASLEFTgetUsersOfChannel(channelId).then( (y) => {
-			console.log("user av", y)
-		})
-		let updateResult = await this.chatService.leaveChannel(channelId, parseInt(request.user.sub));
-		console.log("updateResult", updateResult)
-		const user = this.appGateway.server.in(`user:${request.user.sub}` );
-		user.socketsJoin(`channel:${channelId}`);
-		this.chatService.tmpHASLEFTgetUsersOfChannel(channelId).then( (y) => {
-			console.log("user ap", y)
-		})
+    async leaveChannel(
+        @Req() request,
+        @Param('channelId') channelId: number ) {
+        let updateResult = await this.chatService.leaveChannel(channelId, parseInt(request.user.sub));
+        console.log("updateResult", updateResult)
+        const user = this.appGateway.server.in(`user:${request.user.sub}` ).socketsLeave(`channel:${channelId}`)
 		this.chatService.getChannel(channelId).then( (y) => {
-			console.log("y", y)
-		 	this.appGateway.server.in("channel:" + channelId).emit("sendChannel", y);
-		})
-		return updateResult;
-	}
+	 	 	this.appGateway.server.in("channel:" + channelId).emit("sendChannel", y);
+	 	})
+		//this.appGateway.server.in("user:" + userId).emit("leaveChannel", channelId);
+    }
 
 	@Put('/channels/:channelId/mute/:userId')
 	async muteUser(
