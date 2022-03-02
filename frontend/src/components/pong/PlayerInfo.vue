@@ -34,7 +34,7 @@ export default defineComponent({
 	},
 	computed: {
 		userAvatar() : string {
-			return 'data:image/png;base64,' + this.avatar;
+			return this.avatar;
 		},
 		username() {
 			return this.user.username;
