@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { computed, onUpdated, ref } from 'vue';
-import http from '@/http';
+import { onUpdated, ref, watch } from 'vue';
 import moment from 'moment';
 import UserService from '@/services/UserService';
 
@@ -8,14 +7,14 @@ const props = defineProps({
   userId: {
     type: Number,
     required: true,
-  },
+  }
 });
 
 const games = ref<any>(null);
 
 getGameHistory();
 
-onUpdated(() => {
+watch(() => props.userId, (first, second) => {
   getGameHistory();
 });
 

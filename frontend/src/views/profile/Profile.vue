@@ -19,6 +19,7 @@ onUpdated(() => {
   userId.value = +route.params.userid;
   isOwner.value = userId.value === authStore.userId;
 });
+
 </script>
 
 <template>
