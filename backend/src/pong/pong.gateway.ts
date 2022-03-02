@@ -1,4 +1,4 @@
-import { Logger, UnauthorizedException } from '@nestjs/common';
+import { Logger, ParseIntPipe, UnauthorizedException, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer, WsResponse } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { PongGame } from './classAndTypes/PongGame';

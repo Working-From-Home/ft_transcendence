@@ -6,7 +6,8 @@
 
 				<!-- Modal body -->
 				<div class="modal-body text-black">
-					player with id {{requesterId}} challenge you!
+					<player-info :userId="hostId" side="left"></player-info>
+					<h3>challenge you!</h3>
 				</div>
 
 				<div class="modal-footer">
@@ -23,11 +24,13 @@ import { useAuthStore } from '@/store/modules/auth/auth';
 import { useStatusStore } from '@/store/modules/status/status';
 import { Modal } from 'bootstrap';
 import { defineComponent } from 'vue'
+import PlayerInfo from './PlayerInfo.vue';
 
 export default defineComponent({
+	components: {PlayerInfo},
 	data() {
 		return {
-			requesterId: 0,
+			hostId: 0,
 			requestId: "",
 			gotChallengeModal: {} as Modal
 		}
@@ -41,14 +44,14 @@ export default defineComponent({
 	mounted() {
 		this.gotChallengeModal = new Modal("#gotChallengeModal");
 
-		console.log("mounting pongSocket!")
-
 		this.$pongSocket.auth = { token: `${this.authStore.token}`};
 		this.$pongSocket.connect();
+
 		this.$pongSocket.on("gameRequest", (payload) => {
 			console.log("got game request!")
-			this.requesterId = payload.requesterId;
+			this.hostId = payload.hostId as number;
 			this.requestId = payload.requestId;
+			console.log(`request from id: ${this.hostId}`);
 			this.gotChallengeModal.show();
 		});
 		this.$pongSocket.on("requestCanceled", () => {
