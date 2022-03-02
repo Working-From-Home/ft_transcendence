@@ -11,6 +11,9 @@ function formatImage(data: ArrayBuffer) : string {
 }
 
 class UserService {
+  async paginate(link: string) {
+    return await http.get(link);
+  }
   getUserById(id: number) {
     return http.get<IUser>(`/users/${id}`);
   }
@@ -30,6 +33,9 @@ class UserService {
   }
   async getGameHistory(userId: number) {
     return await http.get(`/game/${userId}`);
+  }
+  async getGamePagination(userId: number, link: string) {
+    return await http.get(link);
   }
   async getFriendships(userId: number, status: string) {
     return await http.get(`/users/${userId}/friends?status=${status}`);
