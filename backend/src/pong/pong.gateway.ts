@@ -1,4 +1,4 @@
-import { Logger, UnauthorizedException } from '@nestjs/common';
+import { Logger, ParseIntPipe, UnauthorizedException, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer, WsResponse } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { PongGame } from './classAndTypes/PongGame';
@@ -51,11 +51,19 @@ export class PongGateway {
 
 	private disconnect(socket: Socket) {
 		socket.emit('Error', new UnauthorizedException());
+		/*if (emitting request) --> cancel request*/
 		socket.disconnect();
 	}
  
 	handleDisconnect(socket: Socket) {
+		let requestId : string;
+
 		this.gameQueue.remove(socket);
+		if (requestId = this.isRequesting(socket.data.userId)) {
+			const gameRequest = this.gameRequests.get(requestId);
+			socket.to(gameRequest.guestId.toString()).emit("requestCanceled");
+			this.gameRequests.delete(requestId);
+		}
 	}
 
 /*________Matchmaking Events: ____________*/
@@ -114,9 +122,8 @@ export class PongGateway {
 					guestId: body.guestId,
 					gameSettings: body.gameSettings
 				});
-		this.server.to(body.guestId.toString()).emit("gameRequest", requestId);
+		this.server.to(body.guestId.toString()).emit("gameRequest", {hostId, requestId});
 
-		this.logger.log(body);
 		this.logger.log(`got request: ${requestId}`);
 		return requestId;
 	}
@@ -201,6 +208,15 @@ export class PongGateway {
 	private removeFromInGame(userIds : number[]) {
 		this.inGameUsers = this.inGameUsers.filter((id) => (id !== userIds[0] && id !== userIds[1]));
 		this.server.emit("inGameUsers", this.inGameUsers);
+	}
+
+	private isRequesting(id : number) : string {
+		for (let [key, value] of this.gameRequests) {
+			if (value.hostId == id) {
+				return key;
+			}
+		}
+		return null;
 	}
 }
 

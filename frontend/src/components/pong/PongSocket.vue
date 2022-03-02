@@ -1,30 +1,38 @@
 <template>
-	<teleport to="#modals">
-		<div class=".container">
-			<div v-if="gameRequest"
-				class="pong-modal bg-light rounded-3 
-							border border-1 border-dark shadow"
-			>
-				<div class="p-4">
-				<h3>You have a game request!</h3>
-				<button @click="answerRequest(true)" type="button" class="btn btn-success mx-2">Accept</button>
-				<button @click="answerRequest(false)" type="button" class="btn btn btn-danger mx-2">Refuse</button>
+	<!-- gotChallengeModal -->
+	<div class="modal fade" id="gotChallengeModal" data-bs-backdrop="static">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+
+				<!-- Modal body -->
+				<div class="modal-body text-black">
+					<player-info :userId="hostId" side="left"></player-info>
+					<h3>challenge you!</h3>
+				</div>
+
+				<div class="modal-footer">
+					<button @click="answerRequest(true)" type="button" data-bs-dismiss="modal" class="btn btn-success mx-2">Accept</button>
+					<button @click="answerRequest(false)" type="button" data-bs-dismiss="modal" class="btn btn btn-danger mx-2">Refuse</button>
 				</div>
 			</div>
 		</div>
-	</teleport>
+	</div>
 </template>
 
 <script lang="ts">
 import { useAuthStore } from '@/store/modules/auth/auth';
 import { useStatusStore } from '@/store/modules/status/status';
+import { Modal } from 'bootstrap';
 import { defineComponent } from 'vue'
+import PlayerInfo from './PlayerInfo.vue';
 
 export default defineComponent({
+	components: {PlayerInfo},
 	data() {
 		return {
+			hostId: 0,
 			requestId: "",
-			gameRequest: false
+			gotChallengeModal: {} as Modal
 		}
 	},
 	setup() {
@@ -34,21 +42,30 @@ export default defineComponent({
 		return { authStore, statusStore };
 	},
 	mounted() {
+		this.gotChallengeModal = new Modal("#gotChallengeModal");
+
 		this.$pongSocket.auth = { token: `${this.authStore.token}`};
 		this.$pongSocket.connect();
-		this.$pongSocket.on("gameRequest", (requestId : string) => {
-			console.log("got a game request!");
-			this.requestId = requestId;
-			this.gameRequest = true;
+
+		this.$pongSocket.on("gameRequest", (payload) => {
+			console.log("got game request!")
+			this.hostId = payload.hostId as number;
+			this.requestId = payload.requestId;
+			console.log(`request from id: ${this.hostId}`);
+			this.gotChallengeModal.show();
 		});
 		this.$pongSocket.on("requestCanceled", () => {
-			this.gameRequest = false;
+			this.gotChallengeModal.hide();
 		})
 		this.$pongSocket.on("inGameUsers", (ids : number[]) => {
 			this.statusStore.setInGameUsers(ids);
 		})
 	},
 	unmounted() {
+		console.log("disconnecting socket");
+		this.$pongSocket.off("gameRequest");
+		this.$pongSocket.off("requestCanceled");
+		this.$pongSocket.off("inGameUsers");
 		this.$pongSocket.disconnect();
 	},
 	methods: {
@@ -57,7 +74,6 @@ export default defineComponent({
 			this.$pongSocket.on("matchFound", (gameId : string) => {
 				this.$router.push({ path: `/pong/${gameId}`});
 			})
-			this.gameRequest = false;
 		}
 	}
 })
@@ -65,11 +81,4 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.pong-modal {
-	 position: absolute;
-	 top: 50%;
-	 left: 50%;
-	 transform: translate(-50%, -50%);
-	 text-align: center;
- }
 </style>
