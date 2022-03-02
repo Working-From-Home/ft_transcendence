@@ -1,55 +1,71 @@
-<template>
-	<div class="profile">
-		<img alt="img profil" :src="user.avatar" />
-		<p>{{ user.pseudo}}</p>
-	</div>
-</template>
+<script setup lang="ts">
+import { onUpdated, ref } from 'vue';
+import UserService from '@/services/UserService';
+import { useAuthStore } from '@/store/modules/auth/auth';
+import ChallengeButton from '@/components/pong/ChallengeButton.vue';
+import ButtonDel from '@/components/users/ButtonDel.vue';
+import ButtonAdd from '@/components/users/ButtonAdd.vue';
 
-<script lang="ts">
-import { Options, Vue } from "vue-class-component";
+const props = defineProps({
+  userId: {
+    type: Number,
+    required: true,
+  },
+  isOwner: {
+    type: Boolean,
+    required: true,
+  },
+});
 
-interface State {
-  user: string,
-}
+const authStore = useAuthStore();
 
-@Options({
-  data: (): State => {
-		return {
-			user: ''
-		};
-	},
-  created() {
-	this.user = this.$store.getters['users/users'];
-  }
-})
-export default class info extends Vue {
+const username = ref<string>('');
+const email = ref<string>('');
+const role = ref<string>('');
+const level = ref<number>(0);
+const victories = ref<number>(0);
+const losses = ref<number>(0);
+
+getUserData(props.userId);
+
+onUpdated(() => {
+  getUserData(props.userId);
+});
+
+function getUserData(id: number) {
+  UserService.getUserById(id).then(
+    (response: any) => (
+      (username.value = response.data.username),
+      (email.value = response.data.email),
+      (role.value = response.data.role),
+      (level.value = response.data.statistics.level),
+      (victories.value = response.data.statistics.victories),
+      (losses.value = response.data.statistics.losses)
+    ),
+  );
 }
 </script>
 
-<style scoped>
-img {
-	width: 50px;
-	height: 50px;
-}
+<template>
+  <div class="px-3 pt-3 pb-1">
+    <h2 class="pb-3">{{ username }}</h2>
+    <div class="row gx-3 pb-2">
+      <div class="col-12 col-md-4">victories:&nbsp&nbsp{{ victories }}</div>
+      <div class="col-12 col-md-4">losses:&nbsp&nbsp{{ losses }}</div>
+      <div class="col-12 col-md-4">level:&nbsp&nbsp{{ level }}</div>
+    </div>
+    <div v-if="props.isOwner" class="m-4">
+      <ButtonDel></ButtonDel>
+    </div>
+    <div v-if="!props.isOwner" class="row m-4"> 
+      <!-- <div class="col mx-1">
+        <ButtonAdd :userId="userId"></ButtonAdd>
+      </div> -->
+      <div class="col mx-1">
+        <ChallengeButton :guestId="props.userId">Challenge</ChallengeButton>
+      </div>
+    </div>
+  </div>
+</template>
 
-p {
-	display: inline-block;
-	margin-left: 15px;
-	position: relative;
-	bottom: 30px;
-	margin-bottom: 0;
-}
-
-.profile {
-	text-align: left;
-	width: 10rem;
-	position: absolute;
-	left:0px;
-	top: 0px;
-	margin-top: 0px;
-	padding: 3px;
-	border-radius: 3px;
-  	box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.26);
-
-}
-</style>
+<style scoped></style>

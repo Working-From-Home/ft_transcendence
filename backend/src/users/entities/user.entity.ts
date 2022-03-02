@@ -67,6 +67,14 @@ export class User {
     @OneToOne(() => Stats, (stats) => stats.user)
     stats: Stats;
 
+    get statistics() {
+        return {
+            level: this.stats.level,
+            victories: this.stats.victories,
+            losses: this.stats.losses
+        }
+    }
+
     /* Achievements */
 
     @ManyToMany(() => Achievement, (achievement) => achievement.users)

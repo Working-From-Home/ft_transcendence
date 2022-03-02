@@ -33,12 +33,14 @@ export class GameService {
 
 	async getGames(userId: number) : Promise<Game[]> {
 		const user = await this.usersService.findById(userId);
-		return this.repo.find({
+		const games = await this.repo.find({
 			where: [
 				{ looser: user },
 				{ winner: user }
 			],
+			order: { id: "DESC" },
 			relations: ['winner', 'looser']
 		});
+		return games;
 	}
 }

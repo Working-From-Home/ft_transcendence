@@ -1,9 +1,10 @@
 <template>
 <div>
-	<button type="button" class="btn btn btn-danger m-2"
+	<button type="button" class="btn btn btn-outline-danger m-2"
 		data-bs-toggle="modal" data-bs-target="#settingsModal"
 	>
-		Challenge
+		<font-awesome-icon icon="bolt" />
+		&nbspChallenge
 	</button>
 
 	<!-- game settings Modal -->
@@ -13,38 +14,36 @@
 
 				<!-- Modal Header -->
 				<div class="modal-header text-black">
-					<h4 class="modal-title">Choose your game settings:</h4>
+					<h4 class="modal-title">Choose your game settings</h4>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 				</div>
 
 				<!-- Modal body -->
 				<div class="modal-body text-black">
-					<p>ball speed:</p>
-					<select class="form-select" v-model="gameSettings.speed">
+
+					<p>ball speed</p>
+					<select class="form-select mb-3" v-model="gameSettings.speed">
   					<option :value=4>slow</option>
   					<option :value=6>normal</option>
   					<option :value=8>fast</option>
 					</select>
-					<p>paddle speed:</p>
-					<select class="form-select" v-model="gameSettings.paddleSpeed">
+					<p>paddle speed</p>
+					<select class="form-select mb-3" v-model="gameSettings.paddleSpeed">
   					<option :value=3>slow</option>
   					<option :value=5>normal</option>
   					<option :value=7>fast</option>
 					</select>
-					<p>number of point to win:</p>
-					<select class="form-select" v-model="gameSettings.score">
+					<p>number of points to win</p>
+					<select class="form-select mb-3" v-model="gameSettings.score">
   					<option>3</option>
   					<option>5</option>
   					<option>8</option>
 					</select>
-				</div>
-
-				<!-- Modal footer -->
-				<div class="modal-footer">
+					
 					<button type="button" class="btn btn-success"
 						data-bs-dismiss="modal"
 						@click="sendGameRequest">
-						Send request
+						Confirm
 					</button>
 				</div>
 			</div>
@@ -77,6 +76,10 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { Modal } from "bootstrap"
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faBolt } from "@fortawesome/free-solid-svg-icons";
+
+library.add(faBolt);
 
 export default defineComponent({
 	props: {
