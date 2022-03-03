@@ -60,7 +60,7 @@ function timeFromNow(s: string) {
 </script>
 
 <template>
-  <div class="container pt-3">
+  <div class="container pt-3 px-md-5">
     <h3 class="mb-2">Match history</h3>
 
     <table class="table">
