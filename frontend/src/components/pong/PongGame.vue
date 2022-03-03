@@ -11,10 +11,14 @@
 			<player-info v-if="gotPlayerIds" class="col"
 				:userId="playerIds[1]" side="right" :score="score[1]"/>
 		</div>
-    <canvas id="canvas" tabindex="0" width="640" height="400"
+    <canvas v-if="!finished" id="canvas" tabindex="0" width="640" height="400"
 				@keydown="handleKeydown"
         @keyup="handleKeyup">
 		</canvas>
+		<div v-else>
+			<h1>{{winner}} won the game!</h1>
+			<router-link to="/pong" class="btn btn-outline-light">Back to pong</router-link>
+		</div>
 	</div>
 	<!-- </div> -->
 </template>

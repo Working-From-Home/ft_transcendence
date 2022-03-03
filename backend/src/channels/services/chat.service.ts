@@ -90,8 +90,9 @@ export class ChatService {
   }
 
   async leaveChannel(channelId: number, userId: number) {
-    await this.findChannelById(channelId);
-    return this.updateUserChannel(userId, channelId, { hasLeft: true });
+    let channel = await this.userChannelRepo.findOneOrFail({where: [{userId, channelId}]})
+    channel.hasLeft = true;
+    return this.userChannelRepo.save(channel);
   }
 
   async addAdmin(channelId: number, adminId: number, userId: number) {

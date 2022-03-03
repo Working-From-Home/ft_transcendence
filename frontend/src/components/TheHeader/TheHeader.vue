@@ -106,6 +106,9 @@ export default defineComponent({
 					//console.log(`One Room`, resp);
 					this.chatRoomsStore.fetchRoom(resp);
 				});
+				this.$socketapp.on("leaveChannel", async (channelId: number) => {
+					this.chatRoomsStore.leaveChannel(channelId);
+				});
 			}
 			return this.authStore.isLoggedIn;
 		},

@@ -43,16 +43,15 @@ export const useChatRoomsStore = defineStore('chatRooms', {
 			 	}
 			}
 		},
-		leaveChannel(roomId: number, userId: number) {
-			let rooms: IChannel[];
-				rooms = [];
-			for (var i = 0; i < this.rooms.length ; i++)
-			if (this.rooms[i].roomId === roomId)
-				for (var j = 0; j < this.rooms[i].users.length; j++)
-					if (this.rooms[i].users[j]._id === userId){
-						delete this.rooms[i].users[j];
-						return ;
-					}
+		leaveChannel(channelId: number) {
+			let i = 0;
+			for (let obj of this.rooms){
+				if (obj["roomId"] === channelId){
+					this.rooms.splice(i, 1);
+					return ;
+				}
+				i++;
+			}
 		}
 	}
 })
