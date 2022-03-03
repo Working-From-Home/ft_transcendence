@@ -97,13 +97,11 @@ export default defineComponent({
 						obj["users"] = await ChatService.sendUserOfChannels(obj["roomId"]);
 						obj["messages"] = await ChatService.sendMessagesOfChannels(obj["roomId"]);
 					}
-					//console.log(`front`, resp);
 					this.chatRoomsStore.fetchRooms(resp);
 				});
-				this.$socketapp.on("sendChannel", async (resp: IChannel) => {
-					resp["users"] = await ChatService.sendUserOfChannels(resp["roomId"]);
-					resp["messages"] = await ChatService.sendMessagesOfChannels(resp["roomId"]);
-					//console.log(`One Room`, resp);
+				this.$socketapp.on("sendChannel", async (resp: IChannel[]) => {
+					resp[0]["users"] = await ChatService.sendUserOfChannels(resp[0]["roomId"]);
+					resp[0]["messages"] = await ChatService.sendMessagesOfChannels(resp[0]["roomId"]);
 					this.chatRoomsStore.fetchRoom(resp);
 				});
 				this.$socketapp.on("leaveChannel", async (channelId: number) => {

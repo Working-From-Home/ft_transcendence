@@ -1,4 +1,5 @@
 <template>
+
 	<div class="chat">
 		<chat-window as any
 			height="calc(100vh - 130px)"
@@ -33,9 +34,13 @@
 				Open Channel
 			</button>
 		</template>
+		<template #room-options="{}" v-if='currentUser.isAdmin === false '>
+			<p></p>
+		</template>
 		</chat-window>
+		<chat-admin-modal/>
 		<chat-new-room-modal/>
-		<chat-info-user-modal :modalMessageUserId="modalMessageUserId" :menuMessageModal="menuMessageModal"/>
+		<chat-info-user-modal :modalUserId="modalUserId" :modalUserName="modalUserName" :modalAvatar="modalAvatar" :menuMessageModal="menuMessageModal"/>
 	</div>
 </template>
 
@@ -43,8 +48,9 @@
 import ChatWindow from 'vue-advanced-chat';
 import 'vue-advanced-chat/dist/vue-advanced-chat.css';
 import { IChannel, IMessage, IUserChannel } from 'shared/models/socket-events';
-import ChatSearchTmp from "./ChatSearchTmp.vue";
+import ChatSearch from "./ChatSearch.vue";
 import ChatNewRoomModal from "./ChatNewRoomModal.vue";
+import ChatAdminModal from "./ChatAdminModal.vue";
 import ChatInfoUserModal from "./ChatInfoUserModal.vue";
 import ChatService from "../../services/ChatService";
 import { computed, defineComponent } from '@vue/runtime-core';
@@ -52,6 +58,7 @@ import { useChatRoomsStore } from '@/store/modules/chatroom/chatroom'
 import { useAuthStore } from "@/store/modules/auth/auth";
 import { toNumber } from '@vue/shared';
 import { Modal } from "bootstrap";
+import UserService from '@/services/UserService';
 
 interface CustomAction {
 	name: string
@@ -73,31 +80,32 @@ export default defineComponent({
 	},
 	components: {
 		ChatWindow,
-		ChatSearchTmp,
+		ChatSearch,
 		ChatNewRoomModal,
-		ChatInfoUserModal
+		ChatInfoUserModal,
+		ChatAdminModal
 	},
 	created() {
 		this.currentUserId = toNumber(localStorage.getItem('userId'))
 	},
+	unmounted() {
+		this.menuMessageModal.hide();
+		this.adminModal.hide();
+	},
 	data(){
 		return {
 			currentUserId: -1 as number,
-			currentUser: null as IUserChannel | null,
+			currentUser: {} as IUserChannel ,
 			currentRoom: null as IChannel | null,
-			rooms: [] as IChannel[] | [],
 			opened: true as boolean, 
 			messages: [] as IMessage[],
 			messagesLoaded: false as boolean,
 			loadingRooms: false as boolean,
 			roomActions: [
 				{ name: 'leaveChannel', title: 'Leave Channel' },
-				{ name: 'destroyChannel', title: 'Destroy Channel' },
 			],
 			menuActions: [
-				{ name: 'muteUser', title: 'Mute User' },
-				{ name: 'kickUser', title: 'Kick User' },
-				{ name: 'banUser', title: 'Ban User' },
+				{ name: 'adminModal', title: 'Admin Channel' },
 			],
 			messageactions: [
 				{
@@ -106,11 +114,15 @@ export default defineComponent({
 				},
 			],
 			menuMessageModal: {} as Modal,
-			modalMessageUserId: -1 as number
+			adminModal: {} as Modal,
+			modalUserId: -1 as number,
+			modalUserName: "" as string,
+			modalAvatar: "" as string
 		}
 	},
 	mounted() {
 		this.menuMessageModal = new Modal("#menuMessageModal");
+		this.adminModal = new Modal("#adminModal");
 	},
 	computed: {
 		isChatView() {
@@ -132,12 +144,12 @@ export default defineComponent({
 		},
 		fetchMessages({ room = {} as IChannel, options = {} as CustomOptions}) {
 			this.currentRoom = room;
-			for (const obj of room["users"]){
-				if (obj["_id"] === this.currentUserId){
-					this.currentUser = obj
-					break;
-				}
-			}
+			room["users"].forEach(element =>{
+				if (element["_id"] === this.currentUserId){
+					this.currentUser = element
+					return;
+				}}
+			);
 			if (this.size === "mini")
 				this.opened = false;
 			if (options.reset)
@@ -151,7 +163,7 @@ export default defineComponent({
 				this.messagesLoaded = true
 			})
 		},
-		sendMessage(room = {} as IChannel, message: any) {
+		sendMessage(room = {} as IChannel, content: any, usersTag: any) {
 			// let newMessage = {
 			// 		_id: this.messages.length,
 			// 		content: message.content,
@@ -161,49 +173,58 @@ export default defineComponent({
 			// 		timestamp: new Date().toString().substring(16, 21),
 			// 		date: new Date().toDateString()
 			// };
-			let newMessage: IMessage;
-			let y = new Date().toString().substring(16, 21)
-			newMessage = {
-					_id: this.messages.length,
-					username: localStorage.getItem('username'),
-					content: message.content,
-					createdAt: new Date().toString().substring(16, 21),
-					date: new Date().toDateString(),
-					channel: room,
-					senderId: this.currentUserId
-			};
-			this.messages = [
-				...this.messages,
-				newMessage
-			]
-			this.chatRoomsStore.addMessage(newMessage, message.roomId);
+			// let newMessage: IMessage;
+			// let y = new Date().toString().substring(16, 21)
+			// newMessage = {
+			// 		_id: this.messages.length,
+			// 		username: localStorage.getItem('username'),
+			// 		content: message.content,
+			// 		createdAt: new Date().toString().substring(16, 21),
+			// 		date: new Date().toDateString(),
+			// 		channel: room,
+			// 		senderId: this.currentUserId
+			// };
+			ChatService.createMessage(room.roomId, this.currentUserId, content);
+			// this.messages = [
+			// 	...this.messages,
+			// 	newMessage
+			// ]
 		},
 		menuActionHandler({ action = {} as CustomAction, roomId = {} as number }) {
 			switch (action.name) {
 				case 'leaveChannel':
 					return this.leaveChannel(roomId)
-				case 'destroyChannel':
-					return this.destroyChannel()
+				case 'adminModal':
+					return this.adminModal.show();
 			}
 		},
 		leaveChannel(roomId: number ){
-			console.log("id", roomId)
+			for (const obj of this.storeRoom){
+				if (obj["roomId"].valueOf() === roomId) { 
+					if (obj["isDm"].valueOf() === true){
+						alert("You can't leave a Direct Message Channel")
+						return ;
+					}
+					break ;
+				}
+			}
 			ChatService.leaveChannel(roomId);
-		},
-		destroyChannel() {
-			//
 		},
 		menuMessageHandler({ action = {} as CustomAction, roomId = {} as number, message = {} as IMessage }) {
 			switch (action.name) {
 				case 'More informations':{
 					if (this.$route.path === "/chat"){
-						this.modalMessageUserId = message["senderId"]
+						this.modalUserId = message.senderId;
+						if (message.username)
+							this.modalUserName = message.username
+						UserService.getAvatarOfUser(message.senderId).then((av) => (this.modalAvatar = av));
 						return this.menuMessageModal.show();
 					}
 					this.$router.push('/chat');
 				}
 			}
 		},
+		
 	}
 })
 </script>

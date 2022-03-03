@@ -10,7 +10,7 @@ import { UpdateResult } from 'typeorm';
 import { AppGateway } from 'src/app.gateway';
 import { OnlineService } from 'src/online.service';
 import { IChannel } from 'shared/models/socket-events';
-
+import { Message } from "../entities/message.entity";
 @Controller()
 @UseGuards(JwtAuthGuard)
 export class ChannelsController {
@@ -23,7 +23,13 @@ export class ChannelsController {
 		@Req() request,
 		@Param('destId', ParseIntPipe) destId: number
 	): Promise<Channel> {
-		return await this.chatService.createDm(parseInt(request.user.sub), destId);
+		const user = this.appGateway.server.in(`user:${request.user.sub}` );
+		let newChannel = await this.chatService.createDm(parseInt(request.user.sub), destId);
+		user.socketsJoin(`channel:${newChannel.id}`);
+		this.chatService.getChannel(newChannel.id).then( (y) => {
+		 	this.appGateway.server.in("channel:" + newChannel.id).emit("sendChannel", y);
+		})
+		return newChannel;
 	}
 
 	@Post('/channels')
@@ -38,6 +44,16 @@ export class ChannelsController {
 		 	this.appGateway.server.in("channel:" + newChannel.id).emit("sendChannel", y);
 		})
 		return newChannel;
+	}
+
+	@Post('/message')
+	async createMessage(
+		@Req() request,
+		@Param('channelId') channelId: number, userId: number, content: string
+	): Promise<Message> {
+		let newMessage = await this.chatService.createMessage(channelId, userId, content);
+		//this.appGateway.server.in("channel:" + newChannel.id).emit("sendMessage", newMessage);
+		return newMessage;
 	}
 
 	@Patch('/channels/:channelId')
@@ -68,12 +84,11 @@ export class ChannelsController {
         @Req() request,
         @Param('channelId') channelId: number ) {
         let updateResult = await this.chatService.leaveChannel(channelId, parseInt(request.user.sub));
-        console.log("updateResult", updateResult)
         const user = this.appGateway.server.in(`user:${request.user.sub}` ).socketsLeave(`channel:${channelId}`)
 		this.chatService.getChannel(channelId).then( (y) => {
 	 	 	this.appGateway.server.in("channel:" + channelId).emit("sendChannel", y);
 	 	})
-		//this.appGateway.server.in("user:" + userId).emit("leaveChannel", channelId);
+		this.appGateway.server.in("user:" + request.user.sub).emit("leaveChannel", channelId);
     }
 
 	@Put('/channels/:channelId/mute/:userId')
