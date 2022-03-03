@@ -41,7 +41,7 @@ export class AppGateway {
 	async handleDisconnect(client: AppSocket) {
 		if (client.data.userId) {
 			this.onlineService.removeUser(client.data.userId)
-			client.broadcast.emit("userDisconnected", client.data.userId);
+			this.server.emit("connectedUsers", this.onlineService.getOnlineUsers())
 			this.logger.log(`User id ${client.data.userId} is offline. (${this.onlineService.getTotalOnlineUsers()} online users)`);
 		}
 		else
@@ -59,8 +59,7 @@ export class AppGateway {
 	{
 		const userId: number = client.data.userId;
 		// Online
-		client.emit("connectedUsers", this.onlineService.getOnlineUsers());
-		client.broadcast.emit("userConnected", userId);
+		this.server.emit("connectedUsers", this.onlineService.getOnlineUsers());
 		this.server.emit('numberOfOnlineUsers', this.onlineService.getTotalOnlineUsers())
 		client.join("user:" + userId);
 		// chat
