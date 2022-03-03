@@ -5,7 +5,7 @@ import { Game } from "../entities/game.entity";
 import { IGameStats } from "src/pong/classAndTypes/IGameStats";
 import { UsersService } from "src/users/services/users.service";
 import { StatsService } from "src/users/services/stats.service";
-
+import { IPaginationOptions, paginate, Pagination } from "nestjs-typeorm-paginate";
 
 @Injectable()
 export class GameService {
@@ -33,12 +33,24 @@ export class GameService {
 
 	async getGames(userId: number) : Promise<Game[]> {
 		const user = await this.usersService.findById(userId);
-		return this.repo.find({
+		const games = await this.repo.find({
 			where: [
 				{ looser: user },
 				{ winner: user }
 			],
+			order: { id: "DESC" },
 			relations: ['winner', 'looser']
 		});
+		return games;
+	}
+
+	async paginate(userId: number, options: IPaginationOptions): Promise<Pagination<Game>> {
+		const queryBuilder = this.repo.createQueryBuilder('game');
+		queryBuilder.leftJoinAndSelect("game.winner", "winner");
+		queryBuilder.leftJoinAndSelect("game.looser", "looser");
+		queryBuilder.where("winner.id = :id", { id: userId });
+		queryBuilder.orWhere("looser.id = :id", { id: userId })
+		queryBuilder.orderBy('game.id', 'DESC');
+		return paginate<Game>(queryBuilder, options);
 	}
 }

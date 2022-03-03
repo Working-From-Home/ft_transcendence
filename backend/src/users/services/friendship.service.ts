@@ -43,8 +43,17 @@ export class FriendshipService {
 
     async getPendings(userId: number): Promise<User[]> {
         const user = await this.usersService.findById(userId);
-        const pendings = await this.repo.find({
+        const requests = await this.repo.find({
             where: [{ recipient: user, status: 'pending' }],
+            relations: ['applicant', 'recipient']
+        });
+        return await this.formatOutput(userId, requests);
+    }
+
+    async getSentRequests(userId: number): Promise<User[]> {
+        const user = await this.usersService.findById(userId);
+        const pendings = await this.repo.find({
+            where: [{ applicant: user, status: 'pending' }],
             relations: ['applicant', 'recipient']
         });
         return await this.formatOutput(userId, pendings);

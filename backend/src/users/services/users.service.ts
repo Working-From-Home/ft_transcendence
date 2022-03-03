@@ -32,13 +32,13 @@ export class UsersService {
     }
 
     async findById(id: number): Promise<User> {
-        const user = await this.repo.findOne(id);
+        const user = await this.repo.findOne({ where: { id }, relations: ['stats'] });
         if (!user) { throw new NotFoundException('user not found'); }
         return user;
     }
 
     async findByIds(ids: number[]): Promise<User[]> {
-        const users = await this.repo.findByIds(ids);
+        const users = await this.repo.findByIds(ids, { relations: ['stats'] });
         return users;
     }
 
@@ -72,21 +72,21 @@ export class UsersService {
     return this.repo.save(data);
   }
 
-    async paginate(options: IPaginationOptions): Promise<Pagination<User>> {
-        const queryBuilder = this.repo.createQueryBuilder('user');
-        queryBuilder.orderBy('user.username', 'DESC');
-        return paginate<User>(queryBuilder, options);
-    }
+  async paginate(options: IPaginationOptions): Promise<Pagination<User>> {
+      const queryBuilder = this.repo.createQueryBuilder('user');
+      queryBuilder.orderBy('user.id', 'ASC');
+      return paginate<User>(queryBuilder, options);
+  }
 
-    async getUserWithAvatar(id: number): Promise<User> {
-        const user = await this.repo.findOne(id, { relations: ["avatar"] });
-        if (!user) { throw new NotFoundException('user not found'); }
-        return user;
-    }
+  async getUserWithAvatar(id: number): Promise<User> {
+      const user = await this.repo.findOne(id, { relations: ["avatar"] });
+      if (!user) { throw new NotFoundException('user not found'); }
+      return user;
+  }
 
-    async getUserWithStats(id: number): Promise<User> {
-        const user = await this.repo.findOne(id, { relations: ["stats"] });
-        if (!user) { throw new NotFoundException('user not found'); }
-        return user;
-    }
+  async getUserWithStats(id: number): Promise<User> {
+      const user = await this.repo.findOne(id, { relations: ["stats"] });
+      if (!user) { throw new NotFoundException('user not found'); }
+      return user;
+  }
 }

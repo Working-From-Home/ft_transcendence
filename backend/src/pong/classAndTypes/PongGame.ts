@@ -39,6 +39,7 @@ export class PongGame {
 		this._paddleYSpeed = gameSettings.paddleSpeed;
 		this._ballXSpeed = gameSettings.speed;
 		this._maxScore = gameSettings.score;
+		this._checkGameSettings();
 	}
 
 	isPlayer(id : number) : boolean {
@@ -177,5 +178,14 @@ export class PongGame {
 		}
 
 		callback(this.gameId, stats);
+	}
+
+	private _checkGameSettings() {
+		if (this._paddleYSpeed <= 0 || this._paddleYSpeed > 10)
+			this._paddleYSpeed = 6;
+		if (this._ballXSpeed <= 0 || this._paddleYSpeed > 10)
+			this._ballXSpeed = 6;
+		if (this._maxScore <= 0)
+			this._maxScore = 5;
 	}
 }

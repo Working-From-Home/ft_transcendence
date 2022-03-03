@@ -1,8 +1,8 @@
-import { Expose } from "class-transformer";
+import { Expose, Transform, Type } from "class-transformer";
 import { Stats } from "../entities/stats.entity";
-// import { UserRole } from "../entities/user.entity";
 
 export class UserDto {
+
     @Expose()
     id: number;
 
@@ -12,9 +12,9 @@ export class UserDto {
     @Expose()
     username: string;
 
-    // @Expose()
-    // role: UserRole;
+    @Expose()
+    role: string;
 
-    // @Expose()
-    // stats: Stats;
+    @Expose()
+    statistics: { level: number, victories: number, losses: number }
 }

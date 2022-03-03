@@ -1,44 +1,54 @@
-<template>
-	<base-button type="button" data-bs-toggle="modal" data-bs-target="#myModal"  mode="flat">
-		<div class="modal fade" id="myModal">
-			<div class="modal-dialog modal-dialog-centered">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h4 class="modal-title">Delete your account</h4>
-						<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-					</div>
-					<div class="modal-body">
-						<p>Are you sure you want to delete your account?</p>
-					</div>
-					<div class="modal-footer">
-						<base-button type="button" class="btn red" @click="deleteAccount">Yes</base-button>
-					</div>
-				</div>
-			</div>
-		</div>
-		<p>Delete your account</p>
-	</base-button>
-</template>
-
 <script setup lang="ts">
-import { useAuthStore } from "@/store/modules/auth/auth";
-import { useRouter } from "vue-router";
-import BaseButton from "../ui/BaseButton.vue";
+import { useAuthStore } from '@/store/modules/auth/auth';
+import { useRouter } from 'vue-router';
+import ButtonTemplate from './ButtonTemplate.vue';
 
 const authStore = useAuthStore();
-const router = useRouter();
+const route = useRouter();
 
 function deleteAccount() {
-	authStore.deleteAccount();
-	router.replace('/');
-};
-
+  authStore.deleteAccount();
+  route.replace('/');
+}
 </script>
 
-<style scoped>
-.red {
-	width: 30%;
-	background-color: red;
-	border-color: #be0606;
-}
-</style>
+<template>
+  <ButtonTemplate
+    type="button"
+    classes="btn btn-outline-danger"
+    data-bs-toggle="modal"
+    data-bs-target="#deleteAccount"
+  >
+    Delete account
+  </ButtonTemplate>
+
+  <div class="modal fade" id="deleteAccount" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header text-black">
+          <h4 class="modal-title">Delete your account</h4>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+          ></button>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body text-black">
+          <p>Are you sure ? This action is irreversible.</p>
+          <ButtonTemplate
+            type="button"
+            class="btn btn-danger mt-2"
+            @click="deleteAccount"
+            data-bs-dismiss="modal"
+          >
+            Yes I am sure
+          </ButtonTemplate>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<style scoped></style>

@@ -3,10 +3,21 @@ import { ValidateNested } from "class-validator";
 import { User } from "../entities/user.entity";
 import { UserDto } from "./user.dto";
 
+class lightUserDto {
+    @Expose()
+    id: number;
+
+    @Expose()
+    username: string;
+
+    @Expose()
+    role: string;
+}
+
 export class UsersPaginationDto {
 
     @ValidateNested({ each: true })
-    @Type(() => UserDto)
+    @Type(() =>lightUserDto)
     @Expose()
     items: User[];
 
