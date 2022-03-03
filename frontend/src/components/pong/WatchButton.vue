@@ -1,9 +1,10 @@
 <template>
 	<div>
-	<button type="button" class="btn btn btn-warning m-2"
+	<button type="button" class="btn btn btn-outline-warning m-2"
 					@click="watchGame"
 	>
-		Watch
+		<font-awesome-icon icon="eye" />
+		&nbspWatch
 	</button>
 
 	<div class="modal fade" id="noGameModal">
@@ -34,6 +35,10 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { Modal } from "bootstrap"
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faEye } from "@fortawesome/free-solid-svg-icons";
+
+library.add(faEye);
 
 export default defineComponent({
 	props: {
