@@ -42,7 +42,7 @@ library.add(faEye);
 
 export default defineComponent({
 	props: {
-		playerId: {type: Number, required: true}
+		userId: {type: Number, required: true}
 	},
 	data() {
 		return {
@@ -54,11 +54,11 @@ export default defineComponent({
 	},
 	methods: {
 		watchGame() {
-			this.$pongSocket.emit("getGameId", this.playerId, (gameId : string) => {
+			this.$pongSocket.emit("getGameId", this.userId, (gameId : string) => {
 				console.log(`got answer: ${gameId}`);
 				if (!gameId) {
 					this.modal.show();
-					console.log(`no one playing with id ${this.playerId}`);
+					console.log(`no one playing with id ${this.userId}`);
 				}
 				else {
 					this.$router.push({ path: `/pong/${gameId}`});

@@ -58,15 +58,14 @@ function getUserData(id: number) {
 </script>
 
 <template>
-  <div class="position-relative">
+  <!-- <div class="position-relative">
     <span
       class="position-absolute top-0 start-100 translate-middle p-3 me-5 bg-danger border border-light rounded-circle"
       :class="isOnline && 'bg-success'"
     >
       <span class="visually-hidden">Status</span>
     </span>
-  </div>
-  <span class=""></span>
+  </div> -->
   <div class="px-3 pt-3 pb-1">
     <h2 class="pb-3">
       {{ username }}
@@ -85,10 +84,10 @@ function getUserData(id: number) {
       </div> -->
 
       <div v-if="isOnline && !isInGame" class="col mx-1">
-        <ChallengeButton :guestId="props.userId">Challenge</ChallengeButton>
+        <ChallengeButton :userId="props.userId">Challenge</ChallengeButton>
       </div>
       <div v-else-if="isInGame" class="col mx-1">
-        <WatchButton :guestId="props.userId">Challenge</WatchButton>
+        <WatchButton :userId="props.userId">Challenge</WatchButton>
       </div>
     </div>
   </div>
