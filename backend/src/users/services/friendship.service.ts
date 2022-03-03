@@ -81,8 +81,6 @@ export class FriendshipService {
     }
 
     private async formatOutput(userId: number, friendships: Friendship[]): Promise<User[]> {
-
-        console.log("FRIENDSHIPS=", friendships);
         let ids: number[] = [];
         friendships.forEach((friendship: Friendship) => {
             if (friendship.applicant.id === userId) {

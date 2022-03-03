@@ -83,7 +83,7 @@ library.add(faBolt);
 
 export default defineComponent({
 	props: {
-		guestId: {type: Number, required: true}
+		userId: {type: Number, required: true}
 	},
 	data() {
 		return {
@@ -102,7 +102,7 @@ export default defineComponent({
 			this.$pongSocket.emit(
 				"gameRequest",
 				{
-					guestId: this.guestId,
+					userId: this.userId,
 					gameSettings: this.gameSettings
 				},
 				(requestId : string) => {

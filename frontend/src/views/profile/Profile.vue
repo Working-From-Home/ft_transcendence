@@ -3,7 +3,7 @@ import { onUpdated, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useAuthStore } from '@/store/modules/auth/auth';
 import Avatar from '@/components/users/Avatar.vue';
-import Info from '@/components/users/info.vue';
+import Info from '@/components/users/Info.vue';
 import History from '@/components/users/History.vue';
 
 const authStore = useAuthStore();
@@ -19,12 +19,13 @@ onUpdated(() => {
   userId.value = +route.params.userid;
   isOwner.value = userId.value === authStore.userId;
 });
+
 </script>
 
 <template>
   <div class="container my-5 px-5">
     <!-- row 1 -->
-    <div class="row gx-3 gy-3">
+    <div class="row gx-3 gy-3 px-5">
       <!-- avatar -->
       <div class="col-12 col-ms-12 col-md-3">
         <div
@@ -42,7 +43,7 @@ onUpdated(() => {
       </div>
     </div>
     <!-- row 2 -->
-    <div class="row g-3">
+    <div class="row g-3 px-5">
       <!-- match history -->
       <div class="col pt-3">
         <div class="bg-light rounded text-black" style="height: 100%">
