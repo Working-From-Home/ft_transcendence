@@ -8,13 +8,14 @@ import { Message } from "../entities/message.entity";
 import { UserChannel } from "../entities/user-channel.entity";
 import { CreateChannelDto } from "../dtos/create-channel.dto";
 import { ISearchChannel, IUserChannel, IChannel } from "shared/models/socket-events";
-
+import { UsersService } from "src/users/services/users.service";
 @Injectable()
 export class ChatService {
   constructor(
     @InjectRepository(Channel) private channelRepo: Repository<Channel>,
     @InjectRepository(UserChannel) private userChannelRepo: Repository<UserChannel>,
-    @InjectRepository(Message) private MessageRepo: Repository<Message>
+    @InjectRepository(Message) private MessageRepo: Repository<Message>,
+	private readonly usersService : UsersService,
   ) { }
 
   /* Create */
@@ -23,6 +24,9 @@ export class ChatService {
     return await getManager().transaction(async entityManager => {
       const newDm = new Channel();
       newDm.isDm = true;
+	  let userTmpOne = await this.usersService.findById(userIdOne);
+	  let userTmpTwo = await this.usersService.findById(userIdTwo);
+	  newDm.title = `${userTmpOne.username} and ${userTmpTwo.username}`;
       await entityManager.save(newDm);
 
       const userOne = new UserChannel();
@@ -61,11 +65,22 @@ export class ChatService {
   }
 
   async createMessage(channelId: number, userId: number, content: string): Promise<Message> {
-    return new Message; // tmp
+	  return await getManager().transaction(async entityManager => {
+      const newMessage = new Message();
+      newMessage.content = content;
+      newMessage.channel = await this.findChannelById(channelId);
+      newMessage.user =  await this.usersService.findById(userId);
+      await entityManager.save(newMessage);
+      return newMessage;
+    });
   }
 
   async joinChannel(channelId: number, userId: number) {
-    await this.findChannelById(channelId);
+    let channel = await this.userChannelRepo.findOne({where: [{userId, channelId}]})
+	if (channel) {
+		channel.hasLeft = false;
+    	return this.userChannelRepo.save(channel);
+	}
     const channelUser = this.userChannelRepo.create({ userId, channelId });
     await this.userChannelRepo.save(channelUser);
     return channelUser;
@@ -210,6 +225,7 @@ export class ChatService {
     return getRepository(Channel)
       .createQueryBuilder("channel")
       .where("title like :name ", { name: `%${title}%` })
+	  .where('channel."isDm" = false')
       .select(["channel.id", "channel.title"])
       .getMany();
   }
@@ -229,30 +245,24 @@ export class ChatService {
 	  );
 	return y;
   }
-
-//A supprimer, pour faire des tests pour filtrer avec hasLeft
- async tmpHASLEFTgetUsersOfChannel(channelId: number) {
+	async getMessagesOfChannelt(channelId: number) {
 	const y = await getManager().connection.query(
-		`SELECT uc."userId" AS "_id",
-				uc."channelId" AS "channelId",
-				(uc."userId" = c."ownerId") AS "isOwner",
-				(uc."role" = 'admin') AS "isAdmin",
-				uc."mutedUntil" AS "mutedUntil",
-				u.username AS "username",
-				uc."hasLeft"
-		FROM "user_channel" uc
-			INNER JOIN "channel" c ON uc."channelId" = c."id"
-			INNER JOIN "user" u ON uc."userId" = u."id"
-		WHERE "channelId" IN (${channelId}) AND uc."hasLeft"=FALSE`
+		`SELECT m."id" AS "_id",
+				m."content" AS "content"
+		FROM Message m
+			LEFT JOIN "channel" c ON c."id" = (${channelId})
+		WHERE c."id" IN (${channelId})`
 	  );
+	  //u."id" AS "senderId",
+	 //u.username AS "username"
+	  //LEFT JOIN "user" u ON uc."userId" = u."id"
 	return y;
   }
-
   async getMessagesOfChannel(channelId: number) {
 	return getRepository(Message)
        .createQueryBuilder("m")
-	   .innerJoin("m.user", "u")
-	   .innerJoin("m.channel", "channel")
+	   .leftJoin("m.user", "u")
+	   .leftJoin("m.channel", "channel")
        .where('channel.id = "channelId"')
 	   .select([
 		   'm.id AS "_id"', 
@@ -275,7 +285,7 @@ export class ChatService {
 	  );
 	return a;
   }
-  async getChannel(channelId: number): Promise<IChannel> {
+  async getChannel(channelId: number): Promise<IChannel[]> {
 	const a = await getManager().connection.query(
 		`SELECT c.id AS "roomId",
 				c."isDm",
