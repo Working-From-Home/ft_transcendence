@@ -32,7 +32,7 @@ export class UsersController {
         @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
     ): Promise<Pagination<User>> {
         limit = limit > 100 ? 100 : limit;
-        return this.usersService.paginate({ page, limit, route: '/users'});
+        return await this.usersService.paginate({ page, limit, route: '/users'});
     }
 
     @Get('/:id')
