@@ -28,8 +28,8 @@
 					</button>
 				</router-link>
 				<chat-d-m-button :otherUserId="modalUserId"/>
-				<challenge-button :guestId="modalUserId"></challenge-button>
-				<watch-button :playerId="modalUserId"></watch-button>
+				<challenge-button :userId="modalUserId"></challenge-button>
+				<watch-button :userId="modalUserId"></watch-button>
 			</div>
 		</div>
       </div>
