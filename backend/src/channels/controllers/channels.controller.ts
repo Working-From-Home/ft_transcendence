@@ -9,7 +9,7 @@ import { UserChannel } from '../entities/user-channel.entity';
 import { UpdateResult } from 'typeorm';
 import { AppGateway } from 'src/app.gateway';
 import { OnlineService } from 'src/online.service';
-import { IChannel } from 'shared/models/socket-events';
+import { IChannel, IMessage } from 'shared/models/socket-events';
 import { Message } from "../entities/message.entity";
 @Controller()
 @UseGuards(JwtAuthGuard)
@@ -46,13 +46,24 @@ export class ChannelsController {
 		return newChannel;
 	}
 
-	@Post('/message')
+	@Post('/channels/:channelId/messages')
 	async createMessage(
 		@Req() request,
-		@Param('channelId') channelId: number, userId: number, content: string
-	): Promise<Message> {
-		let newMessage = await this.chatService.createMessage(channelId, userId, content);
-		//this.appGateway.server.in("channel:" + newChannel.id).emit("sendMessage", newMessage);
+		@Param('channelId') channelId: number,
+		@Body() content: any
+	): Promise<IMessage> {
+		let tmpMessage = await this.chatService.createMessage(channelId, request.user.sub, content);
+		let newMessage: IMessage;
+		newMessage = {
+			_id: tmpMessage.id,
+			username: tmpMessage.user.username,
+			content: tmpMessage.content,
+			createdAt: tmpMessage.createdAt.toString(),
+			date: tmpMessage.createdAt.toDateString(),
+			senderId: tmpMessage.user.id,
+			channelId: tmpMessage.channel.id
+		}
+		this.appGateway.server.in("channel:" + channelId).emit("sendMessage", newMessage);
 		return newMessage;
 	}
 

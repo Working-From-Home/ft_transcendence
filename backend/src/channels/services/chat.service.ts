@@ -64,10 +64,10 @@ export class ChatService {
     });
   }
 
-  async createMessage(channelId: number, userId: number, content: string): Promise<Message> {
+  async createMessage(channelId: number, userId: number, content: any): Promise<Message> {
 	  return await getManager().transaction(async entityManager => {
       const newMessage = new Message();
-      newMessage.content = content;
+      newMessage.content = content.message;
       newMessage.channel = await this.findChannelById(channelId);
       newMessage.user =  await this.usersService.findById(userId);
       await entityManager.save(newMessage);
@@ -245,25 +245,13 @@ export class ChatService {
 	  );
 	return y;
   }
-	async getMessagesOfChannelt(channelId: number) {
-	const y = await getManager().connection.query(
-		`SELECT m."id" AS "_id",
-				m."content" AS "content"
-		FROM Message m
-			LEFT JOIN "channel" c ON c."id" = (${channelId})
-		WHERE c."id" IN (${channelId})`
-	  );
-	  //u."id" AS "senderId",
-	 //u.username AS "username"
-	  //LEFT JOIN "user" u ON uc."userId" = u."id"
-	return y;
-  }
+
   async getMessagesOfChannel(channelId: number) {
 	return getRepository(Message)
        .createQueryBuilder("m")
 	   .leftJoin("m.user", "u")
 	   .leftJoin("m.channel", "channel")
-       .where('channel.id = "channelId"')
+       .where(`channel.id = ${channelId}`)
 	   .select([
 		   'm.id AS "_id"', 
 	   	   'm.content AS "content"',

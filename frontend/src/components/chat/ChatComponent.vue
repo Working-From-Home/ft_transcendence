@@ -45,7 +45,7 @@
 </template>
 
 <script lang='ts'>
-import ChatWindow from 'vue-advanced-chat';
+import ChatWindow, {Message} from 'vue-advanced-chat';
 import 'vue-advanced-chat/dist/vue-advanced-chat.css';
 import { IChannel, IMessage, IUserChannel } from 'shared/models/socket-events';
 import ChatSearch from "./ChatSearch.vue";
@@ -72,7 +72,10 @@ export default defineComponent({
 	setup() {
 		const chatRoomsStore = useChatRoomsStore();
 		const AuthStore = useAuthStore();
-		return { AuthStore, chatRoomsStore, storeRoom: computed(() => chatRoomsStore.getRooms) };
+		return { 	AuthStore,
+					chatRoomsStore,
+					storeRoom: computed(() => chatRoomsStore.getRooms),
+		};
 	},
 	name: 'Chat',
 	props: {
@@ -124,6 +127,22 @@ export default defineComponent({
 		this.menuMessageModal = new Modal("#menuMessageModal");
 		this.adminModal = new Modal("#adminModal");
 	},
+	watch: {
+		async storeRoom(newId, oldId) {
+			//console.log("watcher")
+			if (newId && newId !== 0 && this.currentRoom) {
+				for (const obj of this.storeRoom){
+					if (obj["roomId"].valueOf() === this.currentRoom.roomId) { 
+						if (obj["messages"] && obj["messages"] != this.currentRoom.messages){
+							this.currentRoom.messages = obj["messages"];
+							return ;
+						}
+						return ;
+					}
+				}
+			}
+		}
+	},
 	computed: {
 		isChatView() {
 			if (this.$route.path === "/chat")
@@ -163,7 +182,11 @@ export default defineComponent({
 				this.messagesLoaded = true
 			})
 		},
-		sendMessage(room = {} as IChannel, content: any, usersTag: any) {
+		sendMessage({content, roomId}: {content: Message, roomId: number}) {
+			let send = content;
+			ChatService.createMessage(roomId, {message: send}).catch(error => {
+				console.log("err", error.response)
+			});
 			// let newMessage = {
 			// 		_id: this.messages.length,
 			// 		content: message.content,
@@ -184,7 +207,6 @@ export default defineComponent({
 			// 		channel: room,
 			// 		senderId: this.currentUserId
 			// };
-			ChatService.createMessage(room.roomId, this.currentUserId, content);
 			// this.messages = [
 			// 	...this.messages,
 			// 	newMessage
