@@ -65,7 +65,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import ChatService from "../../services/ChatService";
-import { IChannel, IUserChannel } from "shared/models/socket-events";
+import { IChannel, IUserChannel, IMessage } from "shared/models/socket-events";
 import { useAuthStore } from "@/store/auth";
 import { useStatusStore } from "@/store/modules/status/status";
 import { useChatRoomsStore } from '@/store/modules/chatroom/chatroom'
@@ -105,6 +105,10 @@ export default defineComponent({
 					resp[0]["users"] = await ChatService.sendUserOfChannels(resp[0]["roomId"]);
 					resp[0]["messages"] = await ChatService.sendMessagesOfChannels(resp[0]["roomId"]);
 					this.chatRoomsStore.fetchRoom(resp);
+				});
+				this.$socketapp.on("sendMessage", async (resp: IMessage) => {
+					//console.log("resp", resp)
+					this.chatRoomsStore.addMessage(resp);
 				});
 				this.$socketapp.on("leaveChannel", async (channelId: number) => {
 					this.chatRoomsStore.leaveChannel(channelId);
