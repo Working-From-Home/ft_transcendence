@@ -1,12 +1,13 @@
 import http from '@/http';
 import { ISignedIn } from '@/models/ISignedIn';
+import { IUser } from '@/models/IUser';
 
 class AuthService {
-  signInLocal(username: string, password: string) {
-    return http.post<ISignedIn>('/auth/signin', { username, password });
+  signInLocal(email: string, password: string) {
+    return http.post<ISignedIn>('/auth/signin', { email, password });
   }
-  signUpLocal(email: string, username: string, password: string) {
-    return http.post<ISignedIn>('/auth/signup', { email, username, password });
+  signUpLocal(email: string, password: string) {
+    return http.post<ISignedIn>('/auth/signup', { email, password });
   }
   /** signin and signup with google. */
   signWithGoogle() {

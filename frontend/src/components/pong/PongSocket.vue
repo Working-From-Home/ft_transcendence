@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import { useAuthStore } from '@/store/modules/auth/auth';
+import { useAuthStore } from '@/store/auth';
 import { useStatusStore } from '@/store/modules/status/status';
 import { Modal } from 'bootstrap';
 import { defineComponent } from 'vue'

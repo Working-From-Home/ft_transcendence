@@ -31,9 +31,9 @@ defineProps({
 
 <style lang="scss" scoped>
 // Inspect
-// *:hover {
-//   outline: 1px blue solid;
-// }
+*:hover {
+  outline: 1px blue solid;
+}
 
 // utils
 @mixin filter-invert($n: 100%) {

@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm'
 import { FindManyOptions, Repository } from 'typeorm'
 import { paginate, Pagination, IPaginationOptions } from 'nestjs-typeorm-paginate';
@@ -6,6 +6,7 @@ import { User } from '../entities/user.entity';
 import { AvatarService } from './avatar.service';
 import { StatsService } from './stats.service';
 import { CreateUserDto } from 'src/auth/dtos/create-user.dto';
+import { uniqueNamesGenerator, Config, adjectives, colors, animals } from 'unique-names-generator';
 
 @Injectable()
 export class UsersService {
@@ -23,8 +24,26 @@ export class UsersService {
         return user;
     }
 
-    async update(user: User, attrs: Partial<User>) {
-        return await this.repo.update(user, attrs);
+    async generateUsername(): Promise<string> {
+      return uniqueNamesGenerator({ dictionaries: [adjectives, colors] });
+    }
+
+    async createWithGeneratedUsername(email: string, password: string): Promise<User> {
+        const user = this.repo.create({ email, username: await this.generateUsername(), password });
+        await this.repo.save(user);
+        await this.avatarService.create(user);
+        await this.statsService.create(user); 
+        return user;
+    }
+
+    async update(id: number, attrs: Partial<User>) {
+      // const user = await this.repo.findOne({ where: { id }});
+      // const maxMinutesEdit = 1;
+      // const maxDate = new Date(new Date().getTime() + maxMinutesEdit*60000);
+      // if (attrs.username && user.createdAt > maxDate)
+      //   throw new UnauthorizedException(`Can't modify username after ${maxMinutesEdit} minutes.`);
+      await this.repo.update({id}, attrs);
+      return attrs;
     }
 
     async remove(user: User): Promise<User> {
@@ -58,11 +77,15 @@ export class UsersService {
     return this.repo.find(options)
   }
 
+  async countBy(options?: FindManyOptions<User>): Promise<number> {
+    return await this.repo.count(options);
+  }
+
   async store(data: CreateUserDto): Promise<User> {
     const n = await this.repo.count({
       where: [
         { email: data.email },
-        { username: data.username }
+        // { username: data.username }
       ]
     });
     if (n > 0)

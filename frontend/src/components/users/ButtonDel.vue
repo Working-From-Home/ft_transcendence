@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useAuthStore } from '@/store/modules/auth/auth';
+import { useAuthStore } from '@/store/auth';
 import { useRouter } from 'vue-router';
 import ButtonTemplate from './ButtonTemplate.vue';
 

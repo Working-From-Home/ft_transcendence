@@ -55,7 +55,7 @@ import ChatInfoUserModal from "./ChatInfoUserModal.vue";
 import ChatService from "../../services/ChatService";
 import { computed, defineComponent } from '@vue/runtime-core';
 import { useChatRoomsStore } from '@/store/modules/chatroom/chatroom'
-import { useAuthStore } from "@/store/modules/auth/auth";
+import { useAuthStore } from "@/store/auth";
 import { toNumber } from '@vue/shared';
 import { Modal } from "bootstrap";
 import UserService from '@/services/UserService';

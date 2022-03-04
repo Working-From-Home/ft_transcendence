@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onUpdated, ref } from 'vue';
 import UserService from '@/services/UserService';
-import { useAuthStore } from '@/store/modules/auth/auth';
+import { useAuthStore } from '@/store/auth';
 import { useStatusStore } from '@/store/modules/status/status';
 import ChallengeButton from '@/components/pong/ChallengeButton.vue';
 import WatchButton from '@/components/pong/WatchButton.vue';
@@ -37,6 +37,12 @@ const isInGame = computed<boolean>(() => {
   return statusStore.isInGame(props.userId);
 });
 
+const status = computed<string>(() => {
+  if (!isOnline.value) return 'offline';
+  else if (isInGame.value) return 'in a game';
+  return 'online';
+});
+
 getUserData(props.userId);
 
 onUpdated(() => {
@@ -58,18 +64,23 @@ function getUserData(id: number) {
 </script>
 
 <template>
-  <!-- <div class="position-relative">
-    <span
-      class="position-absolute top-0 start-100 translate-middle p-3 me-5 bg-danger border border-light rounded-circle"
-      :class="isOnline && 'bg-success'"
-    >
-      <span class="visually-hidden">Status</span>
-    </span>
-  </div> -->
+  <!-- status badge -->
+  <div class="mx-5 position-absolute end-0">
+    <div class="mx-md-5">
+      <span
+        class="badge rounded-pill fs-6 my-2 float-start"
+        :class="[
+          isOnline && 'bg-success',
+          !isOnline && 'bg-danger',
+          isInGame && 'bg-warning',
+        ]"
+        >{{ status }}
+      </span>
+    </div>
+  </div>
+  <!-- content -->
   <div class="px-3 pt-3 pb-1">
-    <h2 class="pb-3">
-      {{ username }}
-    </h2>
+    <h2 class="pb-3">{{ username }}</h2>
     <div class="row gx-3 py-2">
       <div class="col-12 col-md-4">victories:&nbsp&nbsp{{ victories }}</div>
       <div class="col-12 col-md-4">losses:&nbsp&nbsp{{ losses }}</div>
@@ -82,7 +93,6 @@ function getUserData(id: number) {
       <!-- <div class="col mx-1">
         <ButtonAdd :userId="userId"></ButtonAdd>
       </div> -->
-
       <div v-if="isOnline && !isInGame" class="col mx-1">
         <ChallengeButton :userId="props.userId">Challenge</ChallengeButton>
       </div>

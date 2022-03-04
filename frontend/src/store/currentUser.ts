@@ -1,7 +1,6 @@
 import { toNumber } from '@vue/shared';
 import { defineStore } from 'pinia';
 
-import vuexStore from '@/store';
 import UserService from '@/services/UserService';
 import { IUser } from '@/models/IUser';
 import axios, { AxiosError } from 'axios';
@@ -23,14 +22,7 @@ export const useCurrentUserStore = defineStore('currentUser', {
     email: '',
     avatar: '',
   }),
-  getters: {
-    getAvatarBase64(): string {
-      const reader = new FileReader;
-      // reader.readAsDataURL(this.avatar?.data.buffer);
-      // return `data:${this.avatar?.data.}`
-      return ``
-    }
-  },
+  getters: {},
   actions: {
     async initStore(myUserId: number) {
       try {

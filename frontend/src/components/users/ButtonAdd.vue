@@ -11,7 +11,7 @@
 <script setup lang="ts">
 import { computed, onUpdated, ref } from 'vue';
 import UserService from "@/services/UserService";
-import { useAuthStore } from '@/store/modules/auth/auth';
+import { useAuthStore } from '@/store/auth';
 
 const props = defineProps({
   userId: {
