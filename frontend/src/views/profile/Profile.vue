@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onUpdated, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import { useAuthStore } from '@/store/modules/auth/auth';
+import { useAuthStore } from '@/store/auth';
 import Avatar from '@/components/users/Avatar.vue';
 import Info from '@/components/users/info.vue';
 import History from '@/components/users/History.vue';

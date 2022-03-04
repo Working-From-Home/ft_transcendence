@@ -23,17 +23,16 @@
     "pinia": "^2.0.11",
     "shared": "file:../shared",
     "socket.io-client": "^4.4.1",
+    "unique-names-generator": "^4.7.1",
     "vue": "^3.2.30",
     "vue-advanced-chat": "https://github.com/Working-From-Home/vue-advanced-chat/archive/refs/tags/v1.5.2-beta.tar.gz",
     "vue-class-component": "^8.0.0-0",
-    "vue-router": "^4.0.12",
-    "vuex": "^4.0.2"
+    "vue-router": "^4.0.12"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~5.0.1",
     "@vue/cli-plugin-router": "~5.0.1",
     "@vue/cli-plugin-typescript": "~5.0.1",
-    "@vue/cli-plugin-vuex": "~5.0.1",
     "@vue/cli-service": "~5.0.1",
     "@vue/compiler-sfc": "^3.2.30",
     "prettier": "^2.5.1",

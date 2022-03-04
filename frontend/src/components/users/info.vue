@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onUpdated, ref } from 'vue';
 import UserService from '@/services/UserService';
-import { useAuthStore } from '@/store/modules/auth/auth';
+import { useAuthStore } from '@/store/auth';
 import { useStatusStore } from '@/store/modules/status/status';
 import ChallengeButton from '@/components/pong/ChallengeButton.vue';
 import WatchButton from '@/components/pong/WatchButton.vue';

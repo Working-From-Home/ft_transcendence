@@ -1,20 +1,33 @@
 <template>
   <div>
     <form @submit.prevent="register" class="needs-validation">
-      <!-- Username tmp-->
-      <div class="form-floating mb-4">
-        <input v-model="username" type="text" class="form-control" id="username" placeholder="" required autofocus />
-        <label for="username" class="text-black">Username</label>
-      </div>
       <!-- Email input -->
       <div class="form-floating mb-4">
-        <input v-model="email" type="email" class="form-control" id="email" placeholder="" required autofocus />
+        <input
+          v-model="email"
+          type="email"
+          class="form-control"
+          id="email"
+          placeholder=""
+          required
+          autofocus
+        />
         <label for="email" class="text-black">Email address</label>
       </div>
       <!-- Password input -->
       <div class="form-floating mb-4">
-        <input v-model="password" type="password" class="form-control" id="password" placeholder="" required />
+        <input
+          v-model="password"
+          type="password"
+          class="form-control"
+          id="password"
+          placeholder=""
+          required
+        />
         <label for="password" class="text-black">Password</label>
+        <div id="passwordHelpBlock" class="form-text">
+          Must be at least 1 characters long.
+        </div>
       </div>
       <!-- Confirm Password -->
       <!-- <div class="form-floating mb-4">
@@ -22,11 +35,25 @@
       <label for="password" class="text-black">Confirm Password</label>
     </div> -->
 
+      <!-- Error from backend -->
+      <!-- <div :hidden="errorMessage == ''" class="alert alert-danger" role="alert" > -->
+      <div
+        :style="{ visibility: errorMessage ? 'visible' : 'hidden' }"
+        class="alert alert-danger"
+        role="alert"
+      >
+        {{ errorMessage }}
+      </div>
       <!-- Submit button -->
-      <button type="submit" class="btn btn-primary btn-lg btn-block">Register</button>
+      <button type="submit" class="btn btn-primary btn-lg btn-block">
+        Register
+      </button>
     </form>
     <hr class="hr-text" data-content="Or continue with" />
-    <a class="btn btn-default btn-oauth rounded-circle rounded-circle" role="button">
+    <a
+      class="btn btn-default btn-oauth rounded-circle rounded-circle"
+      role="button"
+    >
       <font-awesome-icon :icon="['fab', 'google']" color="white" size="5x" />
     </a>
     <a class="btn btn-default btn-oauth" role="button">
@@ -34,7 +61,9 @@
     </a>
     <p>
       Already have an account ?
-      <a class="link-info" @click="emit('changeForm', AuthMode.Register)">Login instead</a>
+      <router-link :to="{ name: 'signin' }" class="link-info"
+        >Login instead</router-link
+      >
     </p>
   </div>
 </template>
@@ -47,7 +76,7 @@ library.add(faGoogle);
 </script>
 
 <script setup lang="ts">
-import { useAuthStore } from '@/store/modules/auth/auth';
+import { useAuthStore } from '@/store/auth';
 import { ref } from 'vue';
 import { AuthMode } from '@/views/auth/auth.interface';
 import { useRouter } from 'vue-router';
@@ -57,21 +86,29 @@ const emit = defineEmits<{
 }>();
 
 const authStore = useAuthStore();
-const router = useRouter();
 
-const username = ref('');
 const email = ref('');
 const password = ref('');
 const passwordConfirm = ref('');
+const errorMessage = ref('');
 
 const register = async () => {
-  const e = await authStore.signUp(username.value, email.value, password.value);
-  if (e) alert(`${e.message}`);
-  else emit('changeForm', AuthMode.RegisterOptional);
+  const e = await authStore.signUp(email.value, password.value);
+  if (e) errorMessage.value = e.message;
+  else {
+    authStore.registerInProgress = true;
+    emit('changeForm', AuthMode.RegisterOptional);
+  }
 };
+
 </script>
 
 <style lang="scss" scoped>
+// Inspect
+*:hover {
+  outline: 1px blue solid;
+}
+
 // utils
 @mixin filter-invert($n: 100%) {
   -webkit-filter: invert($n); /* safari 6.0 - 9.0 */
@@ -127,7 +164,7 @@ const register = async () => {
     line-height: 1.5em;
     color: white;
     /* // this is really the only tricky part, you need to specify the background color of the container element... */
-    background-color: #192531;
+    background-color: $app-background;
   }
 }
 </style>

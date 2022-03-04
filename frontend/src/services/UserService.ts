@@ -1,5 +1,7 @@
 import http from '@/http';
+import { IError } from '@/models/IError';
 import { IUser } from '@/models/IUser';
+import axios, { AxiosError } from 'axios';
 
 function formatImage(data: ArrayBuffer) : string {
 	var binary = '';
@@ -27,6 +29,9 @@ class UserService {
     const response = await http.put(`/users/${myUserId}/avatar`, formData, { responseType: 'arraybuffer' });
 		return formatImage(response.data);
   }
+  updateMe(attrs: Partial<IUser>) {
+    return http.patch<Partial<IUser>>('/users', attrs);
+  }
   async resetDefaultAvatar(myUserId: number): Promise<string> {
     const response = await http.delete(`/users/${myUserId}/avatar`);
 		return formatImage(response.data);
@@ -51,6 +56,13 @@ class UserService {
   }
   async endFriendship(applicantId: number, recipientId: number) {
     await http.delete(`/users/${applicantId}/friends/${recipientId}`);
+  }
+  usernameExists(username: string): Promise<boolean> {
+    return http.head(`/username/${username}`).then( () => {
+      return true; 
+    }).catch( () => {
+      return false;
+    })
   }
 }
 export default new UserService();
