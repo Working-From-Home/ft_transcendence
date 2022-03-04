@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<button class="btn btn-outline-light" v-if="!isSearching" @click="joinMatchmaking">Search Game</button>
+		<button class="btn btn-outline-light" v-if="!isSearching" @click="joinMatchmaking">Search game</button>
 		<button class="btn btn-outline-light" v-if="isSearching" @click="leaveMatchmaking">Stop searching</button>
 		<div v-if="isSearching">
 			<p>
