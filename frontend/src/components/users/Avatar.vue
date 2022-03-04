@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onUpdated, ref } from 'vue';
 import UserService from '@/services/UserService';
+import { useCurrentUserStore } from "@/store/currentUser";
 
 const props = defineProps({
   userId: {
@@ -13,6 +14,8 @@ const props = defineProps({
   },
 });
 
+const currentUserStore = useCurrentUserStore();
+
 const fileInput = ref<HTMLInputElement>();
 const avatar = ref<string>('');
 
@@ -20,6 +23,7 @@ UserService.getAvatarOfUser(props.userId).then((av) => (avatar.value = av));
 
 onUpdated(() => {
   UserService.getAvatarOfUser(props.userId).then((av) => (avatar.value = av));
+  currentUserStore.updateAvatar(avatar.value);
 });
 
 function uploadFile() {
