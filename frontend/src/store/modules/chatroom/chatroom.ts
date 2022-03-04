@@ -23,10 +23,10 @@ export const useChatRoomsStore = defineStore('chatRooms', {
 		fetchRooms(rooms : IChannel[]){
 			this.rooms = rooms
 		},
-		fetchRoom(room : IChannel){
+		fetchRoom(room : IChannel[]){
 			for (let obj of this.rooms){
-				if (obj["roomId"] === room.roomId){
-					obj = room;
+				if (obj["roomId"] === room[0].roomId){
+					obj = room[0];
 					return ;
 				}
 			}
@@ -46,7 +46,7 @@ export const useChatRoomsStore = defineStore('chatRooms', {
 		leaveChannel(channelId: number) {
 			let i = 0;
 			for (let obj of this.rooms){
-				if (obj["roomId"] === channelId){
+				if (obj["roomId"].valueOf() == channelId){
 					this.rooms.splice(i, 1);
 					return ;
 				}

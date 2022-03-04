@@ -1,20 +1,39 @@
 <template>
-<div class="modal text-black" id="menuMessageModal" tabindex="-1">
-  <div class="modal-dialog">
+<div class="modal fade text-black" id="menuMessageModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">More informations about {{ userName }}</h5>
+        <h5 class="modal-title">More informations about {{ modalUserName }}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p>Modal body text goes here.</p>
-		<button type="button" id="btn-front" class="btn-front btn btn-outline-info" data-bs-target="#staticBackdrop" @click="goProfile">
-			Open Profile
-		</button>
+		<div class="row">
+			<div class="col">
+				<img
+				:src="modalAvatar"
+				class="col img-fluid rounded mx-auto"
+				alt="avatar"
+			/>
+			</div>
+			<div class="col">
+				<router-link
+					class="link"
+					:to="{
+						name: 'profile',
+						params: { userid: modalUserId },
+					}"
+					>
+					<button type="button" id="btn-front" class="btn-front btn btn-outline-info" data-bs-target="#staticBackdrop" data-bs-dismiss="modal" aria-label="Close">
+						Open Profile
+					</button>
+				</router-link>
+				<chat-d-m-button :otherUserId="modalUserId"/>
+				<challenge-button :userId="modalUserId"></challenge-button>
+				<watch-button :userId="modalUserId"></watch-button>
+			</div>
+		</div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
       </div>
     </div>
   </div>
@@ -23,33 +42,20 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import UserService from "@/services/UserService";
-import { Modal } from "bootstrap";
+import ChallengeButton from '../pong/ChallengeButton.vue'
+import WatchButton from '../pong/WatchButton.vue'
+import ChatDMButton from "./ChatDMButton.vue";
 
 export default defineComponent({
+	components: { ChallengeButton, WatchButton, ChatDMButton },
 	props: {
-		modalMessageUserId: {type: Number, required: true},
-		menuMessageModal: {type: Modal, required: true}
+		modalUserId: {type: Number, required: true},
+		modalUserName: {type: String, required: true},
+		modalAvatar: {type: String, required: true},
 	},
 	data() {
 		return {
-			userName: "" as string,
 		}
-	},
-	computed: {
-		getName() {
-			console.log("modalMessageUserId", this.modalMessageUserId)
-			UserService.getUserById(this.modalMessageUserId).then( response => {
-				console.log("response", response)
-				return this.userName = response.data.username;
-			})
-		}
-	},
-	methods: {
-		goProfile() {
-			this.menuMessageModal.hide();
-			//this.$router.push('/profile');
-		},
 	},
 })
 </script>

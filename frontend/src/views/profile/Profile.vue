@@ -25,7 +25,7 @@ onUpdated(() => {
 <template>
   <div class="container my-5 px-5">
     <!-- row 1 -->
-    <div class="row gx-3 gy-3">
+    <div class="row gx-3 gy-3 px-md-5">
       <!-- avatar -->
       <div class="col-12 col-ms-12 col-md-3">
         <div
@@ -43,7 +43,7 @@ onUpdated(() => {
       </div>
     </div>
     <!-- row 2 -->
-    <div class="row g-3">
+    <div class="row g-3 px-md-5">
       <!-- match history -->
       <div class="col pt-3">
         <div class="bg-light rounded text-black" style="height: 100%">

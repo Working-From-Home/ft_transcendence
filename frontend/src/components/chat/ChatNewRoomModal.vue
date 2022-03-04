@@ -43,14 +43,11 @@ export default defineComponent({
   methods: {
     createChannel() {
 		if (!this.ChannelName) {
-			alert("pls put a name")
+			alert("please put a name")
 			return
 		}
-		ChatService.createChannel({title: this.ChannelName, password: this.password}).then( resp =>{
-			console.log(resp)
-		}).catch( err => {
-			console.log(err)
-		})
+		ChatService.createChannel({title: this.ChannelName, password: this.password}).then( resp =>{})
+		.catch( err => {console.log(err)})
     }
   }
 })
