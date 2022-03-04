@@ -15,7 +15,7 @@ export interface IMessage {
     content: string;
 	createdAt: string;
     date: string;
-    channel: IChannel;
+    channelId: number;
 	senderId: number;
 }
 
@@ -52,6 +52,7 @@ interface ClientToServerEventsOnline {}
 interface ServerToClientEventsChat {
   sendChannels: (channels: IChannel[]) => void;
   sendChannel: (channels: IChannel[]) => void;
+  sendMessage: (message: IMessage) => void;
   leaveChannel: (channelId: number) => void;
   sendUserChannels: (channelId: number, users: IUserChannel[]) => void;
 }

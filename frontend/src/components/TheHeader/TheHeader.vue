@@ -141,13 +141,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import ChatService from '../../services/ChatService';
-import { IChannel, IUserChannel } from 'shared/models/socket-events';
-import { useAuthStore } from '@/store/auth';
-import { useStatusStore } from '@/store/modules/status/status';
-import { useChatRoomsStore } from '@/store/modules/chatroom/chatroom';
-import { useCurrentUserStore } from '@/store/currentUser';
+import { defineComponent } from "vue";
+import ChatService from "../../services/ChatService";
+import { IChannel, IUserChannel, IMessage } from "shared/models/socket-events";
+import { useAuthStore } from "@/store/auth";
+import { useStatusStore } from "@/store/modules/status/status";
+import { useChatRoomsStore } from '@/store/modules/chatroom/chatroom'
+import { useCurrentUserStore } from "@/store/currentUser";
 
 export default defineComponent({
   setup() {
@@ -165,45 +165,43 @@ export default defineComponent({
         };
         this.$socketapp.connect();
 
-        this.$socketapp.on('connectedUsers', (userIds: number[]) => {
-          console.log(`userIds: ${userIds}`);
-          this.statusStore.setOnlineUsers(userIds);
-        });
-        this.$socketapp.on('connect_error', (err: any) => {
-          console.log(`socket connexion error: ${err}`);
-        });
-        this.$socketapp.on('sendChannels', async (resp: IChannel[]) => {
-          for (const obj of resp) {
-            obj['users'] = await ChatService.sendUserOfChannels(obj['roomId']);
-            obj['messages'] = await ChatService.sendMessagesOfChannels(
-              obj['roomId'],
-            );
-          }
-          this.chatRoomsStore.fetchRooms(resp);
-        });
-        this.$socketapp.on('sendChannel', async (resp: IChannel[]) => {
-          resp[0]['users'] = await ChatService.sendUserOfChannels(
-            resp[0]['roomId'],
-          );
-          resp[0]['messages'] = await ChatService.sendMessagesOfChannels(
-            resp[0]['roomId'],
-          );
-          this.chatRoomsStore.fetchRoom(resp);
-        });
-        this.$socketapp.on('leaveChannel', async (channelId: number) => {
-          this.chatRoomsStore.leaveChannel(channelId);
-        });
-      }
-      return this.authStore.isLoggedIn;
-    },
-  },
-  methods: {
-    logout() {
-      this.authStore.logout();
-      this.$socketapp.disconnect(); //  to remove an put at the right place too
-    },
-  },
-});
+				this.$socketapp.on("connectedUsers", (userIds: number[]) => {
+					console.log(`userIds: ${userIds}`);
+					this.statusStore.setOnlineUsers(userIds);
+				});
+				this.$socketapp.on("connect_error", (err: any) => {
+					console.log(`socket connexion error: ${err}`);
+				});
+				this.$socketapp.on("sendChannels", async (resp: IChannel[]) => {
+					for (const obj of resp){
+						obj["users"] = await ChatService.sendUserOfChannels(obj["roomId"]);
+						obj["messages"] = await ChatService.sendMessagesOfChannels(obj["roomId"]);
+					}
+					this.chatRoomsStore.fetchRooms(resp);
+				});
+				this.$socketapp.on("sendChannel", async (resp: IChannel[]) => {
+					resp[0]["users"] = await ChatService.sendUserOfChannels(resp[0]["roomId"]);
+					resp[0]["messages"] = await ChatService.sendMessagesOfChannels(resp[0]["roomId"]);
+					this.chatRoomsStore.fetchRoom(resp);
+				});
+				this.$socketapp.on("sendMessage", async (resp: IMessage) => {
+					//console.log("resp", resp)
+					this.chatRoomsStore.addMessage(resp);
+				});
+				this.$socketapp.on("leaveChannel", async (channelId: number) => {
+					this.chatRoomsStore.leaveChannel(channelId);
+				});
+			}
+			return this.authStore.isLoggedIn;
+		},
+	},
+	methods: {
+		logout() {
+			this.authStore.logout();
+			this.$socketapp.disconnect(); //  to remove an put at the right place too
+		},
+	}
+})
 </script>
 
 <style lang="scss" scoped>

@@ -17,8 +17,8 @@ class ChatService {
 	createChannel(data: any): Promise<IChannel[]> {
 		return http.post(`/channels`, data);
 	}
-	createMessage(channelId: number, userId: number, content: string): Promise<IMessage> {
-		return http.post(`/message`);
+	createMessage(channelId: number, content: any): Promise<IMessage> {
+		return http.post(`/channels/${channelId}/messages`, content);
 	}
 	// only the owner can update the channel
 	updateChannel(channelId: number, data: Partial<ChannelUpdate>): Promise<any> {

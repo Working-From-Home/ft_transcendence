@@ -91,7 +91,6 @@ export class AppGateway {
 	@SubscribeMessage('sendMessagesOfChannels')
 	handleEventMessagesInChannel(client: AppSocket, channelId: number) {
 		return this.chatService.getMessagesOfChannel(channelId).then( (y) => {
-			//console.log("y", y) 
 				return y
 		}); 
 	}
