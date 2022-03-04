@@ -1,19 +1,6 @@
 <template>
   <div>
     <form @submit.prevent="register" class="needs-validation">
-      <!-- Username tmp-->
-      <div class="form-floating mb-4">
-        <input
-          v-model="username"
-          type="text"
-          class="form-control"
-          id="username"
-          placeholder=""
-          required
-          autofocus
-        />
-        <label for="username" class="text-black">Username</label>
-      </div>
       <!-- Email input -->
       <div class="form-floating mb-4">
         <input
@@ -89,7 +76,7 @@ library.add(faGoogle);
 </script>
 
 <script setup lang="ts">
-import { useAuthStore } from '@/store/modules/auth/auth';
+import { useAuthStore } from '@/store/auth';
 import { ref } from 'vue';
 import { AuthMode } from '@/views/auth/auth.interface';
 import { useRouter } from 'vue-router';
@@ -100,17 +87,17 @@ const emit = defineEmits<{
 
 const authStore = useAuthStore();
 
-const username = ref('');
 const email = ref('');
 const password = ref('');
 const passwordConfirm = ref('');
 const errorMessage = ref('');
 
 const register = async () => {
-  const e = await authStore.signUp(username.value, email.value, password.value);
+  const e = await authStore.signUp(email.value, password.value);
   if (e) errorMessage.value = e.message;
   else emit('changeForm', AuthMode.RegisterOptional);
 };
+
 </script>
 
 <style lang="scss" scoped>

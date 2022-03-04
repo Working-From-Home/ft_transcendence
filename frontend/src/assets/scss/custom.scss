@@ -1,0 +1,30 @@
+// THE doc: https://getbootstrap.com/docs/5.0/customize/sass/
+// https://css-tricks.com/how-to-import-a-sass-file-into-every-vue-component-in-an-app/
+// https://www.reddit.com/r/vuejs/comments/hqhxxz/how_can_i_configure_scss_file_and_share_variables/
+// https://vueschool.io/articles/vuejs-tutorials/globally-load-sass-into-your-vue-js-applications/
+
+// eventually import boostrap from node modules to custom it 
+// https://getbootstrap.com/docs/5.0/customize/sass/
+// https://getbootstrap.com/docs/5.0/utilities/background/
+
+// 1. Include functions first (so you can manipulate colors, SVGs, calc, etc)
+@import '@/../node_modules/bootstrap/scss/functions';
+
+// 2. default variable overrides (like primary secondary, danger etc...)
+// https://getbootstrap.com/docs/5.0/customize/sass/
+@import 'variables';
+
+// 3. Include remainder of required Bootstrap stylesheets
+@import "@/../node_modules/bootstrap/scss/variables";
+@import "@/../node_modules/bootstrap/scss/mixins";
+
+// 4. Include any optional Bootstrap components as you like
+@import "@/../node_modules/bootstrap/scss/root";
+@import "@/../node_modules/bootstrap/scss/reboot";
+@import "@/../node_modules/bootstrap/scss/type";
+@import "@/../node_modules/bootstrap/scss/images";
+@import "@/../node_modules/bootstrap/scss/containers";
+@import "@/../node_modules/bootstrap/scss/grid";
+
+// 5. Add additional custom code here
+

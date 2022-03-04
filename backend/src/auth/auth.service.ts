@@ -18,27 +18,24 @@ export class AuthService {
         private jwtService: JwtService
     ) {}
 
-    async signup(email: string, username: string, password: string) {
+    async signUpLocal(email: string, password: string) {
         if (! await this.isEmailAvailable(email)) {
             throw new BadRequestException('email in use');
         }
-        if (! await this.isUsernameAvailable(username)) {
-            throw new BadRequestException('username in use');
-        }
         const encryptedPasword = await this.encryptPassword(password);
-        const user = await this.usersService.create(email, username, encryptedPasword);
+        const user = await this.usersService.createWithGeneratedUsername(email, encryptedPasword);
         return this.generateAccessToken(user);
     }
 
-    async signin(username: string, password: string) {
-        const user = await this.usersService.findByName(username);
+    async signInLocal(email: string, password: string) {
+        const user = await this.usersService.findByEmail(email);
         if (!user) {
-            throw new NotFoundException('user not found');
+            throw new NotFoundException('Email not found.');
         }
         const [salt, storedHash] = user.password.split('.');
         const hash = (await scrypt(password, salt, 32)) as Buffer;
         if (storedHash !== hash.toString('hex')) {
-            throw new BadRequestException('bad password');
+            throw new BadRequestException('Wrong password, try again.');
         }
         return this.generateAccessToken(user);
     }

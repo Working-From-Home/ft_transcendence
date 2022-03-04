@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onUpdated, ref } from 'vue';
 import UserService from '@/services/UserService';
-import { useAuthStore } from '@/store/modules/auth/auth';
+import { useAuthStore } from '@/store/auth';
 import ChallengeButton from '@/components/pong/ChallengeButton.vue';
 import ButtonDel from '@/components/users/ButtonDel.vue';
 import ButtonAdd from '@/components/users/ButtonAdd.vue';

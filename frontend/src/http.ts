@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-import { useAuthStore } from "./store/modules/auth/auth";
+import { useAuthStore } from "./store/auth";
 
 // The backend api
 const myApi: AxiosInstance = axios.create({

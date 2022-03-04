@@ -26,15 +26,17 @@ import { useStatusStore } from '@/store/modules/status/status'
 import PongMatchmaking from './PongMatchmaking.vue'
 import ChallengeButton from './ChallengeButton.vue'
 import WatchButton from './WatchButton.vue'
+import { useCurrentUserStore } from '@/store/currentUser'
 
 export default defineComponent({
   components: { PongMatchmaking, ChallengeButton, WatchButton },
 	setup() {
 		const statusStore = useStatusStore();
-		return { statusStore };
+		const currentUserStore = useCurrentUserStore();
+		return { statusStore, currentUserStore };
 	},
 	mounted() {
-		const id = this.$store.getters.myUserId;
+		const id = this.currentUserStore.userId!;
 		console.log(`yo: ${id}`);
 		if (!this.statusStore.getinGameusers.includes(id))
 			return ;

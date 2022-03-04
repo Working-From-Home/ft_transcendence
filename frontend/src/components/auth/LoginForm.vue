@@ -2,24 +2,18 @@
   <div>
     <form @submit.prevent="login" class="needs-validation">
       <!-- Email input -->
-      <!-- <div class="form-floating mb-4">
-      <input v-model="email" type="email" class="form-control" id="email" placeholder="" required autofocus />
-      <label for="email" class="text-black">Email address</label>
-    </div> -->
-      <!-- Username tmp-->
       <div class="form-floating mb-4">
         <input
-          v-model="username"
-          type="text"
+          v-model="email"
+          type="email"
           class="form-control"
-          id="username"
+          id="email"
           placeholder=""
           required
           autofocus
         />
-        <label for="username" class="text-black">Username</label>
+        <label for="email" class="text-black">Email address</label>
       </div>
-
       <!-- Password input -->
       <div class="form-floating mb-4">
         <input
@@ -75,7 +69,7 @@ library.add(faGoogle);
 </script>
 
 <script setup lang="ts">
-import { useAuthStore } from '@/store/modules/auth/auth';
+import { useAuthStore } from '@/store/auth';
 import { AuthMode } from '@/views/auth/auth.interface';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -87,14 +81,13 @@ const emit = defineEmits<{
 const authStore = useAuthStore();
 const router = useRouter();
 
-// const email =  ref();
-const username = ref('');
+const email =  ref('');
 const password = ref('');
 
 const errorMessage = ref('');
 
 const login = async () => {
-  const e = await authStore.signIn(username.value, password.value);
+  const e = await authStore.signIn(email.value, password.value);
   if (e) errorMessage.value = e.message;
   else router.push('/');
 };

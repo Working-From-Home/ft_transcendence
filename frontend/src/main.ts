@@ -1,17 +1,17 @@
 import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
-import store, { key } from "./store";
 import Card from './components/ui/Card.vue';
 import BaseButton from './components/ui/BaseButton.vue';
 import BaseDialog from './components/ui/BaseDialog.vue';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
+// pas tres clean, mais flemme, a voir plus tard
+import '@/assets/scss/custom.scss'
 
 import { io,  Socket }  from "socket.io-client";
 import http from "@/http";
 import socketApp from "./socketApp";
-import { Store } from "vuex";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { createPinia } from 'pinia'
 
@@ -25,8 +25,6 @@ app.config.globalProperties.$pongSocket = io( process.env.VUE_APP_BACKEND_SERVER
 });
 
 app
-// .provide("$store", store)
-  .use(store, key) // useful ?
   .use(createPinia()) 
   .use(router)
   .component('card', Card)

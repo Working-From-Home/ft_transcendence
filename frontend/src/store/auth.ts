@@ -3,18 +3,19 @@ import { defineStore } from 'pinia';
 import api from '@/services/AuthService';
 import { useCurrentUserStore } from '@/store/currentUser';
 
-import vuexStore from '@/store';
 import { IError } from '@/models/IError';
 import axios, { AxiosError } from 'axios';
 
 export interface State {
   userId: number | null;
   token: string;
+  refreshToken: string;
 }
 
 export const useAuthStore = defineStore('auth', {
   state: (): State => ({
     token: '',
+    refreshToken: '',
     userId: null, // remove soon ?
   }),
   getters: {
@@ -24,27 +25,23 @@ export const useAuthStore = defineStore('auth', {
     },
   },
   actions: {
-    async signIn(username: string, password: string): Promise<IError | undefined> {
-      const currentUserStore = useCurrentUserStore();
+    async signIn(email: string, password: string): Promise<IError | undefined> {
       try {
-        const resp = await api.signInLocal(username, password);
+        const resp = await api.signInLocal(email, password);
         this.setState(resp.data.access_token, resp.data.id);
 
-        currentUserStore.initStore(resp.data.id); // wip
-        vuexStore.dispatch('getProfile', { id: resp.data.id, token: resp.data.access_token });
+        useCurrentUserStore().initStore(resp.data.id); // wip
       } catch (err) {
         const e = err as AxiosError<IError>;
         if (axios.isAxiosError(e)) return e.response?.data;
       }
     },
-    async signUp(username: string, email: string, password: string) {
-      const currentUserStore = useCurrentUserStore();
+    async signUp(email: string, password: string) {
       try {
-        const resp = await api.signUpLocal(email, username, password);
+        const resp = await api.signUpLocal(email, password);
         this.setState(resp.data.access_token, resp.data.id);
 
-        currentUserStore.initStore(resp.data.id); // wip
-        vuexStore.dispatch('getProfile', { id: resp.data.id, token: resp.data.access_token });
+        useCurrentUserStore().initStore(resp.data.id); // wip
       } catch (err) {
         const e = err as AxiosError<IError>;
         if (axios.isAxiosError(e)) return e.response?.data;
@@ -57,10 +54,10 @@ export const useAuthStore = defineStore('auth', {
       const email: string | null = localStorage.getItem('email');
       const avatar: string | null = localStorage.getItem('avatar');
 
+      
       if (token && userId) {
+        useCurrentUserStore().initStore(userId); // wip
         this.setState(token, userId);
-        vuexStore.commit('initProfile', { username: username, userId: userId, email: email });
-        vuexStore.commit('initAvatar', { avatar: avatar });
       }
     },
     setState(token: string, userId: number) {
@@ -70,21 +67,20 @@ export const useAuthStore = defineStore('auth', {
       localStorage.setItem('token', token);
       localStorage.setItem('userId', userId.toString());
     },
-    clearState() {
-      this.token = '';
-      this.userId = null;
-    },
     logout() {
       api.logout()
       .finally(() => {
-        this.clearState();
-        localStorage.clear();
+        this.clearApp();
       });
     },
     async deleteAccount() {
       await api.deleteAccount(); // deal the response or balec ?
-      this.clearState();
-      localStorage.clear();
+      this.clearApp();
     },
+    clearApp() {
+      this.$reset();
+      useCurrentUserStore().$reset();
+      localStorage.clear();
+    }
   },
 });

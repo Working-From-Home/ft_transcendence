@@ -51,7 +51,8 @@
     "rxjs": "^7.5.4",
     "shared": "file:../shared",
     "swagger-ui-express": "^4.3.0",
-    "typeorm": "^0.2.41"
+    "typeorm": "^0.2.41",
+    "unique-names-generator": "^4.7.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^8.0.0",

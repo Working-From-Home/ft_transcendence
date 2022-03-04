@@ -14,12 +14,12 @@ export class AuthController {
 
     @Post('/signup')
     async createUser(@Body() body: CreateUserDto) {
-        return await this.authService.signup(body.email, body.username, body.password);
+        return await this.authService.signUpLocal(body.email, body.password);
     }
 
     @Post('/signin')
     async signin(@Body() body: AcceptUserDto) {
-        return await this.authService.signin(body.username, body.password);
+        return await this.authService.signInLocal(body.email, body.password);
     }
 
     @Patch('/:id')
