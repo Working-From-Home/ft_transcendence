@@ -44,7 +44,7 @@
 						<ul id="navbar" class="navbar-nav me-3 d-flex">
 							<li class="nav-item dropdown">
 								<a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
-									{{ $store.getters.myEmail + "(idk why become null, need to fix it)" }}
+									{{ currentUserStore.username }}
 								</a>
 								<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 									<li><router-link :to="{ name: 'profile', params: { userid: authStore.userId }}" class="dropdown-item">Profile</router-link></li>
@@ -54,7 +54,7 @@
 								</ul>
 							</li>
 						</ul>
-						<img :src="userAvatar" alt="" width="40" class="me-3 d-inline-block align-text-top">
+						<img :src="currentUserStore.avatar" alt="" width="40" class="me-3 d-inline-block align-text-top">
 					</div>
 				</div>
 			</nav>
@@ -66,16 +66,18 @@
 import { defineComponent } from "vue";
 import ChatService from "../../services/ChatService";
 import { IChannel, IUserChannel } from "shared/models/socket-events";
-import { useAuthStore } from "@/store/modules/auth/auth";
+import { useAuthStore } from "@/store/auth";
 import { useStatusStore } from "@/store/modules/status/status";
 import { useChatRoomsStore } from '@/store/modules/chatroom/chatroom'
+import { useCurrentUserStore } from "@/store/currentUser";
 
 export default defineComponent({
 	setup() {
 		const authStore = useAuthStore();
+		const currentUserStore = useCurrentUserStore();
 		const statusStore = useStatusStore();
 		const chatRoomsStore = useChatRoomsStore();
-		return { authStore, statusStore, chatRoomsStore };
+		return { authStore, currentUserStore, statusStore, chatRoomsStore };
 	},
 	computed: {
 		connect(): boolean {
@@ -97,13 +99,11 @@ export default defineComponent({
 						obj["users"] = await ChatService.sendUserOfChannels(obj["roomId"]);
 						obj["messages"] = await ChatService.sendMessagesOfChannels(obj["roomId"]);
 					}
-					//console.log(`front`, resp);
 					this.chatRoomsStore.fetchRooms(resp);
 				});
-				this.$socketapp.on("sendChannel", async (resp: IChannel) => {
-					resp["users"] = await ChatService.sendUserOfChannels(resp["roomId"]);
-					resp["messages"] = await ChatService.sendMessagesOfChannels(resp["roomId"]);
-					//console.log(`One Room`, resp);
+				this.$socketapp.on("sendChannel", async (resp: IChannel[]) => {
+					resp[0]["users"] = await ChatService.sendUserOfChannels(resp[0]["roomId"]);
+					resp[0]["messages"] = await ChatService.sendMessagesOfChannels(resp[0]["roomId"]);
 					this.chatRoomsStore.fetchRoom(resp);
 				});
 				this.$socketapp.on("leaveChannel", async (channelId: number) => {
@@ -112,9 +112,6 @@ export default defineComponent({
 			}
 			return this.authStore.isLoggedIn;
 		},
-		userAvatar(): string {
-			return 'data:image/png;base64,' + this.$store.getters.myAvatar;
-		}
 	},
 	methods: {
 		logout() {

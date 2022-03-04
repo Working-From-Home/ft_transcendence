@@ -19,7 +19,7 @@ import MiniChat from './components/chat/MiniChat.vue';
 import TheHeader from './components/TheHeader/TheHeader.vue';
 import FriendList from './components/OffcanvasFriendsList.vue';
 import PongSocket from './components/pong/PongSocket.vue';
-import { useAuthStore } from '@/store/modules/auth/auth';
+import { useAuthStore } from '@/store/auth';
 import { useRoute } from 'vue-router';
 import { computed } from 'vue';
 
@@ -37,7 +37,7 @@ const isChatView = computed(() => {
 
 <style lang="scss">
 html {
-  background: #192531;
+  background: $app-background;
   overflow-x: hidden;
 }
 
@@ -47,7 +47,7 @@ html {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: rgba(255, 255, 255, 0.884);
-  background: #192531;
+  background: $app-background;
 }
 
 .fade-enter-active,

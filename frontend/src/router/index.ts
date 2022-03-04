@@ -2,8 +2,8 @@ import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import Home from "../views/Home.vue";
 import PongGame from '../components/pong/PongGame.vue'
 import PongHome from '../components/pong/PongHome.vue'
-import Auth from "@/views/auth/auth.vue";
-import { useAuthStore } from "@/store/modules/auth/auth";
+import Auth from "@/views/auth/Auth.vue";
+import { useAuthStore } from "@/store/auth";
 import { AuthMode } from "@/views/auth/auth.interface";
 import Profile from "@/views/profile/Profile.vue"
 

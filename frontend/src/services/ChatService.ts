@@ -1,6 +1,6 @@
 import http from "@/http"
 import socket from "@/socketApp"
-import { ISearchChannel, IUserChannel, IMessage } from "shared/models/socket-events";
+import { ISearchChannel, IUserChannel, IMessage, IChannel } from "shared/models/socket-events";
 
 interface ChannelUpdate {
 	title: string;
@@ -14,8 +14,11 @@ class ChatService {
 		return http.post(`/dm/${otherUserId}`);
 	}
 	/** create a new channel */
-	createChannel(data: any): Promise<any> {
+	createChannel(data: any): Promise<IChannel[]> {
 		return http.post(`/channels`, data);
+	}
+	createMessage(channelId: number, userId: number, content: string): Promise<IMessage> {
+		return http.post(`/message`);
 	}
 	// only the owner can update the channel
 	updateChannel(channelId: number, data: Partial<ChannelUpdate>): Promise<any> {
