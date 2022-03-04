@@ -102,7 +102,7 @@ export default defineComponent({
 			this.$pongSocket.emit(
 				"gameRequest",
 				{
-					userId: this.userId,
+					guestId: this.userId,
 					gameSettings: this.gameSettings
 				},
 				(requestId : string) => {
