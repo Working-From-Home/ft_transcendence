@@ -5,8 +5,8 @@ import { useAuthStore } from '@/store/modules/auth/auth';
 import { useStatusStore } from '@/store/modules/status/status';
 import ChallengeButton from '@/components/pong/ChallengeButton.vue';
 import WatchButton from '@/components/pong/WatchButton.vue';
-import ButtonDel from '@/components/users/ButtonDel.vue';
-import ButtonAdd from '@/components/users/ButtonAdd.vue';
+import DelButton from '@/components/users/DelButton.vue';
+import FriendButton from '@/components/users/FriendButtons.vue';
 
 const props = defineProps({
   userId: {
@@ -65,7 +65,7 @@ function getUserData(id: number) {
 
 <template>
   <!-- status badge -->
-  <div class="mx-5 position-absolute end-0">
+  <div v-if="!isOwner" class="mx-5 position-absolute end-0">
     <div class="mx-md-5">
       <span
         class="badge rounded-pill fs-6 my-2 float-start"
@@ -87,12 +87,12 @@ function getUserData(id: number) {
       <div class="col-12 col-md-4">level:&nbsp&nbsp{{ level }}</div>
     </div>
     <div v-if="props.isOwner" class="m-4">
-      <ButtonDel></ButtonDel>
+      <DelButton></DelButton>
     </div>
     <div v-else-if="!props.isOwner" class="row m-4">
-      <!-- <div class="col mx-1">
-        <ButtonAdd :userId="userId"></ButtonAdd>
-      </div> -->
+      <div class="col mx-1">
+        <FriendButton :userId="userId"></FriendButton>
+      </div>
       <div v-if="isOnline && !isInGame" class="col mx-1">
         <ChallengeButton :userId="props.userId">Challenge</ChallengeButton>
       </div>
