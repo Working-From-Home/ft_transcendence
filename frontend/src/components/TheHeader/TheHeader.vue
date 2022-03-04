@@ -106,7 +106,7 @@
               >
                 {{ currentUserStore.username }}&nbsp
               </a>
-              <ul class="dropdown-menu mt-2 bg-light" aria-labelledby="navbarDropdown" id="ddd">
+              <ul class="dropdown-menu mt-2 bg-light" aria-labelledby="navbarDropdown" id="ligthDropdown">
                 <li>
                   <router-link
                     :to="{
@@ -239,7 +239,7 @@ $active-link: #42b983;
 
 }
 
-#ddd {
+#ligthDropdown {
 	border-top: none;
 	border-top-left-radius: 0px;
   border-top-right-radius: 0px;

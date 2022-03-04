@@ -41,5 +41,8 @@ export const useCurrentUserStore = defineStore('currentUser', {
       this.email = user.email;
       this.avatar = avatar;
     },
+    updateAvatar(avatar: string) {
+      this.avatar = avatar;
+    }
   },
 });
