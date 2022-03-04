@@ -91,7 +91,11 @@ export class AppGateway {
 	@SubscribeMessage('sendMessagesOfChannels')
 	handleEventMessagesInChannel(client: AppSocket, channelId: number) {
 		return this.chatService.getMessagesOfChannel(channelId).then( (y) => {
-				return y
+			for (const obj of y){
+				obj.date = obj.createdAt.toDateString();
+				obj.createdAt = obj.createdAt.toString();
+			}
+			return y
 		}); 
 	}
 }

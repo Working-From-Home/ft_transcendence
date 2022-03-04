@@ -255,9 +255,11 @@ export class ChatService {
 	   .select([
 		   'm.id AS "_id"', 
 	   	   'm.content AS "content"',
+		   `m."createdAt" AS "createdAt"`, 
 		   'u.id AS "senderId"',
 		   'u.username AS "username"',
 		])
+		.orderBy("m.id")
        .getRawMany();
   }
   async getChannelsOfUser(userId: number): Promise<IChannel[]> {
@@ -265,7 +267,8 @@ export class ChatService {
 		`SELECT c.id AS "roomId",
 				c."isDm",
 				c.title AS "roomName",
-				c."createdAt"
+				c."createdAt",
+				c."password"
 		FROM Channel c
 		LEFT JOIN user_channel u
 			ON u."channelId" = c.id
@@ -278,7 +281,8 @@ export class ChatService {
 		`SELECT c.id AS "roomId",
 				c."isDm",
 				c.title AS "roomName",
-				c."createdAt"
+				c."createdAt",
+				c."password"
 		FROM Channel c
 		WHERE c."id"=(${channelId})`
 	  );
