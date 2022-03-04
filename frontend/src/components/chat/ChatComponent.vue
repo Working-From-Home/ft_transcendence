@@ -7,7 +7,7 @@
 			:rooms="(storeRoom as any)"
 			:rooms-order="'desc'"
 			:rooms-loaded="true"
-			:messages="(messages as any)"
+			:messages="(storeMessage as any)"
 			:messages-loaded="messagesLoaded"
 			:showReactionEmojis="false"
 			:showAudio="false"
@@ -59,7 +59,7 @@ import { useAuthStore } from "@/store/auth";
 import { toNumber } from '@vue/shared';
 import { Modal } from "bootstrap";
 import UserService from '@/services/UserService';
-
+import { library } from '@fortawesome/fontawesome-svg-core';
 interface CustomAction {
 	name: string
 	title: string
@@ -75,6 +75,7 @@ export default defineComponent({
 		return { 	AuthStore,
 					chatRoomsStore,
 					storeRoom: computed(() => chatRoomsStore.getRooms),
+					storeMessage: computed(() => chatRoomsStore.getMessages),
 		};
 	},
 	name: 'Chat',
@@ -90,6 +91,10 @@ export default defineComponent({
 	},
 	created() {
 		this.currentUserId = toNumber(localStorage.getItem('userId'))
+		this.$socketapp.on("sendMessage", async (resp: IMessage[]) => {
+			if (resp[0].channelId === this.currentRoom.roomId)
+				this.chatRoomsStore.addMessage(resp);
+		});
 	},
 	unmounted() {
 		this.menuMessageModal.hide();
@@ -99,7 +104,7 @@ export default defineComponent({
 		return {
 			currentUserId: -1 as number,
 			currentUser: {} as IUserChannel ,
-			currentRoom: null as IChannel | null,
+			currentRoom: {} as IChannel,
 			opened: true as boolean, 
 			messages: [] as IMessage[],
 			messagesLoaded: false as boolean,
@@ -126,22 +131,6 @@ export default defineComponent({
 	mounted() {
 		this.menuMessageModal = new Modal("#menuMessageModal");
 		this.adminModal = new Modal("#adminModal");
-	},
-	watch: {
-		async storeRoom(newId, oldId) {
-			//console.log("watcher")
-			if (newId && newId !== 0 && this.currentRoom) {
-				for (const obj of this.storeRoom){
-					if (obj["roomId"].valueOf() === this.currentRoom.roomId) { 
-						if (obj["messages"] && obj["messages"] != this.currentRoom.messages){
-							this.currentRoom.messages = obj["messages"];
-							return ;
-						}
-						return ;
-					}
-				}
-			}
-		}
 	},
 	computed: {
 		isChatView() {
@@ -176,9 +165,9 @@ export default defineComponent({
 			this.messagesLoaded = false;
 			setTimeout(() => {
 				if (room.messages && room.messages.length > 0)
-					this.messages = room.messages;
+					this.chatRoomsStore.fetchMessage(room.messages);
 				else 
-					this.messages = [];
+					this.chatRoomsStore.fetchMessage([]);
 				this.messagesLoaded = true
 			})
 		},
@@ -187,30 +176,6 @@ export default defineComponent({
 			ChatService.createMessage(roomId, {message: send}).catch(error => {
 				console.log("err", error.response)
 			});
-			// let newMessage = {
-			// 		_id: this.messages.length,
-			// 		content: message.content,
-			// 		senderId: this.currentUserId,
-			// 		username: this.userName,
-			// 		avatar: this.avatar,
-			// 		timestamp: new Date().toString().substring(16, 21),
-			// 		date: new Date().toDateString()
-			// };
-			// let newMessage: IMessage;
-			// let y = new Date().toString().substring(16, 21)
-			// newMessage = {
-			// 		_id: this.messages.length,
-			// 		username: localStorage.getItem('username'),
-			// 		content: message.content,
-			// 		createdAt: new Date().toString().substring(16, 21),
-			// 		date: new Date().toDateString(),
-			// 		channel: room,
-			// 		senderId: this.currentUserId
-			// };
-			// this.messages = [
-			// 	...this.messages,
-			// 	newMessage
-			// ]
 		},
 		menuActionHandler({ action = {} as CustomAction, roomId = {} as number }) {
 			switch (action.name) {

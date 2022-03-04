@@ -32,16 +32,11 @@ export const useChatRoomsStore = defineStore('chatRooms', {
 			}
 			this.rooms = this.rooms.concat(room);
 		},
-		addMessage(message : IMessage){
-			for (var i = 0; i < this.rooms.length ; i++){
-			 	if (this.rooms[i].roomId === message.channelId){
-			 		this.rooms[i].messages = Object.assign(
-						this.rooms[i].messages,
-						message
-					);
-			 		break;
-			 	}
-			}
+		fetchMessage(messages: IMessage[]){
+			this.messages = messages;
+		},
+		addMessage(messages: IMessage[]){
+			this.messages = this.messages.concat(messages);
 		},
 		leaveChannel(channelId: number) {
 			let i = 0;
