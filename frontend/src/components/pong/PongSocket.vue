@@ -7,7 +7,7 @@
 				<!-- Modal body -->
 				<div class="modal-body text-black">
 					<player-info :userId="hostId" side="left"></player-info>
-					<h3>challenge you!</h3>
+					<h3>challenges you!</h3>
 				</div>
 
 				<div class="modal-footer">

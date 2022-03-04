@@ -80,7 +80,7 @@ function getUserData(id: number) {
   </div>
   <!-- content -->
   <div class="px-3 pt-3 pb-1">
-    <h2 class="pb-3">{{ username }}</h2>
+    <h2 class="pb-2">{{ username }}</h2>
     <div class="row gx-3 py-2">
       <div class="col-12 col-md-4">victories:&nbsp&nbsp{{ victories }}</div>
       <div class="col-12 col-md-4">losses:&nbsp&nbsp{{ losses }}</div>
