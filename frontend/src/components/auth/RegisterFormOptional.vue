@@ -41,10 +41,12 @@ import UserService from '@/services/UserService';
 import axios, { AxiosError } from 'axios';
 import { IError } from '@/models/IError';
 import { uniqueNamesGenerator, Config, adjectives, colors, animals } from 'unique-names-generator';
+import { useAuthStore } from '@/store/auth';
 
 
 const router = useRouter();
 const currentUserStore = useCurrentUserStore();
+const authStore = useAuthStore();
 
 enum FeedbackMessage {
   usernameAlreadyInUse = 'Username is already in use.',
@@ -77,8 +79,8 @@ const randomUserName = async () => {
   checkUsernameAvailability();
 }
 
+//save new username and photo
 const submit = async () => {
-  //save new username and photo
   UserService.updateMe({
     username: state.username,
   }).then( (resp) => {
@@ -90,10 +92,12 @@ const submit = async () => {
     return;
   });
   // UserService.setMyAvatar( currentUserStore.userId, );
+  authStore.registerInProgress = false;
   router.push('/');
 };
 
 const skip = async () => {
+  authStore.registerInProgress = false;
   router.push('/');
 };
 

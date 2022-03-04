@@ -95,7 +95,10 @@ const errorMessage = ref('');
 const register = async () => {
   const e = await authStore.signUp(email.value, password.value);
   if (e) errorMessage.value = e.message;
-  else emit('changeForm', AuthMode.RegisterOptional);
+  else {
+    authStore.registerInProgress = true;
+    emit('changeForm', AuthMode.RegisterOptional);
+  }
 };
 
 </script>
@@ -161,7 +164,7 @@ const register = async () => {
     line-height: 1.5em;
     color: white;
     /* // this is really the only tricky part, you need to specify the background color of the container element... */
-    background-color: #192531;
+    background-color: $app-background;
   }
 }
 </style>

@@ -10,16 +10,18 @@ export interface State {
   userId: number | null;
   token: string;
   refreshToken: string;
+  registerInProgress: boolean;
 }
 
 export const useAuthStore = defineStore('auth', {
   state: (): State => ({
     token: '',
     refreshToken: '',
+    registerInProgress: false,
     userId: null, // remove soon ?
   }),
   getters: {
-    isLoggedIn: (state) => state.token !== '',
+    isLoggedIn: (state) => state.token !== '' && state.registerInProgress == false,
     tokenBearer(): string {
       return this.token === '' ? '' : 'Bearer ' + this.token;
     },
