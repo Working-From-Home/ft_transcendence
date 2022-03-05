@@ -218,10 +218,7 @@ $active-link: #42b983;
   #navbar {
     a.router-link-exact-active,
     a.router-link-exact-active:hover {
-      font-weight: bold;
       border-bottom: 1px solid $active-link;
-      // border-bottom-left-radius: 2px;
-      // border-bottom-right-radius: 2px;
     }
     a {
       border-bottom: 1px solid transparent;
