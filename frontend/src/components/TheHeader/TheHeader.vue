@@ -137,6 +137,7 @@
         </div>
       </div>
     </nav>
+	<div v-if="connect"></div>
   </div>
 </template>
 
@@ -180,13 +181,10 @@ export default defineComponent({
 					this.chatRoomsStore.fetchRooms(resp);
 				});
 				this.$socketapp.on("sendChannel", async (resp: IChannel[]) => {
+					console.log(`resp: ${resp}`);
 					resp[0]["users"] = await ChatService.sendUserOfChannels(resp[0]["roomId"]);
 					resp[0]["messages"] = await ChatService.sendMessagesOfChannels(resp[0]["roomId"]);
 					this.chatRoomsStore.fetchRoom(resp);
-				});
-				this.$socketapp.on("sendMessage", async (resp: IMessage) => {
-					//console.log("resp", resp)
-					this.chatRoomsStore.addMessage(resp);
 				});
 				this.$socketapp.on("leaveChannel", async (channelId: number) => {
 					this.chatRoomsStore.leaveChannel(channelId);

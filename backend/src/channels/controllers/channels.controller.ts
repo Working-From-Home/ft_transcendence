@@ -51,10 +51,10 @@ export class ChannelsController {
 		@Req() request,
 		@Param('channelId') channelId: number,
 		@Body() content: any
-	): Promise<IMessage> {
+	): Promise<IMessage[]> {
 		let tmpMessage = await this.chatService.createMessage(channelId, request.user.sub, content);
-		let newMessage: IMessage;
-		newMessage = {
+		let newMessage: IMessage[];
+		newMessage = [{
 			_id: tmpMessage.id,
 			username: tmpMessage.user.username,
 			content: tmpMessage.content,
@@ -62,7 +62,7 @@ export class ChannelsController {
 			date: tmpMessage.createdAt.toDateString(),
 			senderId: tmpMessage.user.id,
 			channelId: tmpMessage.channel.id
-		}
+		}]
 		this.appGateway.server.in("channel:" + channelId).emit("sendMessage", newMessage);
 		return newMessage;
 	}

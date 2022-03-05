@@ -23,6 +23,7 @@ export interface IUserChannel {
     _id: number;
 	username: string;
     channelId: number;
+	password: string | null;
 	isOwner: boolean;
     isAdmin: boolean;
     mutedUntil: Date | null;
@@ -52,7 +53,7 @@ interface ClientToServerEventsOnline {}
 interface ServerToClientEventsChat {
   sendChannels: (channels: IChannel[]) => void;
   sendChannel: (channels: IChannel[]) => void;
-  sendMessage: (message: IMessage) => void;
+  sendMessage: (message: IMessage[]) => void;
   leaveChannel: (channelId: number) => void;
   sendUserChannels: (channelId: number, users: IUserChannel[]) => void;
 }
