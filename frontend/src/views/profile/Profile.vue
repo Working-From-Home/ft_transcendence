@@ -29,15 +29,14 @@ onUpdated(() => {
       <!-- avatar -->
       <div class="col-12 col-ms-12 col-md-3">
         <div
-          class="bg-light rounded d-flex flex-column justify-content-center"
-          style="height: 100%"
+          class="bg-light rounded d-flex flex-column justify-content-center h-100"
         >
           <avatar :userId="userId" :isOwner="isOwner"></avatar>
         </div>
       </div>
       <!-- info card -->
       <div class="col pt-ms-3">
-        <div class="bg-light rounded text-black" style="height: 100%">
+        <div class="bg-light rounded text-black h-100">
           <info :userId="userId" :isOwner="isOwner"></info>
         </div>
       </div>
@@ -46,7 +45,7 @@ onUpdated(() => {
     <div class="row g-3 px-md-5">
       <!-- match history -->
       <div class="col pt-3">
-        <div class="bg-light rounded text-black" style="height: 100%">
+        <div class="bg-light rounded text-black h-100">
           <history :userId="userId"></history>
         </div>
       </div>

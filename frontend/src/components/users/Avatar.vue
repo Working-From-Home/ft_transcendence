@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { onUpdated, ref } from 'vue';
+import { onUpdated, ref, watch } from 'vue';
 import UserService from '@/services/UserService';
-import { useCurrentUserStore } from "@/store/currentUser";
+import { useCurrentUserStore } from '@/store/currentUser';
 
 const props = defineProps({
   userId: {
@@ -19,12 +19,27 @@ const currentUserStore = useCurrentUserStore();
 const fileInput = ref<HTMLInputElement>();
 const avatar = ref<string>('');
 
-UserService.getAvatarOfUser(props.userId).then((av) => (avatar.value = av));
-
-onUpdated(() => {
+if (props.isOwner) avatar.value = currentUserStore.avatar;
+else
   UserService.getAvatarOfUser(props.userId).then((av) => (avatar.value = av));
-  currentUserStore.updateAvatar(avatar.value);
-});
+
+watch(
+  () => props.userId,
+  () => {
+    if (props.isOwner) avatar.value = currentUserStore.avatar;
+    else
+      UserService.getAvatarOfUser(props.userId).then(
+        (av) => (avatar.value = av),
+      );
+  },
+);
+
+watch(
+  () => avatar.value,
+  () => {
+    if (props.isOwner) currentUserStore.updateAvatar(avatar.value);
+  },
+);
 
 function uploadFile() {
   fileInput.value?.click();
@@ -45,13 +60,14 @@ function restoreAvatar() {
 
 <template>
   <img
+    v-if="props.isOwner"
     :src="avatar"
-    class="img-fluid rounded mx-auto"
-    :class="props.isOwner && 'clickable'"
+    class="img-fluid rounded mx-auto clickable"
     data-bs-toggle="modal"
     data-bs-target="#editAvatar"
     alt="avatar"
   />
+  <img v-else :src="avatar" class="img-fluid rounded mx-auto" alt="avatar" />
 
   <div
     v-if="props.isOwner"

@@ -1,3 +1,5 @@
+
+
 <template>
 	<div id="jumbo" class="container ">
 		<div class="col-md-10 p-4 m-auto mt-4 mb-4 bg-info bg-opacity-75 rounded-3">
