@@ -75,8 +75,12 @@ export class ChatService {
     });
   }
 
-  async joinChannel(channelId: number, userId: number) {
+  async joinChannel(channelId: number, userId: number, data: any) {
     let channel = await this.userChannelRepo.findOne({where: [{userId, channelId}]})
+	let tmpChannel = await this.findChannelById(channelId);
+	if (tmpChannel.password != null && tmpChannel.password != data.password) {
+		return null;
+	}
 	if (channel) {
 		channel.hasLeft = false;
     	return this.userChannelRepo.save(channel);
@@ -226,7 +230,7 @@ export class ChatService {
       .createQueryBuilder("channel")
       .where("title like :name ", { name: `%${title}%` })
 	  .where('channel."isDm" = false')
-      .select(["channel.id", "channel.title"])
+      .select(["channel.id", "channel.title", "channel.password"])
       .getMany();
   }
 

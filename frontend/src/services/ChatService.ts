@@ -25,8 +25,8 @@ class ChatService {
 		return http.patch(`/channels/${channelId}`, data);
 	}
 	/** rest or socket ? */
-	joinChannel(channelId: number): Promise<any> {
-		return http.put(`/channels/${channelId}`)
+	joinChannel(channelId: number, data: any): Promise<any> {
+		return http.put(`/channels/${channelId}`, data)
 	}
 	/** rest or socket ? */
 	leaveChannel(channelId: number): Promise<any> {

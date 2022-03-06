@@ -181,7 +181,6 @@ export default defineComponent({
 					this.chatRoomsStore.fetchRooms(resp);
 				});
 				this.$socketapp.on("sendChannel", async (resp: IChannel[]) => {
-					console.log(`resp: ${resp}`);
 					resp[0]["users"] = await ChatService.sendUserOfChannels(resp[0]["roomId"]);
 					resp[0]["messages"] = await ChatService.sendMessagesOfChannels(resp[0]["roomId"]);
 					this.chatRoomsStore.fetchRoom(resp);

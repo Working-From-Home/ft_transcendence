@@ -78,10 +78,13 @@ export class ChannelsController {
 	@Put('/channels/:channelId')
 	async joinChannel(
 		@Req() request,
-		@Param('channelId') channelId: number
+		@Param('channelId') channelId: number,
+		@Body() data: any
 	): Promise<UserChannel> {
 		let newUserChannel : UserChannel;
-		newUserChannel = await this.chatService.joinChannel(channelId, parseInt(request.user.sub));
+		newUserChannel = await this.chatService.joinChannel(channelId, parseInt(request.user.sub), data);
+		if (newUserChannel === null)
+			return null;
 		const user = this.appGateway.server.in(`user:${request.user.sub}` );
 		user.socketsJoin(`channel:${channelId}`);
 		this.chatService.getChannel(channelId).then( (y) => {

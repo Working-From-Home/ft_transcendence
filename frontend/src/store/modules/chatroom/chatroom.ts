@@ -30,7 +30,7 @@ export const useChatRoomsStore = defineStore('chatRooms', {
 					return ;
 				}
 			}
-			this.rooms = this.rooms.concat(room);
+			this.rooms = room.concat(this.rooms);
 		},
 		fetchMessage(messages: IMessage[]){
 			this.messages = messages;
