@@ -112,12 +112,15 @@ export default defineComponent({
 			this.challengeModal.show();
 
 			this.$pongSocket.on("requestAnswer", (accepted : boolean) => {
+				if (accepted)
+					console.log("got request answer: it's accepted! :)");
+				else
+					console.log("got request answer, he refused :(");
 				this.challengeModal.hide();
 			});
 			this.$pongSocket.on("matchFound", (gameId : string) => {
 				this.$router.push({ path: `/pong/${gameId}`});
 			});
-
 		},
 		cancelRequest() {
 			console.log("request canceled");

@@ -27,18 +27,4 @@ export class StatsController {
         const user = await this.usersService.getUserWithStats(id);
         return user.stats;
     }
-
-    @Patch('/victories')
-    @UseGuards(CurrentUserGuard)
-    async incrementVictories(@Param('id', ParseIntPipe) userId: number) {
-        const user = await this.usersService.findById(userId);
-        return await this.statsService.incVictories(user);
-    }
-
-    @Patch('/losses')
-    @UseGuards(CurrentUserGuard)
-    async incrementLosses(@Param('id', ParseIntPipe) userId: number) {
-        const user = await this.usersService.findById(userId);
-        return await this.statsService.incLosses(user);
-    }
 }

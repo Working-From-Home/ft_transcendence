@@ -69,7 +69,7 @@ export class User {
 
     get statistics() {
         return {
-            level: this.stats.level,
+            level: this.stats.xp,
             victories: this.stats.victories,
             losses: this.stats.losses
         }
