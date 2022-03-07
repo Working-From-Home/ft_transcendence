@@ -51,7 +51,7 @@ function endFriendship() {
       v-if="currentUserStore.isSent(props.userId)"
       type="button"
       disabled
-      class="btn btn-info opacity-75 m-2 shadow"
+      class="btn btn-primary m-2 shadow"
     >
       <font-awesome-icon icon="hourglass" />
       &nbspRequest sent
@@ -60,7 +60,7 @@ function endFriendship() {
       v-else-if="currentUserStore.isPending(props.userId)"
       type="button"
       @click="acceptRequest"
-      class="btn btn-info opacity-75 m-2 shadow"
+      class="btn btn-primary m-2 shadow"
     >
       <font-awesome-icon icon="check" />
       &nbspAccept friendship
@@ -69,7 +69,7 @@ function endFriendship() {
       v-else-if="currentUserStore.isFriend(props.userId)"
       type="button"
       @click="endFriendship"
-      class="btn btn-info opacity-75 m-2 shadow"
+      class="btn btn-primary m-2 shadow"
     >
       <font-awesome-icon icon="xmark" />
       &nbspEnd friendship
@@ -78,7 +78,7 @@ function endFriendship() {
       v-else
       type="button"
       @click="sendRequest"
-      class="btn btn-info opacity-75 m-2 shadow"
+      class="btn btn-primary m-2 shadow"
     >
       <font-awesome-icon icon="plus" />
       &nbspAdd friend

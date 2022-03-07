@@ -60,7 +60,9 @@ function uploadAvatar(event: any) {
 
 function restoreAvatar() {
   UserService.resetDefaultAvatar(props.userId).then(
-    (response) => (avatar.value = response),
+    (response) => {
+      avatar.value = response;
+    }
   );
 }
 

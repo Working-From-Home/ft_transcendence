@@ -65,7 +65,7 @@ function timeFromNow(s: string) {
 
     <table class="table rounded">
       <thead>
-        <tr class="text-white">
+        <tr class="text-white" style="border-color: white;">
           <th scope="col">Date</th>
           <th scope="col">Opponent</th>
           <th scope="col">Score</th>
@@ -163,5 +163,13 @@ function timeFromNow(s: string) {
 .table-value {
   font-weight: bold;
   color: black;
+}
+
+.table {
+  color: #679D7E;
+}
+
+.table>:not(caption)>*>* {
+  border-bottom-width: 0 !important;
 }
 </style>

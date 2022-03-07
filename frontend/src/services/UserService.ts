@@ -33,7 +33,7 @@ class UserService {
     return http.patch<Partial<IUser>>('/users', attrs);
   }
   async resetDefaultAvatar(myUserId: number): Promise<string> {
-    const response = await http.delete(`/users/${myUserId}/avatar`);
+    const response = await http.delete(`/users/${myUserId}/avatar`, { responseType: 'arraybuffer' });
 		return formatImage(response.data);
   }
   async getGameHistory(userId: number) {
