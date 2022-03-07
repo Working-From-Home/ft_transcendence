@@ -2,9 +2,9 @@
 <div class="modal fade text-black" id="menuMessageModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">More informations about {{ modalUserName }}</h5>
-		<div >
+      <div class="modal-header  d-flex bd-highlight mb-3">
+        <h5 class="modal-title me-auto p-2 bd-highlight">More informations about {{ modalUserName }}</h5>
+		<div class="p-2 bd-highlight">
 			<span
 				class="badge rounded-pill fs-6 my-2 float-start"
 				:class="[

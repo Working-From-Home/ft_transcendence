@@ -59,7 +59,7 @@ import { useAuthStore } from "@/store/auth";
 import { toNumber } from '@vue/shared';
 import { Modal } from "bootstrap";
 import UserService from '@/services/UserService';
-import { library } from '@fortawesome/fontawesome-svg-core';
+
 interface CustomAction {
 	name: string
 	title: string
@@ -171,9 +171,9 @@ export default defineComponent({
 				this.messagesLoaded = true
 			})
 		},
-		sendMessage({content, roomId}: {content: Message, roomId: number}) {
+		async sendMessage({content, roomId}: {content: Message, roomId: number}) {
 			let send = content;
-			ChatService.createMessage(roomId, {message: send}).catch(error => {
+			await ChatService.createMessage(roomId, {message: send}).catch(error => {
 				console.log("err", error.response)
 			});
 		},

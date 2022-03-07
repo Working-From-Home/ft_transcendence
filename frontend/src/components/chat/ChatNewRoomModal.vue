@@ -1,6 +1,6 @@
 <template>
 	<section>
-		<div class="modal fade text-black" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal fade text-black" id="staticBackdrop"  data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -46,9 +46,6 @@ export default defineComponent({
 			alert("please put a name")
 			return
 		}
-		if (this.password)
-			this.ChannelName = "🔒 " + this.ChannelName;
-		console.log("this.ChannelName", this.ChannelName); 
 		ChatService.createChannel({title: this.ChannelName, password: this.password}).then( resp =>{})
 		.catch( err => {console.log(err)})
     }

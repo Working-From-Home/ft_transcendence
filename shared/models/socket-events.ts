@@ -8,6 +8,7 @@ export interface ISearchChannel
 {
 	id: number;
 	title: string;
+	password: string;
 }
 export interface IMessage {
     _id: number;

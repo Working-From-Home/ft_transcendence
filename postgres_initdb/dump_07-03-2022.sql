@@ -5,7 +5,7 @@
 -- Dumped from database version 14.1
 -- Dumped by pg_dump version 14.1
 
--- Started on 2022-02-12 05:48:04 UTC
+-- Started on 2022-03-07 16:37:56 UTC
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -280,11 +280,11 @@ ALTER SEQUENCE public.message_id_seq OWNED BY public.message.id;
 
 CREATE TABLE public.stats (
     "userId" integer NOT NULL,
-    level integer DEFAULT 0 NOT NULL,
+    xp integer DEFAULT 0 NOT NULL,
     victories integer DEFAULT 0 NOT NULL,
     losses integer DEFAULT 0 NOT NULL,
     CONSTRAINT "CHK_adfd86107a516a476bf6faa77f" CHECK ((victories >= 0)),
-    CONSTRAINT "CHK_ddb6741edef3917d6104c692f3" CHECK (((level >= 0) AND (level <= 42))),
+    CONSTRAINT "CHK_e59446df59ee39832f7d44a879" CHECK ((xp >= 0)),
     CONSTRAINT "CHK_ea77d62bbffd22d4071eb57490" CHECK ((losses >= 0))
 );
 
@@ -579,7 +579,7 @@ COPY public.message (id, content, "createdAt", "channelId", "userId") FROM stdin
 -- Data for Name: stats; Type: TABLE DATA; Schema: public; Owner: pong
 --
 
-COPY public.stats ("userId", level, victories, losses) FROM stdin;
+COPY public.stats ("userId", xp, victories, losses) FROM stdin;
 1	42	15	7
 2	23	150	97
 3	9	15	90
@@ -821,7 +821,7 @@ ALTER TABLE ONLY public.stats
 
 
 --
--- TOC entry 3284 (class 2606 OID 16602)
+-- TOC entry 3284 (class 2606 OID 16516)
 -- Name: user UQ_1132e9fb7a2bb725a1fed6996c7; Type: CONSTRAINT; Schema: public; Owner: pong
 --
 
@@ -830,7 +830,7 @@ ALTER TABLE ONLY public."user"
 
 
 --
--- TOC entry 3286 (class 2606 OID 16516)
+-- TOC entry 3286 (class 2606 OID 16518)
 -- Name: user UQ_78a916df40e02a9deb1c4b75edb; Type: CONSTRAINT; Schema: public; Owner: pong
 --
 
@@ -839,7 +839,7 @@ ALTER TABLE ONLY public."user"
 
 
 --
--- TOC entry 3263 (class 2606 OID 16518)
+-- TOC entry 3263 (class 2606 OID 16520)
 -- Name: avatar UQ_b6abb9e4579bb7fca4d823a5e66; Type: CONSTRAINT; Schema: public; Owner: pong
 --
 
@@ -848,7 +848,7 @@ ALTER TABLE ONLY public.avatar
 
 
 --
--- TOC entry 3288 (class 2606 OID 16604)
+-- TOC entry 3288 (class 2606 OID 16522)
 -- Name: user UQ_c98a14e4b84cb502f75039aec28; Type: CONSTRAINT; Schema: public; Owner: pong
 --
 
@@ -857,7 +857,7 @@ ALTER TABLE ONLY public."user"
 
 
 --
--- TOC entry 3259 (class 2606 OID 16520)
+-- TOC entry 3259 (class 2606 OID 16524)
 -- Name: achievement UQ_d348405b3018bb2266e67affcd4; Type: CONSTRAINT; Schema: public; Owner: pong
 --
 
@@ -866,7 +866,7 @@ ALTER TABLE ONLY public.achievement
 
 
 --
--- TOC entry 3290 (class 2606 OID 16522)
+-- TOC entry 3290 (class 2606 OID 16526)
 -- Name: user UQ_e12875dfb3b1d92d7d7c5377e22; Type: CONSTRAINT; Schema: public; Owner: pong
 --
 
@@ -875,7 +875,7 @@ ALTER TABLE ONLY public."user"
 
 
 --
--- TOC entry 3279 (class 1259 OID 16605)
+-- TOC entry 3279 (class 1259 OID 16527)
 -- Name: IDX_1132e9fb7a2bb725a1fed6996c; Type: INDEX; Schema: public; Owner: pong
 --
 
@@ -883,7 +883,7 @@ CREATE INDEX "IDX_1132e9fb7a2bb725a1fed6996c" ON public."user" USING btree ("goo
 
 
 --
--- TOC entry 3291 (class 1259 OID 16523)
+-- TOC entry 3291 (class 1259 OID 16528)
 -- Name: IDX_3ac6bc9da3e8a56f3f7082012d; Type: INDEX; Schema: public; Owner: pong
 --
 
@@ -891,7 +891,7 @@ CREATE INDEX "IDX_3ac6bc9da3e8a56f3f7082012d" ON public.user_achievements USING 
 
 
 --
--- TOC entry 3266 (class 1259 OID 16524)
+-- TOC entry 3266 (class 1259 OID 16529)
 -- Name: IDX_5577bed8fb22d8661602fafd09; Type: INDEX; Schema: public; Owner: pong
 --
 
@@ -899,7 +899,7 @@ CREATE INDEX "IDX_5577bed8fb22d8661602fafd09" ON public.channel USING btree (tit
 
 
 --
--- TOC entry 3292 (class 1259 OID 16525)
+-- TOC entry 3292 (class 1259 OID 16530)
 -- Name: IDX_6a5a5816f54d0044ba5f3dc2b7; Type: INDEX; Schema: public; Owner: pong
 --
 
@@ -907,7 +907,7 @@ CREATE INDEX "IDX_6a5a5816f54d0044ba5f3dc2b7" ON public.user_achievements USING 
 
 
 --
--- TOC entry 3280 (class 1259 OID 16606)
+-- TOC entry 3280 (class 1259 OID 16531)
 -- Name: IDX_c98a14e4b84cb502f75039aec2; Type: INDEX; Schema: public; Owner: pong
 --
 
@@ -915,7 +915,7 @@ CREATE INDEX "IDX_c98a14e4b84cb502f75039aec2" ON public."user" USING btree ("for
 
 
 --
--- TOC entry 3307 (class 2606 OID 16526)
+-- TOC entry 3307 (class 2606 OID 16532)
 -- Name: stats FK_071bcb8dd9f9511a3880c34c385; Type: FK CONSTRAINT; Schema: public; Owner: pong
 --
 
@@ -924,7 +924,7 @@ ALTER TABLE ONLY public.stats
 
 
 --
--- TOC entry 3310 (class 2606 OID 16531)
+-- TOC entry 3310 (class 2606 OID 16537)
 -- Name: user_channel FK_0a7960363de8a8af7253a934e67; Type: FK CONSTRAINT; Schema: public; Owner: pong
 --
 
@@ -933,7 +933,7 @@ ALTER TABLE ONLY public.user_channel
 
 
 --
--- TOC entry 3308 (class 2606 OID 16536)
+-- TOC entry 3308 (class 2606 OID 16542)
 -- Name: user_achievements FK_3ac6bc9da3e8a56f3f7082012dd; Type: FK CONSTRAINT; Schema: public; Owner: pong
 --
 
@@ -942,7 +942,7 @@ ALTER TABLE ONLY public.user_achievements
 
 
 --
--- TOC entry 3301 (class 2606 OID 16541)
+-- TOC entry 3301 (class 2606 OID 16547)
 -- Name: friendship FK_40a876257fa07c2a89b75f1b53d; Type: FK CONSTRAINT; Schema: public; Owner: pong
 --
 
@@ -951,7 +951,7 @@ ALTER TABLE ONLY public.friendship
 
 
 --
--- TOC entry 3305 (class 2606 OID 16546)
+-- TOC entry 3305 (class 2606 OID 16552)
 -- Name: message FK_446251f8ceb2132af01b68eb593; Type: FK CONSTRAINT; Schema: public; Owner: pong
 --
 
@@ -960,7 +960,7 @@ ALTER TABLE ONLY public.message
 
 
 --
--- TOC entry 3299 (class 2606 OID 16551)
+-- TOC entry 3299 (class 2606 OID 16557)
 -- Name: blocked FK_4843b3c73d560d25ece2c91739a; Type: FK CONSTRAINT; Schema: public; Owner: pong
 --
 
@@ -969,7 +969,7 @@ ALTER TABLE ONLY public.blocked
 
 
 --
--- TOC entry 3311 (class 2606 OID 16556)
+-- TOC entry 3311 (class 2606 OID 16562)
 -- Name: user_channel FK_4e2726725e7890ce4bc31e0ed4f; Type: FK CONSTRAINT; Schema: public; Owner: pong
 --
 
@@ -978,7 +978,7 @@ ALTER TABLE ONLY public.user_channel
 
 
 --
--- TOC entry 3306 (class 2606 OID 16561)
+-- TOC entry 3306 (class 2606 OID 16567)
 -- Name: message FK_5fdbbcb32afcea663c2bea2954f; Type: FK CONSTRAINT; Schema: public; Owner: pong
 --
 
@@ -987,7 +987,7 @@ ALTER TABLE ONLY public.message
 
 
 --
--- TOC entry 3309 (class 2606 OID 16566)
+-- TOC entry 3309 (class 2606 OID 16572)
 -- Name: user_achievements FK_6a5a5816f54d0044ba5f3dc2b74; Type: FK CONSTRAINT; Schema: public; Owner: pong
 --
 
@@ -996,7 +996,7 @@ ALTER TABLE ONLY public.user_achievements
 
 
 --
--- TOC entry 3302 (class 2606 OID 16571)
+-- TOC entry 3302 (class 2606 OID 16577)
 -- Name: friendship FK_940ce313c862033898f3523b3b9; Type: FK CONSTRAINT; Schema: public; Owner: pong
 --
 
@@ -1005,7 +1005,7 @@ ALTER TABLE ONLY public.friendship
 
 
 --
--- TOC entry 3297 (class 2606 OID 16576)
+-- TOC entry 3297 (class 2606 OID 16582)
 -- Name: avatar FK_b6abb9e4579bb7fca4d823a5e66; Type: FK CONSTRAINT; Schema: public; Owner: pong
 --
 
@@ -1014,7 +1014,7 @@ ALTER TABLE ONLY public.avatar
 
 
 --
--- TOC entry 3298 (class 2606 OID 16581)
+-- TOC entry 3298 (class 2606 OID 16587)
 -- Name: blocked FK_bbcd5996b5d4ce61cb0527bb75f; Type: FK CONSTRAINT; Schema: public; Owner: pong
 --
 
@@ -1023,7 +1023,7 @@ ALTER TABLE ONLY public.blocked
 
 
 --
--- TOC entry 3300 (class 2606 OID 16586)
+-- TOC entry 3300 (class 2606 OID 16592)
 -- Name: channel FK_bdfef605fedc02f3f9d60f1bc07; Type: FK CONSTRAINT; Schema: public; Owner: pong
 --
 
@@ -1032,7 +1032,7 @@ ALTER TABLE ONLY public.channel
 
 
 --
--- TOC entry 3303 (class 2606 OID 16591)
+-- TOC entry 3303 (class 2606 OID 16597)
 -- Name: game FK_c9a88636f232892a7ac8eaec0e7; Type: FK CONSTRAINT; Schema: public; Owner: pong
 --
 
@@ -1041,7 +1041,7 @@ ALTER TABLE ONLY public.game
 
 
 --
--- TOC entry 3304 (class 2606 OID 16596)
+-- TOC entry 3304 (class 2606 OID 16602)
 -- Name: game FK_cd57acb58d1147c23da5cd09cae; Type: FK CONSTRAINT; Schema: public; Owner: pong
 --
 
@@ -1049,7 +1049,7 @@ ALTER TABLE ONLY public.game
     ADD CONSTRAINT "FK_cd57acb58d1147c23da5cd09cae" FOREIGN KEY ("winnerId") REFERENCES public."user"(id) ON DELETE SET NULL;
 
 
--- Completed on 2022-02-12 05:48:05 UTC
+-- Completed on 2022-03-07 16:37:56 UTC
 
 --
 -- PostgreSQL database dump complete
