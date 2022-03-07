@@ -56,14 +56,8 @@ export class PongGateway {
 	}
  
 	handleDisconnect(socket: Socket) {
-		let requestId : string;
-
 		this.gameQueue.remove(socket);
-		if (requestId = this.isRequesting(socket.data.userId)) {
-			const gameRequest = this.gameRequests.get(requestId);
-			socket.to(gameRequest.guestId.toString()).emit("requestCanceled");
-			this.gameRequests.delete(requestId);
-		}
+		this.endRequest(socket);
 	}
 
 /*________Matchmaking Events: ____________*/
@@ -208,6 +202,30 @@ export class PongGateway {
 	private removeFromInGame(userIds : number[]) {
 		this.inGameUsers = this.inGameUsers.filter((id) => (id !== userIds[0] && id !== userIds[1]));
 		this.server.emit("inGameUsers", this.inGameUsers);
+	}
+
+	private endRequest(socket : Socket) : void {
+		let requestId : string;
+
+		if (requestId = this.isRequesting(socket.data.userId)) {
+			const gameRequest = this.gameRequests.get(requestId);
+			socket.to(gameRequest.guestId.toString()).emit("requestCanceled");
+			this.gameRequests.delete(requestId);
+		} 
+		else if (requestId = this.isBeingRequested(socket.data.userId)) {
+			const gameRequest = this.gameRequests.get(requestId);
+			socket.to(gameRequest.hostId.toString()).emit("requestAnswer", false);
+			this.gameRequests.delete(requestId);
+		}
+	}
+
+	private isBeingRequested(id : number) : string {
+		for (let [key, value] of this.gameRequests) {
+			if (value.guestId == id) {
+				return key;
+			}
+		}
+		return null;
 	}
 
 	private isRequesting(id : number) : string {
