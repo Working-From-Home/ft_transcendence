@@ -1,16 +1,16 @@
 <template>
-  <div class="row g-3 px-md-5">
+  <div class="row g-3 px-md-5 mt-md-2">
     <div class="col">
-      <div class="bg-success rounded p-3 pb-4">
-        <h3 class="display-6 mt-3 mb-4 fw-bold">Play Pong!</h3>
-        <p class="fs-4 mb-4">find your opponent now and express your talent</p>
+      <div class="bg-success bg-opacity-75 bg-gradient rounded p-3 pb-5">
+        <h1 class="display-6 mt-3 mb-4 fw-bold">Play Pong!</h1>
+        <p class="fs-5 mb-4">find your opponent now and express your talent</p>
         <pong-matchmaking />
       </div>
     </div>
   </div>
   <div class="row g-3 px-md-5">
     <div class="col pt-3">
-      <div class="bg-info bg-opacity-75 rounded p-3">
+      <div class="bg-info bg-opacity-50 bg-gradient rounded p-3">
         <h3 class="display-6 mt-3 mb-4 fw-bold">A bit of history</h3>
         <p class="fs-5 text-justify mx-5">
           Pong is a table tennis–themed arcade sports video game, featuring

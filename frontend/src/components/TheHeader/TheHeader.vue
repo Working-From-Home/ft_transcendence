@@ -132,7 +132,7 @@
             :src="currentUserStore.avatar"
             alt=""
             width="40"
-            class="d-inline-block align-text-top"
+            class="d-inline-block align-text-top rounded"
           />
         </div>
       </div>

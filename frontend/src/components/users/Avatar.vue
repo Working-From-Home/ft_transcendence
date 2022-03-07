@@ -19,9 +19,7 @@ const currentUserStore = useCurrentUserStore();
 const fileInput = ref<HTMLInputElement>();
 const avatar = ref<string>('');
 
-if (props.isOwner) avatar.value = currentUserStore.avatar;
-else
-  UserService.getAvatarOfUser(props.userId).then((av) => (avatar.value = av));
+UserService.getAvatarOfUser(props.userId).then((av) => (avatar.value = av));
 
 watch(
   () => props.userId,
@@ -122,6 +120,7 @@ function restoreAvatar() {
 </template>
 
 <style scoped>
+
 .clickable {
   cursor: pointer;
 }

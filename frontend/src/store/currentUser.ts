@@ -42,14 +42,11 @@ export const useCurrentUserStore = defineStore('currentUser', {
     async initStore(myUserId: number) {
       try {
         const user = await UserService.getUserById(myUserId);
-        const avatar = await UserService.getAvatarOfUser(myUserId);
-      
+        const avatar = await UserService.getAvatarOfUser(myUserId);   
         const friends = await UserService.getFriendships(myUserId, "accepted");
         const pendings = await UserService.getFriendships(myUserId, "pending");
         const sent = await UserService.getFriendships(myUserId, "sent");
-        const friendLists: IFriendLists = { friends, pendings, sent };
-
-        this.setStore(user.data, avatar, friendLists);
+        this.setStore(user.data, avatar, { friends, pendings, sent });
       } catch (err) {
         const e = err as AxiosError<IError>;
         if (axios.isAxiosError(e)) return e.response?.data;
@@ -64,6 +61,12 @@ export const useCurrentUserStore = defineStore('currentUser', {
     },
     updateAvatar(avatar: string) {
       this.avatar = avatar;
+    },
+    async updateFriendLists(userId: number) {
+      const friends = await UserService.getFriendships(userId, "accepted");
+      const pendings = await UserService.getFriendships(userId, "pending");
+      const sent = await UserService.getFriendships(userId, "sent");
+      this.friendLists = { friends, pendings, sent };
     }
   },
 });

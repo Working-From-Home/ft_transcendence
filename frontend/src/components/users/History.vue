@@ -63,9 +63,9 @@ function timeFromNow(s: string) {
   <div class="container pt-3 px-md-5">
     <h3 class="mb-2">Match history</h3>
 
-    <table class="table">
+    <table class="table rounded">
       <thead>
-        <tr>
+        <tr class="text-white">
           <th scope="col">Date</th>
           <th scope="col">Opponent</th>
           <th scope="col">Score</th>
@@ -81,6 +81,7 @@ function timeFromNow(s: string) {
             id="date"
             scope="row"
             data-bs-toggle="tooltip"
+            data-bs-placement="top"
             :title="formatDate(game.createdAt)"
           >
             {{ timeFromNow(game.createdAt) }}
