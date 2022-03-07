@@ -107,6 +107,8 @@ export class PongGateway {
 			return ;
 		if (this.inGameUsers.includes(body.guestId))
 			return ;
+		if (this.isBeingRequested(body.guestId) || this.isRequesting(body.guestId))
+			return ;
 
 		const requestId = `${hostId}to${body.guestId}`;
 		this.gameRequests.set(

@@ -121,7 +121,6 @@ export default defineComponent({
 			this.$pongSocket.on("matchFound", (gameId : string) => {
 				this.$router.push({ path: `/pong/${gameId}`});
 			});
-
 		},
 		cancelRequest() {
 			console.log("request canceled");
