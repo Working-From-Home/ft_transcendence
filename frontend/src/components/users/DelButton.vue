@@ -15,7 +15,7 @@ function deleteAccount() {
 <template>
   <ButtonTemplate
     type="button"
-    classes="btn btn-outline-danger"
+    classes="btn btn-danger shadow"
     data-bs-toggle="modal"
     data-bs-target="#deleteAccount"
   >

@@ -49,7 +49,10 @@ const routes: Array<RouteRecordRaw> = [
   {
     name: "profile",
     path: "/users/:userid",
-	  meta: { requiresAuth: true },
+    meta: {
+      title: 'Profile',
+      requiresAuth: true
+    },
     component: Profile,
   },
   {
@@ -97,7 +100,7 @@ const router = createRouter({
 
 router.beforeEach(function(to, _, next) {
   const authStore = useAuthStore();
-  document.title = `Ft_transcendence - ${to.meta.title}`;
+  document.title = `Transcendence - ${to.meta.title}`;
   if (to.meta.requiresAuth && !authStore.isLoggedIn)
 		next('/');
 	else if (to.meta.requiresUnAuth && authStore.isLoggedIn)

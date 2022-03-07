@@ -7,7 +7,6 @@ import ChallengeButton from '@/components/pong/ChallengeButton.vue';
 import WatchButton from '@/components/pong/WatchButton.vue';
 import DelButton from '@/components/users/DelButton.vue';
 import FriendButton from '@/components/users/FriendButtons.vue';
-import axios from 'axios';
 
 const props = defineProps({
   userId: {
@@ -66,26 +65,34 @@ function getUserData(id: number) {
 
 <template>
   <!-- status badge -->
-  <div v-if="!isOwner" class="mx-5 position-absolute end-0">
-    <div class="mx-md-5">
-      <span
-        class="badge rounded-pill fs-6 my-2 float-start"
-        :class="[
-          isOnline && 'bg-success',
-          !isOnline && 'bg-danger',
-          isInGame && 'bg-warning',
-        ]"
-        >{{ status }}
-      </span>
-    </div>
-  </div>
+
   <!-- content -->
   <div class="px-3 pt-3 pb-1">
-    <h2 class="pb-2">{{ username }}</h2>
+    <div v-if="!isOwner" class="mt-0 mt-md-1 mx-5 position-absolute end-0">
+      <div class="mx-md-5">
+        <span
+          class="badge rounded-pill fs-6 shadow-sm"
+          :class="[
+            isOnline && 'bg-success',
+            !isOnline && 'bg-danger',
+            isInGame && 'bg-warning',
+          ]"
+          >{{ status }}
+        </span>
+      </div>
+    </div>
+    <h2>{{ username }}</h2>
+    <hr />
     <div class="row gx-3 py-2 fs-5 fst-italic">
-      <div class="col-12 col-md-4">victories:&nbsp&nbsp<span class="fw-bold">{{ victories }}</span></div>
-      <div class="col-12 col-md-4">losses:&nbsp&nbsp<span class="fw-bold">{{ losses }}</span></div>
-      <div class="col-12 col-md-4">level:&nbsp&nbsp<span class="fw-bold">{{ level }}</span></div>
+      <div class="col-12 col-md-4">
+        victories:&nbsp&nbsp<span class="fw-bold">{{ victories }}</span>
+      </div>
+      <div class="col-12 col-md-4">
+        losses:&nbsp&nbsp<span class="fw-bold">{{ losses }}</span>
+      </div>
+      <div class="col-12 col-md-4">
+        level:&nbsp&nbsp<span class="fw-bold">{{ level }}</span>
+      </div>
     </div>
     <div v-if="props.isOwner" class="m-4">
       <DelButton></DelButton>

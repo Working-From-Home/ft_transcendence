@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onUpdated, ref, watch } from 'vue';
+import { computed, onUpdated, ref, watch } from 'vue';
 import UserService from '@/services/UserService';
 import { useCurrentUserStore } from '@/store/currentUser';
 
@@ -18,6 +18,7 @@ const currentUserStore = useCurrentUserStore();
 
 const fileInput = ref<HTMLInputElement>();
 const avatar = ref<string>('');
+const errorMessage = ref<string>('');
 
 UserService.getAvatarOfUser(props.userId).then((av) => (avatar.value = av));
 
@@ -44,15 +45,27 @@ function uploadFile() {
 }
 
 function uploadAvatar(event: any) {
-  UserService.setMyAvatar(props.userId, event.target.files[0]).then(
-    (response) => (avatar.value = response),
-  );
+  UserService.setMyAvatar(props.userId, event.target.files[0])
+    .then((response) => {
+      avatar.value = response;
+    })
+    .catch((error) => {
+      fileInput.value!.value = '';
+      if (error.response.status === 413)
+        errorMessage.value = "File Too Large (max: 1MB)";
+      else
+        errorMessage.value = error.response.statusText;
+    });
 }
 
 function restoreAvatar() {
   UserService.resetDefaultAvatar(props.userId).then(
     (response) => (avatar.value = response),
   );
+}
+
+function clearErrorMessage() {
+  errorMessage.value = '';
 }
 </script>
 
@@ -66,6 +79,22 @@ function restoreAvatar() {
     alt="avatar"
   />
   <img v-else :src="avatar" class="img-fluid rounded mx-auto" alt="avatar" />
+
+  <div
+    v-if="errorMessage"
+    style="z-index: 1000 !important"
+    class="alert alert-danger alert-dismissible fade show position-absolute top-50 start-50 translate-middle"
+    role="alert"
+  >
+    <p class="mb-0"><strong>Upload failure:</strong> {{ errorMessage }}</p>
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="alert"
+      aria-label="Close"
+      @click="clearErrorMessage"
+    ></button>
+  </div>
 
   <div
     v-if="props.isOwner"
@@ -90,7 +119,7 @@ function restoreAvatar() {
           <p>What do you want to do ?</p>
           <button
             type="button"
-            class="btn btn-outline-success mx-3"
+            class="btn btn-success mx-3"
             data-bs-dismiss="modal"
             @click="uploadFile"
           >
@@ -101,13 +130,13 @@ function restoreAvatar() {
             type="file"
             style="display: none"
             ref="fileInput"
-            accept="image/*"
+            accept="image/png, image/jpeg"
             name="uploaded_file"
             @change="uploadAvatar"
           />
           <button
             type="button"
-            class="btn btn-outline-danger mx-3"
+            class="btn btn-danger mx-3"
             data-bs-dismiss="modal"
             @click="restoreAvatar"
           >
@@ -120,7 +149,6 @@ function restoreAvatar() {
 </template>
 
 <style scoped>
-
 .clickable {
   cursor: pointer;
 }

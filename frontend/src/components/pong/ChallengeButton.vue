@@ -1,6 +1,6 @@
 <template>
 <div>
-	<button type="button" class="btn btn btn-outline-danger m-2"
+	<button type="button" class="btn btn btn-danger shadow m-2"
 		data-bs-toggle="modal" data-bs-target="#settingsModal"
 	>
 		<font-awesome-icon icon="bolt" />

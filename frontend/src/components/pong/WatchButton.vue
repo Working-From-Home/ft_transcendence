@@ -1,6 +1,6 @@
 <template>
 	<div>
-	<button type="button" class="btn btn btn-outline-warning m-2"
+	<button type="button" class="btn btn btn-warning m-2"
 					@click="watchGame"
 	>
 		<font-awesome-icon icon="eye" />
