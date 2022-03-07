@@ -25,20 +25,19 @@ onUpdated(() => {
 <template>
   <div class="container my-5 px-5">
     <!-- row 1 -->
-    <div class="row g-3 px-md-5">
+    <div class="row g-3 px-md-5 mt-md-2">
       <!-- avatar -->
       <div class="col-12 col-ms-12 col-md-3">
         <div
-          class="bg-light rounded d-flex flex-column justify-content-center"
-          style="height: 100%"
+          class="bg-info bg-opacity-50 bg-gradient rounded d-flex flex-column justify-content-center h-100"
         >
-          <avatar :userId="userId" :isOwner="isOwner"></avatar>
+          <avatar v-cloak :userId="userId" :isOwner="isOwner"></avatar>
         </div>
       </div>
       <!-- info card -->
       <div class="col pt-ms-3">
-        <div class="bg-light rounded text-black" style="height: 100%">
-          <info :userId="userId" :isOwner="isOwner"></info>
+        <div class="bg-info bg-opacity-50 bg-gradient rounded h-100">
+          <info v-cloak :userId="userId" :isOwner="isOwner"></info>
         </div>
       </div>
     </div>
@@ -46,8 +45,8 @@ onUpdated(() => {
     <div class="row g-3 px-md-5">
       <!-- match history -->
       <div class="col pt-3">
-        <div class="bg-light rounded text-black" style="height: 100%">
-          <history :userId="userId"></history>
+        <div class="bg-success bg-opacity-75 bg-gradient rounded h-100">
+          <history v-cloak :userId="userId"></history>
         </div>
       </div>
     </div>

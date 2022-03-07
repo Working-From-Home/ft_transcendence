@@ -42,21 +42,27 @@ class UserService {
   async getGamePagination(userId: number, link: string) {
     return await http.get(link);
   }
-  async getFriendships(userId: number, status: string) {
-    return await http.get(`/users/${userId}/friends?status=${status}`);
+
+  /* friends */
+
+  async getFriendships(userId: number, status: string): Promise<number[]> {
+    const friendships = await http.get(`/users/${userId}/friends?status=${status}`);
+    let ids: number[] = [];
+    friendships.data.forEach((friendship: any) => {
+      ids.push(friendship.id);
+    });
+    return ids;
   }
-  async getFriendshipStatus(applicantId: number, recipientId: number) {
-    return await http.get(`/users/${applicantId}/friends/${recipientId}`);
-  };
   sendFriendRequest(applicantId: number, recipientId: number) {
     http.post(`/users/${applicantId}/friends/${recipientId}`);
   }
   acceptFriendship(applicantId: number, recipientId: number) {
-    http.patch(`/users/${recipientId}/friends/${applicantId}`);
+    http.patch(`/users/${applicantId}/friends/${recipientId}`);
   }
   async endFriendship(applicantId: number, recipientId: number) {
     await http.delete(`/users/${applicantId}/friends/${recipientId}`);
   }
+
   usernameExists(username: string): Promise<boolean> {
     return http.head(`/username/${username}`).then( () => {
       return true; 
