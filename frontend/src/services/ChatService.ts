@@ -33,10 +33,10 @@ class ChatService {
 		return http.delete(`/channels/${channelId}`)
 	}
 	muteUser(channelId: number, userId: number, muteUntil: Date | null): Promise<any> {
-		return http.put(`/channels/${channelId}/mute/${userId}`, muteUntil)
+		return http.put(`/channels/${channelId}/mute/${userId}`, {date: muteUntil})
 	}
 	banUser(channelId: number, userId: number, banUntil: Date | null): Promise<any> {
-		return http.put(`/channels/${channelId}/ban/${userId}`, banUntil)
+		return http.put(`/channels/${channelId}/ban/${userId}`, {date: banUntil})
 	}
 	/** Promote a user to admin */
 	promoteUser(channelId: number, userId: number): Promise<any> {
@@ -52,6 +52,20 @@ class ChatService {
 	searchChannels(term: string): Promise<ISearchChannel[]> {
 		return new Promise(resolve => {
 			socket.emit('searchChannel', term, (resp: ISearchChannel[]) => {
+				resolve(resp)
+			})
+		})
+	}
+	searchUsersByTitle(title: string, channelId: number) {
+		return new Promise(resolve => {
+			socket.emit('searchUsersByTitle', {title: title, channelId: channelId}, (resp: any) => {
+				resolve(resp)
+			})
+		})
+	}
+	searchUsers(title: string) {
+		return new Promise(resolve => {
+			socket.emit('searchUsers', {title: title}, (resp: any) => {
 				resolve(resp)
 			})
 		})

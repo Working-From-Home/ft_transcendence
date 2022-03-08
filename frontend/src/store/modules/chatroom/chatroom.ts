@@ -4,12 +4,20 @@ import { IChannel, IMessage } from 'shared/models/socket-events';
 export interface State {
 	rooms : IChannel[];
 	messages : IMessage[];
+	isAdmin: boolean;
+	isOwner: boolean;
+	isMute: boolean;
+	isban: boolean;
 }
 
 export const useChatRoomsStore = defineStore('chatRooms', {
 	state : (): State => ({
 		rooms: [],
 		messages: [],
+		isAdmin: false,
+		isOwner: false,
+		isMute: false,
+		isban: false,
 	}),
 	getters: {
 		getRooms() : IChannel[] {
