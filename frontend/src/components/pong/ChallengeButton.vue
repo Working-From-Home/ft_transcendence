@@ -23,21 +23,21 @@
 
 					<p>ball speed</p>
 					<select class="form-select mb-3" v-model="gameSettings.speed">
-  					<option :value=4>slow</option>
-  					<option :value=6>normal</option>
-  					<option :value=8>fast</option>
+						<option :value=4>slow</option>
+						<option :value=6>normal</option>
+						<option :value=8>fast</option>
 					</select>
 					<p>paddle speed</p>
 					<select class="form-select mb-3" v-model="gameSettings.paddleSpeed">
-  					<option :value=3>slow</option>
-  					<option :value=5>normal</option>
-  					<option :value=7>fast</option>
+						<option :value=3>slow</option>
+						<option :value=5>normal</option>
+						<option :value=7>fast</option>
 					</select>
 					<p>number of points to win</p>
 					<select class="form-select mb-3" v-model="gameSettings.score">
-  					<option>3</option>
-  					<option>5</option>
-  					<option>8</option>
+						<option>3</option>
+						<option>5</option>
+						<option>8</option>
 					</select>
 					
 					<button type="button" class="btn btn-success"
@@ -52,20 +52,39 @@
 
 	<!-- waiting response Modal -->
 	<div class="modal fade" id="challengeModal" data-bs-backdrop="static">
-		<div class="modal-dialog modal-dialog-centered">
+		<div v-if="!errorRequest" class="modal-dialog modal-dialog-centered">
 			<div class="modal-content">
-
-				<!-- Modal body -->
 				<div class="modal-body text-black">
 					Waiting for the response..
 				</div>
-
-				<!-- Modal footer -->
 				<div class="modal-footer">
 					<button type="button" class="btn btn-danger" data-bs-dismiss="modal"
 						@click="cancelRequest">
 					Cancel request</button>
 				</div>
+			</div>
+		</div>
+		<div v-else class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-body text-black">
+					{{errorRequest}}
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+					Ok</button>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+	<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+		<div id="refusedToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+			<div class="toast-header">
+				<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+			</div>
+			<div class="toast-body text-black">
+				challenge refused.
 			</div>
 		</div>
 	</div>
@@ -76,6 +95,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { Modal } from "bootstrap"
+import { Toast } from 'bootstrap';
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faBolt } from "@fortawesome/free-solid-svg-icons";
 
@@ -89,41 +109,44 @@ export default defineComponent({
 		return {
 			requestId: "",
 			gameSettings: {speed: 6, paddleSpeed: 5, score: 5},
-			challengeModal: {} as Modal
+			challengeModal: {} as Modal,
+			refusedToast: {} as Toast,
+			errorRequest: ""
 		}
 	},
 	mounted() {
 		this.challengeModal = new Modal("#challengeModal");
+		this.refusedToast = new Toast("#refusedToast");
 	},
 	methods: {
 		sendGameRequest() {
-			console.log("send request");
-			console.log(this.gameSettings);
+			this.errorRequest = "";
 			this.$pongSocket.emit(
 				"gameRequest",
 				{
 					guestId: this.userId,
 					gameSettings: this.gameSettings
 				},
-				(requestId : string) => {
-				this.requestId = requestId;
+				(response : {requestId : string, error : string}) => {
+					this.requestId = response.requestId;
+					if (!this.requestId) {
+						this.errorRequest = response.error;
+					}
 			});
 
 			this.challengeModal.show();
 
 			this.$pongSocket.on("requestAnswer", (accepted : boolean) => {
-				if (accepted)
-					console.log("got request answer: it's accepted! :)");
-				else
-					console.log("got request answer, he refused :(");
 				this.challengeModal.hide();
+				if (!accepted)
+					this.refusedToast.show();
 			});
+
 			this.$pongSocket.on("matchFound", (gameId : string) => {
 				this.$router.push({ path: `/pong/${gameId}`});
 			});
 		},
 		cancelRequest() {
-			console.log("request canceled");
 			this.$pongSocket.emit("cancelRequest", this.requestId);
 		}
 	}
