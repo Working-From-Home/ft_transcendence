@@ -48,13 +48,21 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="connectedNav">
-          <form class="mx-auto d-flex my-3 my-lg-0">
+          <form class="mx-auto d-flex my-3 my-lg-0" @submit.prevent="goToUserProfile">
             <input
+			  v-model="userName"
+			  @input="searchUsers()"
               class="form-control me-1"
               type="search"
+			  list="list-id"
               placeholder="search for a user"
               aria-label="search for a user"
             />
+			<datalist id="list-id">
+				<option v-for="result in results" :key="result._id" >
+						{{ result.username }}
+				</option>
+			</datalist>
             <button class="btn btn-outline-success" type="submit">
               Search
             </button>
@@ -149,6 +157,7 @@ import { useAuthStore } from "@/store/auth";
 import { useStatusStore } from "@/store/modules/status/status";
 import { useChatRoomsStore } from '@/store/modules/chatroom/chatroom'
 import { useCurrentUserStore } from "@/store/currentUser";
+import { toNumber } from '@vue/shared';
 
 export default defineComponent({
   setup() {
@@ -158,6 +167,12 @@ export default defineComponent({
     const chatRoomsStore = useChatRoomsStore();
     return { authStore, currentUserStore, statusStore, chatRoomsStore };
   },
+  data() {
+		return {
+			userName: '' as string,
+			results: [] as any,
+		}
+	},
   computed: {
     connect(): boolean {
       if (this.authStore.isLoggedIn) {
@@ -196,6 +211,30 @@ export default defineComponent({
 		logout() {
 			this.authStore.logout();
 			this.$socketapp.disconnect(); //  to remove an put at the right place too
+		},
+		searchUsers() {
+			this.results = [];
+			ChatService.searchUsers(this.userName).then((resp: any) => {
+				for (const obj of resp) {
+					if (obj.id != toNumber(localStorage.getItem('userId')))
+					  this.results = this.results.concat(obj);
+				}
+			});
+		},
+		goToUserProfile() {
+			if (!this.userName) {
+				alert("please put a name")
+				return ;
+			}
+			let results = JSON.parse(JSON.stringify(this.results))
+			for (const obj of results) {
+				if (obj.username === this.userName) {
+					this.$router.push('/users/' + obj._id);
+					return ;
+				}
+				
+			}
+			alert(this.userName + " isn't a user in the room")
 		},
 	}
 })

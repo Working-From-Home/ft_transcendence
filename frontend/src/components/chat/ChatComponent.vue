@@ -34,13 +34,13 @@
 				Open Channel
 			</button>
 		</template>
-		<template #room-options="{}" v-if='currentUser.isAdmin === false '>
+		<!-- <template #room-options="{}" v-if='currentUser.isAdmin === false '>
 			<p></p>
-		</template>
+		</template> -->
 		</chat-window>
-		<chat-admin-modal/>
+		<chat-admin-modal :roomId="currentRoom.roomId" :currentUserId="currentUserId" />
 		<chat-new-room-modal/>
-		<chat-info-user-modal :modalUserId="modalUserId" :modalUserName="modalUserName" :modalAvatar="modalAvatar" :menuMessageModal="menuMessageModal"/>
+		<chat-info-user-modal :UserInfo="UserInfo" :modalUserId="modalUserId" :modalUserName="modalUserName" :modalAvatar="modalAvatar" :menuMessageModal="menuMessageModal"/>
 	</div>
 </template>
 
@@ -104,7 +104,7 @@ export default defineComponent({
 		return {
 			currentUserId: -1 as number,
 			currentUser: {} as IUserChannel ,
-			currentRoom: {} as IChannel,
+			currentRoom: {roomId: -1} as IChannel,
 			opened: true as boolean, 
 			messages: [] as IMessage[],
 			messagesLoaded: false as boolean,
@@ -125,7 +125,8 @@ export default defineComponent({
 			adminModal: {} as Modal,
 			modalUserId: -1 as number,
 			modalUserName: "" as string,
-			modalAvatar: "" as string
+			modalAvatar: "" as string,
+			UserInfo: {}
 		}
 	},
 	mounted() {
@@ -205,6 +206,14 @@ export default defineComponent({
 						if (message.username)
 							this.modalUserName = message.username
 						UserService.getAvatarOfUser(message.senderId).then((av) => (this.modalAvatar = av));
+						ChatService.searchUsersByTitle(this.modalUserName, this.currentRoom.roomId).then((resp: any) => {
+							for (const obj of resp) {
+								if (obj._id === this.modalUserId){
+									this.UserInfo = JSON.parse(JSON.stringify(obj));
+									console.log("obj", obj)
+								}
+							}
+						});
 						return this.menuMessageModal.show();
 					}
 					this.$router.push('/chat');

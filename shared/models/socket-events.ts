@@ -64,6 +64,8 @@ interface ClientToServerEventsChat {
   sendMessage: (channelId: number, content: string) => void; // maybe not string if we keep emoji...
   sendUserOfChannels: (channelId: number, callback: (channels: IUserChannel[]) => void) => void;
   sendMessagesOfChannels: (channelId: number, callback: (channels: IMessage[]) => void) => void;
+  searchUsersByTitle: (data: {title: string, channelId: number}, callback: (channels: any) => void) => void;
+  searchUsers: (data: {title: string}, callback: (channels: any) => void) => void;
 }
 
 // Common

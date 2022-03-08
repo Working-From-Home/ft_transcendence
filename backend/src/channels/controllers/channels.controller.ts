@@ -1,16 +1,13 @@
 import { Controller, Param, ParseIntPipe, Post, UseGuards, Req, Body, Patch, Delete, Put } from '@nestjs/common';
-import { CurrentUserGuard } from 'src/auth/guards/current-user.guard';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { Channel } from '../entities/channel.entity';
-import { createParamDecorator } from '@nestjs/common';
 import { ChatService } from '../services/chat.service';
 import { CreateChannelDto } from '../dtos/create-channel.dto';
 import { UserChannel } from '../entities/user-channel.entity';
 import { UpdateResult } from 'typeorm';
 import { AppGateway } from 'src/app.gateway';
-import { OnlineService } from 'src/online.service';
-import { IChannel, IMessage } from 'shared/models/socket-events';
-import { Message } from "../entities/message.entity";
+import { IMessage } from 'shared/models/socket-events';
+
 @Controller()
 @UseGuards(JwtAuthGuard)
 export class ChannelsController {
@@ -110,12 +107,12 @@ export class ChannelsController {
 		@Req() request,
 		@Param('channelId') channelId: number,
 		@Param('userId') userId: number,
-		@Body() date: Date
-	): Promise<UpdateResult> {
+		@Body() content: {date: Date}
+	) {
 		const adminId = parseInt(request.user.sub);
-		if (!date)
+		if (!content.date)
 			return await this.chatService.unmuteUser(channelId, adminId, userId);
-		return await this.chatService.muteUser(channelId, adminId, userId, date);
+		return await this.chatService.muteUser(channelId, adminId, userId, content.date);
 	}
 
 	@Put('/channels/:channelId/ban/:userId')
@@ -123,12 +120,12 @@ export class ChannelsController {
 		@Req() request,
 		@Param('channelId') channelId: number,
 		@Param('userId') userId: number,
-		@Body() date: Date
-	): Promise<UpdateResult> {
+		@Body() content: {date: Date}
+	) {
 		const adminId = parseInt(request.user.sub);
-		if (!date)
+		if (!content.date)
 			return await this.chatService.unbanUser(channelId, adminId, userId);
-		return await this.chatService.banUser(channelId, adminId, userId, date);
+		return await this.chatService.banUser(channelId, adminId, userId, content.date);
 	}
 
 	@Put('/channels/:channelId/admin/:userId')
@@ -136,7 +133,7 @@ export class ChannelsController {
 		@Req() request,
 		@Param('channelId') channelId: number,
 		@Param('userId') userId: number,
-	): Promise<UpdateResult> {
+	) {
 		return await this.chatService.addAdmin(channelId, parseInt(request.user.sub), userId);
 	}
 
@@ -145,7 +142,7 @@ export class ChannelsController {
 		@Req() request,
 		@Param('channelId') channelId: number,
 		@Param('userId') userId: number,
-	): Promise<UpdateResult> {
+	) {
 		return await this.chatService.removeAdmin(channelId, parseInt(request.user.sub), userId);
 	}
 }
