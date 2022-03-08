@@ -26,7 +26,6 @@ export const useStatusStore = defineStore('status', {
 	},
 	actions : {
 		setOnlineUsers(userIds : number[]) {
-			console.log(`store: userids: ${userIds}`);
 			this.onlineUsers = userIds;
 		},
 		addOnlineUser(userId : number) {

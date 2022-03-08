@@ -104,11 +104,13 @@ export class PongGateway {
 		@ConnectedSocket() socket : Socket) {
 		const hostId = socket.data.userId;
 		if (hostId == body.guestId)
-			return ;
+			return {requestId: "", error: "You can't challenge yourself."};
 		if (this.inGameUsers.includes(body.guestId))
-			return ;
+			return {requestId: "", error: "This user is in game, try later."};
 		if (this.isBeingRequested(body.guestId) || this.isRequesting(body.guestId))
-			return ;
+			return {requestId: "", error: "This user is already being challenged, try later."};
+		if (this.isBeingRequested(hostId) || this.isRequesting(hostId))
+			return {requestId: "", error: "You already have a challenge going on."};
 
 		const requestId = `${hostId}to${body.guestId}`;
 		this.gameRequests.set(
@@ -120,8 +122,7 @@ export class PongGateway {
 				});
 		this.server.to(body.guestId.toString()).emit("gameRequest", {hostId, requestId});
 
-		this.logger.log(`got request: ${requestId}`);
-		return requestId;
+		return {requestId: requestId, error: ""};
 	}
 
 	@SubscribeMessage("cancelRequest")
