@@ -6,6 +6,7 @@ import { AuthService } from './auth/auth.service';
 import { ServerToClientEvents, ClientToServerEvents, InterServerEvents, SocketData} from 'shared/models/socket-events'
 
 import { ChatService } from './channels/services/chat.service'
+import { UsersService } from './users/services/users.service'
 import { OnlineService } from './online.service';
 
 type AppSocket = Socket<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>
@@ -20,7 +21,8 @@ export class AppGateway {
 	constructor(
 		private authService : AuthService,
 		private onlineService: OnlineService,
-		private chatService : ChatService
+		private chatService : ChatService,
+		private usersService : UsersService
 	) {}
 
 	async handleConnection(client: AppSocket) {
@@ -78,6 +80,11 @@ export class AppGateway {
 		return this.chatService.searchChannelsByTitle(title).then( (x) => { return x })
 	}
 
+	@SubscribeMessage('searchUsersByTitle')
+	handleEventUsers(client: AppSocket, data: {title: string, channelId: number}) {
+		return this.chatService.searchUsersByTitle(data).then( (x) => { return x })
+	}
+
 	@SubscribeMessage('searchChannelsByUser')
 	handleEventChannel(client: AppSocket, userId: number) {
 		return this.chatService.getChannelsOfUser(userId).then( (y) => { return y }); 
@@ -85,6 +92,12 @@ export class AppGateway {
 	@SubscribeMessage('sendUserOfChannels')
 	handleEventUsersInChannel(client: AppSocket, channelId: number) {
 		return this.chatService.getUsersOfChannel(channelId).then( (y) => { 
+				return y
+		}); 
+	}
+	@SubscribeMessage('searchUsers')
+	handleEventAllUsers(client: AppSocket, data: {title: string}) {
+		return this.usersService.searchUsers(data).then( (y) => { 
 				return y
 		}); 
 	}

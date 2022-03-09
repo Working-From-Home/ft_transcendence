@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm'
-import { FindManyOptions, Repository } from 'typeorm'
+import { getManager, FindManyOptions, Repository } from 'typeorm'
 import { paginate, Pagination, IPaginationOptions } from 'nestjs-typeorm-paginate';
 import { User } from '../entities/user.entity';
 import { AvatarService } from './avatar.service';
@@ -111,5 +111,14 @@ export class UsersService {
       const user = await this.repo.findOne(id, { relations: ["stats"] });
       if (!user) { throw new NotFoundException('user not found'); }
       return user;
+  }
+  async searchUsers(data: {title: string}) {
+	const y = await getManager().connection.query(
+		`SELECT u."id" AS "_id",
+				u.username AS "username"
+		FROM "user" u
+		WHERE username LIKE ('%${data.title}%')`
+	  );
+	return y;
   }
 }

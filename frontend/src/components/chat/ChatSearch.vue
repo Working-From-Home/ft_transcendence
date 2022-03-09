@@ -63,7 +63,7 @@ export default defineComponent({
   name: 'ChatSearchTmp',
   data(){
     return {
-      searchTerm: '',
+      searchTerm: '' ,
       results: [] as ISearchChannel[],
 	  passwordModal: {} as Modal,
 	  passWord: '' as String,
@@ -81,7 +81,7 @@ export default defineComponent({
     },
     joinChannel() {
 		if (!this.searchTerm) {
-			alert("pls put a nama")
+			alert("please put a name")
 			return
 		}
 		let results = JSON.parse(JSON.stringify(this.results))

@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
+import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { IPaginationOptions, paginate, Pagination } from "nestjs-typeorm-paginate";
 import { InjectRepository } from "@nestjs/typeorm";
 import { getManager, getRepository, Repository } from "typeorm";
@@ -7,7 +7,7 @@ import { Channel } from "../entities/channel.entity";
 import { Message } from "../entities/message.entity";
 import { UserChannel } from "../entities/user-channel.entity";
 import { CreateChannelDto } from "../dtos/create-channel.dto";
-import { ISearchChannel, IUserChannel, IChannel } from "shared/models/socket-events";
+import { ISearchChannel, IChannel } from "shared/models/socket-events";
 import { UsersService } from "src/users/services/users.service";
 @Injectable()
 export class ChatService {
@@ -98,14 +98,16 @@ export class ChatService {
       throw new UnauthorizedException('This channel cannot be updated');
     return await this.channelRepo.update(channel, attrs);
   }
-
+  
   private async updateUserChannel(userId: number, channelId: number, attrs: Partial<UserChannel>) {
     const channelUser = await this.userChannelRepo.findOne({
       where: [{ userId, channelId }]
     });
     if (!channelUser)
       throw new NotFoundException('user not found');
-    return await this.userChannelRepo.update(channelUser, attrs);
+	console.log("channelUser av", attrs)
+	channelUser.mutedUntil = attrs.mutedUntil
+    return await this.userChannelRepo.save(channelUser);
   }
 
   async leaveChannel(channelId: number, userId: number) {
@@ -130,30 +132,56 @@ export class ChatService {
 
   async banUser(channelId: number, adminId: number, userId: number, date: Date) {
     await this.findChannelById(channelId);
-    if (!this.isAdmin(adminId, channelId) || this.isOwner(userId, channelId))
+    if (await !this.isAdmin(adminId, channelId) || await this.isOwner(userId, channelId))
       throw new UnauthorizedException('You cannot ban this user');
-    return this.updateUserChannel(userId, channelId, { bannedUntil: date, hasLeft: true });
+	const channelUser = await this.userChannelRepo.findOne({
+		where: [{ userId, channelId }]
+	});
+	if (!channelUser)
+      throw new NotFoundException('user not found');
+	channelUser.bannedUntil = date;
+	channelUser.hasLeft = true;
+	return this.userChannelRepo.save(channelUser);
   }
 
   async muteUser(channelId: number, adminId: number, userId: number, date: Date) {
     await this.findChannelById(channelId);
-    if (!this.isAdmin(adminId, channelId) || this.isOwner(userId, channelId))
+    if (await !this.isAdmin(adminId, channelId) || await this.isOwner(userId, channelId))
       throw new UnauthorizedException('You cannot mute this user');
-    return this.updateUserChannel(userId, channelId, { mutedUntil: date });
+	const channelUser = await this.userChannelRepo.findOne({
+		where: [{ userId, channelId }]
+	});
+	if (!channelUser)
+      throw new NotFoundException('user not found');
+	channelUser.mutedUntil = date;
+	return this.userChannelRepo.save(channelUser);
   }
 
   async unbanUser(channelId: number, adminId: number, userId: number) {
     await this.findChannelById(channelId);
-    if (!this.isAdmin(adminId, channelId) || this.isOwner(userId, channelId))
+    if (await !this.isAdmin(adminId, channelId) || await this.isOwner(userId, channelId))
       throw new UnauthorizedException('You cannot unban this user');
-    return this.updateUserChannel(userId, channelId, { bannedUntil: null });
+	  const channelUser = await this.userChannelRepo.findOne({
+		where: [{ userId, channelId }]
+	});
+	if (!channelUser)
+      throw new NotFoundException('user not found');
+	channelUser.bannedUntil = null;
+	channelUser.hasLeft = false;
+	return this.userChannelRepo.save(channelUser);
   }
 
   async unmuteUser(channelId: number, adminId: number, userId: number) {
     await this.findChannelById(channelId);
-    if (!this.isAdmin(adminId, channelId) || this.isOwner(userId, channelId))
+    if (await !this.isAdmin(adminId, channelId) || await this.isOwner(userId, channelId))
       throw new UnauthorizedException('You cannot unmute this user');
-    return this.updateUserChannel(userId, channelId, { mutedUntil: null });
+	const channelUser = await this.userChannelRepo.findOne({
+		where: [{ userId, channelId }]
+	});
+	if (!channelUser)
+      throw new NotFoundException('user not found');
+	channelUser.mutedUntil = null;
+    return this.userChannelRepo.save(channelUser);
   }
 
   /* Remove */
@@ -221,7 +249,9 @@ export class ChatService {
     const channel = await getRepository(Channel)
       .createQueryBuilder("channel")
       .where("channel.id = :id", { id: channelId })
+	  .leftJoinAndSelect("channel.owner", "o")
       .getOne();
+	  console.log("channelOwner", channel, userId)
     return channel.owner.id === userId;
   }
 
@@ -232,6 +262,23 @@ export class ChatService {
 	  .where('channel."isDm" = false')
       .select(["channel.id", "channel.title", "channel.password"])
       .getMany();
+  }
+
+  async searchUsersByTitle(data: {title: string, channelId: number}) {
+	const y = await getManager().connection.query(
+		`SELECT uc."userId" AS "_id",
+				uc."channelId" AS "channelId",
+				(uc."role" = 'admin') AS "isAdmin",
+				uc."mutedUntil" AS "mutedUntil",
+				u.username AS "username",
+				uc."hasLeft" AS "hasLeft",
+				uc."bannedUntil" AS "bannedUntil"
+		FROM "user_channel" uc
+			INNER JOIN "channel" c ON uc."channelId" = c."id"
+			INNER JOIN "user" u ON uc."userId" = u."id"
+		WHERE "channelId" IN (${data.channelId}) AND uc."hasLeft"=FALSE AND username LIKE ('%${data.title}%')`
+	  );
+	return y;
   }
 
   async getUsersOfChannel(channelId: number) {
