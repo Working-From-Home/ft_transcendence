@@ -68,7 +68,7 @@ function logout() {
         <div class="collapse navbar-collapse" id="connectedNav">
           <!-- search bar -->
           <div class="ms-auto ps-lg-5">
-            <div class="ms-lg-5 ps-lg-5">
+            <div class="ms-lg-5 ps-lg-4">
               <SearchBar></SearchBar>
             </div>
           </div>				
