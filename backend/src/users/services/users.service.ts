@@ -74,7 +74,7 @@ export class UsersService {
     }
 
   async findBy(options?: FindManyOptions<User>): Promise<User[]> {
-    return this.repo.find(options)
+    return await this.repo.find(options);
   }
 
   async countBy(options?: FindManyOptions<User>): Promise<number> {
