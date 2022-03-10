@@ -17,7 +17,6 @@ function logout() {
 <template>
   <div class="page-header">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-
       <!-- not logged header -->
       <div v-if="!authStore.isLoggedIn" class="container-fluid mx-lg-4 mx-2">
         <router-link to="/" class="navbar-brand">Transcendence</router-link>
@@ -50,7 +49,6 @@ function logout() {
           </ul>
         </div>
       </div>
-
       <!-- logged in header -->
       <div v-if="authStore.isLoggedIn" class="container-fluid mx-lg-4 mx-2">
         <router-link to="/" class="navbar-brand">Transcendence</router-link>
@@ -66,52 +64,25 @@ function logout() {
         >
           <span class="navbar-toggler-icon"></span>
         </button>
-
 				<!-- navbar -->
         <div class="collapse navbar-collapse" id="connectedNav">
-          <!-- small screen -->
-          <ul id="navbar" class="navbar-nav d-lg-none">
-						<li id="smSearchBar">
-							<SearchBar :list="'idss'"></SearchBar>
-						</li>
-            <li class="nav-item mx-2">
-              <router-link to="/pong" class="nav-link active">Pong</router-link>
-            </li>
-            <li class="nav-item mx-2">
-              <router-link to="/chat" class="nav-link active">Chat</router-link>
-            </li>
-            <li class="mx-2">
-              <router-link
-                :to="{
-                  name: 'profile',
-                  params: { userid: authStore.userId },
-                }"
-                class="nav-link active"
-                >Profile</router-link
-              >
-            </li>
-            <li v-if="authStore.isLoggedIn" class="mx-2">
-              <router-link class="logout nav-link active" to="/" @click="logout"
-                >Logout
-              </router-link>
-            </li>
-          </ul>
-
-          <!-- large screen -->
-
-					<SearchBar :list="'aaa'" class=""></SearchBar>
-
-          <ul id="navbar" class="navbar-nav d-none d-lg-flex ms-auto">
+          <!-- search bar -->
+          <div class="ms-auto ps-lg-5">
+            <div class="ms-lg-5 ps-lg-5">
+              <SearchBar></SearchBar>
+            </div>
+          </div>				
+          <ul id="navbar" class="navbar-nav d-lg-flex ms-auto">
             <!-- pong -->
-            <li class="nav-item me-2 ms-auto">
+            <li class="nav-item me-2 ms-lg-auto">
               <router-link to="/pong" class="nav-link active">Pong</router-link>
             </li>
             <!-- chat -->
             <li class="nav-item me-2">
               <router-link to="/chat" class="nav-link active">Chat</router-link>
             </li>
-            <!-- profile -->
-            <li class="nav-item me-4 dropdown">
+            <!-- profile dropdown (only on large screen) -->
+            <li class="nav-item me-2 dropdown d-none d-lg-inline-block">
               <a
                 class="nav-link active"
                 href="#"
@@ -148,30 +119,37 @@ function logout() {
                 </li>
               </ul>
             </li>
-            <!-- avatar -->
-            <li class="nav-item">
+            <!-- profile (only on small screen) -->
+            <li class="mx-2 d-lg-none">
+              <router-link
+                :to="{
+                  name: 'profile',
+                  params: { userid: authStore.userId },
+                }"
+                class="nav-link active"
+                >Profile</router-link
+              >
+            </li>
+            <!-- logout (only on small screen) -->
+            <li v-if="authStore.isLoggedIn" class="mx-2 d-lg-none">
+              <router-link class="logout nav-link active" to="/" @click="logout"
+                >Logout
+              </router-link>
+            </li>
+            <!-- avatar (only on large screen) -->
+            <li class="nav-item d-none d-lg-inline-block">
               <img
                 :src="currentUserStore.avatar"
                 alt="avatar"
                 width="40"
-                class="d-none d-lg-inline-block align-text-top rounded"
+                class="align-text-top rounded"
               /> 
             </li>
-					</ul>
-
-				         
+					</ul>	         
         </div>
       </div>
     </nav>
-
     <Connect></Connect>
-
-		<!-- <div id="searchBar" class="collapse bg-light">
-			<div class="pt-2 pb-3 mx-auto col-6">
-				<SearchBar :list="'ids'"></SearchBar>
-			</div>
-		</div> -->
-
   </div>
 </template>
 
@@ -211,19 +189,4 @@ $active-link: #42b983;
   border-top-left-radius: 0px;
   border-top-right-radius: 0px;
 }
-
-// @include media-breakpoint-up(lg) {
-//   #smSearchBar {
-//     display: none;
-//   }
-// }
-
-// @include media-breakpoint-down(md) {
-//   #searchBar {
-//     display: none;
-//   }
-//   #searchButton {
-//     display: none;
-//   }
-// }
 </style>

@@ -6,42 +6,28 @@ import { ref } from 'vue';
 
 const router = useRouter();
 
-const props = defineProps({
-  list: {
-    type: String,
-    required: true,
-  },
-});
-
-const userName = ref<string>('');
+const username = ref<string>('');
 const results = ref<any>([]);
 const errorMessage = ref<string>('');
-const show = ref<boolean>(false);
-
-function search() {
-  show.value = true;
-}
 
 function searchUsers() {
 	results.value = [];
-	ChatService.searchUsers(userName.value).then((resp: any) => {
-		console.log("RESP =",resp);
+	ChatService.searchUsers(username.value).then((resp: any) => {
 		for (const obj of resp) {
 			if (obj.id != toNumber(localStorage.getItem('userId')))
 				results.value = results.value.concat(obj);
 		}
-		console.log("RES =", results.value);
 	});
 }
 
 function goToUserProfile() {
-  if (!userName.value) {
+  if (!username.value) {
     errorMessage.value = 'Enter a username before clicking on search';
     return;
   }
   let res = JSON.parse(JSON.stringify(results.value));
   for (const user of res) {
-    if (user.username === userName.value) {
+    if (user.username === username.value) {
     	router.push('/users/' + user._id);
       return;
     }
@@ -56,27 +42,24 @@ function clearErrorMessage() {
 
 <template>
   <!-- input -->
-
   <form class="mx-auto d-flex my-3 my-lg-0" @submit.prevent="goToUserProfile">
     <input
-      v-model="userName"
+      v-model="username"
       @input="searchUsers()"
       class="form-control me-1"
       type="search"
-      :list="list"
+      list="ids"
       placeholder="search for a user"
       aria-label="search for a user"
     />
-    <datalist :id="list">
+    <datalist id="ids">
 			<option v-for="result in results" :key="result._id">
 				{{ result.username }}
 			</option>
     </datalist>
     <button class="btn btn-outline-success" type="submit">Search</button>
   </form>
-
   <!-- alert -->
-
   <div class="position-absolute top-50 start-50 translate-middle mt-5">
     <div
       v-if="errorMessage"
