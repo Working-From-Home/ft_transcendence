@@ -17,6 +17,9 @@ JWT_SECRET=my_secret
 # example: http://e2r5p13:3000 or http://10.05.155.14:3000
 BACKEND_SERVER_URI=http://localhost:3000
 
+# the path must always be [host]:[port-frontend]/signup/oauth
+OAUTH_REDIRECT_URI=http://localhost:8080/signup/oauth
+
 # Either development or production
 NODE_ENV=development
 

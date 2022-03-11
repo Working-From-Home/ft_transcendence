@@ -3,20 +3,42 @@ import { ISignedIn } from '@/models/ISignedIn';
 import { IUser } from '@/models/IUser';
 
 class AuthService {
+  // local
   signInLocal(email: string, password: string) {
-    return http.post<ISignedIn>('/auth/signin', { email, password });
+    return http.post<ISignedIn>('/auth/local/signin', { email, password });
   }
   signUpLocal(email: string, password: string) {
-    return http.post<ISignedIn>('/auth/signup', { email, password });
+    return http.post<ISignedIn>('/auth/local/signup', { email, password });
   }
-  /** signin and signup with google. */
-  signWithGoogle() {
-    return http.get('/auth/google');
+
+  // Google
+  signInGoogle(params: string) {
+    return http.get<ISignedIn>(`/auth/google/signin${params}`, {
+      headers: {},
+      withCredentials: false,
+    });
   }
-  /** signin and signup with 42 */
-  signWithFortyTwo() {
-    return http.get('/auth/42');
+  signUpGoogle(params: string) {
+    return http.get<ISignedIn>(`/auth/google/signup${params}`, {
+      headers: {},
+      withCredentials: false,
+    });
   }
+  
+  // 42
+  signInFortyTwo(params: string) {
+    return http.get<ISignedIn>(`/auth/42/signin${params}`, {
+      headers: {},
+      withCredentials: false,
+    });
+  }
+  signUpFortyTwo(params: string) {
+    return http.get<ISignedIn>(`/auth/42/signup${params}`, {
+      headers: {},
+      withCredentials: false,
+    });
+  }
+
   /** Get a new access_token. Must provide the refresh token */
   refresh() {
     return http.post('/auth/refresh');

@@ -26,6 +26,7 @@ services:
     environment:
       - JWT_SECRET=${JWT_SECRET}
       - BACKEND_SERVER_URI=${BACKEND_SERVER_URI}
+      - OAUTH_REDIRECT_URI=${OAUTH_REDIRECT_URI}
       - FORTY_TWO_CLIENT_ID=${FORTY_TWO_CLIENT_ID}
       - FORTY_TWO_SECRET=${FORTY_TWO_SECRET}
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
@@ -47,6 +48,9 @@ services:
       - 9229:9229
     networks:
       - mynet
+      # mynet:
+      #   aliases:
+      #     - ${DOMAIN}
     # command: sh -c 'npm install && npm run start:dev'
     command: sh -c 'npm install && npm run start:debug'
 
