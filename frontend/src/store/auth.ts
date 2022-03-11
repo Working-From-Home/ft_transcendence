@@ -27,23 +27,69 @@ export const useAuthStore = defineStore('auth', {
     },
   },
   actions: {
-    async signIn(email: string, password: string): Promise<IError | undefined> {
+    // local
+    async signInLocal(email: string, password: string): Promise<IError | undefined> {
       try {
         const resp = await api.signInLocal(email, password);
         this.setState(resp.data.access_token, resp.data.id);
 
-        useCurrentUserStore().initStore(resp.data.id); // wip
+        useCurrentUserStore().initStore(resp.data.id);
       } catch (err) {
         const e = err as AxiosError<IError>;
         if (axios.isAxiosError(e)) return e.response?.data;
       }
     },
-    async signUp(email: string, password: string) {
+    async signUpLocal(email: string, password: string) {
       try {
         const resp = await api.signUpLocal(email, password);
         this.setState(resp.data.access_token, resp.data.id);
-
-        useCurrentUserStore().initStore(resp.data.id); // wip
+        useCurrentUserStore().initStore(resp.data.id);
+      } catch (err) {
+        const e = err as AxiosError<IError>;
+        if (axios.isAxiosError(e)) return e.response?.data;
+      }
+    },
+    
+    // google
+    async signInGoogle(params: string): Promise<IError | undefined> {
+      try {
+        const resp = await api.signInGoogle(params);
+        this.setState(resp.data.access_token, resp.data.id);
+        
+        useCurrentUserStore().initStore(resp.data.id);
+      } catch (err) {
+        const e = err as AxiosError<IError>;
+        if (axios.isAxiosError(e)) return e.response?.data;
+      }
+    },
+    async signUpGoogle(params: string) {
+      try {
+        const resp = await api.signUpGoogle(params);
+        this.setState(resp.data.access_token, resp.data.id);
+        useCurrentUserStore().initStore(resp.data.id);
+      } catch (err) {
+        const e = err as AxiosError<IError>;
+        if (axios.isAxiosError(e)) return e.response?.data;
+      }
+    },
+    
+    // 42
+    async signInFortyTwo(params: string): Promise<IError | undefined> {
+      try {
+        const resp = await api.signInFortyTwo(params);
+        this.setState(resp.data.access_token, resp.data.id);
+        
+        useCurrentUserStore().initStore(resp.data.id);
+      } catch (err) {
+        const e = err as AxiosError<IError>;
+        if (axios.isAxiosError(e)) return e.response?.data;
+      }
+    },
+    async signUpFortyTwo(params: string) {
+      try {
+        const resp = await api.signUpFortyTwo(params);
+        this.setState(resp.data.access_token, resp.data.id);
+        useCurrentUserStore().initStore(resp.data.id);
       } catch (err) {
         const e = err as AxiosError<IError>;
         if (axios.isAxiosError(e)) return e.response?.data;

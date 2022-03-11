@@ -12,12 +12,12 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 export class AuthController {
     constructor(private authService: AuthService) {}
 
-    @Post('/signup')
+    @Post('/local/signup')
     async createUser(@Body() body: CreateUserDto) {
         return await this.authService.signUpLocal(body.email, body.password);
     }
 
-    @Post('/signin')
+    @Post('/local/signin')
     async signin(@Body() body: AcceptUserDto) {
         return await this.authService.signInLocal(body.email, body.password);
     }
@@ -32,23 +32,33 @@ export class AuthController {
     
     @Get('/42')
     @UseGuards(AuthGuard('42'))
-    async signInWithFortyTwo(@Req() req) { }
+    async fortyTwo(@Req() req) { }
 
-    @Get('/42/callback')
+    @Get('/42/signin')
     @UseGuards(AuthGuard('42'))
-    async signInWithFortyTwoCallback(@Req() req) {
-        return this.authService.signInWithFortyTwo(req)
+    async signInForty(@Req() req) {
+        return this.authService.signInFortyTwo(req)
     }
 
-    //change it to /google/signin, or maybe not
+    @Get('/42/signup')
+    @UseGuards(AuthGuard('42'))
+    async signUpFortyTwo(@Req() req) {
+        return this.authService.signUpFortyTwo(req)
+    }
+
     @Get('/google')
     @UseGuards(AuthGuard('google'))
-    async signInWithGoogle() { }
+    async google() { }
     
-    @Get('/google/callback')
+    @Get('/google/signin')
     @UseGuards(AuthGuard('google'))
-    async signInWithGoogleCallback(@Req() req) {
-        return this.authService.signInWithGoogle(req)
+    async signInGoogle(@Req() req) {
+        return this.authService.signInGoogle(req)
+    }
+    @Get('/google/signup')
+    @UseGuards(AuthGuard('google'))
+    async signUpGoogle(@Req() req) {
+        return this.authService.signUpGoogle(req)
     }
 
     @Post('/refresh')

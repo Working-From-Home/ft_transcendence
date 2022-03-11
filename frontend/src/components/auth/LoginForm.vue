@@ -46,10 +46,15 @@
     <a
       class="btn btn-default btn-oauth rounded-circle rounded-circle"
       role="button"
+      v-on:click="loginGoogle"
     >
       <font-awesome-icon :icon="['fab', 'google']" color="white" size="5x" />
     </a>
-    <a class="btn btn-default btn-oauth" role="button">
+    <a
+      class="btn btn-default btn-oauth"
+      role="button"
+      v-on:click="loginFortyTwo"
+    >
       <img src="../../assets/logo42-white.svg" width="80" />
     </a>
     <p>
@@ -73,6 +78,7 @@ import { useAuthStore } from '@/store/auth';
 import { AuthMode } from '@/views/auth/auth.interface';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { openSignInWindow } from './OauthPopup';
 
 const emit = defineEmits<{
   (e: 'changeForm', value: AuthMode): void;
@@ -87,10 +93,34 @@ const password = ref('');
 const errorMessage = ref('');
 
 const login = async () => {
-  const e = await authStore.signIn(email.value, password.value);
+  const e = await authStore.signInLocal(email.value, password.value);
   if (e) errorMessage.value = e.message;
   else router.push('/');
 };
+
+const receiveMessageGoogle = async (event: MessageEvent<any>) => {
+  window.removeEventListener('message', receiveMessageGoogle);
+  const e = await authStore.signInGoogle(event.data);
+  if (e) errorMessage.value = e.message;
+  else router.push('/');
+};
+const loginGoogle = async () => {
+  window.addEventListener('message', receiveMessageGoogle);
+  openSignInWindow(`${process.env.VUE_APP_BACKEND_SERVER_URI}/auth/google/`);
+};
+
+
+const receiveMessageFortyTwo = async (event: MessageEvent<any>) => {
+  window.removeEventListener('message', receiveMessageFortyTwo);
+  const e = await authStore.signInFortyTwo(event.data);
+  if (e) errorMessage.value = e.message;
+  else router.push('/');
+};
+const loginFortyTwo = async () => {
+  window.addEventListener('message', receiveMessageFortyTwo);
+  openSignInWindow(`${process.env.VUE_APP_BACKEND_SERVER_URI}/auth/42/`);
+};
+
 </script>
 
 <style lang="scss" scoped>
