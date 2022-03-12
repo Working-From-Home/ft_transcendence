@@ -16,24 +16,18 @@ export class UsersService {
         private readonly statsService: StatsService
     ) {}
 
-    async create(email: string, username: string, password: string): Promise<User> {
-        const user = this.repo.create({ email, username, password });
-        await this.repo.save(user);
-        await this.avatarService.create(user);
-        await this.statsService.create(user); 
-        return user;
-    }
+  async create(user: Partial<User>): Promise<User> {
+    const newUser = this.repo.create(user);
+    if (!newUser.username)
+      newUser.username = await this.generateUsername();
+    await this.repo.save(newUser);
+    await this.avatarService.create(newUser);
+    await this.statsService.create(newUser); 
+    return newUser;
+  }
 
     async generateUsername(): Promise<string> {
       return uniqueNamesGenerator({ dictionaries: [adjectives, colors] });
-    }
-
-    async createWithGeneratedUsername(email: string, password: string): Promise<User> {
-        const user = this.repo.create({ email, username: await this.generateUsername(), password });
-        await this.repo.save(user);
-        await this.avatarService.create(user);
-        await this.statsService.create(user); 
-        return user;
     }
 
     async update(id: number, attrs: Partial<User>) {
@@ -79,20 +73,6 @@ export class UsersService {
 
   async countBy(options?: FindManyOptions<User>): Promise<number> {
     return await this.repo.count(options);
-  }
-
-  async store(data: CreateUserDto): Promise<User> {
-    const n = await this.repo.count({
-      where: [
-        { email: data.email },
-        // { username: data.username }
-      ]
-    });
-    if (n > 0)
-      throw new BadRequestException("User already exists")
-    const user = new User()
-    Object.assign(user, data)
-    return this.repo.save(data);
   }
 
   async paginate(options: IPaginationOptions): Promise<Pagination<User>> {

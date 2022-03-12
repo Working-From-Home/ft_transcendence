@@ -6,6 +6,7 @@ import Auth from "@/views/auth/Auth.vue";
 import { useAuthStore } from "@/store/auth";
 import { AuthMode } from "@/views/auth/auth.interface";
 import Profile from "@/views/profile/Profile.vue"
+import OauthWait from "@/components/auth/OauthWait.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -64,7 +65,8 @@ const routes: Array<RouteRecordRaw> = [
       requiresUnAuth: true
     },
     component: Auth,
-    props: { selectForm: AuthMode.Register}  },
+    props: { selectForm: AuthMode.Register}
+  },
   {
     name: 'signin',
     path: '/signin',
@@ -75,6 +77,15 @@ const routes: Array<RouteRecordRaw> = [
     },
     component: Auth,
     props: { selectForm: AuthMode.Login}
+  },
+  {
+    name: 'oauth',
+    path: '/signup/oauth',
+	  meta: {
+      title: 'Login',
+      requiresUnAuth: true
+    },
+    component: OauthWait,
   },
   {
     path: "/admin",

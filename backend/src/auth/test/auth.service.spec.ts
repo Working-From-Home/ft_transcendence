@@ -14,20 +14,16 @@ describe('AuthService', () => {
     beforeEach(async () => {
         const users: User[] = [];
         fakeUsersService = {
-            create: (email: string, username: string, password: string) => {
-                const user = { id: Math.floor(Math.random() * 99999), email, username, password } as User; 
-                users.push(user);
-                return Promise.resolve(user);
-            },
-            createWithGeneratedUsername: (email: string, password: string) => {
-                const user = {
+            create: (user: Partial<User>) => {
+                if (!user.email) throw new Error('missing requiered fields')
+                const newUser = {
                     id: Math.floor(Math.random() * 99999),
-                    email,
-                    username: uniqueNamesGenerator({ dictionaries: [adjectives, colors] }),
-                    password
+                    email: user.email,
+                    username: user.username,
+                    password: user.password,
                 } as User; 
-                users.push(user);
-                return Promise.resolve(user);
+                users.push(newUser);
+                return Promise.resolve(newUser);
             },
             findById: (id: number) => {
                 const filteredUsers = users.filter(user => user.id === id);
