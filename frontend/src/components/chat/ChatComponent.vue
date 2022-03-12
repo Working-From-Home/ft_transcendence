@@ -12,6 +12,7 @@
 			:showReactionEmojis="false"
 			:showAudio="false"
 			:showFiles="false"
+			:show-footer="!chatRoomsStore.isMute"
 			:room-actions="roomActions"
 			:menu-actions="menuActions"
 			:message-actions="messageactions"
@@ -34,13 +35,13 @@
 				Open Channel
 			</button>
 		</template>
-		<!-- <template #room-options="{}" v-if='currentUser.isAdmin === false '>
+		<template #room-options="{}" v-if='currentUser.isAdmin === false '>
 			<p></p>
-		</template> -->
+		</template>
 		</chat-window>
-		<chat-admin-modal :roomId="currentRoom.roomId" :currentUserId="currentUserId" />
+		<chat-admin-modal :roomId="currentRoom.roomId" :currentUserId="currentUserId"/>
 		<chat-new-room-modal/>
-		<chat-info-user-modal :UserInfo="UserInfo" :modalUserId="modalUserId" :modalUserName="modalUserName" :modalAvatar="modalAvatar" :menuMessageModal="menuMessageModal"/>
+		<chat-info-user-modal :isCurrent="isCurrent" :UserInfo="UserInfo" :modalUserId="modalUserId" :modalUserName="modalUserName" :modalAvatar="modalAvatar" :menuMessageModal="menuMessageModal"/>
 	</div>
 </template>
 
@@ -59,6 +60,7 @@ import { useAuthStore } from "@/store/auth";
 import { toNumber } from '@vue/shared';
 import { Modal } from "bootstrap";
 import UserService from '@/services/UserService';
+import moment from 'moment'
 
 interface CustomAction {
 	name: string
@@ -92,8 +94,10 @@ export default defineComponent({
 	created() {
 		this.currentUserId = toNumber(localStorage.getItem('userId'))
 		this.$socketapp.on("sendMessage", async (resp: IMessage[]) => {
-			if (resp[0].channelId === this.currentRoom.roomId)
-				this.chatRoomsStore.addMessage(resp);
+			this.chatRoomsStore.addMessageCurrent(resp, this.currentRoom.roomId);
+		});
+		this.$socketapp.on("changeParam", async (param: string, channelId: number, userId: number, content: Date | null) => {
+			this.chatRoomsStore.addParam(param, channelId, userId, content);
 		});
 	},
 	unmounted() {
@@ -126,7 +130,9 @@ export default defineComponent({
 			modalUserId: -1 as number,
 			modalUserName: "" as string,
 			modalAvatar: "" as string,
-			UserInfo: {}
+			UserInfo: {},
+			isMute: false,
+			isCurrent: false as boolean
 		}
 	},
 	mounted() {
@@ -138,13 +144,6 @@ export default defineComponent({
 			if (this.$route.path === "/chat")
 				return true;
 			return false;
-		},
-		isMuted() {
-			while (this.currentUser === null)
-				;
-			if (this.currentUser["mutedUntil"] === null)
-				return false;
-			return true;
 		},
 	},
 	methods: {
@@ -159,6 +158,7 @@ export default defineComponent({
 					return;
 				}}
 			);
+			this.isMuted();
 			if (this.size === "mini")
 				this.opened = false;
 			if (options.reset)
@@ -174,8 +174,8 @@ export default defineComponent({
 		},
 		async sendMessage({content, roomId}: {content: Message, roomId: number}) {
 			let send = content;
-			await ChatService.createMessage(roomId, {message: send}).catch(error => {
-				console.log("err", error.response)
+			await ChatService.createMessage(roomId, {message: send}).catch(({ response }) => {
+				alert(response.data.message)
 			});
 		},
 		menuActionHandler({ action = {} as CustomAction, roomId = {} as number }) {
@@ -198,6 +198,24 @@ export default defineComponent({
 			}
 			ChatService.leaveChannel(roomId);
 		},
+		async isMuted() {
+			if (this.currentUser["mutedUntil"] === null)
+				this.chatRoomsStore.isMute = false;
+			else {
+				let curentDate = moment.utc(this.currentUser.mutedUntil)
+				if (moment(curentDate).isBefore()) {
+					this.chatRoomsStore.isMute = false;
+					ChatService.muteUser(this.currentRoom.roomId, this.currentUserId, null);
+				} 
+				else {
+					this.chatRoomsStore.isMute = true;
+					setTimeout(() => {
+						this.chatRoomsStore.isMute = false;
+						ChatService.muteUser(this.currentRoom.roomId, this.currentUserId, null);
+					}, curentDate.diff(moment()));
+				}
+			}
+		},
 		menuMessageHandler({ action = {} as CustomAction, roomId = {} as number, message = {} as IMessage }) {
 			switch (action.name) {
 				case 'More informations':{
@@ -205,12 +223,12 @@ export default defineComponent({
 						this.modalUserId = message.senderId;
 						if (message.username)
 							this.modalUserName = message.username
+						this.isCurrent = this.modalUserId === this.currentUserId,
 						UserService.getAvatarOfUser(message.senderId).then((av) => (this.modalAvatar = av));
 						ChatService.searchUsersByTitle(this.modalUserName, this.currentRoom.roomId).then((resp: any) => {
 							for (const obj of resp) {
 								if (obj._id === this.modalUserId){
 									this.UserInfo = JSON.parse(JSON.stringify(obj));
-									console.log("obj", obj)
 								}
 							}
 						});

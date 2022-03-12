@@ -28,6 +28,7 @@ export interface IUserChannel {
 	isOwner: boolean;
     isAdmin: boolean;
     mutedUntil: Date | null;
+	bannedUntil: Date | null;
 }
 
 export interface IChannel {
@@ -54,6 +55,7 @@ interface ClientToServerEventsOnline {}
 interface ServerToClientEventsChat {
   sendChannels: (channels: IChannel[]) => void;
   sendChannel: (channels: IChannel[]) => void;
+  changeParam: (param: string, channelId: number, userId : number, content: Date | null) => void;
   sendMessage: (message: IMessage[]) => void;
   leaveChannel: (channelId: number) => void;
   sendUserChannels: (channelId: number, users: IUserChannel[]) => void;

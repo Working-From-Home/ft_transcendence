@@ -9,6 +9,7 @@ import { UserChannel } from "../entities/user-channel.entity";
 import { CreateChannelDto } from "../dtos/create-channel.dto";
 import { ISearchChannel, IChannel } from "shared/models/socket-events";
 import { UsersService } from "src/users/services/users.service";
+
 @Injectable()
 export class ChatService {
   constructor(
@@ -78,10 +79,19 @@ export class ChatService {
   async joinChannel(channelId: number, userId: number, data: any) {
     let channel = await this.userChannelRepo.findOne({where: [{userId, channelId}]})
 	let tmpChannel = await this.findChannelById(channelId);
-	if (tmpChannel.password != null && tmpChannel.password != data.password) {
-		return null;
+	if ((tmpChannel.password != null && tmpChannel.password != '') && tmpChannel.password != data.password) {
+		throw new UnauthorizedException('Wrong Password')
 	}
 	if (channel) {
+		if (channel.bannedUntil != null){
+			const d = new Date();
+			let time = d.getTime() + 3600000;
+			let myTime = channel.bannedUntil.getTime()
+			if (time < myTime)
+				throw new UnauthorizedException('You are banned from this room until ' + channel.bannedUntil.toDateString())
+			else
+				channel.bannedUntil = null;
+		}
 		channel.hasLeft = false;
     	return this.userChannelRepo.save(channel);
 	}
@@ -118,9 +128,15 @@ export class ChatService {
 
   async addAdmin(channelId: number, adminId: number, userId: number) {
     await this.findChannelById(channelId);
-    if (!this.isAdmin(adminId, channelId) || this.isOwner(userId, channelId))
+    if (await !this.isAdmin(adminId, channelId) || await this.isOwner(userId, channelId))
       throw new UnauthorizedException('You cannot promote this user');
-    return this.updateUserChannel(userId, channelId, { role: 'admin' });
+	const channelUser = await this.userChannelRepo.findOne({
+		where: [{ userId, channelId }]
+	});
+	if (!channelUser)
+      throw new NotFoundException('user not found');
+	channelUser.role = 'admin';
+	return this.userChannelRepo.save(channelUser);
   }
 
   async removeAdmin(channelId: number, adminId: number, userId: number) {
@@ -140,7 +156,6 @@ export class ChatService {
 	if (!channelUser)
       throw new NotFoundException('user not found');
 	channelUser.bannedUntil = date;
-	channelUser.hasLeft = true;
 	return this.userChannelRepo.save(channelUser);
   }
 
@@ -167,7 +182,6 @@ export class ChatService {
 	if (!channelUser)
       throw new NotFoundException('user not found');
 	channelUser.bannedUntil = null;
-	channelUser.hasLeft = false;
 	return this.userChannelRepo.save(channelUser);
   }
 
@@ -251,7 +265,6 @@ export class ChatService {
       .where("channel.id = :id", { id: channelId })
 	  .leftJoinAndSelect("channel.owner", "o")
       .getOne();
-	  console.log("channelOwner", channel, userId)
     return channel.owner.id === userId;
   }
 
@@ -288,6 +301,7 @@ export class ChatService {
 				(uc."userId" = c."ownerId") AS "isOwner",
 				(uc."role" = 'admin') AS "isAdmin",
 				uc."mutedUntil" AS "mutedUntil",
+				uc."bannedUntil" AS "bannedUntil",
 				u.username AS "username"
 		FROM "user_channel" uc
 			INNER JOIN "channel" c ON uc."channelId" = c."id"
@@ -323,7 +337,7 @@ export class ChatService {
 		FROM Channel c
 		LEFT JOIN user_channel u
 			ON u."channelId" = c.id
-		WHERE u."userId"=(${userId}) AND u."hasLeft"=FALSE`
+		WHERE u."userId"=(${userId}) AND u."hasLeft"=FALSE AND u."bannedUntil" IS NULL`
 	  );
 	return a;
   }

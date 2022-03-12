@@ -3,7 +3,6 @@ import { User } from "../../users/entities/user.entity";
 import { Channel } from "./channel.entity";
 
 @Entity()
-@Check(`case when ("bannedUntil" > CURRENT_TIMESTAMP) THEN "hasLeft" IS TRUE END`)
 export class UserChannel {
     @PrimaryColumn({ type: "integer" })
     userId: number;
