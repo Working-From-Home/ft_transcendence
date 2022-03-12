@@ -1,7 +1,7 @@
 <template class="container-fluid-sm">
   <section>
     <Header></Header>
-    <friend-list v-if="authStore.isLoggedIn"></friend-list>
+    <friendList v-if="authStore.isLoggedIn"></friendList>
     <div class="row align-items-center">
       <router-view v-slot="{ Component, route }">
         <transition name="fade" mode="out-in">
@@ -17,7 +17,7 @@
 <script setup lang="ts">
 import MiniChat from './components/chat/MiniChat.vue';
 import Header from './components/header/Header.vue';
-import FriendList from './components/OffcanvasFriendsList.vue';
+import FriendList from './components/FriendsList.vue';
 import PongSocket from './components/pong/PongSocket.vue';
 import { useAuthStore } from '@/store/auth';
 import { useRoute } from 'vue-router';

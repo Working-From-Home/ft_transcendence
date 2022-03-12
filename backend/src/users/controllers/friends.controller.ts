@@ -77,9 +77,10 @@ export class FriendsController {
     @Serialize(FriendshipDto)
     async removeFriendship(
         @Param('id', ParseIntPipe) lhsId: number,
-        @Param('friendId', ParseIntPipe) rhsId: number
+        @Param('friendId', ParseIntPipe) rhsId: number,
+        @Query('status') status: string
     ): Promise<Friendship> {
-        const friendship = await this.friendshipService.twoWaySearch(lhsId, rhsId, "accepted");
+        const friendship = await this.friendshipService.twoWaySearch(lhsId, rhsId, status);
         if (!friendship) { throw new NotFoundException('request not found'); }
         return await this.friendshipService.remove(friendship);
     }

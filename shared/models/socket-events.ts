@@ -68,6 +68,14 @@ interface ClientToServerEventsChat {
   searchUsers: (data: {title: string}, callback: (channels: any) => void) => void;
 }
 
+/// Friend events
+interface ServerToClientEventsFriend {
+  sendRequest: (applicantId: number, recipientId: number) => void;
+}
+interface ClientToServerEventsFriend {
+
+}
+
 // Common
 export interface ServerToClientEvents
 	extends 

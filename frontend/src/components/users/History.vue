@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import moment from 'moment';
 import UserService from '@/services/UserService';
 
@@ -9,6 +9,11 @@ const props = defineProps({
     required: true,
   },
 });
+
+const anonymous = {
+  id: 0,
+  username: 'anonymous user',
+};
 
 const data = ref<any>({});
 const count = ref<number>(0);
@@ -25,7 +30,12 @@ watch(
 
 function paginate(link: string) {
   UserService.getGamePagination(props.userId, link).then((response: any) => {
-    data.value = response.data;
+    let tmp: any = response.data;
+    for (let item of tmp.items) {
+      if (!item.looser) item.looser = anonymous;
+      if (!item.winner) item.winner = anonymous;
+    }
+    data.value = tmp;
     count.value = response.data.meta.itemCount;
     currentPage.value = response.data.meta.currentPage;
   });
@@ -45,7 +55,7 @@ function opponentId(wId: number, lId: number) {
 
 function formatScore(wId: number, wScore: number, lScore: number) {
   if (wId == props.userId) return wScore + ' - ' + lScore;
-  return lScore + ' - ' + wScore;
+  return lScore + ' - ' +  wScore;
 }
 
 function formatDate(s: string) {
@@ -61,11 +71,10 @@ function timeFromNow(s: string) {
 
 <template>
   <div class="container pt-3 px-md-5">
-    <h3 class="mb-2">Match history</h3>
-
+    <h3 class="mb-3 mt-1">Match history</h3>
     <table class="table rounded">
       <thead>
-        <tr class="text-white" style="border-color: white;">
+        <tr class="text-white" style="border-color: white">
           <th scope="col">Date</th>
           <th scope="col">Opponent</th>
           <th scope="col">Score</th>
@@ -82,13 +91,21 @@ function timeFromNow(s: string) {
             scope="row"
             data-bs-toggle="tooltip"
             data-bs-placement="top"
+            class="fw-normal"
             :title="formatDate(game.createdAt)"
           >
             {{ timeFromNow(game.createdAt) }}
           </th>
-          <td class="table-value">
+          <td class="table-value fw-normal">
+            <span
+              v-if="opponentId(game.winner.id, game.looser.id) === 0"
+              class="fst-italic"
+            >
+              {{ opponentName(game.winner, game.looser) }}
+            </span>
+
             <router-link
-              class="link"
+              v-else
               :to="{
                 name: 'profile',
                 params: { userid: opponentId(game.winner.id, game.looser.id) },
@@ -97,7 +114,7 @@ function timeFromNow(s: string) {
               {{ opponentName(game.winner, game.looser) }}
             </router-link>
           </td>
-          <td class="table-value">
+          <td class="table-value fw-normal">
             {{
               formatScore(game.winner.id, game.winnerScore, game.looserScore)
             }}
@@ -146,13 +163,15 @@ function timeFromNow(s: string) {
         </li>
       </ul>
     </nav>
-
-    <p v-if="!count" class="fst-italic">no game played</p>
+    <div v-if="!count" class="fst-italic">
+      <hr />
+      <p>no game played</p>
+    </div>
   </div>
 </template>
 
 <style scoped>
-.link {
+a:link {
   text-decoration: none;
 }
 
@@ -165,11 +184,7 @@ function timeFromNow(s: string) {
   color: black;
 }
 
-.table {
-  color: #679D7E;
-}
-
-.table>:not(caption)>*>* {
+.table > :not(caption) > * > * {
   border-bottom-width: 0 !important;
 }
 </style>
