@@ -121,11 +121,12 @@ function clearErrorMessage() {
           <p>What do you want to do ?</p>
           <button
             type="button"
-            class="btn btn-success mx-3"
+            class="btn btn-success mx-3 my-1"
             data-bs-dismiss="modal"
             @click="uploadFile"
+            style="min-width:80px"
           >
-            Upload a new avatar
+            Upload
           </button>
           <input
             v-if="props.isOwner"
@@ -141,8 +142,9 @@ function clearErrorMessage() {
             class="btn btn-danger mx-3"
             data-bs-dismiss="modal"
             @click="restoreAvatar"
+            style="min-width:80px"
           >
-            restore my default avatar
+            Restore
           </button>
         </div>
       </div>

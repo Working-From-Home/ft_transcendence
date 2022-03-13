@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import moment from 'moment';
 import UserService from '@/services/UserService';
 
@@ -74,7 +74,7 @@ function timeFromNow(s: string) {
     <h3 class="mb-3 mt-1">Match history</h3>
     <table class="table rounded">
       <thead>
-        <tr class="text-white" style="border-color: white">
+        <tr class="text-white">
           <th scope="col">Date</th>
           <th scope="col">Opponent</th>
           <th scope="col">Score</th>
@@ -87,16 +87,16 @@ function timeFromNow(s: string) {
           :class="isWinner(game.winner.id) ? 'table-success' : 'table-danger'"
         >
           <th
-            id="date"
+            :id="`date${game.id}`"
+            class="table-value fw-normal"
             scope="row"
             data-bs-toggle="tooltip"
             data-bs-placement="top"
-            class="fw-normal"
             :title="formatDate(game.createdAt)"
           >
             {{ timeFromNow(game.createdAt) }}
           </th>
-          <td class="table-value fw-normal">
+          <td class="table-value">
             <span
               v-if="opponentId(game.winner.id, game.looser.id) === 0"
               class="fst-italic"
@@ -114,7 +114,7 @@ function timeFromNow(s: string) {
               {{ opponentName(game.winner, game.looser) }}
             </router-link>
           </td>
-          <td class="table-value fw-normal">
+          <td class="table-value">
             {{
               formatScore(game.winner.id, game.winnerScore, game.looserScore)
             }}
@@ -170,7 +170,13 @@ function timeFromNow(s: string) {
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
+
+a, a:hover, a:focus {
+  outline-style: none;
+  box-shadow: none;
+}
+
 a:link {
   text-decoration: none;
 }
@@ -180,11 +186,21 @@ a:link {
 }
 
 .table-value {
-  font-weight: bold;
+  /* font-weight: bold; */
   color: black;
 }
 
 .table > :not(caption) > * > * {
   border-bottom-width: 0 !important;
 }
+
+.page-item .page-link {
+  background-color: transparent!important;
+}
+.page-link {
+  color: white;
+}
+
+
+
 </style>

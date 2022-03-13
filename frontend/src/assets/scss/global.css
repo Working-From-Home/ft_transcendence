@@ -1,0 +1,6 @@
+a,
+a:hover,
+a:focus {
+    outline-style: none;
+    box-shadow: none;
+ }

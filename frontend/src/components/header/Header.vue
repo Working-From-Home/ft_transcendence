@@ -68,21 +68,23 @@ function logout() {
         <div class="collapse navbar-collapse" id="connectedNav">
           <!-- search bar -->
           <div class="ms-auto ps-lg-5">
-            <div class="ms-lg-5 ps-lg-4">
-              <SearchBar></SearchBar>
+            <div class="ms-lg-5 ps-lg-5">
+              <div class="ms-lg-3">
+                <SearchBar></SearchBar>
+              </div>
             </div>
           </div>				
           <ul id="navbar" class="navbar-nav d-lg-flex ms-auto">
             <!-- pong -->
-            <li class="nav-item me-2 ms-lg-auto">
+            <li class="nav-item me-lg-3 ms-lg-auto">
               <router-link to="/pong" class="nav-link active">Pong</router-link>
             </li>
             <!-- chat -->
-            <li class="nav-item me-2">
+            <li class="nav-item me-lg-3">
               <router-link to="/chat" class="nav-link active">Chat</router-link>
             </li>
             <!-- profile dropdown (only on large screen) -->
-            <li class="nav-item me-2 dropdown d-none d-lg-inline-block">
+            <li class="nav-item me-4 dropdown d-none d-lg-inline-block">
               <a
                 class="nav-link active"
                 href="#"
@@ -109,6 +111,16 @@ function logout() {
                     >Profile</router-link
                   >
                 </li>
+                <li>
+                  <a
+                    class="dropdown-item clickable"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#offc"
+                    aria-controls="offc"
+                  >
+                    Friends
+                  </a>
+                </li>
                 <li v-if="authStore.isLoggedIn">
                   <router-link
                     class="logout dropdown-item"
@@ -120,7 +132,7 @@ function logout() {
               </ul>
             </li>
             <!-- profile (only on small screen) -->
-            <li class="mx-2 d-lg-none">
+            <li class="d-lg-none">
               <router-link
                 :to="{
                   name: 'profile',
@@ -130,8 +142,19 @@ function logout() {
                 >Profile</router-link
               >
             </li>
+            <!-- friends (only on small screen)-->
+            <li class="d-lg-none">
+              <a
+                class="nav-link active clickable"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#offc"
+                aria-controls="offc"
+              >
+                Friends
+              </a>
+            </li>
             <!-- logout (only on small screen) -->
-            <li v-if="authStore.isLoggedIn" class="mx-2 d-lg-none">
+            <li v-if="authStore.isLoggedIn" class="d-lg-none">
               <router-link class="logout nav-link active" to="/" @click="logout"
                 >Logout
               </router-link>
@@ -158,8 +181,6 @@ function logout() {
 @import '@/../node_modules/bootstrap/scss/variables';
 @import '@/../node_modules/bootstrap/scss/mixins';
 
-$active-link: #42b983;
-
 #navbar a.router-link-exact-active {
   color: $active-link;
 }
@@ -183,10 +204,12 @@ $active-link: #42b983;
     border-radius: 0.92em;
   }
 }
-
 .ligth-dropdown {
   border-top: none;
   border-top-left-radius: 0px;
   border-top-right-radius: 0px;
+}
+.clickable {
+  cursor: pointer;
 }
 </style>

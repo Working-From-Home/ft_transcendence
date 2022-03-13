@@ -1,8 +1,15 @@
+<script setup lang="ts">
+import { useAuthStore } from '@/store/auth';
+import Index from '@/components/Index.vue';
+
+const authStore = useAuthStore();
+</script>
+
 <template>
-  <div id="jumbo" class="container my-5 px-5">
+  <div id="jumbo" class="container my-2 px-5">
     <div class="row g-3 px-md-5 mt-md-2">
       <div class="col">
-        <div class="bg-info bg-opacity-50 bg-gradient rounded p-3">
+        <div class="bg-inverted-gradient rounded p-3">
 					<h1 class="display-5 mt-3 fw-bold">Transcendence</h1>
 					<i class="fs-6">a 42 project by tlecoeuv,<br>hwinston, juligonz and alesanto</i>
 					<Index class="m-auto mt-4 mb-3 col-md-8 fs-4" />
@@ -12,7 +19,7 @@
 
     <div v-if="authStore.isLoggedIn" class="row g-3 px-md-5">
       <div class="col-12 col-ms-12 col-md-6 pt-3">
-        <div class="h-100 bg-success bg-opacity-75 bg-gradient rounded p-3">
+        <div class="h-100 bg-inverted-gradienta rounded p-3">
           <h2 class="mt-3">Challenge Someone</h2>
           <p>You can play now</p>
           <router-link to="/pong" class="btn btn-outline-light mb-3">Pong</router-link>
@@ -20,7 +27,7 @@
       </div>
 
       <div class="col-12 col-ms-12 col-md-6 pt-md-3">
-        <div class="h-100 bg-success bg-opacity-75 bg-gradient rounded p-3">
+        <div class="h-100 bg-inverted-gradienta rounded p-3">
           <h2 class="mt-3">Talk to everyone</h2>
           <p>You can use the chat now</p>
           <router-link to="/chat" class="nav-link active">
@@ -32,22 +39,13 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { useAuthStore } from '@/store/auth';
-import Index from '../components/Index.vue';
+<style lang="scss" scoped>
 
-const authStore = useAuthStore();
-</script>
+.bg-inverted-gradient {
+  background: linear-gradient(180deg, rgba(red, 0), rgba(red, .2))
+}
 
-<style scoped>
-img {
-  width: 50px;
-  height: 50px;
-}
-#welcomeTexte {
-  text-align: center;
-}
-#jumbo {
-  background-color: blue-700;
+.bg-inverted-gradienta {
+  background: linear-gradient(180deg, rgba(red, .2), rgba(yellow, 0.1))
 }
 </style>

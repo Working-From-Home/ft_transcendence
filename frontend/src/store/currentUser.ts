@@ -7,6 +7,7 @@ import { IUser } from '@/models/IUser';
 import axios, { AxiosError } from 'axios';
 import { IError } from '@/models/IError';
 import { IFriendLists } from '@/models/IFriendLists';
+import { useStatusStore } from './modules/status/status';
 
 export interface State {
   userId: number | null;

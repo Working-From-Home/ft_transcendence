@@ -23,29 +23,26 @@ onUpdated(() => {
 </script>
 
 <template>
-  <div class="container my-5 px-5">
+  <div class="container my-2 px-5">
     <!-- row 1 -->
     <div class="row g-3 px-md-5 mt-md-2">
-      <!-- avatar -->
       <div class="col-12 col-ms-12 col-md-3">
         <div
-          class="bg-info bg-opacity-25 bg-gradient rounded d-flex flex-column justify-content-center h-100"
+          class="bg-inverted-gradient rounded d-flex flex-column justify-content-center h-100"
         >
           <avatar v-cloak :userId="userId" :isOwner="isOwner"></avatar>
         </div>
       </div>
-      <!-- info card -->
       <div class="col pt-ms-3">
-        <div class="bg-info bg-opacity-25 bg-gradient rounded h-100">
+        <div class="bg-inverted-gradient rounded h-100">
           <info v-cloak :userId="userId" :isOwner="isOwner"></info>
         </div>
       </div>
     </div>
     <!-- row 2 -->
     <div class="row g-3 px-md-5">
-      <!-- match history -->
       <div class="col pt-3">
-        <div class=" bg-gradient rounded h-100">
+        <div class="bg-inverted-gradienta rounded h-100">
           <history v-cloak :userId="userId"></history>
         </div>
       </div>
@@ -53,4 +50,19 @@ onUpdated(() => {
   </div>
 </template>
 
-<style scoped></style>
+<style lang="scss" scoped>
+@import '@/../node_modules/bootstrap/scss/functions';
+@import '@/../node_modules/bootstrap/scss/variables';
+@import '@/../node_modules/bootstrap/scss/mixins';
+
+// .bg-inverted-gradient {
+//   background: linear-gradient(180deg, rgba(white, 0), rgba(white, .15))
+// }
+.bg-inverted-gradient {
+  background: linear-gradient(180deg, rgba(red, 0), rgba(red, .15))
+}
+
+.bg-inverted-gradienta {
+  background: linear-gradient(180deg, rgba(red, .15), rgba(red, 0))
+}
+</style>

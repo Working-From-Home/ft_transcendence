@@ -6,10 +6,12 @@ import { useStatusStore } from '@/store/modules/status/status';
 import ChatService from '../../services/ChatService';
 import { IChannel } from 'shared/models/socket-events';
 import socket from '@/socketApp';
+import { useCurrentUserStore } from '@/store/currentUser';
 
 const authStore = useAuthStore();
 const statusStore = useStatusStore();
 const chatRoomsStore = useChatRoomsStore();
+const currentUserStore = useCurrentUserStore();
 
 const connect = computed<boolean>(() => {
   if (authStore.isLoggedIn) {
@@ -17,7 +19,7 @@ const connect = computed<boolean>(() => {
       token: `${authStore.token}`,
     };
     socket.connect();
-
+  
     socket.on('connectedUsers', (userIds: number[]) => {
       console.log(`userIds: ${userIds}`);
       statusStore.setOnlineUsers(userIds);
@@ -45,6 +47,20 @@ const connect = computed<boolean>(() => {
     });
     socket.on('leaveChannel', async (channelId: number) => {
       chatRoomsStore.leaveChannel(channelId);
+    });
+    /* friends events */
+    socket.on('requestReceived', () => {
+      currentUserStore.updatePendings(authStore.userId as number);
+    });
+    socket.on('requestAccepted', () => {
+      currentUserStore.updateSent(authStore.userId as number);
+      currentUserStore.updateFriends(authStore.userId as number);
+    });
+    socket.on('requestDeclined', () => {
+      currentUserStore.updateSent(authStore.userId as number);
+    });
+    socket.on('friendshipEnded', () => {
+      currentUserStore.updateFriends(authStore.userId as number);
     });
   }
   return authStore.isLoggedIn;
