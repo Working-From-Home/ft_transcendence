@@ -70,24 +70,27 @@ interface ClientToServerEventsChat {
 
 /// Friend events
 interface ServerToClientEventsFriend {
-  sendRequest: (applicantId: number, recipientId: number) => void;
+  requestReceived: () => void;
+  requestAccepted: () => void;
+  requestDeclined: () => void;
+  friendshipEnded: () => void;
 }
-interface ClientToServerEventsFriend {
-
-}
+interface ClientToServerEventsFriend {}
 
 // Common
 export interface ServerToClientEvents
 	extends 
 		ServerToClientEventsOnline,
-    ServerToClientEventsChat
+    ServerToClientEventsChat,
+    ServerToClientEventsFriend
 {
 	error: (error: any) => void;
 }
 
 export interface ClientToServerEvents
   extends ClientToServerEventsOnline,
-  ClientToServerEventsChat
+  ClientToServerEventsChat,
+  ClientToServerEventsFriend
 {
 
 }
