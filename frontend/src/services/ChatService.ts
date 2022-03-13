@@ -40,7 +40,7 @@ class ChatService {
 	}
 	/** Promote a user to admin */
 	promoteUser(channelId: number, userId: number): Promise<any> {
-		return http.post(`/channels/${channelId}/admin/${userId}`)
+		return http.put(`/channels/${channelId}/admin/${userId}`)
 	}
 	/** Revoque admin to user */
 	revokeAdmin(channelId: number, userId: number): Promise<any> {

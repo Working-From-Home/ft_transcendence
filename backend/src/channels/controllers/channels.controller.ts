@@ -94,8 +94,8 @@ export class ChannelsController {
     async leaveChannel(
         @Req() request,
         @Param('channelId') channelId: number ) {
-        let updateResult = await this.chatService.leaveChannel(channelId, parseInt(request.user.sub));
-        const user = this.appGateway.server.in(`user:${request.user.sub}` ).socketsLeave(`channel:${channelId}`)
+        await this.chatService.leaveChannel(channelId, parseInt(request.user.sub));
+        this.appGateway.server.in(`user:${request.user.sub}` ).socketsLeave(`channel:${channelId}`)
 		this.chatService.getChannel(channelId).then( (y) => {
 	 	 	this.appGateway.server.in("channel:" + channelId).emit("sendChannel", y);
 	 	})
@@ -110,9 +110,19 @@ export class ChannelsController {
 		@Body() content: {date: Date}
 	) {
 		const adminId = parseInt(request.user.sub);
-		if (!content.date)
-			return await this.chatService.unmuteUser(channelId, adminId, userId);
-		return await this.chatService.muteUser(channelId, adminId, userId, content.date);
+		let user: UserChannel;
+		if (!content.date){
+			user = await this.chatService.unmuteUser(channelId, adminId, userId);
+			this.appGateway.server.in("user:" + userId).emit("changeParam", "unmute", channelId, userId, null);
+		}
+		else {
+			user = await this.chatService.muteUser(channelId, adminId, userId, content.date);
+			this.chatService.getChannel(channelId).then( (y) => {
+				this.appGateway.server.in("channel:" + channelId).emit("sendChannel", y);
+			})
+			this.appGateway.server.in("user:" + userId).emit("changeParam", "mute", channelId, userId, content.date);
+		}
+		return user;
 	}
 
 	@Put('/channels/:channelId/ban/:userId')
@@ -123,9 +133,22 @@ export class ChannelsController {
 		@Body() content: {date: Date}
 	) {
 		const adminId = parseInt(request.user.sub);
-		if (!content.date)
-			return await this.chatService.unbanUser(channelId, adminId, userId);
-		return await this.chatService.banUser(channelId, adminId, userId, content.date);
+		let user: UserChannel;
+		if (!content.date){
+			user = await this.chatService.unbanUser(channelId, adminId, userId);
+			this.chatService.getChannel(channelId).then( (y) => {
+				this.appGateway.server.in("channel:" + channelId).emit("sendChannel", y);
+			})
+			this.appGateway.server.in("user:" + userId).emit("changeParam", "unban", channelId, userId, null);
+		}
+		else { 
+			user = await this.chatService.banUser(channelId, adminId, userId, content.date)
+			this.chatService.getChannel(channelId).then( (y) => {
+				this.appGateway.server.in("channel:" + channelId).emit("sendChannel", y);
+			})
+			this.appGateway.server.in("user:" + userId).emit("changeParam", "ban", channelId, userId, content.date);
+		}
+		return user;
 	}
 
 	@Put('/channels/:channelId/admin/:userId')
@@ -134,7 +157,12 @@ export class ChannelsController {
 		@Param('channelId') channelId: number,
 		@Param('userId') userId: number,
 	) {
-		return await this.chatService.addAdmin(channelId, parseInt(request.user.sub), userId);
+		await this.chatService.addAdmin(channelId, parseInt(request.user.sub), userId);
+		this.chatService.getChannel(channelId).then( (y) => {
+			this.appGateway.server.in("channel:" + channelId).emit("sendChannel", y);
+		})
+		this.appGateway.server.in("user:" + userId).emit("changeParam", "admin", channelId, userId, null);
+		return ;
 	}
 
 	@Delete('/channels/:channelId/admin/:userId')

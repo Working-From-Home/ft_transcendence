@@ -30,7 +30,7 @@
 </template>
 
 <script lang='ts'>
-import { computed, defineComponent } from '@vue/runtime-core';
+import { defineComponent } from '@vue/runtime-core';
 import ChatService from "../../services/ChatService";
 
 export default defineComponent({
@@ -46,8 +46,11 @@ export default defineComponent({
 			alert("please put a name")
 			return
 		}
-		ChatService.createChannel({title: this.ChannelName, password: this.password}).then( resp =>{})
-		.catch( err => {console.log(err)})
+		ChatService.createChannel({title: this.ChannelName, password: this.password})
+			.then( resp =>{})
+			.catch(({ response }) => {
+			alert(response.data.message)
+   		});
     }
   }
 })
