@@ -54,7 +54,7 @@
 </template>
 
 <script lang='ts'>
-import { computed, defineComponent } from '@vue/runtime-core';
+import { defineComponent } from '@vue/runtime-core';
 import { ISearchChannel } from 'shared/models/socket-events';
 import ChatService from "../../services/ChatService";
 import { Modal } from "bootstrap";
@@ -87,16 +87,13 @@ export default defineComponent({
 		let results = JSON.parse(JSON.stringify(this.results))
 		for (const obj of results) {
 			if (obj["title"] === this.searchTerm) {
-				if (obj["password"] != null){
+				if (obj["password"] != '' && obj["password"] != null){
 					this.joinPrivateRoom = obj;
 					this.passwordModal.show();
 				}
 				else{
-					ChatService.joinChannel(obj["id"], {password: null}).then( resp => {
-						console.log(resp)
-					}).catch(error => {
-						console.log("err", error.response)
-						alert(error.response)
+					ChatService.joinChannel(obj["id"], {password: null}).catch(({ response }) => {
+						alert(response.data.message)
 					});
 				}
 				return ;

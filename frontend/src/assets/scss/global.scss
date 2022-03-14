@@ -1,0 +1,62 @@
+/* disable outline on focus */
+
+a, a:hover, a:focus {
+	outline-style: none;
+	box-shadow: none;
+}
+button, button:hover, button:focus {
+	outline-style: none;
+	box-shadow: none;
+}
+input, input:hover, input:focus {
+	outline-style: none;
+	box-shadow: none;
+}
+
+/* remove arrow from input with datalist */
+
+input::-webkit-calendar-picker-indicator {
+  position: absolute;
+  opacity: 0;
+}
+
+/* gradients */
+
+.gradient-blue-inverted {
+  background: linear-gradient(180deg, rgba(#74A4BC, 0), rgba(#74A4BC, .15))
+}
+.gradient-blue {
+  background: linear-gradient(180deg, rgba(#74A4BC, .15), rgba(#74A4BC, 0))
+}
+
+.gradient-green-inverted {
+  background: linear-gradient(180deg, rgba(#86CD82, 0), rgba(#86CD82, .15))
+}
+.gradient-green {
+  background: linear-gradient(180deg, rgba(#86CD82, .15), rgba(#86CD82, 0))
+}
+
+.gradient-yellow-inverted {
+  background: linear-gradient(180deg, rgba(#FCCA46, 0), rgba(#FCCA46, .15))
+}
+.gradient-yellow {
+  background: linear-gradient(180deg, rgba(#FCCA46, .15), rgba(#FCCA46, 0))
+}
+
+/* cursor */
+
+h1, h2, h3, h4, h5, h6, p, span, th, td {
+	cursor: default;
+}
+
+.clickable-cursor {
+  cursor: pointer;
+}
+
+a:link {
+  text-decoration: none;
+}
+
+.bg-app {
+  background-color: $app-background;
+}

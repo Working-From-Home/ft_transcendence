@@ -24,7 +24,10 @@ export class AuthService {
             throw new BadRequestException('email in use');
         }
         const encryptedPasword = await this.encryptPassword(password);
-        const user = await this.usersService.createWithGeneratedUsername(email, encryptedPasword);
+        const user = await this.usersService.create({
+          email,
+          password: encryptedPasword,
+        });
         return this.generateAccessToken(user);
     }
 
@@ -82,9 +85,9 @@ export class AuthService {
       } 
   	}
 
-		verifyJwt(jwt: string): Promise<JwtPayload> {
-			return this.jwtService.verifyAsync<JwtPayload>(jwt);
-		}
+  verifyJwt(jwt: string): Promise<JwtPayload> {
+    return this.jwtService.verifyAsync<JwtPayload>(jwt);
+  }
 
   async getPayloadFromToken(token: string): Promise<JwtPayload> {
     return this.jwtService
@@ -106,28 +109,61 @@ export class AuthService {
     throw new Error('Method not implemented.');
   }
 
-  async signInWithFortyTwo(req) {
-    throw new Error('Method not implemented.');
+  async signInFortyTwo(req) {
+    if (!req.user) throw new BadRequestException('Something went very wrong');
+  
+    let user = (await this.usersService.findBy({ where: [{ fortyTwoSub: req.user.sub }] }))[0];
+    if (!user)
+      throw new ForbiddenException('42 account not found, register instead ?');
+    return this.generateAccessToken(user);
   }
 
-  async signInWithGoogle(req) {
+  async signInGoogle(req) {
+    if (!req.user) throw new BadRequestException('Something went very wrong');
+  
+    let user = (await this.usersService.findBy({ where: [{ googleSub: req.user.sub }] }))[0];
+    if (!user)
+      throw new ForbiddenException('Google account not found, register instead ?');
+    return this.generateAccessToken(user);
+  }
+
+  async signUpFortyTwo(req) {
     if (!req.user) throw new BadRequestException();
 
-    let user: User = (await this.usersService.findBy({ where: [{ googleSub: req.user.sub }] }))[0];
-    if (user) return this.generateAccessToken(user[0]);
+    let user = (await this.usersService.findBy({ where: [{ fortyTwoSub: req.user.sub }] }))[0];
+    if (user)
+      throw new ForbiddenException('42 accound already registered, signin instead.');
 
     user = (await this.usersService.findBy({ where: [{ email: req.user.email }]}))[0];
     if (user)
-      throw new ForbiddenException('Your google email is already in use, but your profile is not linked to google.')
-
+      throw new ForbiddenException('42 email is already in use, but has not been registered via 42.');
     try {
-      let newUser = new User()
-      newUser.username = "noob" + Math.floor(Math.random() * 90000000) + 1
-      newUser.email = req.user.email
-      newUser.googleSub = req.user.sub
-      newUser.googleAccessToken = req.user.accessToken
+      const newUser = await this.usersService.create({
+        email: req.user.email,
+        fortyTwoSub: req.user.sub,
+        fortyTwoAccessToken: req.user.accessToken,
+      })
+      return this.generateAccessToken(newUser)
+    } catch(err) {
+      throw new Error(err)
+    }
+  }
 
-      newUser = await this.usersService.store(newUser)
+  async signUpGoogle(req) {
+    if (!req.user) throw new BadRequestException();
+
+    let user = (await this.usersService.findBy({ where: [{ googleSub: req.user.sub }] }))[0];
+    if (user)
+      throw new ForbiddenException('Google account already registered, signin instead.');
+    user = (await this.usersService.findBy({ where: [{ email: req.user.email }]}))[0];
+    if (user)
+      throw new ForbiddenException('Google email is already in use, but has not been registered via google.');
+    try {
+      const newUser = await this.usersService.create({
+        email: req.user.email,
+        googleSub: req.user.sub,
+        googleAccessToken: req.user.accessToken,
+      })
       return this.generateAccessToken(newUser)
     } catch(err) {
       throw new Error(err)

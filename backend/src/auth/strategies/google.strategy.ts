@@ -9,7 +9,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     super({
       clientID: config.get<string>('GOOGLE_CLIENT_ID'),
       clientSecret: config.get<string>('GOOGLE_SECRET'),
-      callbackURL: config.get<string>('BACKEND_SERVER_URI') + '/auth/google/callback',
+      callbackURL: config.get<string>('OAUTH_REDIRECT_URI'),
       scope: ['openid', 'email', 'profile'],
     });
   }
@@ -26,7 +26,8 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
       firstName: name.givenName, // useless
       lastName: name.familyName, // useless
       picture: photos[0].value,
-      accessToken
+      accessToken,
+      refreshToken,
     }
     done(null, user);
   }

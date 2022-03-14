@@ -1,7 +1,6 @@
 import { PassportStrategy } from '@nestjs/passport';
-import { Strategy } from 'passport-42';
+import { Strategy, VerifyCallblack} from 'passport-42';
 import { Injectable } from '@nestjs/common';
-import { VerifyCallback } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
@@ -10,7 +9,7 @@ export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {
     super({
       clientID: config.get<string>('FORTY_TWO_CLIENT_ID'),
       clientSecret: config.get<string>('FORTY_TWO_SECRET'),
-      callbackURL: config.get<string>('BACKEND_SERVER_URI') + '/auth/42/callback',
+      callbackURL: config.get<string>('OAUTH_REDIRECT_URI'),
       scope: ['public']
     });
   }
@@ -19,14 +18,17 @@ export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {
     accessToken: string,
     refreshToken: string,
     profile: any,
-    // done: VerifyCallback,
+    done: VerifyCallblack,
   ): Promise<any> {
-		const {name, email, photo} = profile
-		const user = {
-			username:name,
-			email: email,
-			
+		const {id, emails, username, photos } = profile
+    const user = {
+      sub: id,
+      email: emails[0].value,
+			username: username,
+      picture: photos[0].value,
+      accessToken,
+      refreshToken,
 		}
-    console.log(profile)
+    done(null, user);
 	}
 }

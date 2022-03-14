@@ -17,6 +17,9 @@ JWT_SECRET=my_secret
 # example: http://e2r5p13:3000 or http://10.05.155.14:3000
 BACKEND_SERVER_URI=http://localhost:3000
 
+# the path must always be [host]:[frontend-port]/signup/oauth
+OAUTH_REDIRECT_URI=http://localhost:8080/signup/oauth
+
 # Either development or production
 NODE_ENV=development
 
@@ -56,13 +59,19 @@ docker-compose exec backend zsh
 
 #### Setup 42 oAuth
 - Register an app -> https://profile.intra.42.fr/oauth/applications/new
-  - Name the app
-  - Set the redirect uri
-    - If run in local only ->
+  - Name the app.
+  - Set the redirect uri (the value of `OAUTH_REDIRECT_URI` from .env)
 - Copy paste `uid` and `secret` in their respective variables inside the `.env` file.
-  - `FT_API_UID`
-  - `FT_API_SECRET`
-
+  - `FORTY_TWO_CLIENT_ID`
+  - `FORTY_TWO_SECRET`
+#### Setup Google oAuth
+- Create an `Oauth client id` here -> https://console.cloud.google.com/apis/credentials
+	- Application type -> `Web application`
+  - Name the app.
+  - Set the authorised redirect uri (the value of `OAUTH_REDIRECT_URI` from .env)
+- Copy paste `uid` and `secret` in their respective variables inside the `.env` file.
+  - `GOOGLE_CLIENT_ID`
+  - `GOOGLE_SECRET`
 
 #### Access to ft_pong DB from pgAdmin UI
 - open: http://localhost:8081/

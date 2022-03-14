@@ -53,10 +53,15 @@
     <a
       class="btn btn-default btn-oauth rounded-circle rounded-circle"
       role="button"
+      v-on:click="registerGoogle"
     >
       <font-awesome-icon :icon="['fab', 'google']" color="white" size="5x" />
     </a>
-    <a class="btn btn-default btn-oauth" role="button">
+    <a
+      class="btn btn-default btn-oauth"
+      role="button"
+      v-on:click="registerFortyTwo"
+    >
       <img src="../../assets/logo42-white.svg" width="80" />
     </a>
     <p>
@@ -80,6 +85,7 @@ import { useAuthStore } from '@/store/auth';
 import { ref } from 'vue';
 import { AuthMode } from '@/views/auth/auth.interface';
 import { useRouter } from 'vue-router';
+import { openSignInWindow } from './OauthPopup';
 
 const emit = defineEmits<{
   (e: 'changeForm', value: AuthMode): void;
@@ -93,12 +99,42 @@ const passwordConfirm = ref('');
 const errorMessage = ref('');
 
 const register = async () => {
-  const e = await authStore.signUp(email.value, password.value);
+  const e = await authStore.signUpLocal(email.value, password.value);
   if (e) errorMessage.value = e.message;
   else {
     authStore.registerInProgress = true;
     emit('changeForm', AuthMode.RegisterOptional);
   }
+};
+
+const receiveMessageGoogle = async (event: MessageEvent<any>) => {
+  window.removeEventListener('message', receiveMessageGoogle);
+  const e = await authStore.signUpGoogle(event.data);
+  if (e) errorMessage.value = e.message;
+  else {
+    authStore.registerInProgress = true;
+    emit('changeForm', AuthMode.RegisterOptional);
+  }
+};
+
+const registerGoogle = async () => {
+  window.addEventListener('message', receiveMessageGoogle);
+  openSignInWindow(`${process.env.VUE_APP_BACKEND_SERVER_URI}/auth/google/`);
+};
+
+const receiveMessageFortyTwo = async (event: MessageEvent<any>) => {
+  window.removeEventListener('message', receiveMessageFortyTwo);
+  const e = await authStore.signUpFortyTwo(event.data);
+  if (e) errorMessage.value = e.message;
+  else {
+    authStore.registerInProgress = true;
+    emit('changeForm', AuthMode.RegisterOptional);
+  }
+};
+
+const registerFortyTwo = async () => {
+  window.addEventListener('message', receiveMessageFortyTwo);
+  openSignInWindow(`${process.env.VUE_APP_BACKEND_SERVER_URI}/auth/42/`);
 };
 
 </script>

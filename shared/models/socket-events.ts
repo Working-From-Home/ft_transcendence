@@ -28,6 +28,7 @@ export interface IUserChannel {
 	isOwner: boolean;
     isAdmin: boolean;
     mutedUntil: Date | null;
+	bannedUntil: Date | null;
 }
 
 export interface IChannel {
@@ -54,6 +55,7 @@ interface ClientToServerEventsOnline {}
 interface ServerToClientEventsChat {
   sendChannels: (channels: IChannel[]) => void;
   sendChannel: (channels: IChannel[]) => void;
+  changeParam: (param: string, channelId: number, userId : number, content: Date | null) => void;
   sendMessage: (message: IMessage[]) => void;
   leaveChannel: (channelId: number) => void;
   sendUserChannels: (channelId: number, users: IUserChannel[]) => void;
@@ -68,18 +70,29 @@ interface ClientToServerEventsChat {
   searchUsers: (data: {title: string}, callback: (channels: any) => void) => void;
 }
 
+/// Friend events
+interface ServerToClientEventsFriend {
+  requestReceived: () => void;
+  requestAccepted: () => void;
+  requestDeclined: () => void;
+  friendshipEnded: () => void;
+}
+interface ClientToServerEventsFriend {}
+
 // Common
 export interface ServerToClientEvents
 	extends 
 		ServerToClientEventsOnline,
-    ServerToClientEventsChat
+    ServerToClientEventsChat,
+    ServerToClientEventsFriend
 {
 	error: (error: any) => void;
 }
 
 export interface ClientToServerEvents
   extends ClientToServerEventsOnline,
-  ClientToServerEventsChat
+  ClientToServerEventsChat,
+  ClientToServerEventsFriend
 {
 
 }
