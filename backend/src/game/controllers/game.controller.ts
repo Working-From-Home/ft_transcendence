@@ -5,9 +5,10 @@ import { Game } from '../entities/game.entity';
 import { GameService } from '../services/game.service';
 import { GamesPaginationDto } from '../dtos/games-pagination.dto'
 import { Serialize } from '../../interceptors/serialize.interceptor';
+import JwtTwoFaGuard from 'src/auth/guards/jwt-two-fa.guard';
 
 @Controller('game')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, JwtTwoFaGuard)
 export class GameController {
 	constructor(private gameService : GameService) {}
 

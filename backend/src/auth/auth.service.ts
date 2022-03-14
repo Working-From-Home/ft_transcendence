@@ -7,8 +7,9 @@ import { User } from '../users/entities/user.entity';
 
 const scrypt = promisify(_scrypt);
 
-interface JwtPayload {
-  sub: number;
+export interface JwtPayload {
+  sub: number,
+	isTwoFaAuthenticated : boolean
 }
 
 @Injectable()
@@ -73,13 +74,13 @@ export class AuthService {
         return result;
     }
 
-  private generateAccessToken(user: User) {
-      const payload: JwtPayload = {sub: user.id };
+  	generateAccessToken(user: User, isTwoFaAuth = false) {
+      const payload: JwtPayload = {sub: user.id, isTwoFaAuthenticated : isTwoFaAuth };
       return {
         id: user.id,
         access_token: this.jwtService.sign(payload)
       } 
-  }
+  	}
 
 		verifyJwt(jwt: string): Promise<JwtPayload> {
 			return this.jwtService.verifyAsync<JwtPayload>(jwt);

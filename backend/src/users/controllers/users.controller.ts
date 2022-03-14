@@ -23,10 +23,11 @@ import { UsersService } from '../services/users.service';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { CurrentUserGuard } from 'src/auth/guards/current-user.guard';
 import { UpdateUserDto } from 'src/auth/dtos/update-user.dto';
+import JwtTwoFaGuard from 'src/auth/guards/jwt-two-fa.guard';
 
 @ApiTags('users')
 @Controller()
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, JwtTwoFaGuard)
 export class UsersController {    
     constructor(private usersService: UsersService){}
 

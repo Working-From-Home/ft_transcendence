@@ -7,9 +7,10 @@ import { UserChannel } from '../entities/user-channel.entity';
 import { UpdateResult } from 'typeorm';
 import { AppGateway } from 'src/app.gateway';
 import { IMessage } from 'shared/models/socket-events';
+import JwtTwoFaGuard from 'src/auth/guards/jwt-two-fa.guard';
 
 @Controller()
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, JwtTwoFaGuard)
 export class ChannelsController {
 	constructor(private chatService: ChatService,
 				private readonly appGateway: AppGateway

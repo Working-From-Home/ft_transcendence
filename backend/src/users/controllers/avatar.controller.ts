@@ -21,6 +21,7 @@ import { UsersService } from '../services/users.service';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { fileFilter } from '../filters/file.filter';
 import { CurrentUserGuard } from 'src/auth/guards/current-user.guard';
+import JwtTwoFaGuard from 'src/auth/guards/jwt-two-fa.guard';
 
 @ApiTags('avatar')
 @Controller('/users/:id/avatar')
@@ -43,7 +44,7 @@ export class AvatarController {
     }
 
     @Put()
-    @UseGuards(CurrentUserGuard)
+    @UseGuards(CurrentUserGuard, JwtTwoFaGuard)
     @UseInterceptors(FileInterceptor('image', fileFilter))
     async uploadAvatar(
         @Param('id', ParseIntPipe) id: number,
