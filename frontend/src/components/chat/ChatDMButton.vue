@@ -1,5 +1,5 @@
 <template>
-  <!-- <button
+  <button
     type="button"
     id="btn-front"
     class="btn-front btn btn-outline-info"
@@ -9,7 +9,7 @@
     @click="creatDm"
   >
     DM
-  </button> -->
+  </button>
 
 	<router-link
     v-if="small"

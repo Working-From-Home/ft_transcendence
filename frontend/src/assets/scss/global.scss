@@ -4,10 +4,20 @@ a, a:hover, a:focus {
 	outline-style: none;
 	box-shadow: none;
 }
-
 button, button:hover, button:focus {
 	outline-style: none;
 	box-shadow: none;
+}
+input, input:hover, input:focus {
+	outline-style: none;
+	box-shadow: none;
+}
+
+/* remove arrow from input with datalist */
+
+input::-webkit-calendar-picker-indicator {
+  position: absolute;
+  opacity: 0;
 }
 
 /* gradients */

@@ -46,7 +46,7 @@ function clearErrorMessage() {
     <input
       v-model="username"
       @input="searchUsers()"
-      class="form-control me-1"
+      class="form-control me-1 bg-app border-success"
       type="search"
       list="ids"
       placeholder="search for a user"
@@ -80,12 +80,10 @@ function clearErrorMessage() {
 </template>
 
 <style lang="scss" scoped>
-input::-webkit-calendar-picker-indicator {
-  position: absolute;
-  opacity: 0;
+textarea:focus, input:focus {
+    color: white;
 }
-
-datalist > option {
-  width: 100%;
+input, select, textarea{
+    color: white;
 }
 </style>
