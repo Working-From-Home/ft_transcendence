@@ -2,10 +2,12 @@ import { toNumber } from '@vue/shared';
 import { defineStore } from 'pinia';
 
 import UserService from '@/services/UserService';
+import FriendService from '@/services/FriendService';
 import { IUser } from '@/models/IUser';
 import axios, { AxiosError } from 'axios';
 import { IError } from '@/models/IError';
 import { IFriendLists } from '@/models/IFriendLists';
+import { useStatusStore } from './modules/status/status';
 
 export interface State {
   userId: number | null;
@@ -29,13 +31,13 @@ export const useCurrentUserStore = defineStore('currentUser', {
   }),
   getters: {
     isFriend : (state) => {
-			return(id : number) => state.friendLists.friends.includes(id)
+			return (id : number) => state.friendLists.friends.some(friend => friend.id === id);
 		},
     isPending : (state) => {
-			return(id : number) => state.friendLists.pendings.includes(id)
+			return (id : number) => state.friendLists.pendings.some(pending => pending.id === id);
 		},
     isSent : (state) => {
-			return(id : number) => state.friendLists.sent.includes(id)
+			return (id : number) => state.friendLists.sent.some(sent => sent.id === id);
 		},
   },
   actions: {
@@ -43,9 +45,9 @@ export const useCurrentUserStore = defineStore('currentUser', {
       try {
         const user = await UserService.getUserById(myUserId);
         const avatar = await UserService.getAvatarOfUser(myUserId);   
-        const friends = await UserService.getFriendships(myUserId, "accepted");
-        const pendings = await UserService.getFriendships(myUserId, "pending");
-        const sent = await UserService.getFriendships(myUserId, "sent");
+        const friends = await FriendService.getFriendships(myUserId, "accepted");
+        const pendings = await FriendService.getFriendships(myUserId, "pending");
+        const sent = await FriendService.getFriendships(myUserId, "sent");
         this.setStore(user.data, avatar, { friends, pendings, sent });
       } catch (err) {
         const e = err as AxiosError<IError>;
@@ -62,11 +64,14 @@ export const useCurrentUserStore = defineStore('currentUser', {
     updateAvatar(avatar: string) {
       this.avatar = avatar;
     },
-    async updateFriendLists(userId: number) {
-      const friends = await UserService.getFriendships(userId, "accepted");
-      const pendings = await UserService.getFriendships(userId, "pending");
-      const sent = await UserService.getFriendships(userId, "sent");
-      this.friendLists = { friends, pendings, sent };
-    }
+    async updateFriends(userId: number) {
+      this.friendLists.friends = await FriendService.getFriendships(userId, "accepted");
+    },
+    async updatePendings(userId: number) {
+      this.friendLists.pendings = await FriendService.getFriendships(userId, "pending");
+    },
+    async updateSent(userId: number) {
+      this.friendLists.sent = await FriendService.getFriendships(userId, "sent");
+    },
   },
 });

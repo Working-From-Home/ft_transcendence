@@ -70,18 +70,29 @@ interface ClientToServerEventsChat {
   searchUsers: (data: {title: string}, callback: (channels: any) => void) => void;
 }
 
+/// Friend events
+interface ServerToClientEventsFriend {
+  requestReceived: () => void;
+  requestAccepted: () => void;
+  requestDeclined: () => void;
+  friendshipEnded: () => void;
+}
+interface ClientToServerEventsFriend {}
+
 // Common
 export interface ServerToClientEvents
 	extends 
 		ServerToClientEventsOnline,
-    ServerToClientEventsChat
+    ServerToClientEventsChat,
+    ServerToClientEventsFriend
 {
 	error: (error: any) => void;
 }
 
 export interface ClientToServerEvents
   extends ClientToServerEventsOnline,
-  ClientToServerEventsChat
+  ClientToServerEventsChat,
+  ClientToServerEventsFriend
 {
 
 }

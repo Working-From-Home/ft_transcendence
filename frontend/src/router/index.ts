@@ -5,7 +5,7 @@ import PongHome from '../components/pong/PongHome.vue'
 import Auth from "@/views/auth/Auth.vue";
 import { useAuthStore } from "@/store/auth";
 import { AuthMode } from "@/views/auth/auth.interface";
-import Profile from "@/views/profile/Profile.vue"
+import Profile from "@/views/Profile.vue"
 import OauthWait from "@/components/auth/OauthWait.vue";
 
 const routes: Array<RouteRecordRaw> = [
@@ -50,7 +50,10 @@ const routes: Array<RouteRecordRaw> = [
   {
     name: "profile",
     path: "/users/:userid",
-	  meta: { requiresAuth: true },
+    meta: {
+      title: 'Profile',
+      requiresAuth: true
+    },
     component: Profile,
   },
   {
@@ -108,7 +111,7 @@ const router = createRouter({
 
 router.beforeEach(function(to, _, next) {
   const authStore = useAuthStore();
-  document.title = `Ft_transcendence - ${to.meta.title}`;
+  document.title = `Transcendence - ${to.meta.title}`;
   if (to.meta.requiresAuth && !authStore.isLoggedIn)
 		next('/');
 	else if (to.meta.requiresUnAuth && authStore.isLoggedIn)

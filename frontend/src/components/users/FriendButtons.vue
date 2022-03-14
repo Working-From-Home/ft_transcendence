@@ -14,12 +14,10 @@ library.add(faHourglass);
 </script>
 
 <script setup lang="ts">
-import { computed, onUpdated, ref } from 'vue';
 import { useCurrentUserStore } from '@/store/currentUser';
-import UserService from '@/services/UserService';
+import FriendService from '@/services/FriendService';
 import { useAuthStore } from '@/store/auth';
 
-const authStore = useAuthStore();
 const currentUserStore = useCurrentUserStore();
 
 const props = defineProps({
@@ -27,71 +25,124 @@ const props = defineProps({
     type: Number,
     required: true,
   },
-});
-
-const isFriend = computed<boolean>(() => {
-  return currentUserStore.isFriend(props.userId);
-});
-const isPending = computed<boolean>(() => {
-  return currentUserStore.isPending(props.userId);
-});
-const isSent = computed<boolean>(() => {
-  return currentUserStore.isSent(props.userId);
+  small: {
+    type: Boolean,
+    requiored: false,
+    default: false,
+  },
 });
 
 function sendRequest() {
-  UserService.sendFriendRequest(useAuthStore().userId as number, props.userId);
-  currentUserStore.updateFriendLists(useAuthStore().userId as number);
+  FriendService.sendFriendRequest(useAuthStore().userId as number, props.userId).then(() => {
+    currentUserStore.updateSent(useAuthStore().userId as number);
+  });
 }
 
 function acceptRequest() {
-  UserService.acceptFriendship(useAuthStore().userId as number, props.userId);
-  currentUserStore.updateFriendLists(useAuthStore().userId as number);
+  FriendService.acceptFriendship(useAuthStore().userId as number, props.userId).then(() => {
+    currentUserStore.updatePendings(useAuthStore().userId as number);
+    currentUserStore.updateFriends(useAuthStore().userId as number);
+  });
+}
+
+function declineFriendship() {
+  FriendService.endFriendship(useAuthStore().userId as number, props.userId, "pending").then(() => {
+    currentUserStore.updatePendings(useAuthStore().userId as number);
+  });
 }
 
 function endFriendship() {
-  UserService.endFriendship(useAuthStore().userId as number, props.userId);
-  currentUserStore.updateFriendLists(useAuthStore().userId as number);
+  FriendService.endFriendship(useAuthStore().userId as number, props.userId, "accepted").then(() => {
+    currentUserStore.updateFriends(useAuthStore().userId as number);
+  });
 }
 </script>
 
 <template>
   <div>
-    <button
-      v-if="isSent"
-      type="button"
-      disabled
-      class="btn btn-outline-primary m-2"
+    <!-- request sent -->
+    <div v-if="currentUserStore.isSent(props.userId)">
+      <button
+        v-if="currentUserStore.isSent(props.userId)"
+        type="button"
+        disabled
+        class="btn"
+        :class="
+          [props.small && 'btn-sm btn-outline-primary'],
+          [!props.small && 'btn-primary shadow m-2']
+        "
+        style="min-width:2rem"
+      >
+        <font-awesome-icon icon="hourglass" />
+        <span v-if="!props.small">&nbspRequest sent</span>
+      </button>
+    </div>
+    <!-- accept / decline -->
+    <div
+      v-else-if="currentUserStore.isPending(props.userId)"
+      class="d-flex flex-row"
+      :class="props.small && 'justify-content-end'"
     >
-      <font-awesome-icon icon="hourglass" />
-      &nbspRequest sent
-    </button>
-    <button
-      v-else-if="isPending"
-      type="button"
-      @click="acceptRequest"
-      class="btn btn-outline-primary m-2"
-    >
-      <font-awesome-icon icon="check" />
-      &nbspAccept friendship
-    </button>
-    <button
-      v-else-if="isFriend"
-      type="button"
-      @click="endFriendship"
-      class="btn btn-outline-primary m-2"
-    >
-      <font-awesome-icon icon="xmark" />
-      &nbspEnd friendship
-    </button>
-    <button
-      v-else
-      type="button"
-      @click="sendRequest"
-      class="btn btn-outline-primary m-2"
-    >
-      <font-awesome-icon icon="plus" />
-      &nbspAdd friend
-    </button>
+    <div>
+        <button
+          type="button"
+          @click="acceptRequest"
+          class="btn"
+          :class="
+            [props.small && 'btn-sm btn-outline-primary mx-1'],
+            [!props.small && 'btn-primary shadow m-2']
+          "
+          style="min-width:2rem"
+        >
+          <font-awesome-icon icon="check" />
+          <span v-if="!props.small">&nbspAccept</span>
+        </button>
+        <button
+          type="button"
+          @click="declineFriendship"
+          class="btn"
+          :class="
+            [props.small && 'btn-sm btn-outline-primary'],
+            [!props.small && 'btn-primary shadow m-2']
+          "
+          style="min-width:2rem"
+        >
+          <font-awesome-icon icon="xmark" />
+          <span v-if="!props.small">&nbspDecline</span>
+        </button>
+      </div>
+    </div>  
+    <!-- end friendship -->
+    <div v-else-if="currentUserStore.isFriend(props.userId)">
+      <button
+        type="button"
+        @click="endFriendship"
+        class="btn"
+        :class="
+          [props.small && 'btn-sm btn-outline-primary'],
+          [!props.small && 'btn-primary shadow m-2']
+        "
+        style="min-width:2rem"
+      >
+        <font-awesome-icon icon="xmark" />
+        <span v-if="!props.small">&nbspEnd friendship</span>
+      </button>
+    </div>
+    <!-- send request -->
+    <div v-else>
+      <button
+        type="button"
+        @click="sendRequest"
+        class="btn"
+        :class="
+          [props.small && 'btn-sm btn-outline-primary'],
+          [!props.small && 'btn-primary shadow m-2']
+        "
+        style="min-width:2rem"
+      >
+        <font-awesome-icon icon="plus" />
+        <span v-if="!props.small">&nbspAdd friend</span>
+      </button>
+    </div>
   </div>
 </template>

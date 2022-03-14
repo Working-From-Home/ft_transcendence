@@ -13,15 +13,6 @@ function deleteAccount() {
 </script>
 
 <template>
-  <ButtonTemplate
-    type="button"
-    classes="btn btn-outline-danger"
-    data-bs-toggle="modal"
-    data-bs-target="#deleteAccount"
-  >
-    Delete account
-  </ButtonTemplate>
-
   <div class="modal fade" id="deleteAccount" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
