@@ -9,7 +9,7 @@ const authStore = useAuthStore();
   <div id="jumbo" class="container my-2 px-5">
     <div class="row g-3 px-md-5 mt-md-2">
       <div class="col">
-        <div class="bg-inverted-gradient rounded p-3">
+        <div class="bg-success bg-opacity-25 gradient-blue-inverted rounded p-3">
 					<h1 class="display-5 mt-3 fw-bold">Transcendence</h1>
 					<i class="fs-6">a 42 project by tlecoeuv,<br>hwinston, juligonz and alesanto</i>
 					<Index class="m-auto mt-4 mb-3 col-md-8 fs-4" />
@@ -19,7 +19,7 @@ const authStore = useAuthStore();
 
     <div v-if="authStore.isLoggedIn" class="row g-3 px-md-5">
       <div class="col-12 col-ms-12 col-md-6 pt-3">
-        <div class="h-100 bg-inverted-gradienta rounded p-3">
+        <div class="h-100 gradient-blue rounded p-3">
           <h2 class="mt-3">Challenge Someone</h2>
           <p>You can play now</p>
           <router-link to="/pong" class="btn btn-outline-light mb-3">Pong</router-link>
@@ -27,7 +27,7 @@ const authStore = useAuthStore();
       </div>
 
       <div class="col-12 col-ms-12 col-md-6 pt-md-3">
-        <div class="h-100 bg-inverted-gradienta rounded p-3">
+        <div class="h-100 gradient-blue rounded p-3">
           <h2 class="mt-3">Talk to everyone</h2>
           <p>You can use the chat now</p>
           <router-link to="/chat" class="nav-link active">
@@ -39,13 +39,4 @@ const authStore = useAuthStore();
   </div>
 </template>
 
-<style lang="scss" scoped>
-
-.bg-inverted-gradient {
-  background: linear-gradient(180deg, rgba(red, 0), rgba(red, .2))
-}
-
-.bg-inverted-gradienta {
-  background: linear-gradient(180deg, rgba(red, .2), rgba(yellow, 0.1))
-}
-</style>
+<style lang="scss" scoped></style>

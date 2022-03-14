@@ -16,7 +16,7 @@ function logout() {
 
 <template>
   <div class="page-header">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark">
       <!-- not logged header -->
       <div v-if="!authStore.isLoggedIn" class="container-fluid mx-lg-4 mx-2">
         <router-link to="/" class="navbar-brand">Transcendence</router-link>
@@ -97,7 +97,7 @@ function logout() {
                 {{ currentUserStore.username }}&nbsp
               </a>
               <ul
-                class="dropdown-menu mt-2 bg-light ligth-dropdown"
+                class="dropdown-menu mt-2 ligth-dropdown"
                 aria-labelledby="navbarDropdown"
                 id="ligthDropdown"
               >
@@ -107,13 +107,13 @@ function logout() {
                       name: 'profile',
                       params: { userid: authStore.userId },
                     }"
-                    class="dropdown-item"
+                    class="dropdown-item text-light"
                     >Profile</router-link
                   >
                 </li>
                 <li>
                   <a
-                    class="dropdown-item clickable"
+                    class="dropdown-item clickable text-light"
                     data-bs-toggle="offcanvas"
                     data-bs-target="#offc"
                     aria-controls="offc"
@@ -123,7 +123,7 @@ function logout() {
                 </li>
                 <li v-if="authStore.isLoggedIn">
                   <router-link
-                    class="logout dropdown-item"
+                    class="logout dropdown-item text-light"
                     to="/"
                     @click="logout"
                     >Logout
@@ -165,7 +165,7 @@ function logout() {
                 :src="currentUserStore.avatar"
                 alt="avatar"
                 width="40"
-                class="align-text-top rounded"
+                class="rounded"
               /> 
             </li>
 					</ul>	         
@@ -180,6 +180,10 @@ function logout() {
 @import '@/../node_modules/bootstrap/scss/functions';
 @import '@/../node_modules/bootstrap/scss/variables';
 @import '@/../node_modules/bootstrap/scss/mixins';
+
+.page-header {
+  border-bottom: solid 1px $secondary;
+}
 
 #navbar a.router-link-exact-active {
   color: $active-link;
@@ -205,11 +209,12 @@ function logout() {
   }
 }
 .ligth-dropdown {
-  border-top: none;
+  background-color: $app-background;
+  // border-top: none;
   border-top-left-radius: 0px;
   border-top-right-radius: 0px;
 }
-.clickable {
-  cursor: pointer;
+.dropdown-item:hover {
+  background-color: $app-background;
 }
 </style>

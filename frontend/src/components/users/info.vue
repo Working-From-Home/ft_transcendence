@@ -10,13 +10,12 @@ library.add(faSkull);
 </script>
 
 <script setup lang="ts">
-import { computed, onMounted, onUpdated, ref } from 'vue';
+import { computed, onMounted, onUnmounted, onUpdated, ref } from 'vue';
 import UserService from '@/services/UserService';
-import { useAuthStore } from '@/store/auth';
 import { useStatusStore } from '@/store/modules/status/status';
 import ChallengeButton from '@/components/pong/ChallengeButton.vue';
 import WatchButton from '@/components/pong/WatchButton.vue';
-import DelButton from '@/components/users/DelButton.vue';
+import EditModal from '@/components/users/EditModal.vue';
 import FriendButtons from '@/components/users/FriendButtons.vue';
 import { Tooltip } from 'bootstrap';
 
@@ -31,7 +30,6 @@ const props = defineProps({
   },
 });
 
-const authStore = useAuthStore();
 const statusStore = useStatusStore();
 
 const tooltips = ref<Tooltip[]>({} as Tooltip[]);
@@ -63,12 +61,12 @@ const level = computed<number>(() => {
 getUserData(props.userId);
 
 onMounted(() => {
-  tooltips.value = [
-    new Tooltip('#victories'),
-    new Tooltip('#losses'),
-  ];
-  if (props.isOwner)
-    tooltips.value.push(new Tooltip('#edit'));
+  tooltips.value = [new Tooltip('#victories'), new Tooltip('#losses')];
+  if (props.isOwner) tooltips.value.push(new Tooltip('#edit'));
+});
+
+onUnmounted(() => {
+  for (const tooltip of tooltips.value) tooltip.dispose();
 });
 
 onUpdated(() => {
@@ -106,32 +104,50 @@ function getUserData(id: number) {
       </div>
     </div>
 
-    <div v-else class="mt-1 mt-md-2 mx-5 position-absolute end-0" id="edit" data-bs-toggle="tooltip" title="edit profile">
+    <div
+      v-else
+      class="mt-1 mt-md-2 mx-5 position-absolute end-0"
+      id="edit"
+      data-bs-toggle="tooltip"
+      title="edit profile"
+    >
       <div
-        class="mx-md-5"
-        type="button"
+        class="mx-md-5 clickable-cursor"
         data-bs-toggle="modal"
         data-bs-target="#deleteAccount"
       >
         <font-awesome-icon icon="gear" class="fa-lg mx-3" />
       </div>
-      <DelButton></DelButton>
     </div>
+    <EditModal></EditModal>
 
     <h2>{{ username }}</h2>
     <hr />
-    <div class="row gx-3 pb-3 fs-6 fst-italic default-cursor">
-      <div class="col-2 offset-3" id="victories" data-bs-toggle="tooltip" title="victories">
+    <div class="row gx-3 pb-3 fs-6 fst-italic">
+      <div
+        class="col-2 offset-3"
+        id="victories"
+        data-bs-toggle="tooltip"
+        title="victories"
+      >
         <font-awesome-icon icon="trophy" />
-        &nbsp&nbsp<span class="fw-bold">{{ victories }}</span>
+        <span class="fw-bold">&nbsp&nbsp{{ victories }}</span>
       </div>
-      <div class="col-2 offset-2" id="losses" data-bs-toggle="tooltip" title="losses">
+      <div
+        class="col-2 offset-2"
+        id="losses"
+        data-bs-toggle="tooltip"
+        title="losses"
+      >
         <font-awesome-icon icon="skull" />
-        &nbsp&nbsp<span class="fw-bold">{{ losses }}</span>
+        <span class="fw-bold">&nbsp&nbsp{{ losses }}</span>
       </div>
     </div>
 
-    <div class="progress app-bg position-relative mx-sm-2 mb-2" style="height: 2rem">
+    <div
+      class="progress bg-app position-relative mx-sm-2 mb-2"
+      style="height: 2rem;"
+    >
       <div
         class="progress-bar bg-warning"
         role="progressbar"
@@ -141,7 +157,7 @@ function getUserData(id: number) {
         aria-valuemax="100"
       ></div>
       <span
-        class="position-absolute top-50 start-50 translate-middle fs-6 fst-italic fw-bold"
+        class="position-absolute top-50 start-50 translate-middle fs-6 fst-italic fw-bold default-cursor"
         style="white-space: nowrap"
         >level {{ Math.floor(level) }}&nbsp&nbsp-&nbsp&nbsp{{
           xp % 100
@@ -149,10 +165,6 @@ function getUserData(id: number) {
         %</span
       >
     </div>
-
-    <!-- <div v-if="props.isOwner" class="m-4">
-      <DelButton></DelButton>
-    </div> -->
     <div v-if="!props.isOwner" class="row m-4 mb-2">
       <div class="col mx-1">
         <FriendButtons :userId="userId"></FriendButtons>
@@ -169,12 +181,4 @@ function getUserData(id: number) {
   </div>
 </template>
 
-<style lang="scss" scoped>
-.app-bg {
-  background-color: $app-background;
-}
-
-.default-cursor {
-  cursor: default;
-}
-</style>
+<style lang="scss" scoped></style>

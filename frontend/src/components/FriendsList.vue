@@ -8,6 +8,7 @@ import FriendButtons from './users/FriendButtons.vue';
 import ChallengeButton from './pong/ChallengeButton.vue';
 import WatchButton from './pong/WatchButton.vue';
 import { Offcanvas } from 'bootstrap';
+import ChatDMButton from './chat/ChatDMButton.vue';
 
 const currentUserStore = useCurrentUserStore();
 const statusStore = useStatusStore();
@@ -169,6 +170,10 @@ watch(
                         class="text-end"
                       >
                         <div class="d-flex flex-row justify-content-end">
+                          <ChatDMButton
+                            :otherUserId="friend.id"
+                            :small="true"
+                          ></ChatDMButton>
                           <ChallengeButton
                             v-if="!statusStore.isInGame(friend.id)"
                             :id="'challengeFromFriendsList'"
@@ -182,10 +187,6 @@ watch(
                             :small="true"
                             class="mx-1"
                           ></WatchButton>
-                          <FriendButtons
-                            :userId="friend.id"
-                            :small="true"
-                          ></FriendButtons>
                         </div>
                       </td>
                     </tr>
@@ -237,10 +238,10 @@ watch(
                         v-if="!statusStore.isOnline(friend.id)"
                         class="text-end"
                       >
-                        <FriendButtons
-                          :userId="friend.id"
+                        <ChatDMButton
+                          :otherUserId="friend.id"
                           :small="true"
-                        ></FriendButtons>
+                        ></ChatDMButton>
                       </td>
                     </tr>
                   </tbody>

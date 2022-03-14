@@ -133,10 +133,10 @@ function endFriendship() {
       <button
         type="button"
         @click="sendRequest"
-        class="btn m-2"
+        class="btn"
         :class="
           [props.small && 'btn-sm btn-outline-primary'],
-          [!props.small && 'btn-primary shadow']
+          [!props.small && 'btn-primary shadow m-2']
         "
         style="min-width:2rem"
       >

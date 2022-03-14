@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
+import { computed, onMounted, onUnmounted, onUpdated, ref, watch } from 'vue';
 import moment from 'moment';
 import UserService from '@/services/UserService';
+import { Tooltip } from 'bootstrap';
 
 const props = defineProps({
   userId: {
@@ -15,11 +16,27 @@ const anonymous = {
   username: 'anonymous user',
 };
 
-const data = ref<any>({});
-const count = ref<number>(0);
-const currentPage = ref<number>(0);
+const items = ref<any>([]);
+const links = ref<any>({});
+const meta = ref<any>({});
+const tooltips = ref<Tooltip[]>([]);
 
 paginate(`/game/${props.userId}/pagination`);
+
+onMounted(() => {
+  setTimeout(() => {
+    setTooltips();
+  }, 2000);
+});
+
+onUpdated(() => {
+  unsetTooltips();
+  setTooltips();
+});
+
+onUnmounted(() => {
+  unsetTooltips();
+});
 
 watch(
   () => props.userId,
@@ -28,6 +45,18 @@ watch(
   },
 );
 
+function setTooltips() {
+  for (const item of items.value) {
+    let tooltip = new Tooltip("#date" + item.id);
+    tooltips.value.push(tooltip);
+  }
+}
+
+function unsetTooltips() {
+  for (const tooltip of tooltips.value)
+    tooltip.dispose();
+}
+
 function paginate(link: string) {
   UserService.getGamePagination(props.userId, link).then((response: any) => {
     let tmp: any = response.data;
@@ -35,9 +64,9 @@ function paginate(link: string) {
       if (!item.looser) item.looser = anonymous;
       if (!item.winner) item.winner = anonymous;
     }
-    data.value = tmp;
-    count.value = response.data.meta.itemCount;
-    currentPage.value = response.data.meta.currentPage;
+    items.value = tmp.items;
+    links.value = tmp.links;
+    meta.value = tmp.meta;
   });
 }
 
@@ -55,12 +84,12 @@ function opponentId(wId: number, lId: number) {
 
 function formatScore(wId: number, wScore: number, lScore: number) {
   if (wId == props.userId) return wScore + ' - ' + lScore;
-  return lScore + ' - ' +  wScore;
+  return lScore + ' - ' + wScore;
 }
 
 function formatDate(s: string) {
   const date = Date.parse(s);
-  return moment(date).format('MMMM Do YYYY, h:mm:ss a');
+  return moment(date).format('MMMM Do YYYY, HH:mm');
 }
 
 function timeFromNow(s: string) {
@@ -71,8 +100,7 @@ function timeFromNow(s: string) {
 
 <template>
   <div class="container pt-3 px-md-5">
-    <h3 class="mb-3 mt-1">Match history</h3>
-    <table class="table rounded">
+    <table class="table rounded mb-3">
       <thead>
         <tr class="text-white">
           <th scope="col">Date</th>
@@ -81,11 +109,7 @@ function timeFromNow(s: string) {
         </tr>
       </thead>
       <tbody>
-        <tr
-          v-for="game in data.items"
-          class="table-row"
-          :class="isWinner(game.winner.id) ? 'table-success' : 'table-danger'"
-        >
+        <tr v-for="game in items" class="table-row">
           <th
             :id="`date${game.id}`"
             class="table-value fw-normal"
@@ -114,7 +138,10 @@ function timeFromNow(s: string) {
               {{ opponentName(game.winner, game.looser) }}
             </router-link>
           </td>
-          <td class="table-value">
+          <td
+            class="table-value fw-bold"
+            :class="isWinner(game.winner.id) ? 'text-success' : 'text-danger'"
+          >
             {{
               formatScore(game.winner.id, game.winnerScore, game.looserScore)
             }}
@@ -122,48 +149,44 @@ function timeFromNow(s: string) {
         </tr>
       </tbody>
     </table>
-
-    <nav v-if="count" aria-label="Page navigation">
+    <!-- navigation -->
+    <nav v-if="meta.itemCount" aria-label="Page navigation">
       <ul class="pagination justify-content-center">
-        <li class="page-item" :class="currentPage == 1 && 'disabled'">
-          <a class="page-link clickable" @click="paginate(data.links.first)"
+        <li class="page-item" :class="meta.currentPage == 1 && 'disabled'">
+          <a
+            class="page-link"
+            href="#"
+            @click="paginate(links.first)"
             >First</a
           >
         </li>
-        <li class="page-item" :class="currentPage == 1 && 'disabled'">
+        <li class="page-item" :class="meta.currentPage == 1 && 'disabled'">
           <a
             class="page-link"
             href="#"
-            aria-label="Previous"
-            @click="paginate(data.links.previous)"
+            @click="paginate(links.previous)"
+            >&laquo;</a
           >
-            <span aria-hidden="true">&laquo;</span>
-          </a>
         </li>
-        <li
-          class="page-item"
-          :class="currentPage == data.meta.totalPages && 'disabled'"
-        >
+        <li class="page-item" :class="meta.currentPage == meta.totalPages && 'disabled'">
           <a
             class="page-link"
             href="#"
-            aria-label="Next"
-            @click="paginate(data.links.next)"
+            @click="paginate(links.next)"
+            >&raquo;</a
           >
-            <span aria-hidden="true">&raquo;</span>
-          </a>
         </li>
-        <li
-          class="page-item"
-          :class="currentPage == data.meta.totalPages && 'disabled'"
-        >
-          <a class="page-link clickable" @click="paginate(data.links.last)"
+        <li class="page-item" :class="meta.currentPage == meta.totalPages && 'disabled'">
+          <a
+            class="page-link"
+            href="#"
+            @click="paginate(links.last)"
             >Last</a
           >
         </li>
       </ul>
     </nav>
-    <div v-if="!count" class="fst-italic">
+    <div v-if="!meta.itemCount" class="fst-italic">
       <hr />
       <p>no game played</p>
     </div>
@@ -171,36 +194,23 @@ function timeFromNow(s: string) {
 </template>
 
 <style lang="scss" scoped>
-
-a, a:hover, a:focus {
-  outline-style: none;
-  box-shadow: none;
+a {
+  color: white;
 }
-
-a:link {
-  text-decoration: none;
-}
-
-.clickable {
-  cursor: pointer;
-}
-
 .table-value {
-  /* font-weight: bold; */
-  color: black;
+  color: white;
 }
-
+.page-item .page-link {
+  background-color: transparent !important;
+}
 .table > :not(caption) > * > * {
   border-bottom-width: 0 !important;
 }
-
-.page-item .page-link {
-  background-color: transparent!important;
+.table-striped > tbody > tr:nth-child(odd) > td,
+.table-striped > tbody > tr:nth-child(odd) > th {
+  background-color: transparent !important;
 }
-.page-link {
-  color: white;
+.pagination > li > a {
+  border-width: 0.5px;
 }
-
-
-
 </style>
