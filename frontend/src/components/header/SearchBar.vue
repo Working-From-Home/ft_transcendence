@@ -46,7 +46,7 @@ function clearErrorMessage() {
     <input
       v-model="username"
       @input="searchUsers()"
-      class="form-control me-1 bg-app border-success"
+      class="form-control me-1 bg-body border-secondary"
       type="search"
       list="ids"
       placeholder="search for a user"
@@ -57,7 +57,7 @@ function clearErrorMessage() {
 				{{ result.username }}
 			</option>
     </datalist>
-    <button class="btn btn-outline-success" type="submit">Search</button>
+    <button class="btn btn-outline-secondary" type="submit">Search</button>
   </form>
   <!-- alert -->
   <div class="position-absolute top-50 start-50 translate-middle mt-5">
@@ -82,6 +82,7 @@ function clearErrorMessage() {
 <style lang="scss" scoped>
 textarea:focus, input:focus {
     color: white;
+    background-color: $body;
 }
 input, select, textarea{
     color: white;

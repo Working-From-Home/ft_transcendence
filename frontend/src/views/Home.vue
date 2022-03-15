@@ -9,7 +9,7 @@ const authStore = useAuthStore();
   <div id="jumbo" class="container my-2 px-5">
     <div class="row g-3 px-md-5 mt-md-2">
       <div class="col">
-        <div class="bg-success bg-opacity-25 gradient-blue-inverted rounded p-3">
+        <div class="bg-primary bg-opacity-50 gradient-blue-inverted rounded p-3">
 					<h1 class="display-5 mt-3 fw-bold">Transcendence</h1>
 					<i class="fs-6">a 42 project by tlecoeuv,<br>hwinston, juligonz and alesanto</i>
 					<Index class="m-auto mt-4 mb-3 col-md-8 fs-4" />

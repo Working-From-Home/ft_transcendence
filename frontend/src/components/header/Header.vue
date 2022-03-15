@@ -15,7 +15,7 @@ function logout() {
 </script>
 
 <template>
-  <div class="page-header">
+  <div class="page-header border-bottom border-secondary">
     <nav class="navbar navbar-expand-lg navbar-dark">
       <!-- not logged header -->
       <div v-if="!authStore.isLoggedIn" class="container-fluid mx-lg-4 mx-2">
@@ -94,10 +94,10 @@ function logout() {
                 data-bs-display="static"
                 aria-expanded="false"
               >
-                {{ currentUserStore.username }}&nbsp
+                {{ currentUserStore.username }}
               </a>
               <ul
-                class="dropdown-menu mt-2 ligth-dropdown"
+                class="dropdown-menu mt-2"
                 aria-labelledby="navbarDropdown"
                 id="ligthDropdown"
               >
@@ -107,13 +107,13 @@ function logout() {
                       name: 'profile',
                       params: { userid: authStore.userId },
                     }"
-                    class="dropdown-item text-light"
+                    class="dropdown-item"
                     >Profile</router-link
                   >
                 </li>
                 <li>
                   <a
-                    class="dropdown-item clickable text-light"
+                    class="dropdown-item clickable-cursor"
                     data-bs-toggle="offcanvas"
                     data-bs-target="#offc"
                     aria-controls="offc"
@@ -123,7 +123,7 @@ function logout() {
                 </li>
                 <li v-if="authStore.isLoggedIn">
                   <router-link
-                    class="logout dropdown-item text-light"
+                    class="dropdown-item"
                     to="/"
                     @click="logout"
                     >Logout
@@ -145,7 +145,7 @@ function logout() {
             <!-- friends (only on small screen)-->
             <li class="d-lg-none">
               <a
-                class="nav-link active clickable"
+                class="nav-link active clickable-cursor"
                 data-bs-toggle="offcanvas"
                 data-bs-target="#offc"
                 aria-controls="offc"
@@ -155,7 +155,7 @@ function logout() {
             </li>
             <!-- logout (only on small screen) -->
             <li v-if="authStore.isLoggedIn" class="d-lg-none">
-              <router-link class="logout nav-link active" to="/" @click="logout"
+              <router-link class="nav-link active" to="/" @click="logout"
                 >Logout
               </router-link>
             </li>
@@ -176,45 +176,4 @@ function logout() {
   </div>
 </template>
 
-<style lang="scss" scoped>
-@import '@/../node_modules/bootstrap/scss/functions';
-@import '@/../node_modules/bootstrap/scss/variables';
-@import '@/../node_modules/bootstrap/scss/mixins';
-
-.page-header {
-  border-bottom: solid 1px $secondary;
-}
-
-#navbar a.router-link-exact-active {
-  color: $active-link;
-}
-@include media-breakpoint-up(lg) {
-  #navbar {
-    a.router-link-exact-active,
-    a.router-link-exact-active:hover {
-      border-bottom: 1px solid $active-link;
-    }
-    a {
-      border-bottom: 1px solid transparent;
-    }
-    a:hover {
-      border-bottom: 1px solid $active-link;
-    }
-  }
-}
-@include media-breakpoint-down(lg) {
-  #navbar a.router-link-exact-active {
-    border: 1px solid $active-link;
-    border-radius: 0.92em;
-  }
-}
-.ligth-dropdown {
-  background-color: $app-background;
-  // border-top: none;
-  border-top-left-radius: 0px;
-  border-top-right-radius: 0px;
-}
-.dropdown-item:hover {
-  background-color: $app-background;
-}
-</style>
+<style lang="scss" scoped></style>

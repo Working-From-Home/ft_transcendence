@@ -1,5 +1,6 @@
 <template>
   <button
+    v-if="!small"
     type="button"
     id="btn-front"
     class="btn-front btn btn-outline-info"

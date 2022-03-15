@@ -4,10 +4,11 @@ import router from "./router";
 import Card from './components/ui/Card.vue';
 import BaseButton from './components/ui/BaseButton.vue';
 import BaseDialog from './components/ui/BaseDialog.vue';
-import "bootstrap/dist/css/bootstrap.min.css";
+
 import "bootstrap";
-// pas tres clean, mais flemme, a voir plus tard
-import '@/assets/scss/custom.scss'
+import "bootstrap/dist/css/bootstrap.min.css";
+import '@/assets/scss/custom.scss';
+import '@/assets/scss/global.scss';
 
 import { io,  Socket }  from "socket.io-client";
 import http from "@/http";
