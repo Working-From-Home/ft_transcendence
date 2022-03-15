@@ -1,7 +1,7 @@
 <template>
   <div class="row g-3 px-md-5 mt-md-2">
     <div class="col">
-      <div class="bg-success bg-opacity-25 gradient-blue-inverted rounded p-3 pb-5">
+      <div class="bg-primary gradient-blue-inverted rounded p-3 pb-5">
         <h1 class="display-6 mt-3 mb-4 fw-bold">Play Pong!</h1>
         <p class="fs-5 mb-4">find your opponent now and express your talent</p>
         <pong-matchmaking />
@@ -78,4 +78,5 @@ export default defineComponent({
 .text-justify {
   text-align: justify;
 }
+
 </style>

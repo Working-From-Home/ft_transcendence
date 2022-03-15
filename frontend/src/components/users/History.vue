@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, onUpdated, ref, watch } from 'vue';
+import { onUnmounted, onUpdated, ref, watch } from 'vue';
 import moment from 'moment';
 import UserService from '@/services/UserService';
 import { Tooltip } from 'bootstrap';
@@ -22,12 +22,6 @@ const meta = ref<any>({});
 const tooltips = ref<Tooltip[]>([]);
 
 paginate(`/game/${props.userId}/pagination`);
-
-onMounted(() => {
-  setTimeout(() => {
-    setTooltips();
-  }, 2000);
-});
 
 onUpdated(() => {
   unsetTooltips();
@@ -53,8 +47,10 @@ function setTooltips() {
 }
 
 function unsetTooltips() {
-  for (const tooltip of tooltips.value)
+  for (const tooltip of tooltips.value) {
     tooltip.dispose();
+  }
+  tooltips.value = [];
 }
 
 function paginate(link: string) {
@@ -100,9 +96,9 @@ function timeFromNow(s: string) {
 
 <template>
   <div class="container pt-3 px-md-5">
-    <table class="table rounded mb-3">
+    <table class="table table-hover rounded mb-3">
       <thead>
-        <tr class="text-white">
+        <tr>
           <th scope="col">Date</th>
           <th scope="col">Opponent</th>
           <th scope="col">Score</th>
