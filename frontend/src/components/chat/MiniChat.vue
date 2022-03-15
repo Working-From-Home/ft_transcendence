@@ -10,7 +10,7 @@
 		>
 			Chat
 		</button>
-		<div class="dropdown-menu div">
+		<div class="dropdown-menu div p-0 bg-transparent">
 			<chat-component size="mini" class="comp" aria-labelledby="dropdownMenuClickableInside"></chat-component>
 		</div>
 	</div>

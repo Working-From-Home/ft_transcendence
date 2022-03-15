@@ -22,17 +22,17 @@
 	>
 		<font-awesome-icon icon="message" />
 	</router-link>
-
+	<module-toast :title="toastProps.title" :message="toastProps.message"/>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import UserService from '@/services/UserService';
 import { toNumber } from '@vue/shared';
+import { Toast } from "bootstrap";
 import ChatService from '../../services/ChatService';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faMessage } from '@fortawesome/free-solid-svg-icons';
-
+import moduleToast from './Toast.vue';
 library.add(faMessage);
 
 export default defineComponent({
@@ -40,9 +40,17 @@ export default defineComponent({
     otherUserId: { type: Number, required: true },
     small: { type: Boolean, required: false },
   },
+  components: {
+		moduleToast
+	},
   data() {
     return {
       userId: -1 as number,
+	  toast: {} as Toast,
+	  toastProps: {
+		  message: '' as string,
+		  title: '' as string,
+	  }
     };
   },
   created() {
@@ -50,7 +58,12 @@ export default defineComponent({
   },
   methods: {
     creatDm() {
-      ChatService.createDm(this.userId, this.otherUserId);
+      ChatService.createDm(this.userId, this.otherUserId).catch(({ response }) => {
+			this.toast = new Toast("#toastModal");
+			this.toastProps.message = response.data.message;
+			this.toastProps.title = "Error";
+			this.toast.show();
+   		});;
     },
   },
 });
