@@ -9,13 +9,11 @@
         </transition>
       </router-view>
     </div>
-    <mini-chat v-if="authStore.isLoggedIn && !isChatView"></mini-chat>
     <pong-socket v-if="authStore.isLoggedIn" />
   </section>
 </template>
 
 <script setup lang="ts">
-import MiniChat from './components/chat/MiniChat.vue';
 import Header from './components/header/Header.vue';
 import FriendList from './components/header/FriendsList.vue';
 import PongSocket from './components/pong/PongSocket.vue';
