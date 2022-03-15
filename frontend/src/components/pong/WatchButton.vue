@@ -10,8 +10,8 @@
       style="min-width: 2rem"
       @click="watchGame"
     >
-      <font-awesome-icon icon="eye" />
-      <span v-if="!small">&nbspWatch</span>
+      <font-awesome-icon icon="eye" :class="!small && 'pe-2'"/>
+      <span v-if="!small" class="clickable-cursor">Watch</span>
     </button>
 
     <div class="modal fade" id="noGameModal">

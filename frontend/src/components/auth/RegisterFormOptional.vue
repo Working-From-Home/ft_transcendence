@@ -106,7 +106,7 @@ const skip = async () => {
 <style lang="scss">
 // .fa-dice-five:hover,
 #random-username {
-  border-left: 1px solid $app-background;
+  border-left: 1px solid $body-bg;
 }
 #random-username:hover .fa-dice-five {
   color: black;

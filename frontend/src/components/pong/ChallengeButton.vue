@@ -8,29 +8,28 @@
 				[!small && 'btn-danger shadow m-2']
 			"
       data-bs-toggle="modal"
-      :data-bs-target="'#' + id"
+      :data-bs-target="`#${id}0`"
       style="min-width: 2rem"
     >
-      <font-awesome-icon icon="bolt" />
-      <span v-if="!small">&nbspChallenge</span>
+      <font-awesome-icon icon="bolt" :class="!small && 'pe-2'"/>
+      <span v-if="!small" class="clickable-cursor">Challenge</span>
     </button>
 
     <!-- game settings Modal -->
-    <div class="modal fade" :id="id" data-bs-backdrop="static">
+    <div class="modal fade" :id="`${id}0`" data-bs-backdrop="static">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <!-- Modal Header -->
-          <div class="modal-header text-black">
+          <div class="modal-header">
             <h4 class="modal-title">Choose your game settings</h4>
             <button
               type="button"
-              class="btn-close"
+              class="btn-close btn-close-white"
               data-bs-dismiss="modal"
             ></button>
           </div>
-
           <!-- Modal body -->
-          <div class="modal-body text-black">
+          <div class="modal-body">
             <p>ball speed</p>
             <select class="form-select mb-3" v-model="gameSettings.speed">
               <option :value="4">slow</option>
@@ -49,10 +48,9 @@
               <option>5</option>
               <option>8</option>
             </select>
-
             <button
               type="button"
-              class="btn btn-success"
+              class="btn btn-success my-1"
               data-bs-dismiss="modal"
               @click="sendGameRequest"
             >
@@ -64,14 +62,14 @@
     </div>
 
     <!-- waiting response Modal -->
-    <div class="modal fade" id="challengeModal" data-bs-backdrop="static">
+    <div class="modal fade" :id="`${id}1`" data-bs-backdrop="static">
       <div v-if="!errorRequest" class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-          <div class="modal-body text-black">Waiting for the response..</div>
-          <div class="modal-footer">
+          <div class="modal-body text-center">
+            <p>Waiting for the response...</p>
             <button
               type="button"
-              class="btn btn-danger"
+              class="btn btn-danger my-1"
               data-bs-dismiss="modal"
               @click="cancelRequest"
             >
@@ -82,13 +80,11 @@
       </div>
       <div v-else class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-          <div class="modal-body text-black">
-            {{ errorRequest }}
-          </div>
-          <div class="modal-footer">
+          <div class="modal-body">
+            <p>{{ errorRequest }}</p>
             <button
               type="button"
-              class="btn btn-danger"
+              class="btn btn-danger my-1"
               data-bs-dismiss="modal"
             >
               Ok
@@ -98,9 +94,10 @@
       </div>
     </div>
 
+    <!-- toast -->
     <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
       <div
-        id="refusedToast"
+        :id="`${id}2`"
         class="toast hide"
         role="alert"
         aria-live="assertive"
@@ -109,12 +106,12 @@
         <div class="toast-header">
           <button
             type="button"
-            class="btn-close"
+            class="btn-close btn-close-white"
             data-bs-dismiss="toast"
             aria-label="Close"
           ></button>
         </div>
-        <div class="toast-body text-black">challenge refused.</div>
+        <div class="toast-body">challenge refused.</div>
       </div>
     </div>
   </div>
@@ -145,8 +142,8 @@ export default defineComponent({
     };
   },
   mounted() {
-    this.challengeModal = new Modal('#challengeModal');
-    this.refusedToast = new Toast('#refusedToast');
+    this.challengeModal = new Modal(`#${this.id}1`);
+    this.refusedToast = new Toast(`#${this.id}2`);
   },
   methods: {
     sendGameRequest() {

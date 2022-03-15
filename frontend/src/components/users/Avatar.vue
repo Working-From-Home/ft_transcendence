@@ -75,7 +75,7 @@ function clearErrorMessage() {
   <img
     v-if="props.isOwner"
     :src="avatar"
-    class="img-fluid rounded mx-auto clickable"
+    class="img-fluid rounded mx-auto clickable-cursor"
     data-bs-toggle="modal"
     data-bs-target="#editAvatar"
     alt="avatar"
@@ -102,22 +102,22 @@ function clearErrorMessage() {
     v-if="props.isOwner"
     class="modal fade"
     id="editAvatar"
-    data-bs-backdrop="static"
+    data-bs-backdrop="true"
   >
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <!-- Modal Header -->
-        <div class="modal-header text-black">
+        <div class="modal-header">
           <h4 class="modal-title">Edit your avatar</h4>
           <button
             type="button"
-            class="btn-close"
+            class="btn-close btn-close-white"
             data-bs-dismiss="modal"
           ></button>
         </div>
 
         <!-- Modal body -->
-        <div class="modal-body text-black">
+        <div class="modal-body">
           <p>What do you want to do ?</p>
           <button
             type="button"
@@ -152,8 +152,4 @@ function clearErrorMessage() {
   </div>
 </template>
 
-<style scoped>
-.clickable {
-  cursor: pointer;
-}
-</style>
+<style scoped></style>
