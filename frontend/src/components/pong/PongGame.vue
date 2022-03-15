@@ -1,7 +1,7 @@
 <template>
   <div class="row g-3 px-md-5 mt-md-2">
     <div class="col">
-      <div class="gradient-blue-inverted rounded p-3 pb-5">
+      <div class="rounded p-3 pb-5">
         <div class="col col-lg-8 p-2 p-lg-0 m-auto">
           <div class="d-flex flex-row align-items-center mb-4">
             <player-info
