@@ -33,13 +33,18 @@
 					</button>
 					<chat-d-m-button :otherUserId="modalUserId"/>
 				</div>
-				<div v-if="!isCurrent" class="row">
-					<div v-if="isOnline && !isInGame" class="col">
-						<ChallengeButton :userId="modalUserId">Challenge</ChallengeButton>
-					</div>
-					<div v-else-if="isInGame" class="col">
-						<WatchButton :userId="modalUserId">Challenge</WatchButton>
-					</div>
+				<div v-if="!isCurrent && isOnline" class="row">
+					<ChallengeButton
+						v-if="!statusStore.isInGame(modalUserId)"
+						:id="'challengeFromChat'"
+						:userId="modalUserId"
+						class="mx-1"
+					>Challenge</ChallengeButton>
+					<WatchButton
+						v-else
+						:userId="modalUserId"
+						class="mx-1"
+					>Watch</WatchButton>
 				</div>
 			</div>
 		</div>

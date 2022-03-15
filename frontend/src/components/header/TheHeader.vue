@@ -244,11 +244,12 @@ import ChatService from '../../services/ChatService';
 import { IChannel, IUserChannel, IMessage } from 'shared/models/socket-events';
 import { useAuthStore } from '@/store/auth';
 import { useStatusStore } from '@/store/modules/status/status';
-import { useChatRoomsStore } from '@/store/modules/chatroom/chatroom';
+import { useChatRoomsStore } from '@/store/chatroom';
 import { useCurrentUserStore } from '@/store/currentUser';
 import { toNumber } from '@vue/shared';
 import { useRoute } from 'vue-router';
 import SearchBar from './SearchBar.vue';
+import UserService from '@/services/UserService';
 
 export default defineComponent({
   components: { SearchBar },
@@ -286,20 +287,24 @@ export default defineComponent({
         this.$socketapp.on('sendChannels', async (resp: IChannel[]) => {
           for (const obj of resp) {
             obj['users'] = await ChatService.sendUserOfChannels(obj['roomId']);
-            obj['messages'] = await ChatService.sendMessagesOfChannels(
-              obj['roomId'],
-            );
-          }
-          this.chatRoomsStore.fetchRooms(resp);
-        });
-        this.$socketapp.on('sendChannel', async (resp: IChannel[]) => {
-          resp[0]['users'] = await ChatService.sendUserOfChannels(
-            resp[0]['roomId'],
-          );
-          resp[0]['messages'] = await ChatService.sendMessagesOfChannels(
-            resp[0]['roomId'],
-          );
-          this.chatRoomsStore.fetchRoom(resp);
+            if (obj.isDm === true) {
+				for (const user of obj.users){
+					if (user.username != localStorage.getItem('username')){
+						obj.roomName = user.username;
+						await UserService.getAvatarOfUser(user._id).then((av: string ) => (obj.avatar = av));
+					}
+						
+				}
+			}
+			else {
+				if (!obj.isPassword)
+					obj.avatar = "https://cdn-icons-png.flaticon.com/512/3050/3050502.png"
+				else
+					obj.avatar = "https://cdn-icons.flaticon.com/png/512/473/premium/473704.png?token=exp=1647210631~hmac=931ceef01cd343599ae660c0337aba86"
+			}
+			obj["messages"] = await ChatService.sendMessagesOfChannels(obj["roomId"]);
+		  }
+		  this.chatRoomsStore.fetchRoom(resp);
         });
         this.$socketapp.on('leaveChannel', async (channelId: number) => {
           this.chatRoomsStore.leaveChannel(channelId);

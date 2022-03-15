@@ -1,5 +1,6 @@
 <template>
   <div>
+	  <module-toast :title="toastProps.title" :message="toastProps.message"/>
       <form @submit.prevent="joinChannel">
 		  <div class="row text-black">
 			<div class="col-9">
@@ -54,20 +55,29 @@
 </template>
 
 <script lang='ts'>
-import { defineComponent } from '@vue/runtime-core';
+import { defineComponent, ref } from '@vue/runtime-core';
 import { ISearchChannel } from 'shared/models/socket-events';
 import ChatService from "../../services/ChatService";
-import { Modal } from "bootstrap";
+import { Modal, Toast } from "bootstrap";
+import moduleToast from './Toast.vue';
 
 export default defineComponent({
+  components: {
+		moduleToast
+	},
   name: 'ChatSearchTmp',
   data(){
     return {
       searchTerm: '' ,
       results: [] as ISearchChannel[],
 	  passwordModal: {} as Modal,
-	  passWord: '' as String,
+	  passWord: '' as string,
 	  joinPrivateRoom: {} as ISearchChannel,
+	  toast: {} as Toast,
+	  toastProps: {
+		  message: '' as string,
+		  title: '' as string,
+	  }
     }
   },
   mounted() {
@@ -87,33 +97,39 @@ export default defineComponent({
 		let results = JSON.parse(JSON.stringify(this.results))
 		for (const obj of results) {
 			if (obj["title"] === this.searchTerm) {
-				if (obj["password"] != '' && obj["password"] != null){
+				if (obj.isPassword){
 					this.joinPrivateRoom = obj;
 					this.passwordModal.show();
 				}
 				else{
 					ChatService.joinChannel(obj["id"], {password: null}).catch(({ response }) => {
-						alert(response.data.message)
+						this.toast = new Toast("#toastModal");
+						this.toastProps.message = response.data.message;
+						this.toastProps.title = "Error";
+						this.toast.show();
 					});
 				}
 				return ;
 			}
 		}
-		alert("This channel doesn't exist")
+		this.toast = new Toast("#toastModal");
+		this.toastProps.message = "This channel doesn't exist";
+		this.toastProps.title = "Error";
+		this.toast.show();
     },
 	joinChannelpassword(){
 		if (this.passWord){
 			ChatService.joinChannel(this.joinPrivateRoom.id, {password: this.passWord}).then( resp => {
-				if (resp.data === '')
-					alert("Wrong password")
-				else
-					this.passwordModal.hide()
+				this.passwordModal.hide()
+			}).catch(({ response }) => {
+				this.toast = new Toast("#toastModal");
+				this.toastProps.message = response.data.message;
+				this.toastProps.title = "Error";
+				this.toast.show();
 			});
 		}
-	}
+	},
   },
 })
 
 </script>
-
-<style></style>
