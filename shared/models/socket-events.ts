@@ -39,6 +39,8 @@ export interface IChannel {
 	owner: IUserChannel;
 	messages: IMessage[] | null;
 	users: IUserChannel[];
+	avatar: string | null;
+	isPassword: boolean;
 }
 
 /// Online events

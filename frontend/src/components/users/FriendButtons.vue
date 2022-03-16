@@ -73,15 +73,15 @@ function endFriendship() {
         "
         style="min-width:2rem"
       >
-        <font-awesome-icon icon="hourglass" />
-        <span v-if="!props.small">&nbspRequest sent</span>
+        <font-awesome-icon icon="hourglass" :class="!small && 'pe-2'" />
+        <span v-if="!props.small" class="clickable-cursor">Request sent</span>
       </button>
     </div>
     <!-- accept / decline -->
     <div
       v-else-if="currentUserStore.isPending(props.userId)"
       class="d-flex flex-row"
-      :class="props.small && 'justify-content-end'"
+      :class="[props.small && 'justify-content-end'], [!props.small && 'justify-content-center']"
     >
     <div>
         <button
@@ -94,8 +94,8 @@ function endFriendship() {
           "
           style="min-width:2rem"
         >
-          <font-awesome-icon icon="check" />
-          <span v-if="!props.small">&nbspAccept</span>
+          <font-awesome-icon icon="check" :class="!small && 'pe-2'" />
+          <span v-if="!props.small" class="clickable-cursor">Accept</span>
         </button>
         <button
           type="button"
@@ -107,8 +107,8 @@ function endFriendship() {
           "
           style="min-width:2rem"
         >
-          <font-awesome-icon icon="xmark" />
-          <span v-if="!props.small">&nbspDecline</span>
+          <font-awesome-icon icon="xmark" :class="!small && 'pe-2'" />
+          <span v-if="!props.small" class="clickable-cursor">Decline</span>
         </button>
       </div>
     </div>  
@@ -124,8 +124,8 @@ function endFriendship() {
         "
         style="min-width:2rem"
       >
-        <font-awesome-icon icon="xmark" />
-        <span v-if="!props.small">&nbspEnd friendship</span>
+        <font-awesome-icon icon="xmark" :class="!small && 'pe-2'" />
+        <span v-if="!props.small" class="clickable-cursor">End friendship</span>
       </button>
     </div>
     <!-- send request -->
@@ -140,8 +140,8 @@ function endFriendship() {
         "
         style="min-width:2rem"
       >
-        <font-awesome-icon icon="plus" />
-        <span v-if="!props.small">&nbspAdd friend</span>
+        <font-awesome-icon icon="plus" :class="!small && 'pe-2'" />
+        <span v-if="!props.small" class="clickable-cursor">Add friend</span>
       </button>
     </div>
   </div>

@@ -1,16 +1,20 @@
 /* disable outline on focus */
 
 a, a:hover, a:focus {
-	outline-style: none;
-	box-shadow: none;
+	outline-style: none !important;
+	box-shadow: none !important;
 }
 button, button:hover, button:focus {
-	outline-style: none;
-	box-shadow: none;
+	outline-style: none !important;
+	box-shadow: none !important;
 }
 input, input:hover, input:focus {
-	outline-style: none;
-	box-shadow: none;
+	outline-style: none !important;
+	box-shadow: none !important;
+}
+select, select:hover, select:focus {
+	outline-style: none !important;
+	box-shadow: none !important;
 }
 
 /* remove arrow from input with datalist */
@@ -21,6 +25,13 @@ input::-webkit-calendar-picker-indicator {
 }
 
 /* gradients */
+
+.gradient-body-inverted {
+  background: linear-gradient(180deg, rgba(#192531, 0), rgba(#192531, 1))
+}
+.gradient-body {
+  background: linear-gradient(180deg, rgba(#192531, 1), rgba(#192531, 0))
+}
 
 .gradient-blue-inverted {
   background: linear-gradient(180deg, rgba(#74A4BC, 0), rgba(#74A4BC, .15))
@@ -55,8 +66,4 @@ h1, h2, h3, h4, h5, h6, p, span, th, td {
 
 a:link {
   text-decoration: none;
-}
-
-.bg-app {
-  background-color: $app-background;
 }

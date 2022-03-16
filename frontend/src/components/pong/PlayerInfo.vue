@@ -1,10 +1,8 @@
 <template>
-	<div class="d-flex justify-content-evenly">
-		<div class="d-flex justify-content align-items-center">
-			<h3 v-if="side === 'right'" class="px-1">{{ username }}</h3>
-			<img :src="userAvatar" alt="avatar of user" height="50" class="px-1">
-			<h3 v-if="side === 'left'" class="px-1">{{ username }}</h3>
-		</div>
+	<div class="d-flex flex-column align-items-center">
+		<img :src="userAvatar" alt="avatar" height="40" class="mb-3">
+		<h6 v-if="small">{{ username }}</h6>
+		<h4 v-else>{{ username }}</h4>
 	</div>
 </template>
 
@@ -16,7 +14,7 @@ import { IUser } from "@/models/IUser";
 export default defineComponent({
 	props: {
 		userId: {type: Number, required: true},
-		side : {type: String, required: true},
+		small : {type: Boolean, required: false},
 	},
 	data() {
 		return {
@@ -53,5 +51,4 @@ export default defineComponent({
 
 </script>
 
-<style>
-</style>
+<style></style>

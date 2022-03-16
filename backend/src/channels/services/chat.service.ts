@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
+import { Injectable, NotFoundException, UnauthorizedException, BadRequestException } from "@nestjs/common";
 import { IPaginationOptions, paginate, Pagination } from "nestjs-typeorm-paginate";
 import { InjectRepository } from "@nestjs/typeorm";
 import { getManager, getRepository, Repository } from "typeorm";
@@ -25,8 +25,20 @@ export class ChatService {
     return await getManager().transaction(async entityManager => {
       const newDm = new Channel();
       newDm.isDm = true;
+	  let error = '';
 	  let userTmpOne = await this.usersService.findById(userIdOne);
 	  let userTmpTwo = await this.usersService.findById(userIdTwo);
+	  let y = await this.getChannelsOfUser(userIdOne)
+	  for (const obj of y){
+		if (obj.isDm){
+			let users = await this.getUsersOfChannel(obj.roomId)
+			for (const user of users) { 
+				if (user._id === userIdTwo){
+					throw new UnauthorizedException("You're already in a conversation with " + userTmpTwo.username);
+				}
+			}
+		}
+	  }
 	  newDm.title = `${userTmpOne.username} and ${userTmpTwo.username}`;
       await entityManager.save(newDm);
 
@@ -115,7 +127,6 @@ export class ChatService {
     });
     if (!channelUser)
       throw new NotFoundException('user not found');
-	console.log("channelUser av", attrs)
 	channelUser.mutedUntil = attrs.mutedUntil
     return await this.userChannelRepo.save(channelUser);
   }
@@ -269,12 +280,13 @@ export class ChatService {
   }
 
   async searchChannelsByTitle(title: string): Promise<ISearchChannel[]> {
-    return getRepository(Channel)
-      .createQueryBuilder("channel")
-      .where("title like :name ", { name: `%${title}%` })
-	  .where('channel."isDm" = false')
-      .select(["channel.id", "channel.title", "channel.password"])
-      .getMany();
+	  return await getManager().connection.query(
+		`SELECT channel.id AS "id",
+				channel.title AS title,
+				(channel."password" != '') AS "isPassword"
+		  FROM "channel" channel
+		  WHERE title LIKE ('%${title}%') AND channel."isDm"=FALSE`
+	  );
   }
 
   async searchUsersByTitle(data: {title: string, channelId: number}) {
@@ -333,7 +345,7 @@ export class ChatService {
 				c."isDm",
 				c.title AS "roomName",
 				c."createdAt",
-				c."password"
+				(c."password" != '') AS "isPassword"
 		FROM Channel c
 		LEFT JOIN user_channel u
 			ON u."channelId" = c.id
@@ -347,7 +359,7 @@ export class ChatService {
 				c."isDm",
 				c.title AS "roomName",
 				c."createdAt",
-				c."password"
+				(c."password" != '') AS "isPassword"
 		FROM Channel c
 		WHERE c."id"=(${channelId})`
 	  );

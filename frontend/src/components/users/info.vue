@@ -131,7 +131,7 @@ function getUserData(id: number) {
         title="victories"
       >
         <font-awesome-icon icon="trophy" />
-        <span class="fw-bold">&nbsp&nbsp{{ victories }}</span>
+        <span class="fw-bold ms-2">{{ victories }}</span>
       </div>
       <div
         class="col-2 offset-2"
@@ -140,16 +140,16 @@ function getUserData(id: number) {
         title="losses"
       >
         <font-awesome-icon icon="skull" />
-        <span class="fw-bold">&nbsp&nbsp{{ losses }}</span>
+        <span class="fw-bold ms-2">{{ losses }}</span>
       </div>
     </div>
 
     <div
-      class="progress bg-app position-relative mx-sm-2 mb-2"
+      class="progress bg-body position-relative mx-sm-2 mb-2"
       style="height: 2rem;"
     >
       <div
-        class="progress-bar bg-warning"
+        class="progress-bar bg-primary"
         role="progressbar"
         :style="{ width: (xp % 100) + '%' }"
         :aria-valuenow="xp % 100"

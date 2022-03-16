@@ -1,30 +1,107 @@
-// THE doc: https://getbootstrap.com/docs/5.0/customize/sass/
-// https://css-tricks.com/how-to-import-a-sass-file-into-every-vue-component-in-an-app/
-// https://www.reddit.com/r/vuejs/comments/hqhxxz/how_can_i_configure_scss_file_and_share_variables/
-// https://vueschool.io/articles/vuejs-tutorials/globally-load-sass-into-your-vue-js-applications/
+/* colors */
 
-// eventually import boostrap from node modules to custom it 
-// https://getbootstrap.com/docs/5.0/customize/sass/
-// https://getbootstrap.com/docs/5.0/utilities/background/
+$body-bg:       #192531;		// don't touch
+$body-color:    #f8f9fa;		// don't touch
 
-// 1. Include functions first (so you can manipulate colors, SVGs, calc, etc)
-@import '@/../node_modules/bootstrap/scss/functions';
+$primary:       #42b983;
+$secondary:     #74a4bc;
+$success:       #198754;		// don't touch
+$info:          #0dcaf0;
+$warning:       #ffc107;		// don't touch
+$danger:        #dc3545;		// don't touch
+$light:         #e9ecef;		// don't touch
+$dark:          #212529;
 
-// 2. default variable overrides (like primary secondary, danger etc...)
-// https://getbootstrap.com/docs/5.0/customize/sass/
-@import 'variables';
+$body:          #192531;
 
-// 3. Include remainder of required Bootstrap stylesheets
-@import "@/../node_modules/bootstrap/scss/variables";
-@import "@/../node_modules/bootstrap/scss/mixins";
+$theme-colors: (
+  "primary":		$primary,
+  "secondary":	$secondary,
+  "success":		$success,
+  "info":				$info,
+  "warning":		$warning,
+  "danger":			$danger,
+  "light":			$light,
+  "dark":				$dark,
 
-// 4. Include any optional Bootstrap components as you like
-@import "@/../node_modules/bootstrap/scss/root";
-@import "@/../node_modules/bootstrap/scss/reboot";
-@import "@/../node_modules/bootstrap/scss/type";
-@import "@/../node_modules/bootstrap/scss/images";
-@import "@/../node_modules/bootstrap/scss/containers";
-@import "@/../node_modules/bootstrap/scss/grid";
+  "body":				$body				// tmp
+);
 
-// 5. Add additional custom code here
 
+/* general */
+
+$link-color: 										$body-color;
+$link-hover-color: 							$secondary;
+
+/* nav */
+
+$nav-link-hover-color:					$secondary !important;
+
+/* table */
+
+$table-group-separator-color:				$body-bg;
+
+/* pagination */
+
+$pagination-padding-x:							1rem;
+$pagination-border-color:						$secondary;			// good ?
+$pagination-hover-border-color:			$secondary;			// good ?
+$pagination-active-border-color:		$secondary;			// good ?
+$pagination-disabled-border-color:	$secondary;			// good ?
+
+/* dropdown */
+
+$dropdown-bg:										$body-bg;
+$dropdown-color:								$body-color;
+$dropdown-link-color: 					$body-color;
+$dropdown-link-hover-color:			$secondary;
+$dropdown-link-hover-bg:				$body-bg;
+$dropdown-link-active-color:		$secondary !important;
+$dropdown-link-active-bg:				$body-bg;
+
+/* offcanvas */
+
+$offcanvas-horizontal-width:		300px;
+$offcanvas-bg-color:						$body-bg;
+$offcanvas-color:								$body-color;
+
+/* accordion */
+
+$accordion-button-color: 				$body-color; 
+$accordion-button-active-bg:		rgba(#000, .1);
+$accordion-button-active-color:	$secondary;
+$accordion-icon-color:					$body-color;
+$accordion-icon-active-color:		$secondary;
+
+/* modal */
+
+$modal-content-color:						$body-color;
+$modal-content-bg:							$body-bg;
+
+$modal-header-border-color:			rgba(#000, .2);
+
+/* tooltip */
+
+$tooltip-bg:										$body-bg;
+$tooltip-opacity:								1;
+
+
+
+
+
+
+
+
+
+
+
+// $custom-colors: (
+//   "body":       $body
+// );
+
+// $theme-colors: map-merge($theme-colors, $custom-colors);
+
+@import "@/../node_modules/bootstrap/scss/bootstrap";
+
+
+// $theme-colors: map-merge($theme-colors, $custom-colors);
