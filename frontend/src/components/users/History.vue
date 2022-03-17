@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { onUnmounted, onUpdated, ref, watch } from 'vue';
 import moment from 'moment';
 import UserService from '@/services/UserService';
+import { Tooltip } from 'bootstrap';
 
 const props = defineProps({
   userId: {
@@ -10,11 +11,26 @@ const props = defineProps({
   },
 });
 
-const data = ref<any>({});
-const count = ref<number>(0);
-const currentPage = ref<number>(0);
+const anonymous = {
+  id: 0,
+  username: 'anonymous user',
+};
+
+const items = ref<any>([]);
+const links = ref<any>({});
+const meta = ref<any>({});
+const tooltips = ref<Tooltip[]>([]);
 
 paginate(`/game/${props.userId}/pagination`);
+
+onUpdated(() => {
+  unsetTooltips();
+  setTooltips();
+});
+
+onUnmounted(() => {
+  unsetTooltips();
+});
 
 watch(
   () => props.userId,
@@ -23,11 +39,30 @@ watch(
   },
 );
 
+function setTooltips() {
+  for (const item of items.value) {
+    let tooltip = new Tooltip("#date" + item.id);
+    tooltips.value.push(tooltip);
+  }
+}
+
+function unsetTooltips() {
+  for (const tooltip of tooltips.value) {
+    tooltip.dispose();
+  }
+  tooltips.value = [];
+}
+
 function paginate(link: string) {
   UserService.getGamePagination(props.userId, link).then((response: any) => {
-    data.value = response.data;
-    count.value = response.data.meta.itemCount;
-    currentPage.value = response.data.meta.currentPage;
+    let tmp: any = response.data;
+    for (let item of tmp.items) {
+      if (!item.looser) item.looser = anonymous;
+      if (!item.winner) item.winner = anonymous;
+    }
+    items.value = tmp.items;
+    links.value = tmp.links;
+    meta.value = tmp.meta;
   });
 }
 
@@ -50,7 +85,7 @@ function formatScore(wId: number, wScore: number, lScore: number) {
 
 function formatDate(s: string) {
   const date = Date.parse(s);
-  return moment(date).format('MMMM Do YYYY, h:mm:ss a');
+  return moment(date).format('MMMM Do YYYY, HH:mm');
 }
 
 function timeFromNow(s: string) {
@@ -61,24 +96,19 @@ function timeFromNow(s: string) {
 
 <template>
   <div class="container pt-3 px-md-5">
-    <h3 class="mb-2">Match history</h3>
-
-    <table class="table rounded">
+    <table class="table table-hover rounded mb-3">
       <thead>
-        <tr class="text-white">
+        <tr>
           <th scope="col">Date</th>
           <th scope="col">Opponent</th>
           <th scope="col">Score</th>
         </tr>
       </thead>
       <tbody>
-        <tr
-          v-for="game in data.items"
-          class="table-row"
-          :class="isWinner(game.winner.id) ? 'table-success' : 'table-danger'"
-        >
+        <tr v-for="game in items" class="table-row">
           <th
-            id="date"
+            :id="`date${game.id}`"
+            class="table-value fw-normal"
             scope="row"
             data-bs-toggle="tooltip"
             data-bs-placement="top"
@@ -87,8 +117,15 @@ function timeFromNow(s: string) {
             {{ timeFromNow(game.createdAt) }}
           </th>
           <td class="table-value">
+            <span
+              v-if="opponentId(game.winner.id, game.looser.id) === 0"
+              class="fst-italic"
+            >
+              {{ opponentName(game.winner, game.looser) }}
+            </span>
+
             <router-link
-              class="link"
+              v-else
               :to="{
                 name: 'profile',
                 params: { userid: opponentId(game.winner.id, game.looser.id) },
@@ -97,7 +134,10 @@ function timeFromNow(s: string) {
               {{ opponentName(game.winner, game.looser) }}
             </router-link>
           </td>
-          <td class="table-value">
+          <td
+            class="table-value fw-bold"
+            :class="isWinner(game.winner.id) ? 'text-success' : 'text-danger'"
+          >
             {{
               formatScore(game.winner.id, game.winnerScore, game.looserScore)
             }}
@@ -105,63 +145,68 @@ function timeFromNow(s: string) {
         </tr>
       </tbody>
     </table>
-
-    <nav v-if="count" aria-label="Page navigation">
+    <!-- navigation -->
+    <nav v-if="meta.itemCount" aria-label="Page navigation">
       <ul class="pagination justify-content-center">
-        <li class="page-item" :class="currentPage == 1 && 'disabled'">
-          <a class="page-link clickable" @click="paginate(data.links.first)"
+        <li class="page-item" :class="meta.currentPage == 1 && 'disabled'">
+          <a
+            class="page-link"
+            href="#"
+            @click="paginate(links.first)"
             >First</a
           >
         </li>
-        <li class="page-item" :class="currentPage == 1 && 'disabled'">
+        <li class="page-item" :class="meta.currentPage == 1 && 'disabled'">
           <a
             class="page-link"
             href="#"
-            aria-label="Previous"
-            @click="paginate(data.links.previous)"
+            @click="paginate(links.previous)"
+            >&laquo;</a
           >
-            <span aria-hidden="true">&laquo;</span>
-          </a>
         </li>
-        <li
-          class="page-item"
-          :class="currentPage == data.meta.totalPages && 'disabled'"
-        >
+        <li class="page-item" :class="meta.currentPage == meta.totalPages && 'disabled'">
           <a
             class="page-link"
             href="#"
-            aria-label="Next"
-            @click="paginate(data.links.next)"
+            @click="paginate(links.next)"
+            >&raquo;</a
           >
-            <span aria-hidden="true">&raquo;</span>
-          </a>
         </li>
-        <li
-          class="page-item"
-          :class="currentPage == data.meta.totalPages && 'disabled'"
-        >
-          <a class="page-link clickable" @click="paginate(data.links.last)"
+        <li class="page-item" :class="meta.currentPage == meta.totalPages && 'disabled'">
+          <a
+            class="page-link"
+            href="#"
+            @click="paginate(links.last)"
             >Last</a
           >
         </li>
       </ul>
     </nav>
-
-    <p v-if="!count" class="fst-italic">no game played</p>
+    <div v-if="!meta.itemCount" class="fst-italic">
+      <hr />
+      <p>no game played</p>
+    </div>
   </div>
 </template>
 
-<style scoped>
-.link {
-  text-decoration: none;
+<style lang="scss" scoped>
+a {
+  color: white;
 }
-
-.clickable {
-  cursor: pointer;
-}
-
 .table-value {
-  font-weight: bold;
-  color: black;
+  color: white;
+}
+.page-item .page-link {
+  background-color: transparent !important;
+}
+.table > :not(caption) > * > * {
+  border-bottom-width: 0 !important;
+}
+.table-striped > tbody > tr:nth-child(odd) > td,
+.table-striped > tbody > tr:nth-child(odd) > th {
+  background-color: transparent !important;
+}
+.pagination > li > a {
+  border-width: 0.5px;
 }
 </style>

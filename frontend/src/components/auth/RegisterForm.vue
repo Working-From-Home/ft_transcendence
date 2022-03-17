@@ -200,7 +200,7 @@ const registerFortyTwo = async () => {
     line-height: 1.5em;
     color: white;
     /* // this is really the only tricky part, you need to specify the background color of the container element... */
-    background-color: $app-background;
+    background-color: $body-bg;
   }
 }
 </style>

@@ -1,7 +1,7 @@
 <template class="container-fluid-sm">
   <section>
-    <the-header></the-header>
-    <friend-list v-if="authStore.isLoggedIn"></friend-list>
+    <Header></Header>
+    <FriendList v-if="authStore.isLoggedIn"></FriendList>
     <div class="row align-items-center">
       <router-view v-slot="{ Component, route }">
         <transition name="fade" mode="out-in">
@@ -9,15 +9,13 @@
         </transition>
       </router-view>
     </div>
-    <mini-chat v-if="authStore.isLoggedIn && !isChatView"></mini-chat>
     <pong-socket v-if="authStore.isLoggedIn" />
   </section>
 </template>
 
 <script setup lang="ts">
-import MiniChat from './components/chat/MiniChat.vue';
-import TheHeader from './components/TheHeader/TheHeader.vue';
-import FriendList from './components/OffcanvasFriendsList.vue';
+import Header from './components/header/Header.vue';
+import FriendList from './components/header/FriendsList.vue';
 import PongSocket from './components/pong/PongSocket.vue';
 import { useAuthStore } from '@/store/auth';
 import { useRoute } from 'vue-router';
@@ -37,7 +35,6 @@ const isChatView = computed(() => {
 
 <style lang="scss">
 html {
-  background: $app-background;
   overflow-x: hidden;
 }
 
@@ -46,8 +43,6 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: rgba(255, 255, 255, 0.884);
-  background: $app-background;
 }
 
 .fade-enter-active,

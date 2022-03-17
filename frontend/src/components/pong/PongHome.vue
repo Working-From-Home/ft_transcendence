@@ -1,7 +1,7 @@
 <template>
   <div class="row g-3 px-md-5 mt-md-2">
     <div class="col">
-      <div class="bg-success bg-opacity-75 bg-gradient rounded p-3 pb-5">
+      <div class="bg-primary gradient-blue-inverted rounded p-3 pb-5">
         <h1 class="display-6 mt-3 mb-4 fw-bold">Play Pong!</h1>
         <p class="fs-5 mb-4">find your opponent now and express your talent</p>
         <pong-matchmaking />
@@ -10,9 +10,9 @@
   </div>
   <div class="row g-3 px-md-5">
     <div class="col pt-3">
-      <div class="bg-info bg-opacity-50 bg-gradient rounded p-3">
+      <div class="gradient-blue rounded p-3">
         <h3 class="display-6 mt-3 mb-4 fw-bold">A bit of history</h3>
-        <p class="fs-5 text-justify mx-5">
+        <p class="fs-5 text-justify mx-md-5">
           Pong is a table tennis–themed arcade sports video game, featuring
           simple two-dimensional graphics, manufactured by Atari and originally
           released in 1972. It was created by Allan Alcorn as a training
@@ -23,7 +23,7 @@
           Magnavox Odyssey, the first home video game console. In response,
           Magnavox later sued Atari for patent infringement...
         </p>
-        <p class="fs-5 text-justify mx-5">
+        <p class="fs-5 text-justify mx-md-5">
           Pong was the first commercially successful video game, and it helped
           to establish the video game industry along with the Magnavox Odyssey.
           Soon after its release, several companies began producing games that
@@ -33,7 +33,7 @@
           its staff to move beyond Pong and produce more innovative games
           themselves.
         </p>
-        <p class="fs-5 text-justify mx-5">
+        <p class="fs-5 text-justify mx-md-5">
           Atari released several sequels to Pong that built upon the original's
           gameplay by adding new features. During the 1975 Christmas season,
           Atari released a home version of Pong exclusively through Sears retail
@@ -78,4 +78,5 @@ export default defineComponent({
 .text-justify {
   text-align: justify;
 }
+
 </style>

@@ -13,29 +13,20 @@ function deleteAccount() {
 </script>
 
 <template>
-  <ButtonTemplate
-    type="button"
-    classes="btn btn-outline-danger"
-    data-bs-toggle="modal"
-    data-bs-target="#deleteAccount"
-  >
-    Delete account
-  </ButtonTemplate>
-
-  <div class="modal fade" id="deleteAccount" data-bs-backdrop="static">
+  <div class="modal fade" id="deleteAccount" data-bs-backdrop="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <!-- Modal Header -->
-        <div class="modal-header text-black">
+        <div class="modal-header">
           <h4 class="modal-title">Delete your account</h4>
           <button
             type="button"
-            class="btn-close"
+            class="btn-close btn-close-white"
             data-bs-dismiss="modal"
           ></button>
         </div>
         <!-- Modal body -->
-        <div class="modal-body text-black">
+        <div class="modal-body">
           <p>Are you sure ? This action is irreversible.</p>
           <ButtonTemplate
             type="button"

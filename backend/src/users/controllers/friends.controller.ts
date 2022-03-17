@@ -20,12 +20,16 @@ import { Friendship } from '../entities/friendship.entity';
 import { FriendshipDto } from '../dtos/friendship.dto';
 import { UserDto } from '../dtos/user.dto';
 import { User } from '../entities/user.entity';
+import { AppGateway } from 'src/app.gateway';
 
 @ApiTags('friends')
 @Controller('/users/:id/friends')
 @UseGuards(JwtAuthGuard)
 export class FriendsController {
-    constructor(private friendshipService: FriendshipService) {}
+    constructor(
+        private friendshipService: FriendshipService,
+        private appGateway: AppGateway,
+    ) {}
 
     @Get()
     @Serialize(UserDto)
@@ -57,7 +61,9 @@ export class FriendsController {
         if (await this.friendshipService.twoWaySearch(applicantId, recipientId)) {
             throw new BadRequestException('the relationship already exists');
         }
-        return await this.friendshipService.create(applicantId, recipientId);
+        const friendship = await this.friendshipService.create(applicantId, recipientId);
+        this.appGateway.server.in(`user:${recipientId}`).emit('requestReceived');
+        return friendship;
     }
 
     @Patch('/:applicantId')
@@ -69,6 +75,7 @@ export class FriendsController {
     ): Promise<Friendship> {
         const friendship = await this.friendshipService.oneWaySearch(applicantId, recipientId, 'pending');
         if (!friendship) { throw new NotFoundException('request not found') }
+        this.appGateway.server.in(`user:${applicantId}`).emit('requestAccepted');
         return await this.friendshipService.accept(friendship);
     }
 
@@ -77,10 +84,15 @@ export class FriendsController {
     @Serialize(FriendshipDto)
     async removeFriendship(
         @Param('id', ParseIntPipe) lhsId: number,
-        @Param('friendId', ParseIntPipe) rhsId: number
+        @Param('friendId', ParseIntPipe) rhsId: number,
+        @Query('status') status: string
     ): Promise<Friendship> {
-        const friendship = await this.friendshipService.twoWaySearch(lhsId, rhsId, "accepted");
+        const friendship = await this.friendshipService.twoWaySearch(lhsId, rhsId, status);
         if (!friendship) { throw new NotFoundException('request not found'); }
+        if (status === "pending")
+            this.appGateway.server.in(`user:${rhsId}`).emit('requestDeclined');
+        else if (status === "accepted")
+            this.appGateway.server.in(`user:${rhsId}`).emit('friendshipEnded');
         return await this.friendshipService.remove(friendship);
     }
 }

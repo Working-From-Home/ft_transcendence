@@ -6,5 +6,5 @@ export const fileFilter = {
         const allowedMimesTypes: validMimeType[] = validMimesTypes;
         allowedMimesTypes.includes(file.mimetype) ? cb(null, true) : cb(null, false);
     },
-    limits: { files: 1, fileSize: 256 * 1000 }
+    limits: { files: 1, fileSize: 1000000 }
 }
