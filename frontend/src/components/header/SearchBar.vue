@@ -3,49 +3,50 @@ import ChatService from '@/services/ChatService';
 import { toNumber } from '@vue/shared';
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
+import { useNotificationsStore } from '@/store/notifications';
 
 const router = useRouter();
+const notificationsStore = useNotificationsStore();
 
 const username = ref<string>('');
 const results = ref<any>([]);
-const errorMessage = ref<string>('');
 
 function searchUsers() {
-	results.value = [];
-	ChatService.searchUsers(username.value).then((resp: any) => {
-		for (const obj of resp) {
-			if (obj.id != toNumber(localStorage.getItem('userId')))
-				results.value = results.value.concat(obj);
-		}
-	});
+  results.value = [];
+  ChatService.searchUsers(username.value).then((resp: any) => {
+    for (const obj of resp) {
+      if (obj.id != toNumber(localStorage.getItem('userId')))
+        results.value.push(obj);
+    }
+  });
 }
 
 function goToUserProfile() {
   if (!username.value) {
-    errorMessage.value = 'Enter a username before clicking on search';
-    return;
+    return error('warning', 'Enter a username before clicking on search');
   }
   let res = JSON.parse(JSON.stringify(results.value));
   for (const user of res) {
     if (user.username === username.value) {
-    	router.push('/users/' + user._id);
+      username.value = '';
+      router.push('/users/' + user._id);
       return;
     }
   }
-  errorMessage.value = 'This user does not exist';
+  error('warning', 'This user does not exist');
 }
 
-function clearErrorMessage() {
-  errorMessage.value = '';
+function error(header: string, body: string) {
+  username.value = '';
+  notificationsStore.enqueue('warning', header, body);
 }
 </script>
 
 <template>
-  <!-- input -->
-  <form class="mx-auto d-flex my-3 my-lg-0" @submit.prevent="goToUserProfile">
+  <form class="mx-auto d-flex ms-lg-3 my-3 my-lg-0" @submit.prevent="goToUserProfile">
     <input
       v-model="username"
-      @input="searchUsers()"
+      @input="searchUsers"
       class="form-control me-1 bg-body border-secondary"
       type="search"
       list="ids"
@@ -53,38 +54,18 @@ function clearErrorMessage() {
       aria-label="search for a user"
     />
     <datalist id="ids">
-			<option v-for="result in results" :key="result._id">
-				{{ result.username }}
-			</option>
+      <option v-for="result in results" :key="result._id">
+        {{ result.username }}
+      </option>
     </datalist>
-    <button class="btn btn-outline-secondary" type="submit">Search</button>
-  </form>
-  <!-- alert -->
-  <div class="position-absolute top-50 start-50 translate-middle mt-5">
-    <div
-      v-if="errorMessage"
-      style="z-index: 1000 !important"
-      class="alert alert-warning alert-dismissible fade show mt-5"
-      role="alert"
+    <button
+      id="searchButton"
+      class="btn btn-outline-secondary"
+      type="submit"
     >
-      <p class="mb-0">{{ errorMessage }}</p>
-      <button
-        type="button"
-        class="btn-close"
-        data-bs-dismiss="alert"
-        aria-label="Close"
-        @click="clearErrorMessage"
-      ></button>
-    </div>
-  </div>
+      Search
+    </button>
+  </form>
 </template>
 
-<style lang="scss" scoped>
-textarea:focus, input:focus {
-    color: white;
-    background-color: $body;
-}
-input, select, textarea{
-    color: white;
-}
-</style>
+<style lang="scss" scoped></style>

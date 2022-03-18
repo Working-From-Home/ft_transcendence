@@ -1,7 +1,7 @@
 <template>
   <div>
     <button
-      class="btn btn-outline-light"
+      class="btn btn-outline-danger"
       v-if="!isSearching"
       @click="joinMatchmaking"
     >

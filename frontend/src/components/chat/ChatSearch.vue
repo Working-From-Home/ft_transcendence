@@ -8,8 +8,8 @@
 					v-model="searchTerm"
 					@input="searchChannels()"
 					type="search"
-					placeholder="Search channels"
-					class="form-control form-control-lg"
+					placeholder="search for a channel"
+					class="form-control form-control-lg border-secondary"
 					list="my-list-id"
 				/>
 				<datalist id="my-list-id">
@@ -18,7 +18,7 @@
 					</option>
 				</datalist>
 			</div>
-			<button type="submit" class="col btn btn-outline-primary">Add Channel</button>
+			<button type="submit" class="col btn btn-outline-secondary">Join</button>
 		  </div>
 	   </form>
 
