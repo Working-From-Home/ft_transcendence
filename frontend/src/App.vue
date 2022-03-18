@@ -1,6 +1,7 @@
 <template class="container-fluid-sm">
   <section>
     <Header></Header>
+    <NotificationsHandler></NotificationsHandler>
     <FriendList v-if="authStore.isLoggedIn"></FriendList>
     <div class="row align-items-center">
       <router-view v-slot="{ Component, route }">
@@ -20,6 +21,7 @@ import PongSocket from './components/pong/PongSocket.vue';
 import { useAuthStore } from '@/store/auth';
 import { useRoute } from 'vue-router';
 import { computed } from 'vue';
+import NotificationsHandler from './components/notifications/notificationsHandler.vue';
 
 const authStore = useAuthStore();
 const route = useRoute();
