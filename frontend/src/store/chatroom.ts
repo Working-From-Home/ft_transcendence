@@ -9,6 +9,7 @@ export interface State {
 	isOwner: boolean;
 	isMute: boolean;
 	isban: boolean;
+	blockList: any[]; 
 }
 
 export const useChatRoomsStore = defineStore('chatRooms', {
@@ -19,6 +20,7 @@ export const useChatRoomsStore = defineStore('chatRooms', {
 		isOwner: false,
 		isMute: false,
 		isban: false,
+		blockList: [],
 	}),
 	getters: {
 		getRooms() : IChannel[] {
@@ -29,6 +31,9 @@ export const useChatRoomsStore = defineStore('chatRooms', {
 		},
 		getIsMute(): boolean {
 			return this.isMute;
+		},
+		getblock(): any[] {
+			return this.blockList;
 		}
 	},
 	actions : {
@@ -51,9 +56,21 @@ export const useChatRoomsStore = defineStore('chatRooms', {
 			this.rooms = room.concat(this.rooms);
 		},
 		fetchMessage(messages: IMessage[]){
+			for (let message of messages) {
+				for (const obj of this.blockList) {
+					if (obj.recipientId === message.senderId)
+						message.deleted = true
+				}
+			}
 			this.messages = messages;
 		},
 		addMessageCurrent(messages: IMessage[], channelId: number){
+			for (let message of messages) {
+				for (const obj of this.blockList) {
+					if (obj.recipientId === message.senderId)
+						message.deleted = true
+				}
+			}
 			for (let obj of this.rooms){
 				if (obj["roomId"] === channelId){
 					if (obj.messages)
@@ -89,6 +106,35 @@ export const useChatRoomsStore = defineStore('chatRooms', {
 					}
 				}
 			}
+			if (param === "block"){
+				this.blockList = [
+					...this.blockList,
+					{
+						applicantId: toNumber(localStorage.getItem('userId')),
+						recipientId: userId,
+						createdAt: content
+					}
+				]
+				for (let message of this.messages) {
+					if (userId === message.senderId)
+						message.deleted = true
+				}
+			}
+			else if (param === "unblock"){
+				let tmp = this.blockList
+				this.blockList = []
+				for (let obj of tmp) {
+					if (obj.recipientId !== userId)
+						this.blockList = [
+							...this.blockList,
+							obj
+						]
+				}
+				for (let message of this.messages) {
+					if (userId === message.senderId)
+						message.deleted = false
+				}
+			}
 		},
 		leaveChannel(channelId: number) {
 			let i = 0;
@@ -99,6 +145,9 @@ export const useChatRoomsStore = defineStore('chatRooms', {
 				}
 				i++;
 			}
+		},
+		listBlock(listBlock: any) {
+			this.blockList = listBlock;
 		}
 	}
 })
