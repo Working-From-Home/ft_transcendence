@@ -68,8 +68,13 @@
 import { defineComponent } from 'vue'
 import ChatService from "../../services/ChatService";
 import { Modal } from "bootstrap";
+import { useNotificationsStore } from '@/store/notifications';
 
 export default defineComponent({
+  setup() {
+	const notificationsStore = useNotificationsStore();
+	return { notificationsStore };
+  },
 	props: {
 		currentUserId: {type: Number, required: true},
 		roomId: {type: Number, required: true},
@@ -103,7 +108,7 @@ export default defineComponent({
 		},
 		muted() {
 			if (!this.userName) {
-				alert("please put a name")
+				this.notificationsStore.enqueue("warning", "Error", "Username can't be empty")
 				return ;
 			}
 			let results = JSON.parse(JSON.stringify(this.results))
@@ -115,13 +120,12 @@ export default defineComponent({
 					this.timeModal.show();
 					return ;
 				}
-				
 			}
-			alert(this.userName + " isn't a user in the room")
+			this.notificationsStore.enqueue("warning", "Error", this.userName + " isn't a user in the room")
 		},
 		banned() {
 			if (!this.userName) {
-				alert("please put a name")
+				this.notificationsStore.enqueue("warning", "Error", "Username can't be empty")
 				return ;
 			}
 			let results = JSON.parse(JSON.stringify(this.results))
@@ -134,7 +138,7 @@ export default defineComponent({
 					return ;
 				}
 			}
-			alert(this.userName + " isn't a user in the room")
+			this.notificationsStore.enqueue("warning", "Error", this.userName + " isn't a user in the room")
 		},
 		unmuted() {
 			ChatService.muteUser(this.roomId, this.userTarget._id, null)
@@ -151,31 +155,30 @@ export default defineComponent({
 		submitTime() {
 			if (this.action === "mute")
 				ChatService.muteUser(this.roomId, this.userTarget._id, this.time).catch(({ response }) => {
-					alert(response.data.message)
+					this.notificationsStore.enqueue("warning", "Error", response.data.message)
 			});
 			if (this.action === "ban")
 				ChatService.banUser(this.roomId, this.userTarget._id, this.time).catch(({ response }) => {
-					alert(response.data.message)
+					this.notificationsStore.enqueue("warning", "Error", response.data.message)
 			});
 			this.userName = '';
 			this.timeModal.hide();
 		},
 		Admin() {
 			if (!this.userName) {
-				alert("please put a name")
+				this.notificationsStore.enqueue("warning", "Error", "Username can't be empty")
 				return ;
 			}
 			let results = JSON.parse(JSON.stringify(this.results))
 			for (const obj of results) {
 				if (obj.username === this.userName) {
 					ChatService.promoteUser(this.roomId, obj._id).catch(({ response }) => {
-							alert(response.data.message)
+						this.notificationsStore.enqueue("warning", "Error", response.data.message)
 					});
-					alert(this.userName + " is now admin")
 					return ;
 				}
 			}
-			alert(this.userName + " isn't a user in the room")
+			this.notificationsStore.enqueue("warning", "Error", this.userName + " isn't a user in the room")
 			
 		}
 	}  

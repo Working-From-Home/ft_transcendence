@@ -62,7 +62,7 @@ export class ChatService {
 	let channels = await this.searchChannelsByTitle(data.title);
 	for (const obj of channels) {
 		if (data.title = obj.title)
-			throw new UnauthorizedException("This Channel exist");
+			throw new UnauthorizedException("This Channel already in use");
 	}
     return await getManager().transaction(async entityManager => {
       const tmpOwner = new User();
