@@ -42,9 +42,16 @@ export class AppGateway {
 	
 	async handleDisconnect(client: AppSocket) {
 		if (client.data.userId) {
+			console.log("disconnect")
 			this.onlineService.removeUser(client.data.userId)
 			this.server.emit("connectedUsers", this.onlineService.getOnlineUsers())
-			this.logger.log(`User id ${client.data.userId} is offline. (${this.onlineService.getTotalOnlineUsers()} online users)`);
+			this.logger.log(`User id ${client.data.userId} is offline. (${this.onlineService.getTotalOnlineUsers()} online users)`)
+			this.chatService.getChannelsOfUser(client.data.userId).then( (y) => {
+				for (const obj of y){
+					client.leave("channel:" + obj["roomId"]);
+				}
+			});
+			client.leave("user:" + client.data.userId);
 		}
 		else
 			this.logger.log(`Disconnection: http handshake failed for some reason`);

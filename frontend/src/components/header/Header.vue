@@ -10,6 +10,13 @@ const currentUserStore = useCurrentUserStore();
 
 function logout() {
 	authStore.logout();
+	socket.off('sendChannels');
+    socket.off('connect_error');
+    socket.off('connectedUsers');
+	socket.off('sendChannel');
+	socket.off('leaveChannel');
+	socket.off('sendMessage');
+	socket.off('changeParam');
 	socket.disconnect(); //  to remove and put at the right place too
 }
 </script>

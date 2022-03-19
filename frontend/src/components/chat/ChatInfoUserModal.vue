@@ -28,9 +28,7 @@
 					</button>
 				</router-link>
 				<div v-if="!isCurrent">
-					<button type="button" id="btn-front" class="btn-front btn btn-outline-info">
-							block
-					</button>
+					<chat-block-button :modalUserId="modalUserId"/>
 					<chat-d-m-button :otherUserId="modalUserId"/>
 				</div>
 				<div v-if="!isCurrent && isOnline" class="row">
@@ -87,6 +85,7 @@ import { PropType, defineComponent } from 'vue'
 import ChallengeButton from '@/components/pong/ChallengeButton.vue';
 import WatchButton from '@/components/pong/WatchButton.vue';
 import ChatDMButton from "./ChatDMButton.vue";
+import ChatBlockButton from "./ChatBlockButton.vue";
 import { useStatusStore } from '@/store/modules/status/status';
 import { useAuthStore } from '@/store/auth';
 
@@ -96,7 +95,7 @@ export default defineComponent({
 		const authStore = useAuthStore();
 		return { statusStore, authStore };
 	},
-	components: { ChallengeButton, WatchButton, ChatDMButton },
+	components: { ChallengeButton, WatchButton, ChatDMButton, ChatBlockButton },
 	props: {
 		modalUserId: {type: Number, required: true},
 		modalUserName: {type: String, required: true},
@@ -115,7 +114,7 @@ export default defineComponent({
 			if (!this.isOnline) return 'offline';
 			else if (this.isInGame) return 'in a game';
 			return 'online';
-		}
-	}
+		},
+	},
 })
 </script>
