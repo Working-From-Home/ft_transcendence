@@ -1,6 +1,5 @@
 <template>
   <div>
-	  <module-toast :title="toastProps.title" :message="toastProps.message"/>
       <form @submit.prevent="joinChannel">
 		  <div class="row text-black">
 			<div class="col-9">
@@ -58,13 +57,14 @@
 import { defineComponent, ref } from '@vue/runtime-core';
 import { ISearchChannel } from 'shared/models/socket-events';
 import ChatService from "../../services/ChatService";
-import { Modal, Toast } from "bootstrap";
-import moduleToast from './Toast.vue';
+import { Modal } from "bootstrap";
+import { useNotificationsStore } from '@/store/notifications';
 
 export default defineComponent({
-  components: {
-		moduleToast
-	},
+  setup() {
+	const notificationsStore = useNotificationsStore();
+	return { notificationsStore };
+  },
   name: 'ChatSearchTmp',
   data(){
     return {
@@ -72,12 +72,7 @@ export default defineComponent({
       results: [] as ISearchChannel[],
 	  passwordModal: {} as Modal,
 	  passWord: '' as string,
-	  joinPrivateRoom: {} as ISearchChannel,
-	  toast: {} as Toast,
-	  toastProps: {
-		  message: '' as string,
-		  title: '' as string,
-	  }
+	  joinPrivateRoom: {} as ISearchChannel
     }
   },
   mounted() {
@@ -91,7 +86,7 @@ export default defineComponent({
     },
     joinChannel() {
 		if (!this.searchTerm) {
-			alert("please put a name")
+			this.notificationsStore.enqueue("warning", "Error", "Channel Name can't be empty")
 			return
 		}
 		let results = JSON.parse(JSON.stringify(this.results))
@@ -103,29 +98,20 @@ export default defineComponent({
 				}
 				else{
 					ChatService.joinChannel(obj["id"], {password: null}).catch(({ response }) => {
-						this.toast = new Toast("#toastModal");
-						this.toastProps.message = response.data.message;
-						this.toastProps.title = "Error";
-						this.toast.show();
+						this.notificationsStore.enqueue("warning", "Error", response.data.message)
 					});
 				}
 				return ;
 			}
 		}
-		this.toast = new Toast("#toastModal");
-		this.toastProps.message = "This channel doesn't exist";
-		this.toastProps.title = "Error";
-		this.toast.show();
+		this.notificationsStore.enqueue("warning", "Error", "This channel doesn't exist")
     },
 	joinChannelpassword(){
 		if (this.passWord){
 			ChatService.joinChannel(this.joinPrivateRoom.id, {password: this.passWord}).then( resp => {
 				this.passwordModal.hide()
 			}).catch(({ response }) => {
-				this.toast = new Toast("#toastModal");
-				this.toastProps.message = response.data.message;
-				this.toastProps.title = "Error";
-				this.toast.show();
+				this.notificationsStore.enqueue("warning", "Error", response.data.message)
 			});
 		}
 	},
