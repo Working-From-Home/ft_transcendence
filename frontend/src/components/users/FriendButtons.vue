@@ -68,8 +68,8 @@ function endFriendship() {
         disabled
         class="btn"
         :class="
-          [props.small && 'btn-sm btn-outline-primary'],
-          [!props.small && 'btn-primary shadow m-2']
+          [props.small && 'btn-sm btn-outline-info'],
+          [!props.small && 'btn-info shadow m-2']
         "
         style="min-width:2rem"
       >
@@ -89,8 +89,8 @@ function endFriendship() {
           @click="acceptRequest"
           class="btn"
           :class="
-            [props.small && 'btn-sm btn-outline-primary mx-1'],
-            [!props.small && 'btn-primary shadow m-2']
+            [props.small && 'btn-sm btn-outline-info mx-1'],
+            [!props.small && 'btn-info shadow m-2']
           "
           style="min-width:2rem"
         >
@@ -102,8 +102,8 @@ function endFriendship() {
           @click="declineFriendship"
           class="btn"
           :class="
-            [props.small && 'btn-sm btn-outline-primary'],
-            [!props.small && 'btn-primary shadow m-2']
+            [props.small && 'btn-sm btn-outline-info'],
+            [!props.small && 'btn-info shadow m-2']
           "
           style="min-width:2rem"
         >
@@ -119,13 +119,13 @@ function endFriendship() {
         @click="endFriendship"
         class="btn"
         :class="
-          [props.small && 'btn-sm btn-outline-primary'],
-          [!props.small && 'btn-primary shadow m-2']
+          [props.small && 'btn-sm btn-outline-info'],
+          [!props.small && 'btn-info shadow m-2']
         "
         style="min-width:2rem"
       >
         <font-awesome-icon icon="xmark" :class="!small && 'pe-2'" />
-        <span v-if="!props.small" class="clickable-cursor">End friendship</span>
+        <span v-if="!props.small" class="clickable-cursor">Unfriend</span>
       </button>
     </div>
     <!-- send request -->
@@ -135,8 +135,8 @@ function endFriendship() {
         @click="sendRequest"
         class="btn"
         :class="
-          [props.small && 'btn-sm btn-outline-primary'],
-          [!props.small && 'btn-primary shadow m-2']
+          [props.small && 'btn-sm btn-outline-info'],
+          [!props.small && 'btn-info shadow m-2']
         "
         style="min-width:2rem"
       >

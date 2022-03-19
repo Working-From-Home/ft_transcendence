@@ -15,7 +15,7 @@ function logout() {
 </script>
 
 <template>
-  <div class="page-header border-bottom border-secondary">
+  <div class="page-header border-bottom border-terciary">
     <nav class="navbar navbar-expand-lg navbar-dark">
       <!-- not logged header -->
       <div v-if="!authStore.isLoggedIn" class="container-fluid mx-lg-4 mx-2">
@@ -51,7 +51,7 @@ function logout() {
       </div>
       <!-- logged in header -->
       <div v-if="authStore.isLoggedIn" class="container-fluid mx-lg-4 mx-2">
-        <router-link to="/" class="navbar-brand">Transcendence</router-link>
+        <router-link to="/" class="navbar-brand text-primary fw-bold">Transcendence</router-link>
 				<!-- hamburger button -->
         <button
           class="navbar-toggler"
