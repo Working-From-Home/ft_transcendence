@@ -17,7 +17,7 @@ select, select:hover, select:focus {
 	box-shadow: none !important;
 }
 
-/* remove arrow from input with datalist */
+/* remove arrow from datalist input */
 
 input::-webkit-calendar-picker-indicator {
   position: absolute;
@@ -26,12 +26,22 @@ input::-webkit-calendar-picker-indicator {
 
 /* gradients */
 
+.light-gradient {
+  background: linear-gradient(180deg, rgba(white, 0.15), rgba(white, 0))
+}
+.light-gradient-inverted {
+  background: linear-gradient(180deg, rgba(white, 0), rgba(white, 0.15))
+}
+
 .gradient-body-inverted {
   background: linear-gradient(180deg, rgba(#192531, 0), rgba(#192531, 1))
 }
 .gradient-body {
   background: linear-gradient(180deg, rgba(#192531, 1), rgba(#192531, 0))
 }
+
+
+
 
 .gradient-blue-inverted {
   background: linear-gradient(180deg, rgba(#74A4BC, 0), rgba(#74A4BC, .15))
@@ -56,7 +66,7 @@ input::-webkit-calendar-picker-indicator {
 
 /* cursor */
 
-h1, h2, h3, h4, h5, h6, p, span, th, td {
+h1, h2, h3, h4, h5, h6, p, span, th, td, small {
 	cursor: default;
 }
 
@@ -66,4 +76,8 @@ h1, h2, h3, h4, h5, h6, p, span, th, td {
 
 a:link {
   text-decoration: none;
+}
+
+a.page-link {
+  min-width: 70px;
 }

@@ -93,9 +93,9 @@ function getUserData(id: number) {
     <div v-if="!isOwner" class="mt-0 mt-md-1 mx-5 position-absolute end-0">
       <div class="mx-md-5">
         <span
-          class="badge rounded-pill fs-6 shadow-sm bg-light fst-italic"
+          class="badge rounded-pill fs-6 shadow-sm border border-terciary fst-italic"
           :class="[
-            isOnline && 'text-success',
+            isOnline && 'text-primary',
             !isOnline && 'text-danger',
             isInGame && 'text-warning',
           ]"
