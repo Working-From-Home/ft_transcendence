@@ -89,8 +89,9 @@ function getUserData(id: number) {
 
 <template>
   <div class="px-3 pt-3 pb-1">
-    <!-- status badge -->
-    <div v-if="!isOwner" class="mt-0 mt-md-1 mx-5 position-absolute end-0">
+
+    <!-- status badge for medium and large screen -->
+    <div v-if="!isOwner" class="d-none d-md-inline mt-0 mt-md-1 mx-5 position-absolute end-0">
       <div class="mx-md-5">
         <span
           class="badge rounded-pill fs-6 shadow-sm border border-terciary fst-italic"
@@ -103,10 +104,10 @@ function getUserData(id: number) {
         </span>
       </div>
     </div>
-
+    <!-- edit button for medium and large screen -->
     <div
       v-else
-      class="mt-1 mt-md-2 mx-5 position-absolute end-0"
+      class="d-none d-md-inline mt-1 mt-md-2 mx-5 position-absolute end-0"
       id="edit"
       data-bs-toggle="tooltip"
       title="edit profile"
@@ -117,15 +118,45 @@ function getUserData(id: number) {
         data-bs-target="#deleteAccount"
       >
         <font-awesome-icon icon="gear" class="fa-lg mx-3" />
+      </div>  
+    </div>
+    
+    <!-- status badge for small screen -->
+    <div v-if="!isOwner" class="d-md-none mb-4">
+      <span
+        class="badge rounded-pill fs-6 shadow-sm border border-terciary fst-italic"
+        :class="[
+          isOnline && 'text-primary',
+          !isOnline && 'text-danger',
+          isInGame && 'text-warning',
+        ]"
+        >{{ status }}
+      </span>
+    </div>
+    <!-- edit button for small screen -->
+    <div
+      v-else
+      class="d-md-none mb-4"
+      id="edit"
+      data-bs-toggle="tooltip"
+      title="edit profile"
+    >
+      <div
+        class="clickable-cursor"
+        data-bs-toggle="modal"
+        data-bs-target="#deleteAccount"
+      >
+        <font-awesome-icon icon="gear" class="fa-lg mx-3" />
       </div>
     </div>
-    <EditModal></EditModal>
+
+    <div v-if="isOwner"><EditModal></EditModal></div>
 
     <h2>{{ username }}</h2>
     <hr />
     <div class="row gx-3 pb-3 fs-6 fst-italic">
       <div
-        class="col-2 offset-3"
+        class="col-2 offset-3 text-nowrap"
         id="victories"
         data-bs-toggle="tooltip"
         title="victories"
@@ -134,7 +165,7 @@ function getUserData(id: number) {
         <span class="fw-bold ms-2">{{ victories }}</span>
       </div>
       <div
-        class="col-2 offset-2"
+        class="col-2 offset-2 text-nowrap"
         id="losses"
         data-bs-toggle="tooltip"
         title="losses"
