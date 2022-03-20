@@ -259,13 +259,14 @@ export default defineComponent({
 })
 </script>
 
-<style>
+<style scoped>
 body {
 	font-family: 'Quicksand', sans-serif;
 }
 .chat {
 	margin: 1rem auto;
 }
+
 body-webkit-scrollbar-thumb {
   background-color: blue; /* color of the scroll thumb */
   border-radius: 20px; /* roundness of the scroll thumb */
