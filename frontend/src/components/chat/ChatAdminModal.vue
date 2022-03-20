@@ -69,6 +69,7 @@ import { defineComponent } from 'vue'
 import ChatService from "../../services/ChatService";
 import { Modal } from "bootstrap";
 import { useNotificationsStore } from '@/store/notifications';
+import { IUserChannel } from 'shared/models/socket-events';
 
 export default defineComponent({
   setup() {
@@ -82,7 +83,7 @@ export default defineComponent({
 	data() {
 		return {
 			userName: '' as string,
-			results: [] as any,
+			results: [] as IUserChannel[],
 			userTarget: {} as any,
 			timeModal: {} as Modal,
 			action: null as ("ban" | "mute" | "admin" | null),
@@ -99,9 +100,9 @@ export default defineComponent({
 			this.results = [];
 			this.userTarget = {};
 			this.action = null;
-			ChatService.searchUsersByTitle(this.userName, this.roomId).then((resp: any) => {
+			ChatService.searchUsersByTitle(this.userName, this.roomId).then((resp: IUserChannel[]) => {
 				for (const obj of resp) {
-					if (obj.id != this.currentUserId)
+					if (obj._id != this.currentUserId)
 					  this.results = this.results.concat(obj);
 				}
 			});

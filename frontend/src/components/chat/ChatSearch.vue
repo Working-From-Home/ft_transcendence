@@ -1,7 +1,7 @@
 <template>
   <div>
       <form @submit.prevent="joinChannel">
-		  <div class="row text-black">
+		  <div id="formJoin" class="row text-black">
 			<div class="col-9">
 				<input
 					v-model="searchTerm"
@@ -17,7 +17,7 @@
 					</option>
 				</datalist>
 			</div>
-			<button type="submit" class="col btn btn-outline-secondary">Join</button>
+			<button id="buttonJoin" type="submit" class="col-3 btn btn-outline-secondary">Join</button>
 		  </div>
 	   </form>
 
@@ -119,3 +119,9 @@ export default defineComponent({
 })
 
 </script>
+
+<style scoped>
+#formJoin {
+	margin-right: 0;
+}
+</style>
