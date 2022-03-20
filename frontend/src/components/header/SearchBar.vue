@@ -4,6 +4,7 @@ import { toNumber } from '@vue/shared';
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 import { useNotificationsStore } from '@/store/notifications';
+import { IUserChannel } from "shared/models/socket-events";
 
 const router = useRouter();
 const notificationsStore = useNotificationsStore();
@@ -13,9 +14,9 @@ const results = ref<any>([]);
 
 function searchUsers() {
   results.value = [];
-  ChatService.searchUsers(username.value).then((resp: any) => {
+  ChatService.searchUsers(username.value).then((resp: IUserChannel[]) => {
     for (const obj of resp) {
-      if (obj.id != toNumber(localStorage.getItem('userId')))
+      if (obj._id != toNumber(localStorage.getItem('userId')))
         results.value.push(obj);
     }
   });

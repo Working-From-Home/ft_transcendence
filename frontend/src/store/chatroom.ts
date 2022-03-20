@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { IChannel, IMessage } from 'shared/models/socket-events';
+import { IChannel, IMessage, IBlocked } from 'shared/models/socket-events';
 import { toNumber } from '@vue/shared';
 
 export interface State {
@@ -9,7 +9,7 @@ export interface State {
 	isOwner: boolean;
 	isMute: boolean;
 	isban: boolean;
-	blockList: any[]; 
+	blockList: IBlocked[]; 
 }
 
 export const useChatRoomsStore = defineStore('chatRooms', {
@@ -32,7 +32,7 @@ export const useChatRoomsStore = defineStore('chatRooms', {
 		getIsMute(): boolean {
 			return this.isMute;
 		},
-		getblock(): any[] {
+		getblock(): IBlocked[] {
 			return this.blockList;
 		}
 	},
@@ -72,12 +72,13 @@ export const useChatRoomsStore = defineStore('chatRooms', {
 				}
 			}
 			for (let obj of this.rooms){
-				if (obj["roomId"] === channelId){
+				if (obj["roomId"] === messages[0].channelId){
 					if (obj.messages)
 						obj.messages = obj.messages.concat(messages);
 					else
 						obj.messages = messages;
-					this.messages = obj.messages;
+					if (channelId === messages[0].channelId)
+						this.messages = obj.messages;
 					return ;
 				}
 			}
@@ -146,7 +147,7 @@ export const useChatRoomsStore = defineStore('chatRooms', {
 				i++;
 			}
 		},
-		listBlock(listBlock: any) {
+		listBlock(listBlock: IBlocked[]) {
 			this.blockList = listBlock;
 		}
 	}

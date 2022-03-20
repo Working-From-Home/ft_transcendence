@@ -112,7 +112,7 @@ export class ChannelsController {
 		@Param('channelId') channelId: number,
 		@Param('userId') userId: number,
 		@Body() content: {date: Date}
-	) {
+	): Promise<UserChannel>  {
 		const adminId = parseInt(request.user.sub);
 		let user: UserChannel;
 		if (!content.date){
@@ -135,11 +135,12 @@ export class ChannelsController {
 		@Param('channelId') channelId: number,
 		@Param('userId') userId: number,
 		@Body() content: {date: Date}
-	) {
+	): Promise<UserChannel> {
 		const adminId = parseInt(request.user.sub);
 		let user: UserChannel;
 		if (!content.date){
 			user = await this.chatService.unbanUser(channelId, adminId, userId);
+			this.appGateway.server.in(`user:${userId}`).socketsLeave(`channel:${channelId}`)
 			this.chatService.getChannel(channelId).then( (y) => {
 				this.appGateway.server.in("channel:" + channelId).emit("sendChannel", y);
 			})
@@ -147,6 +148,7 @@ export class ChannelsController {
 		}
 		else { 
 			user = await this.chatService.banUser(channelId, adminId, userId, content.date)
+			this.appGateway.server.in(`user:${userId}`).socketsJoin(`channel:${channelId}`)
 			this.chatService.getChannel(channelId).then( (y) => {
 				this.appGateway.server.in("channel:" + channelId).emit("sendChannel", y);
 			})
@@ -174,7 +176,7 @@ export class ChannelsController {
 		@Req() request,
 		@Param('channelId') channelId: number,
 		@Param('userId') userId: number,
-	) {
+	): Promise<UserChannel> {
 		return await this.chatService.removeAdmin(channelId, parseInt(request.user.sub), userId);
 	}
 
@@ -182,7 +184,7 @@ export class ChannelsController {
     async blockUser(
 		@Req() request,
         @Param('recipientId', ParseIntPipe) recipientId: number
-    ) {
+    ): Promise<Blocked>{
 		let block = await this.chatService.blockUser(request.user.sub, recipientId);
 		this.appGateway.server.in("user:" + request.user.sub).emit("changeParam", "block", 0, recipientId, block.createdAt);
         return block
@@ -192,14 +194,14 @@ export class ChannelsController {
     async unblockUser(
 		@Req() request,
         @Param('recipientId', ParseIntPipe) recipientId: number
-    ) {
+    ): Promise<Blocked[]> {
 		const unblock = await this.chatService.getBlocked(request.user.sub, recipientId);
 		this.appGateway.server.in("user:" + request.user.sub).emit("changeParam", "unblock", 0, recipientId, null);
         return await this.chatService.unBlockUser(unblock);
     }
 
 	@Get('/block')
-    async getblock( @Req() request ) {
+    async getblock( @Req() request ): Promise<Blocked[]> {
         let users = await this.chatService.isBlocked(request.user.sub);
         return users;
     }
