@@ -49,7 +49,7 @@
 </template>
 
 <script lang='ts'>
-import ChatWindow, {Message} from 'vue-advanced-chat';
+import ChatWindow, {Message, Room, CustomAction } from 'vue-advanced-chat'
 import 'vue-advanced-chat/dist/vue-advanced-chat.css';
 import { IChannel, IMessage, IUserChannel } from 'shared/models/socket-events';
 import ChatSearch from "./ChatSearch.vue";
@@ -66,10 +66,6 @@ import UserService from '@/services/UserService';
 import moment from 'moment'
 import { useNotificationsStore } from '@/store/notifications';
 
-interface CustomAction {
-	name: string
-	title: string
-};
 interface CustomOptions {
 	reset: boolean
 }
@@ -95,7 +91,7 @@ export default defineComponent({
 		ChatSearch,
 		ChatNewRoomModal,
 		ChatInfoUserModal,
-		ChatAdminModal
+		ChatAdminModal,
 	},
 	created() {
 		this.currentUserId = toNumber(localStorage.getItem('userId'))
@@ -103,6 +99,22 @@ export default defineComponent({
 			this.chatRoomsStore.addMessageCurrent(resp, this.currentRoom.roomId);
 		});
 		this.$socketapp.on("changeParam", async (param: string, channelId: number, userId: number, content: Date | null) => {
+			for (const obj of this.storeRoom) {
+				if (obj.roomId === channelId){
+					if (param === "ban"){
+						this.notificationsStore.enqueue("info", "Banned", "You're banned from " + obj.roomName)
+					}
+					else if (param === "unban"){
+						this.notificationsStore.enqueue("info", "Unbanned", "You're unbanned from " + obj.roomName)
+					}
+					else if (param === "mute"){
+						this.notificationsStore.enqueue("info", "Banned", "You're muted from " + obj.roomName)
+					}
+					else if (param === "unmute"){
+						this.notificationsStore.enqueue("info", "Unbanned", "You're unmuted from " + obj.roomName)
+					}
+				}
+			}
 			this.chatRoomsStore.addParam(param, channelId, userId, content);
 		});
 	},
@@ -136,7 +148,7 @@ export default defineComponent({
 			modalUserId: -1 as number,
 			modalUserName: "" as string,
 			modalAvatar: "" as string,
-			UserInfo: {},
+			UserInfo: {} as IUserChannel,
 			isMute: false,
 			isCurrent: false as boolean,
 			textMessages: {
@@ -241,7 +253,7 @@ export default defineComponent({
 							this.modalUserName = message.username
 						this.isCurrent = this.modalUserId === this.currentUserId,
 						UserService.getAvatarOfUser(message.senderId).then((av) => (this.modalAvatar = av));
-						ChatService.searchUsersByTitle(this.modalUserName, this.currentRoom.roomId).then((resp: any) => {
+						ChatService.searchUsersByTitle(this.modalUserName, this.currentRoom.roomId).then((resp: IUserChannel[]) => {
 							for (const obj of resp) {
 								if (obj._id === this.modalUserId){
 									this.UserInfo = JSON.parse(JSON.stringify(obj));
@@ -259,14 +271,35 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
-body {
-	font-family: 'Quicksand', sans-serif;
-}
+<style>
 .chat {
 	margin: 1rem auto;
 }
 
+.vac-message-wrapper .vac-message-container {
+    min-width: 130px;
+}
+
+.vac-message-wrapper .vac-message-card {
+	background: rgba(116, 164, 188, 0.15)!important;
+}
+.vac-message-wrapper .vac-message-current {
+    background: rgb(65, 196, 136, 0.8 )!important;
+}
+
+.vac-message-wrapper .vac-text-username {
+    font-weight: bold;
+    color: #42B983;
+	text-align: left;
+}
+
+.vac-room-header .vac-room-name {
+    color: #42B983;
+	font-weight: 700;
+}
+.vac-col-messages .vac-box-footer {
+    border-radius: 0px 0px 0px 4px;
+}
 body-webkit-scrollbar-thumb {
   background-color: blue; /* color of the scroll thumb */
   border-radius: 20px; /* roundness of the scroll thumb */

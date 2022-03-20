@@ -7,7 +7,7 @@ import { Channel } from "../entities/channel.entity";
 import { Message } from "../entities/message.entity";
 import { UserChannel } from "../entities/user-channel.entity";
 import { CreateChannelDto } from "../dtos/create-channel.dto";
-import { ISearchChannel, IChannel } from "shared/models/socket-events";
+import { ISearchChannel, IChannel, IUserChannel, IMessage } from "shared/models/socket-events";
 import { UsersService } from "src/users/services/users.service";
 import { Blocked } from 'src/users/entities/blocked.entity';
 
@@ -289,13 +289,13 @@ export class ChatService {
     return channelUser.role === 'admin';
   }
 
-  async isBlocked(applicantId: number)  {
+  async isBlocked(applicantId: number): Promise<Blocked[]>  {
 	const applicant = await this.usersService.findById(applicantId);
 	return await this.blockRepo.find({
 		where: [{ applicant}]
 	});
   }
-  async getBlocked(applicantId: number, recipientId: number)  {
+  async getBlocked(applicantId: number, recipientId: number): Promise<Blocked[]>  {
 	const applicant = await this.usersService.findById(applicantId);
 	const recipient = await this.usersService.findById(recipientId);
 	return await this.blockRepo.find({
@@ -323,7 +323,7 @@ export class ChatService {
 	  );
   }
 
-  async searchUsersByTitle(data: {title: string, channelId: number}) {
+  async searchUsersByTitle(data: {title: string, channelId: number}): Promise<IUserChannel[]> {
 	const y = await getManager().connection.query(
 		`SELECT uc."userId" AS "_id",
 				uc."channelId" AS "channelId",
@@ -340,7 +340,7 @@ export class ChatService {
 	return y;
   }
 
-  async getUsersOfChannel(channelId: number) {
+  async getUsersOfChannel(channelId: number): Promise<IUserChannel[]> {
 	const y = await getManager().connection.query(
 		`SELECT uc."userId" AS "_id",
 				uc."channelId" AS "channelId",
@@ -357,7 +357,7 @@ export class ChatService {
 	return y;
   }
 
-  async getMessagesOfChannel(channelId: number) {
+  async getMessagesOfChannel(channelId: number): Promise<Message[]> {
 	return getRepository(Message)
        .createQueryBuilder("m")
 	   .leftJoin("m.user", "u")

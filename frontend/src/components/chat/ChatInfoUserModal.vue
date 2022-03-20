@@ -3,7 +3,7 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header  d-flex bd-highlight mb-3">
-        <h5 class="modal-title me-auto p-2 bd-highlight">About {{ modalUserName }}</h5>
+        <h5 class="modal-title me-auto p-2 bd-highlight">About <span style="color:#42B983;">{{ modalUserName }}</span></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -27,7 +27,7 @@
 						Open Profile
 					</button>
 				</router-link>
-				<div v-if="!isCurrent">
+				<div v-if="!isCurrent" class="d-flex justify-content-center">
 					<chat-block-button :modalUserId="modalUserId"/>
 					<chat-d-m-button :otherUserId="modalUserId"/>
 				</div>
@@ -88,6 +88,7 @@ import ChatDMButton from "./ChatDMButton.vue";
 import ChatBlockButton from "./ChatBlockButton.vue";
 import { useStatusStore } from '@/store/modules/status/status';
 import { useAuthStore } from '@/store/auth';
+import { IUserChannel } from 'shared/models/socket-events';
 
 export default defineComponent({
 	setup() {
@@ -100,7 +101,7 @@ export default defineComponent({
 		modalUserId: {type: Number, required: true},
 		modalUserName: {type: String, required: true},
 		modalAvatar: {type: String, required: true},
-		UserInfo: {type: Object as PropType<any>, required: true},
+		UserInfo: {type: Object as PropType<IUserChannel>, required: true},
 		isCurrent: {type: Boolean , required: true}
 	},
 	computed: {
