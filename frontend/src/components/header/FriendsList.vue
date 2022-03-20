@@ -240,28 +240,14 @@ watch(
 
 <style lang="scss" scoped>
 .accordion-body {
-  padding: 0.5rem 0 0.5rem 0.6rem;
-}
-.accordion-button {
-  background-color: transparent;
-  padding: 1rem 0.3rem !important;
-  color: white;
+  padding: 0.5rem 0 0.5rem 0.3rem;
 }
 
 .accordion-button::after {
   margin-left: 1rem;
-  // background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%2342b983'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !important;
 }
-
-
 
 .table {
   margin-bottom: 0 !important;
-}
-
-
-a:link {
-  text-decoration: none;
-  color: white;
 }
 </style>

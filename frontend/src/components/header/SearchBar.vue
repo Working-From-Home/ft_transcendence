@@ -23,7 +23,7 @@ function searchUsers() {
 
 function goToUserProfile() {
   if (!username.value) {
-    return error('warning', 'Enter a username before clicking on search');
+    return notify('info', 'instructions for use', 'Please enter a username before clicking on search');
   }
   let res = JSON.parse(JSON.stringify(results.value));
   for (const user of res) {
@@ -33,12 +33,12 @@ function goToUserProfile() {
       return;
     }
   }
-  error('warning', 'This user does not exist');
+  notify('danger', 'not found', 'This user does not exist');
 }
 
-function error(header: string, body: string) {
+function notify(type: string, header: string, body: string) {
   username.value = '';
-  notificationsStore.enqueue('warning', header, body);
+  notificationsStore.enqueue(type, header, body);
 }
 </script>
 
