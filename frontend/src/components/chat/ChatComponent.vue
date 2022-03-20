@@ -18,7 +18,8 @@
 			:room-actions="roomActions"
 			:menu-actions="menuActions"
 			:message-actions="messageactions"
-			:rooms-list-opened="opened"
+			:rooms-list-opened="opened" 
+			:responsive-breakpoint="300" 
 			@send-message="sendMessage"
 			@fetch-messages="fetchMessages"
 			@room-action-handler="menuActionHandler"
@@ -40,7 +41,6 @@
 		<template #room-options="{}" v-if='currentUser.isAdmin === false || !isChatView '>
 			<p></p>
 		</template>
-		<module-toast :title="toastProps.title" :message="toastProps.message"/>
 		</chat-window>
 		<chat-admin-modal :roomId="currentRoom.roomId" :currentUserId="currentUserId"/>
 		<chat-new-room-modal/>
@@ -61,10 +61,10 @@ import { computed, defineComponent } from '@vue/runtime-core';
 import { useChatRoomsStore } from '@/store/chatroom'
 import { useAuthStore } from "@/store/auth";
 import { toNumber } from '@vue/shared';
-import { Modal, Toast } from "bootstrap";
+import { Modal } from "bootstrap";
 import UserService from '@/services/UserService';
 import moment from 'moment'
-import moduleToast from './Toast.vue';
+import { useNotificationsStore } from '@/store/notifications';
 
 interface CustomAction {
 	name: string
@@ -78,8 +78,10 @@ export default defineComponent({
 	setup() {
 		const chatRoomsStore = useChatRoomsStore();
 		const AuthStore = useAuthStore();
+		const notificationsStore = useNotificationsStore();
 		return { 	AuthStore,
 					chatRoomsStore,
+					notificationsStore,
 					storeRoom: computed(() => chatRoomsStore.getRooms),
 					storeMessage: computed(() => chatRoomsStore.getMessages),
 		};
@@ -93,8 +95,7 @@ export default defineComponent({
 		ChatSearch,
 		ChatNewRoomModal,
 		ChatInfoUserModal,
-		ChatAdminModal,
-		moduleToast
+		ChatAdminModal
 	},
 	created() {
 		this.currentUserId = toNumber(localStorage.getItem('userId'))
@@ -140,11 +141,6 @@ export default defineComponent({
 			isCurrent: false as boolean,
 			textMessages: {
 				MESSAGE_DELETED: 'This message is blocked',
-			},
-			toast: {} as Toast,
-			toastProps: {
-				message: '' as string,
-				title: '' as string,
 			}
 		}
 	},
@@ -191,10 +187,7 @@ export default defineComponent({
 		async sendMessage({content, roomId}: {content: Message, roomId: number}) {
 			let send = content;
 			await ChatService.createMessage(roomId, {message: send}).catch(({ response }) => {
-				this.toast = new Toast("#toastModal");
-				this.toastProps.message = response.data.message;
-				this.toastProps.title = "Error";
-				this.toast.show();
+				this.notificationsStore.enqueue("warning", "Error", response.data.message)
 			});
 		},
 		menuActionHandler({ action = {} as CustomAction, roomId = {} as number }) {
@@ -209,10 +202,7 @@ export default defineComponent({
 			for (const obj of this.storeRoom){
 				if (obj["roomId"].valueOf() === roomId) { 
 					if (obj["isDm"].valueOf() === true){
-						this.toast = new Toast("#toastModal");
-						this.toastProps.message = "You can't leave a Direct Message Channel";
-						this.toastProps.title = "Error";
-						this.toast.show();
+						this.notificationsStore.enqueue("warning", "Error", "You can't leave a Direct Message Channel")
 						return ;
 					}
 					break ;
@@ -228,10 +218,7 @@ export default defineComponent({
 				if (moment(curentDate).isBefore()) {
 					this.chatRoomsStore.isMute = false;
 					ChatService.muteUser(this.currentRoom.roomId, this.currentUserId, null).catch(({ response }) => {
-						this.toast = new Toast("#toastModal");
-						this.toastProps.message = response.data.message;
-						this.toastProps.title = "Error";
-						this.toast.show();
+						this.notificationsStore.enqueue("warning", "Error", response.data.message)
 					});
 				} 
 				else {
@@ -239,10 +226,7 @@ export default defineComponent({
 					setTimeout(() => {
 						this.chatRoomsStore.isMute = false;
 						ChatService.muteUser(this.currentRoom.roomId, this.currentUserId, null).catch(({ response }) => {
-						this.toast = new Toast("#toastModal");
-						this.toastProps.message = response.data.message;
-						this.toastProps.title = "Error";
-						this.toast.show();
+						this.notificationsStore.enqueue("warning", "Error", response.data.message)
 					});
 					}, curentDate.diff(moment()));
 				}

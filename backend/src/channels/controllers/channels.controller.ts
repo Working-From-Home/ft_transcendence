@@ -1,10 +1,11 @@
-import { Controller, Param, ParseIntPipe, Post, UseGuards, Req, Body, Patch, Delete, Put } from '@nestjs/common';
+import { Controller, Param, ParseIntPipe, Post, UseGuards, Req, Body, Patch, Delete, Put, Get } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { Channel } from '../entities/channel.entity';
 import { ChatService } from '../services/chat.service';
 import { CreateChannelDto } from '../dtos/create-channel.dto';
 import { UserChannel } from '../entities/user-channel.entity';
 import { UpdateResult } from 'typeorm';
+import { Blocked } from '../../users/entities/blocked.entity';
 import { AppGateway } from 'src/app.gateway';
 import { IMessage } from 'shared/models/socket-events';
 
@@ -21,8 +22,10 @@ export class ChannelsController {
 		@Param('destId', ParseIntPipe) destId: number
 	): Promise<Channel> {
 		const user = this.appGateway.server.in(`user:${request.user.sub}` );
+		const user2 = this.appGateway.server.in(`user:${destId}` );
 		let newChannel = await this.chatService.createDm(parseInt(request.user.sub), destId);
 		user.socketsJoin(`channel:${newChannel.id}`);
+		user2.socketsJoin(`channel:${newChannel.id}`);
 		this.chatService.getChannel(newChannel.id).then( (y) => {
 		 	this.appGateway.server.in("channel:" + newChannel.id).emit("sendChannel", y);
 		})
@@ -58,7 +61,8 @@ export class ChannelsController {
 			createdAt: tmpMessage.createdAt.toString(),
 			date: tmpMessage.createdAt.toDateString(),
 			senderId: tmpMessage.user.id,
-			channelId: tmpMessage.channel.id
+			channelId: tmpMessage.channel.id,
+			deleted: null
 		}]
 		this.appGateway.server.in("channel:" + channelId).emit("sendMessage", newMessage);
 		return newMessage;
@@ -173,4 +177,30 @@ export class ChannelsController {
 	) {
 		return await this.chatService.removeAdmin(channelId, parseInt(request.user.sub), userId);
 	}
+
+	@Post('/block/:recipientId')
+    async blockUser(
+		@Req() request,
+        @Param('recipientId', ParseIntPipe) recipientId: number
+    ) {
+		let block = await this.chatService.blockUser(request.user.sub, recipientId);
+		this.appGateway.server.in("user:" + request.user.sub).emit("changeParam", "block", 0, recipientId, block.createdAt);
+        return block
+    }
+
+	@Delete('/block/:recipientId')
+    async unblockUser(
+		@Req() request,
+        @Param('recipientId', ParseIntPipe) recipientId: number
+    ) {
+		const unblock = await this.chatService.getBlocked(request.user.sub, recipientId);
+		this.appGateway.server.in("user:" + request.user.sub).emit("changeParam", "unblock", 0, recipientId, null);
+        return await this.chatService.unBlockUser(unblock);
+    }
+
+	@Get('/block')
+    async getblock( @Req() request ) {
+        let users = await this.chatService.isBlocked(request.user.sub);
+        return users;
+    }
 }

@@ -7,7 +7,11 @@ interface ChannelUpdate {
 	password: string;
 	isPublic: boolean;
 }
-
+export interface IBlocked {
+	id: number;
+	username: string;
+  }
+  
 class ChatService {
 	/** create a conversation between me and someone */
 	createDm(userId: number, otherUserId: number): Promise<any> {
@@ -45,6 +49,16 @@ class ChatService {
 	/** Revoque admin to user */
 	revokeAdmin(channelId: number, userId: number): Promise<any> {
 		return http.delete(`/channels/${channelId}/ban/${userId}`)
+	}
+	blockUser(recipientId: number) {
+		return http.post(`/block/${recipientId}`)
+	}
+	unBlockUser(recipientId: number) {
+		return http.delete(`/block/${recipientId}`)
+	}
+	async getblock(): Promise<any[]> {
+		const blocklist = await http.get(`/block`);
+		return blocklist.data;
 	}
 	kickUser(channelId: number, userId: number): Promise<any> {
 		return http.delete(`/channels/${channelId}/kick/${userId}`)

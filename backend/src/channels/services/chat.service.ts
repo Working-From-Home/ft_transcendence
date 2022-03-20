@@ -9,6 +9,7 @@ import { UserChannel } from "../entities/user-channel.entity";
 import { CreateChannelDto } from "../dtos/create-channel.dto";
 import { ISearchChannel, IChannel } from "shared/models/socket-events";
 import { UsersService } from "src/users/services/users.service";
+import { Blocked } from 'src/users/entities/blocked.entity';
 
 @Injectable()
 export class ChatService {
@@ -16,6 +17,7 @@ export class ChatService {
     @InjectRepository(Channel) private channelRepo: Repository<Channel>,
     @InjectRepository(UserChannel) private userChannelRepo: Repository<UserChannel>,
     @InjectRepository(Message) private MessageRepo: Repository<Message>,
+	@InjectRepository(Blocked) private blockRepo: Repository<Blocked>,
 	private readonly usersService : UsersService,
   ) { }
 
@@ -57,6 +59,11 @@ export class ChatService {
   }
 
   async createChannel(ownerId: number, data: CreateChannelDto) {
+	let channels = await this.searchChannelsByTitle(data.title);
+	for (const obj of channels) {
+		if (data.title = obj.title)
+			throw new UnauthorizedException("This Channel already in use");
+	}
     return await getManager().transaction(async entityManager => {
       const tmpOwner = new User();
       tmpOwner.id = ownerId;
@@ -209,6 +216,18 @@ export class ChatService {
     return this.userChannelRepo.save(channelUser);
   }
 
+	async blockUser(applicantId: number, recipientId: number) {
+		if (applicantId === recipientId) {
+			throw new BadRequestException;
+		}
+		const applicant = await this.usersService.findById(applicantId);
+		const recipient = await this.usersService.findById(recipientId);
+		const blocked = this.blockRepo.create({ applicant, recipient });
+		return await this.blockRepo.save(blocked);
+	}
+	async unBlockUser(unblock: Blocked[]) {
+		return await this.blockRepo.remove(unblock);
+	}
   /* Remove */
 
   async removeChannel(channel: Channel): Promise<Channel> {
@@ -269,6 +288,21 @@ export class ChatService {
       throw new NotFoundException('user not found');
     return channelUser.role === 'admin';
   }
+
+  async isBlocked(applicantId: number)  {
+	const applicant = await this.usersService.findById(applicantId);
+	return await this.blockRepo.find({
+		where: [{ applicant}]
+	});
+  }
+  async getBlocked(applicantId: number, recipientId: number)  {
+	const applicant = await this.usersService.findById(applicantId);
+	const recipient = await this.usersService.findById(recipientId);
+	return await this.blockRepo.find({
+		where: [{ applicant, recipient}]
+	});
+  }
+  
 
   async isOwner(userId: number, channelId: number): Promise<boolean> {
     const channel = await getRepository(Channel)
@@ -365,12 +399,4 @@ export class ChatService {
 	  );
 	return a;
   }
-
-
-  // async getUsersInChannel(channelId: number): Promise<UsersInChannel[]> {
-  //   return getRepository(UsersInChannel)
-  //     .createQueryBuilder("u")
-  //     .where("u.channelId = 1")
-  //     .getRawMany();
-  // }
 }

@@ -25,10 +25,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import BaseButton from '../ui/BaseButton.vue';
 
 export default defineComponent({
-  components: { BaseButton },
   data() {
     return {
       isSearching: false,

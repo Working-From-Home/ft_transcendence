@@ -18,6 +18,7 @@ export interface IMessage {
     date: string;
     channelId: number;
 	senderId: number;
+	deleted: boolean | null;
 }
 
 export interface IUserChannel {
@@ -65,7 +66,7 @@ interface ServerToClientEventsChat {
 
 interface ClientToServerEventsChat {
   searchChannel: (title: string, callback: (channels: ISearchChannel[]) => void) => void;
-  sendMessage: (channelId: number, content: string) => void; // maybe not string if we keep emoji...
+  sendMessage: (channelId: number, content: string) => void;
   sendUserOfChannels: (channelId: number, callback: (channels: IUserChannel[]) => void) => void;
   sendMessagesOfChannels: (channelId: number, callback: (channels: IMessage[]) => void) => void;
   searchUsersByTitle: (data: {title: string, channelId: number}, callback: (channels: any) => void) => void;
