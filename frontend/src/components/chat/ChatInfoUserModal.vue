@@ -3,7 +3,7 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header  d-flex bd-highlight mb-3">
-        <h5 class="modal-title me-auto p-2 bd-highlight">About {{ modalUserName }}</h5>
+        <h5 class="modal-title me-auto p-2 bd-highlight">About <span style="color:#42B983;">{{ modalUserName }}</span></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -27,10 +27,8 @@
 						Open Profile
 					</button>
 				</router-link>
-				<div v-if="!isCurrent">
-					<button type="button" id="btn-front" class="btn-front btn btn-outline-info">
-							block
-					</button>
+				<div v-if="!isCurrent" class="d-flex justify-content-center">
+					<chat-block-button :modalUserId="modalUserId"/>
 					<chat-d-m-button :otherUserId="modalUserId"/>
 				</div>
 				<div v-if="!isCurrent && isOnline" class="row">
@@ -87,8 +85,10 @@ import { PropType, defineComponent } from 'vue'
 import ChallengeButton from '@/components/pong/ChallengeButton.vue';
 import WatchButton from '@/components/pong/WatchButton.vue';
 import ChatDMButton from "./ChatDMButton.vue";
+import ChatBlockButton from "./ChatBlockButton.vue";
 import { useStatusStore } from '@/store/modules/status/status';
 import { useAuthStore } from '@/store/auth';
+import { IUserChannel } from 'shared/models/socket-events';
 
 export default defineComponent({
 	setup() {
@@ -96,12 +96,12 @@ export default defineComponent({
 		const authStore = useAuthStore();
 		return { statusStore, authStore };
 	},
-	components: { ChallengeButton, WatchButton, ChatDMButton },
+	components: { ChallengeButton, WatchButton, ChatDMButton, ChatBlockButton },
 	props: {
 		modalUserId: {type: Number, required: true},
 		modalUserName: {type: String, required: true},
 		modalAvatar: {type: String, required: true},
-		UserInfo: {type: Object as PropType<any>, required: true},
+		UserInfo: {type: Object as PropType<IUserChannel>, required: true},
 		isCurrent: {type: Boolean , required: true}
 	},
 	computed: {
@@ -115,7 +115,7 @@ export default defineComponent({
 			if (!this.isOnline) return 'offline';
 			else if (this.isInGame) return 'in a game';
 			return 'online';
-		}
-	}
+		},
+	},
 })
 </script>

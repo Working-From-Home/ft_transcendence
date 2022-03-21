@@ -28,7 +28,10 @@ const connect = computed<boolean>(() => {
     socket.on('connect_error', (err: any) => {
       console.log(`socket connexion error: ${err}`);
     });
+	 /* channel events */
     socket.on('sendChannels', async (resp: IChannel[]) => {
+	  let blocked = await ChatService.getblock();
+	  chatRoomsStore.listBlock(blocked)
       for (const obj of resp) {
         obj['users'] = await ChatService.sendUserOfChannels(obj['roomId']);
 		if (obj.isDm === true){

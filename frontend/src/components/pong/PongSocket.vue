@@ -34,6 +34,7 @@
 <script lang="ts">
 import { useAuthStore } from '@/store/auth';
 import { useStatusStore } from '@/store/modules/status/status';
+import { useNotificationsStore } from '@/store/notifications';
 import { Modal } from 'bootstrap';
 import { defineComponent } from 'vue';
 import PlayerInfo from './PlayerInfo.vue';
@@ -50,8 +51,8 @@ export default defineComponent({
   setup() {
     const authStore = useAuthStore();
     const statusStore = useStatusStore();
-
-    return { authStore, statusStore };
+    const notificationsStore = useNotificationsStore();
+    return { authStore, statusStore, notificationsStore };
   },
   mounted() {
     this.gotChallengeModal = new Modal('#gotChallengeModal');
@@ -68,6 +69,7 @@ export default defineComponent({
     });
     this.$pongSocket.on('requestCanceled', () => {
       this.gotChallengeModal.hide();
+      this.notificationsStore.enqueue('danger', 'canceled', "your challenger has cancelled his invitation");
     });
     this.$pongSocket.on('inGameUsers', (ids: number[]) => {
       this.statusStore.setInGameUsers(ids);

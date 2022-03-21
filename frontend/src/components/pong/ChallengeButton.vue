@@ -2,14 +2,14 @@
   <div>
     <button
       type="button"
-			class="btn"
-			:class="
-				[small && 'btn-sm btn-outline-danger'],
-				[!small && 'btn-danger shadow m-2']
-			"
+      class="btn text-nowrap"
+      :class="
+        [small && 'btn-sm btn-outline-danger'],
+        [!small && 'btn-danger shadow m-2']
+      "
       data-bs-toggle="modal"
       :data-bs-target="`#${id}0`"
-      style="min-width: 2rem"
+      :style="small ? 'min-width: 2rem;' : 'min-width: 8.5rem;'"
     >
       <font-awesome-icon icon="bolt" :class="!small && 'pe-2'"/>
       <span v-if="!small" class="clickable-cursor">Challenge</span>
@@ -62,11 +62,11 @@
     </div>
 
     <!-- waiting response Modal -->
-    <div class="modal fade" :id="`${id}1`" data-bs-backdrop="static">
-      <div v-if="!errorRequest" class="modal-dialog modal-dialog-centered">
+    <div class="modal fade" :id="`${id}`" data-bs-backdrop="static">
+      <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-body text-center">
-            <p>Waiting for the response...</p>
+            <p>Waiting for response...</p>
             <button
               type="button"
               class="btn btn-danger my-1"
@@ -78,41 +78,6 @@
           </div>
         </div>
       </div>
-      <div v-else class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-body">
-            <p>{{ errorRequest }}</p>
-            <button
-              type="button"
-              class="btn btn-danger my-1"
-              data-bs-dismiss="modal"
-            >
-              Ok
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- toast -->
-    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-      <div
-        :id="`${id}2`"
-        class="toast hide"
-        role="alert"
-        aria-live="assertive"
-        aria-atomic="true"
-      >
-        <div class="toast-header">
-          <button
-            type="button"
-            class="btn-close btn-close-white"
-            data-bs-dismiss="toast"
-            aria-label="Close"
-          ></button>
-        </div>
-        <div class="toast-body">challenge refused.</div>
-      </div>
     </div>
   </div>
 </template>
@@ -120,9 +85,9 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { Modal } from 'bootstrap';
-import { Toast } from 'bootstrap';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faBolt } from '@fortawesome/free-solid-svg-icons';
+import { useNotificationsStore } from '@/store/notifications';
 
 library.add(faBolt);
 
@@ -137,17 +102,19 @@ export default defineComponent({
       requestId: '',
       gameSettings: { speed: 6, paddleSpeed: 5, score: 5 },
       challengeModal: {} as Modal,
-      refusedToast: {} as Toast,
-      errorRequest: '',
+      responded: false
     };
   },
+  setup() {
+    const notificationsStore = useNotificationsStore();
+    return { notificationsStore };
+  },
   mounted() {
-    this.challengeModal = new Modal(`#${this.id}1`);
-    this.refusedToast = new Toast(`#${this.id}2`);
+    this.challengeModal = new Modal(`#${this.id}`);
   },
   methods: {
     sendGameRequest() {
-      this.errorRequest = '';
+      this.responded = false;
       this.$pongSocket.emit(
         'gameRequest',
         {
@@ -157,25 +124,38 @@ export default defineComponent({
         (response: { requestId: string; error: string }) => {
           this.requestId = response.requestId;
           if (!this.requestId) {
-            this.errorRequest = response.error;
+            this.notificationsStore.enqueue('danger', 'failure', response.error);
           }
         },
       );
-
       this.challengeModal.show();
-
+      this.watchTimeOut();
       this.$pongSocket.on('requestAnswer', (accepted: boolean) => {
+        this.$pongSocket.off('requestAnswer');
+        this.responded = true;
         this.challengeModal.hide();
-        if (!accepted) this.refusedToast.show();
+        if (!accepted) {
+          this.notificationsStore.enqueue('danger', 'canceled', 'challenge refused');
+        }
       });
-
       this.$pongSocket.on('matchFound', (gameId: string) => {
         this.$router.push({ path: `/pong/${gameId}` });
       });
     },
     cancelRequest() {
       this.$pongSocket.emit('cancelRequest', this.requestId);
+      this.$pongSocket.off('requestAnswer');
+      this.responded = true;
     },
+    watchTimeOut() {
+      setTimeout(() => {
+        if (!this.responded) {
+          this.cancelRequest();
+          this.challengeModal.hide();
+          this.notificationsStore.enqueue('danger', 'canceled', 'no response');
+        }
+      }, 30000);
+    }
   },
 });
 </script>

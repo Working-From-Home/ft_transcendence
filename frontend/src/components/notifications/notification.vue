@@ -35,13 +35,13 @@ const type = computed<string>(() => {
 
 onMounted(() => {
 	el.value.addEventListener('hidden.bs.toast', unset);
-	const toast = new Toast('#notification', {delay: 2500});
+	const toast = new Toast('#notification', {delay: 4000});
 	toast.show();
 })
 
 watch(() => props.notification, () => {
 	el.value.addEventListener('hidden.bs.toast', unset);
-	const toast = new Toast('#notification', {delay: 2500});
+	const toast = new Toast('#notification', {delay: 4000});
 	toast.show();
 });
 
@@ -57,9 +57,9 @@ function timeFromNow() {
 </script>
 
 <template>
-	<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+	<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
     <div ref="el" id="notification" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
-      <div class="toast-header bg-dark">
+      <div class="toast-header bg-dark my-auto">
 
 				<div class="px-2" :class="type">
 					<font-awesome-icon v-if="notification.type === 'warning'" icon="circle-exclamation" />

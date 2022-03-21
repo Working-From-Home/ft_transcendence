@@ -3,7 +3,7 @@ import { ConnectedSocket, MessageBody,SubscribeMessage, WebSocketGateway, WebSoc
 import { Server, Socket } from 'socket.io';
 import { AuthService } from './auth/auth.service';
 
-import { ServerToClientEvents, ClientToServerEvents, InterServerEvents, SocketData} from 'shared/models/socket-events'
+import { ServerToClientEvents, ClientToServerEvents, InterServerEvents, SocketData, IMessage, IChannel, IUserChannel, ISearchChannel} from 'shared/models/socket-events'
 
 import { ChatService } from './channels/services/chat.service'
 import { UsersService } from './users/services/users.service'
@@ -42,9 +42,16 @@ export class AppGateway {
 	
 	async handleDisconnect(client: AppSocket) {
 		if (client.data.userId) {
+			console.log("disconnect")
 			this.onlineService.removeUser(client.data.userId)
 			this.server.emit("connectedUsers", this.onlineService.getOnlineUsers())
-			this.logger.log(`User id ${client.data.userId} is offline. (${this.onlineService.getTotalOnlineUsers()} online users)`);
+			this.logger.log(`User id ${client.data.userId} is offline. (${this.onlineService.getTotalOnlineUsers()} online users)`)
+			this.chatService.getChannelsOfUser(client.data.userId).then( (y) => {
+				for (const obj of y){
+					client.leave("channel:" + obj["roomId"]);
+				}
+			});
+			client.leave("user:" + client.data.userId);
 		}
 		else
 			this.logger.log(`Disconnection: http handshake failed for some reason`);
@@ -76,39 +83,42 @@ export class AppGateway {
 	}
 
 	@SubscribeMessage('searchChannel')
-	handleEvent(client: AppSocket, title: string) {
+	handleEvent(client: AppSocket, title: string): Promise<ISearchChannel[]> {
 		return this.chatService.searchChannelsByTitle(title).then( (x) => { return x })
 	}
 
 	@SubscribeMessage('searchUsersByTitle')
-	handleEventUsers(client: AppSocket, data: {title: string, channelId: number}) {
+	handleEventUsers(client: AppSocket, data: {title: string, channelId: number}): Promise<IUserChannel[]> {
 		return this.chatService.searchUsersByTitle(data).then( (x) => { return x })
 	}
 
 	@SubscribeMessage('searchChannelsByUser')
-	handleEventChannel(client: AppSocket, userId: number) {
+	handleEventChannel(client: AppSocket, userId: number): Promise<IChannel[]> {
 		return this.chatService.getChannelsOfUser(userId).then( (y) => { return y }); 
 	}
 	@SubscribeMessage('sendUserOfChannels')
-	handleEventUsersInChannel(client: AppSocket, channelId: number) {
+	handleEventUsersInChannel(client: AppSocket, channelId: number): Promise<IUserChannel[]> {
 		return this.chatService.getUsersOfChannel(channelId).then( (y) => { 
 				return y
 		}); 
 	}
 	@SubscribeMessage('searchUsers')
-	handleEventAllUsers(client: AppSocket, data: {title: string}) {
+	handleEventAllUsers(client: AppSocket, data: {title: string}): Promise<IUserChannel[]> {
 		return this.usersService.searchUsers(data).then( (y) => { 
 				return y
 		}); 
 	}
 	@SubscribeMessage('sendMessagesOfChannels')
-	handleEventMessagesInChannel(client: AppSocket, channelId: number) {
+	handleEventMessagesInChannel(client: AppSocket, channelId: number): Promise<IMessage[]> {
 		return this.chatService.getMessagesOfChannel(channelId).then( (y) => {
+			let tmpMessage;
+			tmpMessage = y;
+			let i = 0;
 			for (const obj of y){
-				obj.date = obj.createdAt.toDateString();
-				obj.createdAt = obj.createdAt.toString();
+				tmpMessage[i].date = obj.createdAt.toDateString();
+				tmpMessage[i++].createdAt = obj.createdAt.toString();
 			}
-			return y
+			return tmpMessage
 		}); 
 	}
 }

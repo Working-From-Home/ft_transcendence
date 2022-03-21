@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed, onUpdated, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import UserService from '@/services/UserService';
 import { useCurrentUserStore } from '@/store/currentUser';
+import { useNotificationsStore } from '@/store/notifications';
 
 const props = defineProps({
   userId: {
@@ -15,10 +16,10 @@ const props = defineProps({
 });
 
 const currentUserStore = useCurrentUserStore();
+const notificationsStore= useNotificationsStore();
 
 const fileInput = ref<HTMLInputElement>();
 const avatar = ref<string>('');
-const errorMessage = ref<string>('');
 
 UserService.getAvatarOfUser(props.userId).then((av) => (avatar.value = av));
 
@@ -52,9 +53,9 @@ function uploadAvatar(event: any) {
     .catch((error) => {
       fileInput.value!.value = '';
       if (error.response.status === 413)
-        errorMessage.value = "File Too Large (max: 1MB)";
+        notify("danger", "upload failure", "File Too Large (max: 1MB)");
       else
-        errorMessage.value = error.response.statusText;
+        notify("danger", "upload failure", error.response.statusText);
     });
 }
 
@@ -66,8 +67,8 @@ function restoreAvatar() {
   );
 }
 
-function clearErrorMessage() {
-  errorMessage.value = '';
+function notify(type: string, header: string, body: string) {
+  notificationsStore.enqueue(type, header, body);
 }
 </script>
 
@@ -75,29 +76,14 @@ function clearErrorMessage() {
   <img
     v-if="props.isOwner"
     :src="avatar"
+    width="200"
     class="img-fluid rounded mx-auto clickable-cursor"
     data-bs-toggle="modal"
     data-bs-target="#editAvatar"
     alt="avatar"
   />
   <img v-else :src="avatar" class="img-fluid rounded mx-auto" alt="avatar" />
-
-  <div
-    v-if="errorMessage"
-    style="z-index: 1000 !important"
-    class="alert alert-danger alert-dismissible fade show position-absolute top-50 start-50 translate-middle"
-    role="alert"
-  >
-    <p class="mb-0"><strong>Upload failure:</strong> {{ errorMessage }}</p>
-    <button
-      type="button"
-      class="btn-close"
-      data-bs-dismiss="alert"
-      aria-label="Close"
-      @click="clearErrorMessage"
-    ></button>
-  </div>
-
+  <!-- Modal -->
   <div
     v-if="props.isOwner"
     class="modal fade"
@@ -106,7 +92,6 @@ function clearErrorMessage() {
   >
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <!-- Modal Header -->
         <div class="modal-header">
           <h4 class="modal-title">Edit your avatar</h4>
           <button
@@ -115,8 +100,6 @@ function clearErrorMessage() {
             data-bs-dismiss="modal"
           ></button>
         </div>
-
-        <!-- Modal body -->
         <div class="modal-body">
           <p>What do you want to do ?</p>
           <button

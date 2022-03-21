@@ -146,7 +146,7 @@ function timeFromNow(s: string) {
       </tbody>
     </table>
     <!-- navigation -->
-    <nav v-if="meta.itemCount" aria-label="Page navigation">
+    <nav v-if="meta.itemCount" class="mt-4" aria-label="Page navigation">
       <ul class="pagination justify-content-center">
         <li class="page-item" :class="meta.currentPage == 1 && 'disabled'">
           <a

@@ -66,12 +66,12 @@ function endFriendship() {
         v-if="currentUserStore.isSent(props.userId)"
         type="button"
         disabled
-        class="btn"
+        class="btn text-nowrap"
         :class="
           [props.small && 'btn-sm btn-outline-info'],
           [!props.small && 'btn-info shadow m-2']
         "
-        style="min-width:2rem"
+        :style="small ? 'min-width: 2rem;' : 'min-width: 8.5rem;'"
       >
         <font-awesome-icon icon="hourglass" :class="!small && 'pe-2'" />
         <span v-if="!props.small" class="clickable-cursor">Request sent</span>
@@ -87,12 +87,12 @@ function endFriendship() {
         <button
           type="button"
           @click="acceptRequest"
-          class="btn"
+          class="btn text-nowrap"
           :class="
             [props.small && 'btn-sm btn-outline-info mx-1'],
             [!props.small && 'btn-info shadow m-2']
           "
-          style="min-width:2rem"
+          :style="small ? 'min-width: 2rem;' : 'min-width: 8.5rem;'"
         >
           <font-awesome-icon icon="check" :class="!small && 'pe-2'" />
           <span v-if="!props.small" class="clickable-cursor">Accept</span>
@@ -100,12 +100,12 @@ function endFriendship() {
         <button
           type="button"
           @click="declineFriendship"
-          class="btn"
+          class="btn text-nowrap"
           :class="
             [props.small && 'btn-sm btn-outline-info'],
             [!props.small && 'btn-info shadow m-2']
           "
-          style="min-width:2rem"
+          :style="small ? 'min-width: 2rem;' : 'min-width: 8.5rem;'"
         >
           <font-awesome-icon icon="xmark" :class="!small && 'pe-2'" />
           <span v-if="!props.small" class="clickable-cursor">Decline</span>
@@ -117,12 +117,12 @@ function endFriendship() {
       <button
         type="button"
         @click="endFriendship"
-        class="btn"
+        class="btn text-nowrap"
         :class="
           [props.small && 'btn-sm btn-outline-info'],
           [!props.small && 'btn-info shadow m-2']
         "
-        style="min-width:2rem"
+        :style="small ? 'min-width: 2rem;' : 'min-width: 8.5rem;'"
       >
         <font-awesome-icon icon="xmark" :class="!small && 'pe-2'" />
         <span v-if="!props.small" class="clickable-cursor">Unfriend</span>
@@ -133,12 +133,12 @@ function endFriendship() {
       <button
         type="button"
         @click="sendRequest"
-        class="btn"
+        class="btn text-nowrap"
         :class="
           [props.small && 'btn-sm btn-outline-info'],
           [!props.small && 'btn-info shadow m-2']
         "
-        style="min-width:2rem"
+        :style="small ? 'min-width: 2rem;' : 'min-width: 8.5rem;'"
       >
         <font-awesome-icon icon="plus" :class="!small && 'pe-2'" />
         <span v-if="!props.small" class="clickable-cursor">Add friend</span>
