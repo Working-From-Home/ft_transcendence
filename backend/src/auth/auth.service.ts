@@ -107,8 +107,8 @@ export class AuthService {
     throw new Error('Method not implemented.');
   }
 
-  logout() {
-    throw new Error('Method not implemented.');
+  logout(userId: number) {
+    this.usersService.update(userId, {refreshToken: null});
   }
 
   async signInFortyTwo(req) {
