@@ -8,7 +8,7 @@ export class UpdateUserDto {
     @IsString()
     @IsOptional()
     @Length(2, 30)
-    @IsAlphanumeric()
+    // @IsAlphanumeric()
     username: string;
 
     @IsString()

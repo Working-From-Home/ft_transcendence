@@ -147,29 +147,33 @@ const randomUserName = async () => {
 
 //save new username and photo
 const submit = async () => {
-  try {
-    const resp = await UserService.updateMe({ username: state.username });
-    currentUserStore.username = resp.data.username!;
-  } catch (err) {
-    const e = err as AxiosError<IError>;
-    if (axios.isAxiosError(e))
-      state.usernameError = e.response?.data.message.toString()!;
-    else alert(err);
-  }
-  try {
-    if (state.avatar == currentUserStore.avatar) return registrationDone();
-    UserService.setMyAvatar(
-      currentUserStore.userId,
-      fileInput.value!.files![0],
-    );
-  } catch (err) {
-    const e = err as AxiosError<IError>;
-    console.log(err);
-    if (axios.isAxiosError(e)) {
-      if (e.response?.status == 413) alert('Image too big...');
-    } else alert(err);
-  }
-  registrationDone();
+  let success = true;
+  if (state.username != currentUserStore.username)
+    try {
+      const resp = await UserService.updateMe({ username: state.username });
+      currentUserStore.username = resp.data.username!;
+    } catch (err) {
+      const e = err as AxiosError<IError>;
+      success = false;
+      if (axios.isAxiosError(e))
+        state.usernameError = e.response?.data.message.toString()!;
+      else alert(err);
+    }
+  if (state.avatar != currentUserStore.avatar)
+    try {
+      await UserService.setMyAvatar(
+        currentUserStore.userId,
+        fileInput.value!.files![0],
+      );
+    } catch (err) {
+      const e = err as AxiosError<IError>;
+      success = false;
+      if (axios.isAxiosError(e)) {
+        if (e.response?.status == 413) alert('Image too big...');
+      } else alert(err);
+    }
+  if (success)
+    registrationDone();
 };
 
 const registrationDone = () => {

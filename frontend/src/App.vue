@@ -25,11 +25,12 @@ import NotificationsHandler from './components/notifications/notificationsHandle
 import { useCurrentUserStore } from './store/currentUser';
 
 const authStore = useAuthStore();
+const currentUserStore = useCurrentUserStore();
 const route = useRoute();
 
 onBeforeMount( async () => {
-  const currentUserStore = useCurrentUserStore();
-  await currentUserStore.initStore(null);
+  if (currentUserStore.userId)
+    await currentUserStore.initStore(null);
 });
 
 </script>
