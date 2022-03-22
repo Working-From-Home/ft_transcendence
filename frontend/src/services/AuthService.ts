@@ -50,8 +50,9 @@ class AuthService {
 
 	// Two Factor Auth
 	async generateQrCode() {
-		const response = await http.post('/2fa/generate');
-		return response.data;
+		const response = await http.post('/2fa/generate', {}, { responseType : 'blob'});
+		const fileUrl = window.URL.createObjectURL(response.data);
+		return fileUrl;
 	}
 
 	turnOnTwoFA(twoFaCode : string) {

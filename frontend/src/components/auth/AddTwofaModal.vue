@@ -16,12 +16,12 @@
 
 					<div class="modal-body">
 						<p>
-							To use the two factor authentication you need to user the google authenticator app.
+							To use the two factor authentication you need the google authenticator app.
 						</p>
 						<div v-if="!QrCodeRequested">
 							<button
 								type="button"
-								class="btn btn-sm btn-outline-info"
+								class="btn btn-primary"
 								@click="getQrCode"
 							>
 								get QrCode
@@ -32,7 +32,13 @@
 								<div class="spinner-border"></div>
 							</div>
 							<div v-else>
-								<img :src="'data:image/png' + QrCode" alt="Qrcode"  class="mx-3">
+								<img :src="QrCode" alt="Qrcode"  class="mx-3">
+								<form @submit.prevent="sendCode">
+									<div class="mb-3 mt-3">
+										<input v-model="twoFaCode" type="string" class="form-control" placeholder="Enter code" name="twoFaCode" autocomplete="off">
+									</div>
+									<button type="submit" class="btn btn-primary" >Submit</button>
+								</form>
 							</div>
 						</div>
 					</div>
@@ -59,7 +65,7 @@ export default defineComponent({
 			QrCodeRequested: false,
 			QrCodeLoading: false,
 			QrCode: "",
-			TwoFaCode: ""
+			twoFaCode: ""
 		}
 	},
 	methods: {
@@ -73,7 +79,10 @@ export default defineComponent({
 		resetData() {
 			this.QrCodeRequested = false;
 			this.QrCodeLoading = false;
-			this.TwoFaCode = "";
+			this.twoFaCode = "";
+		},
+		sendCode() {
+			AuthService.turnOnTwoFA(this.twoFaCode);
 		}
 	}
 })

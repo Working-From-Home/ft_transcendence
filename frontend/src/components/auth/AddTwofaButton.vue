@@ -2,7 +2,7 @@
 	<div>
 		<button
 		type="button"
-			class="btn btn-sm btn-outline-info"
+			class="btn btn-primary"
 			data-bs-toggle="modal"
 			data-bs-target="#addTwoFA"
 		>

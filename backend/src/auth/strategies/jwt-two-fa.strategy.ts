@@ -10,14 +10,14 @@ import { JwtPayload } from '../auth.service'
 export class JwtTwoFaStrategy extends PassportStrategy(Strategy, 'jwt-two-fa')
 {
 	constructor(
-		private readonly configService : ConfigService,
+		private readonly config : ConfigService,
 		private readonly userService : UsersService,
 	) {
 		super({
 			jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: configService.get<string>('JWT_SECRET')
-		})
+      secretOrKey: config.get<string>('ACCESS_TOKEN_SECRET'),
+		});
 	}
 
 	async validate(payload: JwtPayload) {
