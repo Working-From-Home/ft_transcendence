@@ -10,7 +10,11 @@ git clone https://github.com/Working-From-Home/ft_transcendence.git && cd ft_tra
 ```
 Create a `.env` file, template example:
 ```
-JWT_SECRET=my_secret
+ACCESS_TOKEN_SECRET=my_secret
+REFRESH_TOKEN_SECRET=my_secret2
+# expressed in seconds or a string describing a time span zeit/ms. Eg: 60, "2 days", "10h", "7d"
+ACCESS_TOKEN_EXPIRATION=3200s
+REFRESH_TOKEN_EXPIRATION=15d
 
 # localhost can be replaced by the hostname or ip of the computer to
 # make the website available from others computers.

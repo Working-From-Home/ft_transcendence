@@ -5,12 +5,11 @@ import { Stats } from "./stats.entity";
 import { Channel } from "../../channels/entities/channel.entity";
 import { Message } from "../../channels/entities/message.entity";
 import { UserChannel } from "../../channels/entities/user-channel.entity";
-import { Achievement } from "./achievement.entity";
 import { Blocked } from "./blocked.entity";
 import { Game } from "../../game/entities/game.entity";
+import { Exclude } from "class-transformer";
 
 @Entity()
-@Check(`case when ("role" = 'owner' OR "role" = 'admin') THEN banned IS NOT TRUE END`)
 export class User {
     @PrimaryGeneratedColumn()
     id: number;
@@ -24,16 +23,15 @@ export class User {
     username: string;
 
     @Column({nullable: true })
+    @Exclude()
     password: string | null;
 
-    @Column({ type: "enum", enum: ["owner", "admin", "user"], default: "user" })
-    role: "owner" | "admin" | "user";
+    @Column({ type: "text", nullable: true })
+    @Exclude()
+    refreshToken: string | null;
 
     @Column({ type: 'timestamptz', default: () => "CURRENT_TIMESTAMP" })
     createdAt: Date;
-
-    @Column({ type: "boolean", default: false })
-    banned: boolean;
 
     /* OAuth */
 
@@ -45,17 +43,21 @@ export class User {
     
     @Index()
     @Column({ type: "text", unique: true, nullable: true})
+    @Exclude()
     googleSub: string | null;
 
     @Column({ type: "text", nullable: true })
-    googleAccessToken: string | null;
+    @Exclude()
+    googleRefreshToken: string | null;
 
     @Index()
     @Column({ type: "text", unique: true, nullable: true })
+    @Exclude()
     fortyTwoSub: string | null;
-
+    
     @Column({ type: "text", nullable: true })
-    fortyTwoAccessToken: string | null;
+    @Exclude()
+    fortyTwoRefreshToken: string | null;
 
     /* Avatar */
 
@@ -74,16 +76,6 @@ export class User {
             losses: this.stats.losses
         }
     }
-
-    /* Achievements */
-
-    @ManyToMany(() => Achievement, (achievement) => achievement.users)
-    @JoinTable({
-        name: "user_achievements",
-        joinColumns: [{ name: "userId", referencedColumnName: "id" }],
-        inverseJoinColumns: [{ name: "achievementId", referencedColumnName: "id" }]
-    })
-    achievements: Achievement[];
 
     /* Friendships */
 

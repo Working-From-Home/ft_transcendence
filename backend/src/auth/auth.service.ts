@@ -33,9 +33,12 @@ export class AuthService {
 
     async signInLocal(email: string, password: string) {
         const user = await this.usersService.findByEmail(email);
-        if (!user) {
+        if (!user)
             throw new NotFoundException('Email not found.');
-        }
+        if (user.googleSub)
+            throw new NotFoundException('This account has been created via google. Please sign in with google.');
+        if (user.fortyTwoSub)
+            throw new NotFoundException('This account has been created via 42. Please sign in with 42.');
         const [salt, storedHash] = user.password.split('.');
         const hash = (await scrypt(password, salt, 32)) as Buffer;
         if (storedHash !== hash.toString('hex')) {
@@ -105,8 +108,8 @@ export class AuthService {
     throw new Error('Method not implemented.');
   }
 
-  logout() {
-    throw new Error('Method not implemented.');
+  logout(userId: number) {
+    this.usersService.update(userId, {refreshToken: null});
   }
 
   async signInFortyTwo(req) {
@@ -132,7 +135,7 @@ export class AuthService {
 
     let user = (await this.usersService.findBy({ where: [{ fortyTwoSub: req.user.sub }] }))[0];
     if (user)
-      throw new ForbiddenException('42 accound already registered, signin instead.');
+      throw new ForbiddenException('This account already exists. Please sign in with 42 instead.');
 
     user = (await this.usersService.findBy({ where: [{ email: req.user.email }]}))[0];
     if (user)
@@ -141,7 +144,7 @@ export class AuthService {
       const newUser = await this.usersService.create({
         email: req.user.email,
         fortyTwoSub: req.user.sub,
-        fortyTwoAccessToken: req.user.accessToken,
+        fortyTwoRefreshToken: req.user.refreshToken,
       })
       return this.generateAccessToken(newUser)
     } catch(err) {
@@ -154,15 +157,15 @@ export class AuthService {
 
     let user = (await this.usersService.findBy({ where: [{ googleSub: req.user.sub }] }))[0];
     if (user)
-      throw new ForbiddenException('Google account already registered, signin instead.');
+      throw new ForbiddenException('This account already exists. Please sign in with google instead.');
     user = (await this.usersService.findBy({ where: [{ email: req.user.email }]}))[0];
     if (user)
-      throw new ForbiddenException('Google email is already in use, but has not been registered via google.');
+      throw new ForbiddenException('Google email is already in use, but has not been registered via google. Please sign in with your password.');
     try {
       const newUser = await this.usersService.create({
         email: req.user.email,
         googleSub: req.user.sub,
-        googleAccessToken: req.user.accessToken,
+        googleRefreshToken: req.user.refreshToken,
       })
       return this.generateAccessToken(newUser)
     } catch(err) {

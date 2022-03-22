@@ -69,7 +69,7 @@ export class AuthController {
 
     @Post('/logout')
     @UseGuards(JwtAuthGuard)
-    logout() {
-        this.authService.logout()
+    logout(@Req() request) {
+        this.authService.logout(parseInt(request.user.sub));
     }
 }

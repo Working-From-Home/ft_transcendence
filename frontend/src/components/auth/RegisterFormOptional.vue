@@ -1,27 +1,73 @@
 <template>
   <div>
     <form @submit.prevent="submit" class="needs-validation">
-      <!-- Username tmp-->
-      <div class="form-floating input-group mb-4">
-        <input v-model="state.username" v-on:input="checkUsernameAvailability" type="text" class="form-control" :class="[state.isValid]" id="username" required autofocus/>
-        <label for="username" class="text-black">How should we call you ?</label>
-        <button class="btn btn-outline-light" v-on:click="randomUserName" type="button" id="random-username">
-          <font-awesome-icon :icon="['fas', 'dice-five']" color="white" size="2x"/>
-        </button>
-        <div class="invalid-feedback">
-          {{ state.message }}
+      <!-- Username -->
+      <div class="hstack gap-3 justify-content-lg-center mb-4">
+        <div class="form-floating">
+          <input
+            v-model="state.username"
+            v-on:input="checkUsernameAvailability"
+            type="text"
+            class="form-control"
+            :class="[!state.usernameError ? 'is-valid' : 'is-invalid']"
+            id="username"
+            autocomplete="off"
+            required
+            autofocus
+          />
+          <label for="username">How should we call you ?</label>
+          <div class="invalid-feedback">{{ state.usernameError }}</div>
+          <div class="valid-feedback">Username available</div>
         </div>
-        <div class="valid-feedback">Username available.</div>
+        <button
+          class="btn btn-outline-primary"
+          v-on:click="randomUserName"
+          type="button"
+          id="random-username"
+        >
+          <font-awesome-icon :icon="['fas', 'dice-five']" size="2x" />
+        </button>
       </div>
-      <!-- Avatar -->
 
+      <!-- Avatar -->
+      <div class="mb-4">
+        <div class="mb-2" v-on:click="fileInput!.click()">
+          <img :src="state.avatar" class="img-thumbnail clickable-cursor" />
+        </div>
+        <input
+          ref="fileInput"
+          type="file"
+          style="display: none"
+          accept="image/*"
+          name="uploaded_file"
+          @change="changeAvatar"
+        />
+        <button
+          type="button"
+          v-on:click="state.avatar = currentUserStore.avatar"
+          :disabled="state.avatar == currentUserStore.avatar"
+          class="btn btn-outline-info btn-lg btn-block"
+        >
+          Reset Avatar
+        </button>
+      </div>
       <!-- Submit button -->
-      <button type="button" v-on:click="skip" class="btn btn-secondary btn-lg btn-block">
-        Skip
-      </button>
-      <button type="submit" class="btn btn-primary btn-lg btn-block">
-        Let's play !
-      </button>
+      <div class="hstack gap-3 justify-content-lg-center">
+        <button
+          type="button"
+          v-on:click="registrationDone"
+          class="btn btn-secondary btn-lg btn-block"
+        >
+          Skip
+        </button>
+        <button
+          type="submit"
+          class="btn btn-primary btn-lg btn-block"
+          :disabled="!canContinue"
+        >
+          Continue
+        </button>
+      </div>
     </form>
   </div>
 </template>
@@ -34,81 +80,105 @@ library.add(faDiceFive);
 </script>
 
 <script setup lang="ts">
-import { reactive } from 'vue';
+import { computed, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useCurrentUserStore } from '@/store/currentUser';
-import UserService from '@/services/UserService';
+import UserService, { formatImage } from '@/services/UserService';
 import axios, { AxiosError } from 'axios';
 import { IError } from '@/models/IError';
-import { uniqueNamesGenerator, Config, adjectives, colors, animals } from 'unique-names-generator';
+import {
+  uniqueNamesGenerator,
+  Config,
+  adjectives,
+  colors,
+  animals,
+} from 'unique-names-generator';
 import { useAuthStore } from '@/store/auth';
-
 
 const router = useRouter();
 const currentUserStore = useCurrentUserStore();
 const authStore = useAuthStore();
 
+const fileInput = ref<HTMLInputElement>();
+
 enum FeedbackMessage {
+  None = '',
   usernameAlreadyInUse = 'Username is already in use.',
   usernameEmpty = 'Please provide your username.',
 }
 
 const state = reactive({
   username: currentUserStore.username,
-  isValid: 'is-valid',
-  message: '',
+  usernameError: '',
+  avatar: currentUserStore.avatar,
 });
 
 const checkUsernameAvailability = async () => {
-  if (state.username.length == 0) {
-    state.message = FeedbackMessage.usernameEmpty;
-    state.isValid = 'is-invalid';
-  } else {
-    state.message = FeedbackMessage.usernameAlreadyInUse;
-    if (
-      (await UserService.usernameExists(state.username)) &&
-      state.username !== currentUserStore.username
-    )
-      state.isValid = 'is-invalid';
-    else state.isValid = 'is-valid';
-  }
+  if (state.username.length == 0)
+    state.usernameError = FeedbackMessage.usernameEmpty;
+  else if (
+    state.username.trim() !== currentUserStore.username &&
+    (await UserService.usernameExists(state.username))
+  )
+    state.usernameError = FeedbackMessage.usernameAlreadyInUse;
+  else state.usernameError = FeedbackMessage.None;
+};
+
+const canContinue = computed((): boolean => {
+  if (!!state.usernameError) return false;
+  if (
+    state.username.trim() == currentUserStore.username &&
+    state.avatar == currentUserStore.avatar
+  )
+    return false;
+  return true;
+});
+
+const changeAvatar = async () => {
+  if (fileInput.value!.files == undefined) state.avatar = '';
+  else
+    state.avatar = formatImage(await fileInput.value!.files![0].arrayBuffer());
 };
 
 const randomUserName = async () => {
   state.username = uniqueNamesGenerator({ dictionaries: [adjectives, colors] });
   checkUsernameAvailability();
-}
+};
 
 //save new username and photo
 const submit = async () => {
-  UserService.updateMe({
-    username: state.username,
-  }).then( (resp) => {
-    currentUserStore.username = resp.data.username!;
-  }).catch( (err) => {
-    const e = err as AxiosError<IError>;
-    if (axios.isAxiosError(e)) alert(e.response?.data.message);
-    else alert(err);
-    return;
-  });
-  // UserService.setMyAvatar( currentUserStore.userId, );
+  let success = true;
+  if (state.username != currentUserStore.username)
+    try {
+      const resp = await UserService.updateMe({ username: state.username });
+      currentUserStore.username = resp.data.username!;
+    } catch (err) {
+      const e = err as AxiosError<IError>;
+      success = false;
+      if (axios.isAxiosError(e))
+        state.usernameError = e.response?.data.message.toString()!;
+      else alert(err);
+    }
+  if (state.avatar != currentUserStore.avatar)
+    try {
+      currentUserStore.avatar = await UserService.setMyAvatar(
+        currentUserStore.userId,
+        fileInput.value!.files![0],
+      );
+    } catch (err) {
+      const e = err as AxiosError<IError>;
+      success = false;
+      if (axios.isAxiosError(e)) {
+        if (e.response?.status == 413) alert('Image too big...');
+      } else alert(err);
+    }
+  if (success) registrationDone();
+};
+
+const registrationDone = () => {
   authStore.registerInProgress = false;
   router.push('/');
 };
-
-const skip = async () => {
-  authStore.registerInProgress = false;
-  router.push('/');
-};
-
 </script>
 
-<style lang="scss">
-// .fa-dice-five:hover,
-#random-username {
-  border-left: 1px solid $body-bg;
-}
-#random-username:hover .fa-dice-five {
-  color: black;
-}
-</style>
+<style lang="scss"></style>
