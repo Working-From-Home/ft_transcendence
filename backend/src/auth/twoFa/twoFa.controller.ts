@@ -49,6 +49,7 @@ export class TwoFaController {
 		const user = await this.usersService.findById(parseInt(request.user.sub));
 		const { otpauthUrl } = await this.twoFaService.generateTwoFaSecret(user);
 
+		response.set({ 'Content-Type': 'image/png'})
 		return this.twoFaService.pipeQrCodeStream(response, otpauthUrl);
 	}
 }

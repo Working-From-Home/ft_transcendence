@@ -2,6 +2,15 @@ import http from '@/http';
 import { ISignedIn } from '@/models/ISignedIn';
 import { IUser } from '@/models/IUser';
 
+function formatImage(data: ArrayBuffer) : string {
+	var binary = '';
+	var bytes = new Uint8Array(data);
+	var len = bytes.byteLength;
+	for (var i = 0; i < len; i++)
+			binary += String.fromCharCode(bytes[i]);
+	return 'data:image/png;base64,' + window.btoa(binary);
+}
+
 class AuthService {
   // local
   signInLocal(email: string, password: string) {
@@ -38,6 +47,16 @@ class AuthService {
       withCredentials: false,
     });
   }
+
+	// Two Factor Auth
+	async generateQrCode() {
+		const response = await http.post('/2fa/generate');
+		return response.data;
+	}
+
+	turnOnTwoFA(twoFaCode : string) {
+		return http.post('/2fa/turn-on', { twoFaCode : twoFaCode });
+	}
 
   /** Get a new access_token. Must provide the refresh token */
   refresh() {
