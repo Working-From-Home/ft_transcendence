@@ -7,7 +7,7 @@
     		[small && 'btn-outline-warning btn-sm'],
 				[!small && 'btn-warning m-2']
       "
-      style="min-width: 2rem"
+      :style="small ? 'min-width: 2rem;' : 'min-width: 8.5rem;'"
       @click="watchGame"
     >
       <font-awesome-icon icon="eye" :class="!small && 'pe-2'"/>

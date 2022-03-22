@@ -32,8 +32,13 @@
 <script lang='ts'>
 import { defineComponent } from '@vue/runtime-core';
 import ChatService from "../../services/ChatService";
+import { useNotificationsStore } from '@/store/notifications';
 
 export default defineComponent({
+  setup() {
+		const notificationsStore = useNotificationsStore();
+		return { notificationsStore };
+	},
   data(){
     return {
       password: '',
@@ -43,13 +48,13 @@ export default defineComponent({
   methods: {
     createChannel() {
 		if (!this.ChannelName) {
-			alert("please put a name")
+			this.notificationsStore.enqueue("warning", "Error", "Channel name can't be empty")
 			return
 		}
 		ChatService.createChannel({title: this.ChannelName, password: this.password})
 			.then( resp =>{})
 			.catch(({ response }) => {
-			alert(response.data.message)
+				this.notificationsStore.enqueue("warning", "Error", response.data.message)
    		});
     }
   }

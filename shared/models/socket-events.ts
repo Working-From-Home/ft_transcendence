@@ -4,11 +4,16 @@
 // https://stackoverflow.com/questions/38506952/how-to-send-response-back-to-client-using-socket-io
 // https://socket.io/docs/v4/emitting-events/#acknowledgements
 
-export interface ISearchChannel
-{
+export interface ISearchChannel {
 	id: number;
 	title: string;
 	password: string;
+}
+
+export interface IBlocked {
+	applicantId: number;
+	recipientId: number;
+	createdAt: Date | null;
 }
 export interface IMessage {
     _id: number;
@@ -18,6 +23,7 @@ export interface IMessage {
     date: string;
     channelId: number;
 	senderId: number;
+	deleted: boolean | null;
 }
 
 export interface IUserChannel {
@@ -65,11 +71,11 @@ interface ServerToClientEventsChat {
 
 interface ClientToServerEventsChat {
   searchChannel: (title: string, callback: (channels: ISearchChannel[]) => void) => void;
-  sendMessage: (channelId: number, content: string) => void; // maybe not string if we keep emoji...
+  sendMessage: (channelId: number, content: string) => void;
   sendUserOfChannels: (channelId: number, callback: (channels: IUserChannel[]) => void) => void;
   sendMessagesOfChannels: (channelId: number, callback: (channels: IMessage[]) => void) => void;
-  searchUsersByTitle: (data: {title: string, channelId: number}, callback: (channels: any) => void) => void;
-  searchUsers: (data: {title: string}, callback: (channels: any) => void) => void;
+  searchUsersByTitle: (data: {title: string, channelId: number}, callback: (UserChannel: IUserChannel[]) => void) => void;
+  searchUsers: (data: {title: string}, callback: (UserChannel: IUserChannel[]) => void) => void;
 }
 
 /// Friend events

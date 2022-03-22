@@ -28,7 +28,7 @@ onUpdated(() => {
     <div class="row g-3 px-md-5 mt-md-2">
       <div class="col-12 col-ms-12 col-md-3">
         <div
-          class="gradient-blue-inverted rounded d-flex flex-column justify-content-center h-100"
+          class="grdt rounded d-flex flex-column justify-content-center h-100 overflow-hidden"
         >
           <avatar v-cloak :userId="userId" :isOwner="isOwner"></avatar>
         </div>
@@ -50,4 +50,13 @@ onUpdated(() => {
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+@import "@/assets/scss/custom.scss";
+
+@include media-breakpoint-up(md) {
+  .grdt {
+    background: linear-gradient(180deg, rgba(#74A4BC, 0), rgba(#74A4BC, .15));
+  }
+}
+
+</style>

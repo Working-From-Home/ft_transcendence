@@ -43,12 +43,11 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Card from '../ui/Card.vue';
 import PlayerInfo from './PlayerInfo.vue';
 import { IGameState, GameCanvas } from './GameCanvas';
 
 export default defineComponent({
-  components: { Card, PlayerInfo },
+  components: { PlayerInfo },
   data() {
     return {
       gameCanvas: {} as GameCanvas,

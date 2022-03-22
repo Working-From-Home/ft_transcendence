@@ -1,34 +1,29 @@
 import http from "@/http"
 import socket from "@/socketApp"
-import { ISearchChannel, IUserChannel, IMessage, IChannel } from "shared/models/socket-events";
+import { ISearchChannel, IUserChannel, IMessage, IChannel, IBlocked } from "shared/models/socket-events";
 
 interface ChannelUpdate {
 	title: string;
 	password: string;
 	isPublic: boolean;
 }
-
+  
 class ChatService {
-	/** create a conversation between me and someone */
 	createDm(userId: number, otherUserId: number): Promise<any> {
 		return http.post(`/dm/${otherUserId}`);
 	}
-	/** create a new channel */
 	createChannel(data: any): Promise<IChannel[]> {
 		return http.post(`/channels`, data);
 	}
 	createMessage(channelId: number, content: any): Promise<IMessage> {
 		return http.post(`/channels/${channelId}/messages`, content);
 	}
-	// only the owner can update the channel
 	updateChannel(channelId: number, data: Partial<ChannelUpdate>): Promise<any> {
 		return http.patch(`/channels/${channelId}`, data);
 	}
-	/** rest or socket ? */
 	joinChannel(channelId: number, data: any): Promise<any> {
 		return http.put(`/channels/${channelId}`, data)
 	}
-	/** rest or socket ? */
 	leaveChannel(channelId: number): Promise<any> {
 		return http.delete(`/channels/${channelId}`)
 	}
@@ -38,16 +33,18 @@ class ChatService {
 	banUser(channelId: number, userId: number, banUntil: Date | null): Promise<any> {
 		return http.put(`/channels/${channelId}/ban/${userId}`, {date: banUntil})
 	}
-	/** Promote a user to admin */
 	promoteUser(channelId: number, userId: number): Promise<any> {
 		return http.put(`/channels/${channelId}/admin/${userId}`)
 	}
-	/** Revoque admin to user */
-	revokeAdmin(channelId: number, userId: number): Promise<any> {
-		return http.delete(`/channels/${channelId}/ban/${userId}`)
+	blockUser(recipientId: number): Promise<IBlocked[]> {
+		return http.post(`/block/${recipientId}`)
 	}
-	kickUser(channelId: number, userId: number): Promise<any> {
-		return http.delete(`/channels/${channelId}/kick/${userId}`)
+	unBlockUser(recipientId: number): Promise<IBlocked[]> {
+		return http.delete(`/block/${recipientId}`)
+	}
+	async getblock(): Promise<IBlocked[]> {
+		const blocklist = await http.get(`/block`);
+		return blocklist.data;
 	}
 	searchChannels(term: string): Promise<ISearchChannel[]> {
 		return new Promise(resolve => {
@@ -56,14 +53,14 @@ class ChatService {
 			})
 		})
 	}
-	searchUsersByTitle(title: string, channelId: number) {
+	searchUsersByTitle(title: string, channelId: number): Promise<IUserChannel[]>  {
 		return new Promise(resolve => {
 			socket.emit('searchUsersByTitle', {title: title, channelId: channelId}, (resp: any) => {
 				resolve(resp)
 			})
 		})
 	}
-	searchUsers(title: string) {
+	searchUsers(title: string): Promise<IUserChannel[]> {
 		return new Promise(resolve => {
 			socket.emit('searchUsers', {title: title}, (resp: any) => {
 				resolve(resp)
