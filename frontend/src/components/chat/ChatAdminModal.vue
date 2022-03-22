@@ -122,7 +122,7 @@ export default defineComponent({
 					return ;
 				}
 			}
-			this.notificationsStore.enqueue("warning", "Error", this.userName + " isn't a user in the room")
+			this.notificationsStore.enqueue("warning", "Error", this.userName + " isn't a user of this room")
 		},
 		banned() {
 			if (!this.userName) {
@@ -139,7 +139,7 @@ export default defineComponent({
 					return ;
 				}
 			}
-			this.notificationsStore.enqueue("warning", "Error", this.userName + " isn't a user in the room")
+			this.notificationsStore.enqueue("warning", "Error", this.userName + " isn't a user of this room")
 		},
 		unmuted() {
 			ChatService.muteUser(this.roomId, this.userTarget._id, null)
@@ -179,7 +179,7 @@ export default defineComponent({
 					return ;
 				}
 			}
-			this.notificationsStore.enqueue("warning", "Error", this.userName + " isn't a user in the room")
+			this.notificationsStore.enqueue("warning", "Error", this.userName + " isn't a user of this room")
 			
 		}
 	}  

@@ -1,7 +1,6 @@
 import { defineStore } from "pinia";
 import { IChannel, IMessage, IBlocked } from 'shared/models/socket-events';
-import { toNumber } from '@vue/shared';
-
+import { useCurrentUserStore } from '@/store/currentUser';
 export interface State {
 	rooms : IChannel[];
 	messages : IMessage[];
@@ -42,7 +41,7 @@ export const useChatRoomsStore = defineStore('chatRooms', {
 		},
 		fetchRoom(room : IChannel[]){
 			for (let obj of room[0].users){
-				if (obj._id === toNumber(localStorage.getItem('userId'))){
+				if (obj._id === useCurrentUserStore().userId){
 					if (obj.bannedUntil != null)
 						return ;
 				}
@@ -98,8 +97,6 @@ export const useChatRoomsStore = defineStore('chatRooms', {
 								user.mutedUntil = null;
 								this.isMute = false;
 							}
-							else if (param === "unban")
-								user.mutedUntil = null;
 							else if (param === "admin")
 								user.isAdmin = true;
 							return ;
@@ -111,7 +108,7 @@ export const useChatRoomsStore = defineStore('chatRooms', {
 				this.blockList = [
 					...this.blockList,
 					{
-						applicantId: toNumber(localStorage.getItem('userId')),
+						applicantId: useCurrentUserStore().userId,
 						recipientId: userId,
 						createdAt: content
 					}

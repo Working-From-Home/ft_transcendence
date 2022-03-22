@@ -35,11 +35,12 @@ const connect = computed<boolean>(() => {
       for (const obj of resp) {
         obj['users'] = await ChatService.sendUserOfChannels(obj['roomId']);
 		if (obj.isDm === true){
-			for (const user of obj.users)
-				if (user.username != localStorage.getItem('username')){
+			for (const user of obj.users){
+				if (user.username != currentUserStore.username){
 					obj.roomName = user.username;
 					await UserService.getAvatarOfUser(user._id).then((av: string ) => (obj.avatar = av));
 				}
+			}
 		}
 		else {
 			if (!obj.isPassword)
@@ -57,7 +58,7 @@ const connect = computed<boolean>(() => {
       );
 	  if (resp[0].isDm === true){
 		for (const user of resp[0].users)
-			if (user.username != localStorage.getItem('username')){
+			if (user.username != currentUserStore.username){
 				resp[0].roomName = user.username;
 			await UserService.getAvatarOfUser(user._id).then((av: string ) => (resp[0].avatar = av));
 		}
