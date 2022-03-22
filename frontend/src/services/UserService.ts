@@ -1,7 +1,7 @@
 import http from '@/http';
 import { IUser } from '@/models/IUser';
 
-function formatImage(data: ArrayBuffer) : string {
+export function formatImage(data: ArrayBuffer) : string {
 	var binary = '';
 	var bytes = new Uint8Array(data);
 	var len = bytes.byteLength;

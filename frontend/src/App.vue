@@ -20,17 +20,16 @@ import FriendList from './components/header/FriendsList.vue';
 import PongSocket from './components/pong/PongSocket.vue';
 import { useAuthStore } from '@/store/auth';
 import { useRoute } from 'vue-router';
-import { computed } from 'vue';
+import { computed, onBeforeMount } from 'vue';
 import NotificationsHandler from './components/notifications/notificationsHandler.vue';
+import { useCurrentUserStore } from './store/currentUser';
 
 const authStore = useAuthStore();
 const route = useRoute();
 
-authStore.initStore();
-
-const isChatView = computed(() => {
-  if (route.path === '/chat') return true;
-  return false;
+onBeforeMount( async () => {
+  const currentUserStore = useCurrentUserStore();
+  await currentUserStore.initStore(null);
 });
 
 </script>

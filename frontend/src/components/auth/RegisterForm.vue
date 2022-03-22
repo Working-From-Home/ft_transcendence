@@ -12,7 +12,7 @@
           required
           autofocus
         />
-        <label for="email" class="text-black">Email address</label>
+        <label for="email">Email address</label>
       </div>
       <!-- Password input -->
       <div class="form-floating mb-4">
@@ -24,7 +24,7 @@
           placeholder=""
           required
         />
-        <label for="password" class="text-black">Password</label>
+        <label for="password">Password</label>
         <div id="passwordHelpBlock" class="form-text">
           Must be at least 1 characters long.
         </div>
@@ -32,7 +32,7 @@
       <!-- Confirm Password -->
       <!-- <div class="form-floating mb-4">
       <input v-model="passwordConfirm" type="password" class="form-control" id="password" placeholder="" required />
-      <label for="password" class="text-black">Confirm Password</label>
+      <label for="password" >Confirm Password</label>
     </div> -->
 
       <!-- Error from backend -->
@@ -101,20 +101,14 @@ const errorMessage = ref('');
 const register = async () => {
   const e = await authStore.signUpLocal(email.value, password.value);
   if (e) errorMessage.value = e.message;
-  else {
-    authStore.registerInProgress = true;
-    emit('changeForm', AuthMode.RegisterOptional);
-  }
+  else emit('changeForm', AuthMode.RegisterOptional);
 };
 
 const receiveMessageGoogle = async (event: MessageEvent<any>) => {
   window.removeEventListener('message', receiveMessageGoogle);
   const e = await authStore.signUpGoogle(event.data);
   if (e) errorMessage.value = e.message;
-  else {
-    authStore.registerInProgress = true;
-    emit('changeForm', AuthMode.RegisterOptional);
-  }
+  else emit('changeForm', AuthMode.RegisterOptional);
 };
 
 const registerGoogle = async () => {
@@ -126,10 +120,7 @@ const receiveMessageFortyTwo = async (event: MessageEvent<any>) => {
   window.removeEventListener('message', receiveMessageFortyTwo);
   const e = await authStore.signUpFortyTwo(event.data);
   if (e) errorMessage.value = e.message;
-  else {
-    authStore.registerInProgress = true;
-    emit('changeForm', AuthMode.RegisterOptional);
-  }
+  else emit('changeForm', AuthMode.RegisterOptional);
 };
 
 const registerFortyTwo = async () => {

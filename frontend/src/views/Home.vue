@@ -27,24 +27,22 @@ const authStore = useAuthStore();
     </div>
 
     <div v-if="authStore.isLoggedIn" class="row g-3 px-md-5">
-      <div class="col-12 col-ms-12 col-md-6 pt-3">
+      <div class="col-12 col-ms-12 col-md-6 pt-3 position-relative">
         <div class="h-100 gradient-blue rounded p-3">
           <h2 class="mt-3 text-primary">Challenge Someone</h2>
           <p>You can play now</p>
-          <router-link to="/pong" class="btn btn-outline-secondary mb-3"
+          <router-link to="/pong" class="btn btn-outline-secondary mb-3 stretched-link"
             >Pong</router-link
           >
         </div>
       </div>
 
-      <div class="col-12 col-ms-12 col-md-6 pt-md-3">
+      <div class="col-12 col-ms-12 col-md-6 pt-md-3 position-relative">
         <div class="h-100 gradient-blue rounded p-3">
           <h2 class="mt-3 text-primary">Talk to everyone</h2>
           <p>You can use the chat now</p>
-          <router-link to="/chat" class="nav-link active">
-            <button class="btn btn-outline-secondary mb-3" type="button">
-              Chat
-            </button>
+          <router-link to="/chat" class="btn btn-outline-secondary mb-3 stretched-link">
+            Chat
           </router-link>
         </div>
       </div>

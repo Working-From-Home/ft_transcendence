@@ -143,7 +143,7 @@ export class AuthService {
       const newUser = await this.usersService.create({
         email: req.user.email,
         fortyTwoSub: req.user.sub,
-        fortyTwoAccessToken: req.user.accessToken,
+        fortyTwoRefreshToken: req.user.refreshToken,
       })
       return this.generateAccessToken(newUser)
     } catch(err) {
@@ -164,7 +164,7 @@ export class AuthService {
       const newUser = await this.usersService.create({
         email: req.user.email,
         googleSub: req.user.sub,
-        googleAccessToken: req.user.accessToken,
+        googleRefreshToken: req.user.refreshToken,
       })
       return this.generateAccessToken(newUser)
     } catch(err) {
