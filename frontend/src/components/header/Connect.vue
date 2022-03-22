@@ -35,8 +35,9 @@ const connect = computed<boolean>(() => {
       for (const obj of resp) {
         obj['users'] = await ChatService.sendUserOfChannels(obj['roomId']);
 		if (obj.isDm === true){
+			let userBy = await UserService.getUserById(currentUserStore.userId)
 			for (const user of obj.users){
-				if (user.username != currentUserStore.username){
+				if (user.username != userBy.data.username){
 					obj.roomName = user.username;
 					await UserService.getAvatarOfUser(user._id).then((av: string ) => (obj.avatar = av));
 				}
