@@ -12,7 +12,6 @@ import { Stats } from './users/entities/stats.entity';
 import { Friendship } from './users/entities/friendship.entity';
 import { GameModule } from './game/game.module';
 import { Blocked } from './users/entities/blocked.entity';
-import { Achievement } from './users/entities/achievement.entity';
 import { Channel } from './channels/entities/channel.entity';
 import { Message } from './channels/entities/message.entity';
 import { UserChannel } from './channels/entities/user-channel.entity';
@@ -39,9 +38,9 @@ import { AppLoggerMiddleware } from './http.logger.middleware';
           password: config.get('POSTGRES_PASSWORD'),
           database: config.get('POSTGRES_DATABASE'),
           entities: [
-            User, Stats, Avatar, Friendship, Blocked, Achievement,
+            User, Stats, Avatar, Friendship, Blocked,
             Channel, Message, UserChannel, UsersInChannel,
-            Game 
+            Game
           ],
           // logging: 'all',
           synchronize: false     // shouldn't be used in production: may lose data

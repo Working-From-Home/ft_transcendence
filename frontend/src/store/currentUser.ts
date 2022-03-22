@@ -7,18 +7,11 @@ import { IUser } from '@/models/IUser';
 import axios, { AxiosError } from 'axios';
 import { IError } from '@/models/IError';
 import { IFriendLists } from '@/models/IFriendLists';
-
-export interface State {
-  userId: number | null;
-  email: string;
-  username: string;
-  avatar: string;
-  friendLists: IFriendLists;
-}
+import { useLocalStorage, useStorage } from '@vueuse/core';
 
 export const useCurrentUserStore = defineStore('currentUser', {
-  state: (): State => ({
-    userId: null,
+  state: () => ({
+    userId: useLocalStorage('userId', 0),
     username: '',
     email: '',
     avatar: '',
@@ -26,7 +19,7 @@ export const useCurrentUserStore = defineStore('currentUser', {
       friends: [],
       pendings: [],
       sent: []
-    },
+    } as IFriendLists,
   }),
   getters: {
     isFriend : (state) => {
@@ -40,13 +33,15 @@ export const useCurrentUserStore = defineStore('currentUser', {
 		},
   },
   actions: {
-    async initStore(myUserId: number) {
+    async initStore(userId: number | null) {
+      if (userId)
+        this.userId = userId;
       try {
-        const user = await UserService.getUserById(myUserId);
-        const avatar = await UserService.getAvatarOfUser(myUserId);   
-        const friends = await FriendService.getFriendships(myUserId, "accepted");
-        const pendings = await FriendService.getFriendships(myUserId, "pending");
-        const sent = await FriendService.getFriendships(myUserId, "sent");
+        const user = await UserService.getUserById(this.userId);
+        const avatar = await UserService.getAvatarOfUser(this.userId);   
+        const friends = await FriendService.getFriendships(this.userId, "accepted");
+        const pendings = await FriendService.getFriendships(this.userId, "pending");
+        const sent = await FriendService.getFriendships(this.userId, "sent");
         this.setStore(user.data, avatar, { friends, pendings, sent });
       } catch (err) {
         const e = err as AxiosError<IError>;

@@ -109,15 +109,17 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach(function(to, _, next) {
+router.beforeEach(function(to, from, next) {
   const authStore = useAuthStore();
   document.title = `Transcendence - ${to.meta.title}`;
   if (to.meta.requiresAuth && !authStore.isLoggedIn)
+    next('/');
+  else if (to.meta.requiresUnAuth && authStore.isLoggedIn)
 		next('/');
-	else if (to.meta.requiresUnAuth && authStore.isLoggedIn)
-		next('/');
-	else
-		next();
+  else if (authStore.registerInProgress && to.name != 'signup')
+      next({name: 'signup'});
+  else
+    next();
 });
 
 export default router;

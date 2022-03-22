@@ -78,17 +78,17 @@ const connect = computed<boolean>(() => {
     });
     /* friends events */
     socket.on('requestReceived', () => {
-      currentUserStore.updatePendings(authStore.userId as number);
+      currentUserStore.updatePendings(currentUserStore.userId);
     });
     socket.on('requestAccepted', () => {
-      currentUserStore.updateSent(authStore.userId as number);
-      currentUserStore.updateFriends(authStore.userId as number);
+      currentUserStore.updateSent(currentUserStore.userId);
+      currentUserStore.updateFriends(currentUserStore.userId);
     });
     socket.on('requestDeclined', () => {
-      currentUserStore.updateSent(authStore.userId as number);
+      currentUserStore.updateSent(currentUserStore.userId);
     });
     socket.on('friendshipEnded', () => {
-      currentUserStore.updateFriends(authStore.userId as number);
+      currentUserStore.updateFriends(currentUserStore.userId);
     });
   }
   return authStore.isLoggedIn;
