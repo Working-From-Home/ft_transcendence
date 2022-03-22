@@ -15,8 +15,6 @@ myApi.interceptors.request.use( config => {
 	return config;
 });
 
-
-
 //https://thedutchlab.com/blog/using-axios-interceptors-for-refreshing-your-api-token
 // interceptor to manage expired token ?
 // myApi.interceptors.response.use(
@@ -57,21 +55,5 @@ myApi.interceptors.request.use( config => {
 //     }
 //   }
 // );
-
-
-// api 42 ?
-// const ftApi = axios.create({
-// 	baseURL: "http://some-other/api/v2",
-// 	timeout: 1000,
-// 	headers: {}
-// });
-
-// const apiClient: AxiosInstance = axios.create({
-	//   baseURL: 'https://api.openbrewerydb.org',
-	//   headers: {
-		//     'Content-type': 'application/json',
-		//   },
-		// })
-		// export default apiClient
 		
 export default myApi

@@ -161,7 +161,7 @@ const submit = async () => {
     }
   if (state.avatar != currentUserStore.avatar)
     try {
-      await UserService.setMyAvatar(
+      currentUserStore.avatar = await UserService.setMyAvatar(
         currentUserStore.userId,
         fileInput.value!.files![0],
       );
@@ -172,8 +172,7 @@ const submit = async () => {
         if (e.response?.status == 413) alert('Image too big...');
       } else alert(err);
     }
-  if (success)
-    registrationDone();
+  if (success) registrationDone();
 };
 
 const registrationDone = () => {

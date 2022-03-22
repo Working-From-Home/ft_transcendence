@@ -7,6 +7,7 @@ import { Message } from "../../channels/entities/message.entity";
 import { UserChannel } from "../../channels/entities/user-channel.entity";
 import { Blocked } from "./blocked.entity";
 import { Game } from "../../game/entities/game.entity";
+import { Exclude } from "class-transformer";
 
 @Entity()
 export class User {
@@ -22,9 +23,11 @@ export class User {
     username: string;
 
     @Column({nullable: true })
+    @Exclude()
     password: string | null;
 
     @Column({ type: "text", nullable: true })
+    @Exclude()
     refreshToken: string | null;
 
     @Column({ type: 'timestamptz', default: () => "CURRENT_TIMESTAMP" })
@@ -40,16 +43,20 @@ export class User {
     
     @Index()
     @Column({ type: "text", unique: true, nullable: true})
+    @Exclude()
     googleSub: string | null;
 
     @Column({ type: "text", nullable: true })
+    @Exclude()
     googleRefreshToken: string | null;
 
     @Index()
     @Column({ type: "text", unique: true, nullable: true })
+    @Exclude()
     fortyTwoSub: string | null;
-
+    
     @Column({ type: "text", nullable: true })
+    @Exclude()
     fortyTwoRefreshToken: string | null;
 
     /* Avatar */
