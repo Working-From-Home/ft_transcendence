@@ -60,11 +60,12 @@ import ChatService from "../../services/ChatService";
 import { computed, defineComponent } from '@vue/runtime-core';
 import { useChatRoomsStore } from '@/store/chatroom'
 import { useAuthStore } from "@/store/auth";
-import { toNumber } from '@vue/shared';
+import { useCurrentUserStore } from '@/store/currentUser';
 import { Modal } from "bootstrap";
 import UserService from '@/services/UserService';
 import moment from 'moment'
 import { useNotificationsStore } from '@/store/notifications';
+import socket from '@/socketApp';
 
 interface CustomOptions {
 	reset: boolean
@@ -75,9 +76,11 @@ export default defineComponent({
 		const chatRoomsStore = useChatRoomsStore();
 		const AuthStore = useAuthStore();
 		const notificationsStore = useNotificationsStore();
+		const currentUserStore = useCurrentUserStore();
 		return { 	AuthStore,
 					chatRoomsStore,
 					notificationsStore,
+					currentUserStore,
 					storeRoom: computed(() => chatRoomsStore.getRooms),
 					storeMessage: computed(() => chatRoomsStore.getMessages),
 		};
@@ -94,24 +97,24 @@ export default defineComponent({
 		ChatAdminModal,
 	},
 	created() {
-		this.currentUserId = toNumber(localStorage.getItem('userId'))
+		this.currentUserId = this.currentUserStore.userId;
 		this.$socketapp.on("sendMessage", async (resp: IMessage[]) => {
 			this.chatRoomsStore.addMessageCurrent(resp, this.currentRoom.roomId);
 		});
 		this.$socketapp.on("changeParam", async (param: string, channelId: number, userId: number, content: Date | null) => {
 			for (const obj of this.storeRoom) {
-				if (obj.roomId === channelId){
+				if (obj.roomId.toString() === channelId.toString()){
 					if (param === "ban"){
-						this.notificationsStore.enqueue("info", "Banned", "You're banned from " + obj.roomName)
+						this.notificationsStore.enqueue("info", "Banned", "You're banned from the Channel " + obj.roomName)
 					}
 					else if (param === "unban"){
-						this.notificationsStore.enqueue("info", "Unbanned", "You're unbanned from " + obj.roomName)
+						this.notificationsStore.enqueue("info", "Unbanned", "You're unbanned from the Channel " + obj.roomName + ". You can now join.")
 					}
 					else if (param === "mute"){
-						this.notificationsStore.enqueue("info", "Banned", "You're muted from " + obj.roomName)
+						this.notificationsStore.enqueue("info", "Banned", "You're muted in the Channel " + obj.roomName)
 					}
 					else if (param === "unmute"){
-						this.notificationsStore.enqueue("info", "Unbanned", "You're unmuted from " + obj.roomName)
+						this.notificationsStore.enqueue("info", "Unbanned", "You're unmuted in the Channel " + obj.roomName)
 					}
 				}
 			}
@@ -121,6 +124,8 @@ export default defineComponent({
 	unmounted() {
 		this.menuMessageModal.hide();
 		this.adminModal.hide();
+		socket.off('sendMessage');
+		socket.off('changeParam');
 	},
 	data(){
 		return {
@@ -247,22 +252,19 @@ export default defineComponent({
 		menuMessageHandler({ action = {} as CustomAction, roomId = {} as number, message = {} as IMessage }) {
 			switch (action.name) {
 				case 'More informations':{
-					if (this.$route.path === "/chat"){
-						this.modalUserId = message.senderId;
-						if (message.username)
-							this.modalUserName = message.username
-						this.isCurrent = this.modalUserId === this.currentUserId,
-						UserService.getAvatarOfUser(message.senderId).then((av) => (this.modalAvatar = av));
-						ChatService.searchUsersByTitle(this.modalUserName, this.currentRoom.roomId).then((resp: IUserChannel[]) => {
-							for (const obj of resp) {
-								if (obj._id === this.modalUserId){
-									this.UserInfo = JSON.parse(JSON.stringify(obj));
-								}
+					this.modalUserId = message.senderId;
+					if (message.username)
+						this.modalUserName = message.username
+					this.isCurrent = this.modalUserId === this.currentUserId,
+					UserService.getAvatarOfUser(message.senderId).then((av) => (this.modalAvatar = av));
+					ChatService.searchUsersByTitle(this.modalUserName, this.currentRoom.roomId).then((resp: IUserChannel[]) => {
+						for (const obj of resp) {
+							if (obj._id === this.modalUserId){
+								this.UserInfo = JSON.parse(JSON.stringify(obj));
 							}
-						});
-						return this.menuMessageModal.show();
-					}
-					this.$router.push('/chat');
+						}
+					});
+					return this.menuMessageModal.show();
 				}
 			}
 		},

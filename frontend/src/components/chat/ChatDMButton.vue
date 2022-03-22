@@ -26,17 +26,19 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { toNumber } from '@vue/shared';
 import ChatService from '../../services/ChatService';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faMessage } from '@fortawesome/free-solid-svg-icons';
 import { useNotificationsStore } from '@/store/notifications';
+import { useCurrentUserStore } from '@/store/currentUser';
+
 library.add(faMessage);
 
 export default defineComponent({
   setup() {
 	const notificationsStore = useNotificationsStore();
-	return { notificationsStore };
+	const currentUserStore = useCurrentUserStore();
+	return { notificationsStore, currentUserStore };
   },
   props: {
     otherUserId: { type: Number, required: true },
@@ -48,13 +50,13 @@ export default defineComponent({
     };
   },
   created() {
-    this.userId = toNumber(localStorage.getItem('userId'));
+    this.userId = this.currentUserStore.userId;
   },
   methods: {
     creatDm() {
       ChatService.createDm(this.userId, this.otherUserId).catch(({ response }) => {
 			this.notificationsStore.enqueue("warning", "Error", response.data.message)
-   		});;
+   		});
     },
   },
 });
