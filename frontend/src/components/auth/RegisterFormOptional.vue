@@ -2,7 +2,8 @@
   <div>
     <form @submit.prevent="submit" class="needs-validation">
       <!-- Username -->
-      <div class="hstack gap-3 justify-content-lg-center mb-4">
+      <!-- <div class="hstack gap-3 justify-content-lg-center mb-4"> -->
+      <div class="d-inline-flex gap-2">
         <div class="form-floating">
           <input
             v-model="state.username"
@@ -16,11 +17,11 @@
             autofocus
           />
           <label for="username">How should we call you ?</label>
-          <div class="invalid-feedback">{{ state.usernameError }}</div>
-          <div class="valid-feedback">Username available</div>
+          <div class="invalid-feedback position-absolute">{{ state.usernameError }}</div>
+          <div class="valid-feedback position-absolute">Username available</div>
         </div>
         <button
-          class="btn btn-outline-primary"
+          class="btn btn-outline-primary position-relative top-0"
           v-on:click="randomUserName"
           type="button"
           id="random-username"
@@ -30,7 +31,7 @@
       </div>
 
       <!-- Avatar -->
-      <div class="mb-4">
+      <div class="mb-4 mt-5">
         <div class="mb-2" v-on:click="fileInput!.click()">
           <img :src="state.avatar" class="img-thumbnail clickable-cursor" />
         </div>
