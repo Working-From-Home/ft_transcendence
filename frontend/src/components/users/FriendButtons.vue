@@ -16,7 +16,6 @@ library.add(faHourglass);
 <script setup lang="ts">
 import { useCurrentUserStore } from '@/store/currentUser';
 import FriendService from '@/services/FriendService';
-import { useAuthStore } from '@/store/auth';
 
 const currentUserStore = useCurrentUserStore();
 
@@ -33,27 +32,27 @@ const props = defineProps({
 });
 
 function sendRequest() {
-  FriendService.sendFriendRequest(useAuthStore().userId as number, props.userId).then(() => {
-    currentUserStore.updateSent(useAuthStore().userId as number);
+  FriendService.sendFriendRequest(currentUserStore.userId, props.userId).then(() => {
+    currentUserStore.updateSent(currentUserStore.userId);
   });
 }
 
 function acceptRequest() {
-  FriendService.acceptFriendship(useAuthStore().userId as number, props.userId).then(() => {
-    currentUserStore.updatePendings(useAuthStore().userId as number);
-    currentUserStore.updateFriends(useAuthStore().userId as number);
+  FriendService.acceptFriendship(currentUserStore.userId, props.userId).then(() => {
+    currentUserStore.updatePendings(currentUserStore.userId);
+    currentUserStore.updateFriends(currentUserStore.userId);
   });
 }
 
 function declineFriendship() {
-  FriendService.endFriendship(useAuthStore().userId as number, props.userId, "pending").then(() => {
-    currentUserStore.updatePendings(useAuthStore().userId as number);
+  FriendService.endFriendship(currentUserStore.userId, props.userId, "pending").then(() => {
+    currentUserStore.updatePendings(currentUserStore.userId);
   });
 }
 
 function endFriendship() {
-  FriendService.endFriendship(useAuthStore().userId as number, props.userId, "accepted").then(() => {
-    currentUserStore.updateFriends(useAuthStore().userId as number);
+  FriendService.endFriendship(currentUserStore.userId, props.userId, "accepted").then(() => {
+    currentUserStore.updateFriends(currentUserStore.userId);
   });
 }
 </script>

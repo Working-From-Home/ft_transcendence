@@ -35,11 +35,13 @@ const connect = computed<boolean>(() => {
       for (const obj of resp) {
         obj['users'] = await ChatService.sendUserOfChannels(obj['roomId']);
 		if (obj.isDm === true){
-			for (const user of obj.users)
-				if (user.username != localStorage.getItem('username')){
+			let userBy = await UserService.getUserById(currentUserStore.userId)
+			for (const user of obj.users){
+				if (user.username != userBy.data.username){
 					obj.roomName = user.username;
 					await UserService.getAvatarOfUser(user._id).then((av: string ) => (obj.avatar = av));
 				}
+			}
 		}
 		else {
 			if (!obj.isPassword)
@@ -57,7 +59,7 @@ const connect = computed<boolean>(() => {
       );
 	  if (resp[0].isDm === true){
 		for (const user of resp[0].users)
-			if (user.username != localStorage.getItem('username')){
+			if (user.username != currentUserStore.username){
 				resp[0].roomName = user.username;
 			await UserService.getAvatarOfUser(user._id).then((av: string ) => (resp[0].avatar = av));
 		}
@@ -78,17 +80,17 @@ const connect = computed<boolean>(() => {
     });
     /* friends events */
     socket.on('requestReceived', () => {
-      currentUserStore.updatePendings(authStore.userId as number);
+      currentUserStore.updatePendings(currentUserStore.userId);
     });
     socket.on('requestAccepted', () => {
-      currentUserStore.updateSent(authStore.userId as number);
-      currentUserStore.updateFriends(authStore.userId as number);
+      currentUserStore.updateSent(currentUserStore.userId);
+      currentUserStore.updateFriends(currentUserStore.userId);
     });
     socket.on('requestDeclined', () => {
-      currentUserStore.updateSent(authStore.userId as number);
+      currentUserStore.updateSent(currentUserStore.userId);
     });
     socket.on('friendshipEnded', () => {
-      currentUserStore.updateFriends(authStore.userId as number);
+      currentUserStore.updateFriends(currentUserStore.userId);
     });
   }
   return authStore.isLoggedIn;

@@ -1,23 +1,23 @@
 <script setup lang="ts">
 import { onUpdated, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import { useAuthStore } from '@/store/auth';
 import Avatar from '@/components/users/Avatar.vue';
 import Info from '@/components/users/info.vue';
 import History from '@/components/users/History.vue';
+import { useCurrentUserStore } from '@/store/currentUser';
 
-const authStore = useAuthStore();
+const currentUserStore = useCurrentUserStore();
 const route = useRoute();
 
 const userId = ref<number>(0);
 const isOwner = ref<boolean>(false);
 
 userId.value = +route.params.userid;
-isOwner.value = userId.value === authStore.userId;
+isOwner.value = userId.value === currentUserStore.userId;
 
 onUpdated(() => {
   userId.value = +route.params.userid;
-  isOwner.value = userId.value === authStore.userId;
+  isOwner.value = userId.value === currentUserStore.userId;
 });
 
 </script>

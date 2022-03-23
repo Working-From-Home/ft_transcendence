@@ -7,7 +7,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import '@/assets/scss/custom.scss';
 import '@/assets/scss/global.scss';
 
-import { io,  Socket }  from "socket.io-client";
+import { io }  from "socket.io-client";
 import http from "@/http";
 import socketApp from "./socketApp";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";

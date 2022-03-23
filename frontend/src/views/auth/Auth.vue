@@ -8,8 +8,9 @@
         <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1 h-00">
           <Transition name="fade-form" mode="out-in">
             <LoginForm v-if="selectForm == AuthMode.Login" @change-form="selectForm = AuthMode.Register" />
+            <RegisterFormOptional v-else-if="selectForm == AuthMode.RegisterOptional || authStore.registerInProgress"/>
             <RegisterForm v-else-if="selectForm == AuthMode.Register" @change-form=" (v) => selectForm = v" />
-            <RegisterFormOptional v-else-if="selectForm == AuthMode.RegisterOptional"/>
+            <p v-else> error ! > </p>
           </Transition>
         </div>
       </div>
@@ -21,12 +22,16 @@
 import LoginForm from '@/components/auth/LoginForm.vue';
 import RegisterForm from '@/components/auth/RegisterForm.vue';
 import RegisterFormOptional from '@/components/auth/RegisterFormOptional.vue';
+import { useAuthStore } from '@/store/auth';
 import { PropType } from 'vue';
 import { AuthMode } from './auth.interface';
 
 defineProps({
   selectForm: { type: Number as PropType<AuthMode>, required: true, default: AuthMode.Login },
 });
+
+const authStore = useAuthStore();
+
 </script>
 
 <style lang="scss" scoped>

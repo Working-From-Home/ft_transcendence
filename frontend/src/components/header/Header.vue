@@ -93,15 +93,19 @@ function logout() {
             <!-- profile dropdown (only on large screen) -->
             <li class="nav-item me-4 dropdown d-none d-lg-inline-block">
               <a
-                class="nav-link active"
-                href="#"
-                id="navbarDropdown"
+                class="dropdown-toggle"            href="#"                id="navbarDropdown"
                 role="button"
                 data-bs-toggle="dropdown"
                 data-bs-display="static"
                 aria-expanded="false"
               >
-                {{ currentUserStore.username }}
+              <img
+                :src="currentUserStore.avatar"
+                alt="avatar"
+                width="40"
+                class="rounded"
+              /> 
+              {{ currentUserStore.username }}
               </a>
               <ul
                 class="dropdown-menu mt-2"
@@ -112,7 +116,7 @@ function logout() {
                   <router-link
                     :to="{
                       name: 'profile',
-                      params: { userid: authStore.userId },
+                      params: { userid: currentUserStore.userId },
                     }"
                     class="dropdown-item"
                     >Profile</router-link
@@ -143,7 +147,7 @@ function logout() {
               <router-link
                 :to="{
                   name: 'profile',
-                  params: { userid: authStore.userId },
+                  params: { userid: currentUserStore.userId },
                 }"
                 class="nav-link active"
                 >Profile</router-link
@@ -165,15 +169,6 @@ function logout() {
               <router-link class="nav-link active" to="/" @click="logout"
                 >Logout
               </router-link>
-            </li>
-            <!-- avatar (only on large screen) -->
-            <li class="nav-item d-none d-lg-inline-block">
-              <img
-                :src="currentUserStore.avatar"
-                alt="avatar"
-                width="40"
-                class="rounded"
-              /> 
             </li>
 					</ul>	         
         </div>

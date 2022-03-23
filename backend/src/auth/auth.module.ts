@@ -17,8 +17,10 @@ import { FortyTwoStrategy } from './strategies/forty-two.strategy';
         JwtModule.registerAsync({
             imports: [ConfigModule],
             useFactory: async (config: ConfigService) => ({
-              secret: config.get<string>('JWT_SECRET'),
-              signOptions: { expiresIn: '3600s' },
+              secret: config.get<string>('ACCESS_TOKEN_SECRET'),
+              signOptions: {
+                expiresIn: config.get<string>('ACCESS_TOKEN_EXPIRATION')
+              },
             }),
             inject: [ConfigService]
         })
