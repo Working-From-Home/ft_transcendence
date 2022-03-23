@@ -1,5 +1,23 @@
 <template>
+
   <button
+    type="button"
+    @click="creatDm"
+    id="btn-front"
+    class="btn text-nowrap"
+    :class="
+      [small && 'btn-sm btn-outline-success'],
+      [!small && 'btn-success shadow m-2']
+    "
+    :style="small ? 'min-width: 2rem;' : 'min-width: 8.5rem;'"
+  >
+    <font-awesome-icon icon="message" :class="!small && 'pe-2'" />
+    <span v-if="!small" class="clickable-cursor">Chat</span>
+  </button>
+
+
+
+  <!-- <button
     v-if="!small"
     type="button"
     id="btn-front"
@@ -21,7 +39,8 @@
 		style="min-width:2rem"
 	>
 		<font-awesome-icon icon="message" />
-	</router-link>
+	</router-link> -->
+
 </template>
 
 <script lang="ts">
