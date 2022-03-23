@@ -12,7 +12,7 @@ export class Channel {
     isDm: boolean;
 
     @Index()
-    @Column({ type: "text", nullable: true })
+    @Column({ type: "text", unique: true })
     title: string | null;
 
     @Column({ type: "text", nullable: true })

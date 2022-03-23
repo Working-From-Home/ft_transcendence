@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Avatar } from './entities/avatar.entity';
 import { User } from './entities/user.entity';
@@ -13,6 +13,7 @@ import { FriendshipService } from './services/friendship.service';
 import { FriendsController } from './controllers/friends.controller';
 import { StatsController } from './controllers/stats.controller';
 import { Game } from 'src/game/entities/game.entity';
+import { AppModule } from 'src/app.module';
 
 @Module({
     imports: [
@@ -22,7 +23,8 @@ import { Game } from 'src/game/entities/game.entity';
             Stats,
             Friendship,
             Game
-        ])
+        ]),
+        forwardRef(() => AppModule)
     ],
     providers: [
         UsersService,
@@ -38,6 +40,7 @@ import { Game } from 'src/game/entities/game.entity';
     ],
     exports: [
         UsersService,
+				StatsService,
         TypeOrmModule
     ]
 })

@@ -13,9 +13,8 @@ services:
       - ./frontend/:/app
       - ./shared/:/shared
     environment:
-      - NODE_ENV=development
-      - BACKEND_HOST=localhost
-      - BACKEND_PORT=3000
+      - NODE_ENV=${NODE_ENV-development}
+      - VUE_APP_BACKEND_SERVER_URI=${BACKEND_SERVER_URI}
     ports:
       - 8080:8080
     networks:
@@ -28,8 +27,16 @@ services:
     depends_on:
       - postgres
     environment:
-      - JWT_SECRET=${JWT_SECRET}
-      - API_KEY_42=${API_KEY_42}
+      - ACCESS_TOKEN_SECRET=${ACCESS_TOKEN_SECRET}
+      - ACCESS_TOKEN_EXPIRATION=${ACCESS_TOKEN_EXPIRATION}
+      - REFRESH_TOKEN_SECRET=${REFRESH_TOKEN_SECRET}
+      - REFRESH_TOKEN_EXPIRATION=${REFRESH_TOKEN_EXPIRATION}
+      - BACKEND_SERVER_URI=${BACKEND_SERVER_URI}
+      - OAUTH_REDIRECT_URI=${OAUTH_REDIRECT_URI}
+      - FORTY_TWO_CLIENT_ID=${FORTY_TWO_CLIENT_ID}
+      - FORTY_TWO_SECRET=${FORTY_TWO_SECRET}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_SECRET=${GOOGLE_SECRET}
       - POSTGRES_HOST=postgres
       - POSTGRES_PORT=${POSTGRES_PORT}
       - POSTGRES_USER=${POSTGRES_USER}
@@ -38,7 +45,7 @@ services:
       # - TYPEORM_LOGGING=true
       # - TYPEORM_SYNCHRONIZE=true
       # - DEBUG=*
-      - NODE_ENV=development
+      - NODE_ENV=${NODE_ENV-development}
     volumes:
       - ./backend/:/app
       - ./shared/:/shared
@@ -47,14 +54,15 @@ services:
       - 9229:9229
     networks:
       - mynet
+      # mynet:
+      #   aliases:
+      #     - ${DOMAIN}
     # command: sh -c 'npm install && npm run start:dev'
-    command: sh -c 'npm install && npm run start:dev  --debug 0.0.0.0:9229'
+    command: sh -c 'npm install && npm run start:debug'
 
   postgres:
     restart: always
     image: postgres:14-alpine3.15
-    logging:
-      driver: "none"
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -84,6 +92,8 @@ services:
   pgadmin:
     restart: always
     image: dpage/pgadmin4
+    logging:
+      driver: "none"
     ports:
       - 8081:80
     environment:

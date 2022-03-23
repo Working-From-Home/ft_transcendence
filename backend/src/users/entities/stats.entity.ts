@@ -11,8 +11,8 @@ export class Stats {
     user: User;
 
     @Column({ default: 0 })
-    @Check(`"level" >= 0 AND "level" <= 42`)
-    level: number;
+    @Check(`"xp" >= 0`)
+    xp: number;
 
     @Column({ default: 0 })
     @Check(`"victories" >= 0`)

@@ -1,0 +1,112 @@
+/* colors */
+
+$body-bg:       #192531;    // OK!
+$body-color:    #f8f9fa;    // OK!
+
+$primary:       #42b983;    // OK!
+$secondary:     #74a4bc;    // OK!
+$terciary:      #495057; // <- gray 700 | gray 800 -> #343a40;
+
+$success:       #198754;		// OK!
+$info:          #224ED3;    // OK!
+$warning:       #ffc107;		// OK!
+$danger:        #dc3545;		// OK!
+
+$light:         #e9ecef;		// don't touch
+$dark:          #212529;    // don't touch
+
+$theme-colors: (
+  "primary":		$primary,
+  "secondary":	$secondary,
+  "terciary":   $terciary,
+  "success":		$success,
+  "info":				$info,
+  "warning":		$warning,
+  "danger":			$danger,
+  "light":			$light,
+  "dark":				$dark,
+
+  "body":				$body-bg,				// tmp
+);
+
+
+/* general */
+
+$link-color: 										$body-color;
+$link-hover-color: 							$secondary;
+
+/* nav */
+
+$nav-link-hover-color:					$secondary !important;
+
+/* table */
+
+$table-group-separator-color:				$body-bg;
+
+/* pagination */
+
+$pagination-padding-x:							1rem;
+$pagination-border-color:						$terciary;			// good ?
+$pagination-hover-border-color:			$terciary;			// good ?
+$pagination-active-border-color:		$terciary;			// good ?
+$pagination-disabled-border-color:	$terciary;			// good ?
+
+/* dropdown */
+
+$dropdown-bg:										$body-bg;
+$dropdown-color:								$body-color;
+$dropdown-link-color: 					$body-color;
+$dropdown-link-hover-color:			$secondary;
+$dropdown-link-hover-bg:				$body-bg;
+$dropdown-link-active-color:		$secondary !important;
+$dropdown-link-active-bg:				$body-bg;
+
+/* offcanvas */
+
+$offcanvas-horizontal-width:		300px;
+$offcanvas-bg-color:						$body-bg;
+$offcanvas-color:								$body-color;
+
+/* accordion */
+
+$accordion-button-color: 				$body-color; 
+$accordion-button-active-bg:		rgba(#000, .1);
+$accordion-button-active-color:	$secondary;
+$accordion-button-padding-y:    1rem;
+$accordion-button-padding-x:    0.3rem;
+
+$accordion-icon-color:					$body-color;
+$accordion-icon-active-color:		$secondary;
+
+/* modal */
+
+$modal-content-color:						$body-color;
+$modal-content-bg:							$body-bg;
+
+$modal-header-border-color:			rgba(#000, .2);
+
+/* tooltip */
+
+$tooltip-bg:										$body-bg;
+$tooltip-opacity:								1;
+
+
+
+
+
+
+
+
+
+
+
+// $custom-colors: (
+//   "body":       $body
+// );
+
+// $theme-colors: map-merge($theme-colors, $custom-colors);
+
+@import "@/../node_modules/bootstrap/scss/bootstrap";
+
+
+// $theme-colors: map-merge($theme-colors, $custom-colors);

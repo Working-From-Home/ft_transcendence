@@ -1,28 +1,37 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Game } from 'src/game/entities/game.entity';
-import { ChatTmpService } from './chat.tmp.service';
 import { Channel } from './entities/channel.entity';
 import { Message } from './entities/message.entity';
 import { UserChannel } from './entities/user-channel.entity';
-
+import { Blocked } from '../users/entities/blocked.entity';
+import { ChannelsController } from './controllers/channels.controller';
+import { ChatService } from './services/chat.service';
+import { UsersModule } from 'src/users/users.module';
+import { AppGateway } from 'src/app.gateway';
+import { AppModule } from 'src/app.module';
+import { AuthModule } from 'src/auth/auth.module';
 @Module({
     imports: [
         TypeOrmModule.forFeature([
             Message,
             UserChannel,
             Channel,
-            Game
-        ])
+            Game,
+			Blocked
+        ]),
+        UsersModule,
+		AuthModule,
+		forwardRef(() => AppModule),
     ],
     providers: [
-        ChatTmpService
+        ChatService,
     ],
     controllers: [
-
+        ChannelsController
     ],
     exports: [
-        ChatTmpService
+        ChatService,
     ]
 })
 export class ChannelsModule {}

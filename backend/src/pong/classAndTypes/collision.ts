@@ -11,7 +11,8 @@ export function checkPaddleWall(paddle : GameObject) : boolean {
 export function checkBallCollision(
     ball : GameObject,
     leftPaddle : GameObject,
-    rightPaddle : GameObject
+    rightPaddle : GameObject,
+		ballXSpeed : number
     ) : void
 {
     //paddle collision
@@ -21,7 +22,7 @@ export function checkBallCollision(
         ball.pos.x < leftPaddle.pos.x + leftPaddle.width &&
         ball.pos.x > leftPaddle.pos.x
     ) {
-        setBallDir(ball, leftPaddle, 1);
+        setBallDir(ball, leftPaddle, 1, ballXSpeed);
     }
     else if (
         ball.pos.y + ball.height > rightPaddle.pos.y &&
@@ -29,23 +30,23 @@ export function checkBallCollision(
         ball.pos.x + ball.width > rightPaddle.pos.x &&
         ball.pos.x + ball.width < rightPaddle.pos.x + rightPaddle.width
     ) {
-        setBallDir(ball, rightPaddle, -1);
+        setBallDir(ball, rightPaddle, -1, ballXSpeed);
     }
     //Wall collision
     if (ball.pos.y <= 0 || ball.pos.y + ball.height >= 400)
         ball.changeYDirection();
 }
 
-function setBallDir(ball : GameObject, paddle : GameObject, dir : number) {
+function setBallDir(ball : GameObject, paddle : GameObject, dir : number, ballXSpeed : number) {
 	const paddleThird = paddle.height / 3;
 
 	if (ball.pos.y + 5 < paddle.pos.y + paddleThird) {
-		ball.speed = {x: 6 * dir, y: -2}
+		ball.speed = {x: ballXSpeed * dir, y: -2}
 	}
 	else if (ball.pos.y + 5 < paddle.pos.y + (paddleThird * 2)) {
-		ball.speed = {x: 6 * dir, y: 0}
+		ball.speed = {x: ballXSpeed * dir, y: 0}
 	}
 	else {
-		ball.speed = {x: 6 * dir, y: 2}
+		ball.speed = {x: ballXSpeed * dir, y: 2}
 	}
 }

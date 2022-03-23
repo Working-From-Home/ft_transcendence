@@ -1,51 +1,42 @@
-<template class="container-fluid">
-	<section>
-		<the-header></the-header>
-		<friend-list v-if="isLoggedIn"></friend-list>
-		<div class="row align-items-center">
-			<router-view/>
-		</div>
-		<mini-chat v-if="isLoggedIn && isChatView"></mini-chat>
-		<pong-socket v-if="isLoggedIn"/>
-	</section>
+<template class="container-fluid-sm">
+  <section>
+    <Header></Header>
+    <NotificationsHandler></NotificationsHandler>
+    <FriendList v-if="authStore.isLoggedIn"></FriendList>
+    <div class="row align-items-center">
+      <router-view v-slot="{ Component, route }">
+        <transition name="fade" mode="out-in">
+          <component :is="Component" :key="route.path" />
+        </transition>
+      </router-view>
+    </div>
+    <pong-socket v-if="authStore.isLoggedIn" />
+  </section>
 </template>
 
-<script lang="ts">
-import { Options, Vue } from "vue-class-component";
-import MiniChat from "./components/chat/MiniChat.vue";
-import TheHeader from "./components/TheHeader/TheHeader.vue";
-import FriendList from "./components/OffcanvasFriendsList.vue";
-import PongSocket from "./components/pong/PongSocket.vue"
-// import { initSocket, socket } from "./socket";
-import { io }  from "socket.io-client";
+<script setup lang="ts">
+import Header from './components/header/Header.vue';
+import FriendList from './components/header/FriendsList.vue';
+import PongSocket from './components/pong/PongSocket.vue';
+import { useAuthStore } from '@/store/auth';
+import { useRoute } from 'vue-router';
+import { computed, onBeforeMount } from 'vue';
+import NotificationsHandler from './components/notifications/notificationsHandler.vue';
+import { useCurrentUserStore } from './store/currentUser';
 
-@Options({
-	components: {
-		MiniChat,
-		TheHeader,
-		FriendList,
-		PongSocket
-	},
-	computed: {
-		isLoggedIn() {	
-			return this.$store.getters.isAuth;
-		},
-		isChatView() {
-			if (this.$route.path === "/chat")
-				return false;
-			return true;
-		}
-	},
-	created() {
-		this.$store.dispatch('checkLog');
-	},
-})
-export default class HelloWorld extends Vue {}
+const authStore = useAuthStore();
+const currentUserStore = useCurrentUserStore();
+const route = useRoute();
+
+onBeforeMount( async () => {
+  if (currentUserStore.userId)
+    await currentUserStore.initStore(null);
+});
+
 </script>
 
-<style>
+<style lang="scss">
 html {
-  background: #192531;
   overflow-x: hidden;
 }
 
@@ -54,7 +45,15 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: rgba(255, 255, 255, 0.884);
-  background: #192531;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.1s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

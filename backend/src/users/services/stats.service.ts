@@ -14,9 +14,10 @@ export class StatsService {
     }
 
     async incVictories(user: User) {
-        const stats = await this.repo.findOne(user.id);
+        const stats = await this.repo.findOneOrFail({userId: user.id});
         if (!stats) { throw new NotFoundException('stats not found'); }
         stats.victories += 1;
+				stats.xp += 50;
         return await this.repo.save(stats);
     }
 
@@ -24,6 +25,7 @@ export class StatsService {
         const stats = await this.repo.findOne(user.id);
         if (!stats) { throw new NotFoundException('stats not found'); }
         stats.losses += 1;
+				stats.xp += 10;
         return await this.repo.save(stats);
     }
 

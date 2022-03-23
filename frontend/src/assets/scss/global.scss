@@ -1,0 +1,83 @@
+/* disable outline on focus */
+
+a, a:hover, a:focus {
+	outline-style: none !important;
+	box-shadow: none !important;
+}
+button, button:hover, button:focus {
+	outline-style: none !important;
+	box-shadow: none !important;
+}
+input, input:hover, input:focus {
+	outline-style: none !important;
+	box-shadow: none !important;
+}
+select, select:hover, select:focus {
+	outline-style: none !important;
+	box-shadow: none !important;
+}
+
+/* remove arrow from datalist input */
+
+input::-webkit-calendar-picker-indicator {
+  position: absolute;
+  opacity: 0;
+}
+
+/* gradients */
+
+.light-gradient {
+  background: linear-gradient(180deg, rgba(white, 0.15), rgba(white, 0))
+}
+.light-gradient-inverted {
+  background: linear-gradient(180deg, rgba(white, 0), rgba(white, 0.15))
+}
+
+.gradient-body-inverted {
+  background: linear-gradient(180deg, rgba(#192531, 0), rgba(#192531, 1))
+}
+.gradient-body {
+  background: linear-gradient(180deg, rgba(#192531, 1), rgba(#192531, 0))
+}
+
+
+
+
+.gradient-blue-inverted {
+  background: linear-gradient(180deg, rgba(#74A4BC, 0), rgba(#74A4BC, .15))
+}
+.gradient-blue {
+  background: linear-gradient(180deg, rgba(#74A4BC, .15), rgba(#74A4BC, 0))
+}
+
+.gradient-green-inverted {
+  background: linear-gradient(180deg, rgba(#86CD82, 0), rgba(#86CD82, .15))
+}
+.gradient-green {
+  background: linear-gradient(180deg, rgba(#86CD82, .15), rgba(#86CD82, 0))
+}
+
+.gradient-yellow-inverted {
+  background: linear-gradient(180deg, rgba(#FCCA46, 0), rgba(#FCCA46, .15))
+}
+.gradient-yellow {
+  background: linear-gradient(180deg, rgba(#FCCA46, .15), rgba(#FCCA46, 0))
+}
+
+/* cursor */
+
+h1, h2, h3, h4, h5, h6, p, span, th, td, small {
+	cursor: default;
+}
+
+.clickable-cursor {
+  cursor: pointer;
+}
+
+a:link {
+  text-decoration: none;
+}
+
+a.page-link {
+  min-width: 70px;
+}

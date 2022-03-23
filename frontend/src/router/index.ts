@@ -1,19 +1,29 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import Home from "../views/Home.vue";
-import store from "../store";
 import PongGame from '../components/pong/PongGame.vue'
 import PongHome from '../components/pong/PongHome.vue'
+import Auth from "@/views/auth/Auth.vue";
+import { useAuthStore } from "@/store/auth";
+import { AuthMode } from "@/views/auth/auth.interface";
+import Profile from "@/views/Profile.vue"
+import OauthWait from "@/components/auth/OauthWait.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
     name: "Home",
     component: Home,
+    meta: {
+      title: 'Home'
+    }
   },
   {
     path: "/pong",
     name: "Pong",
-		meta: { requiresAuth: true },
+		meta: {
+      title: 'Pong',
+      requiresAuth: true
+    },
     component: () =>
       import("../views/Pong.vue"),
 			children: [
@@ -30,35 +40,60 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/chat",
     name: "Chat",
-	meta: { requiresAuth: true },
+	  meta: {
+      title: 'Chat',
+      requiresAuth: true
+    },
     component: () =>
       import("../views/Chat.vue"),
   },
   {
-    path: "/profile",
     name: "profile",
-	meta: { requiresAuth: true },
-    component: () =>
-      import("../views/profiles/Profile.vue"),
+    path: "/users/:userid",
+    meta: {
+      title: 'Profile',
+      requiresAuth: true
+    },
+    component: Profile,
   },
   {
-    path: "/auth/signup",
-    name: "Register",
-	meta: { requiresUnAuth: true },
-    component: () =>
-      import("../views/auth/signUp.vue"),
+    name: 'signup',
+    path: '/signup',
+    alias: ['/sign-up', '/register'],
+	  meta: {
+      title: 'Register',
+      requiresUnAuth: true
+    },
+    component: Auth,
+    props: { selectForm: AuthMode.Register}
   },
   {
-    path: "/auth/signin",
-    name: "Log",
-	meta: { requiresUnAuth: true },
-    component: () =>
-      import("../views/auth/signIn.vue"),
+    name: 'signin',
+    path: '/signin',
+    alias: ['/sign-in', '/login'],
+	  meta: {
+      title: 'Login',
+      requiresUnAuth: true
+    },
+    component: Auth,
+    props: { selectForm: AuthMode.Login}
+  },
+  {
+    name: 'oauth',
+    path: '/signup/oauth',
+	  meta: {
+      title: 'Login',
+      requiresUnAuth: true
+    },
+    component: OauthWait,
   },
   {
     path: "/admin",
     name: "admin",
-	meta: { requiresAuth: true },
+	  meta: {
+      title: 'Administration',
+      requiresAuth: true
+    },
     component: () =>
       import("../views/AdminPannel.vue"),
   },
@@ -74,13 +109,17 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach(function(to, _, next) {
-	if (to.meta.requiresAuth && !store.getters.isAuth)
+router.beforeEach(function(to, from, next) {
+  const authStore = useAuthStore();
+  document.title = `Transcendence - ${to.meta.title}`;
+  if (to.meta.requiresAuth && !authStore.isLoggedIn)
+    next('/');
+  else if (to.meta.requiresUnAuth && authStore.isLoggedIn)
 		next('/');
-	else if (to.meta.requiresUnAuth && store.getters.isAuth)
-		next('/');
-	else
-		next();
+  else if (authStore.registerInProgress && to.name != 'signup')
+      next({name: 'signup'});
+  else
+    next();
 });
 
 export default router;

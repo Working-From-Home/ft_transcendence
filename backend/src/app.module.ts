@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
@@ -10,8 +10,8 @@ import { AuthModule } from './auth/auth.module';
 import { PongModule } from './pong/pong.module';
 import { Stats } from './users/entities/stats.entity';
 import { Friendship } from './users/entities/friendship.entity';
+import { GameModule } from './game/game.module';
 import { Blocked } from './users/entities/blocked.entity';
-import { Achievement } from './users/entities/achievement.entity';
 import { Channel } from './channels/entities/channel.entity';
 import { Message } from './channels/entities/message.entity';
 import { UserChannel } from './channels/entities/user-channel.entity';
@@ -19,7 +19,8 @@ import { Game } from './game/entities/game.entity';
 import { UsersInChannel } from './channels/entities/users-in-channel.view.entity';
 import { AppGateway } from './app.gateway';
 import { ChannelsModule } from './channels/channels.module';
-
+import { OnlineService } from './online.service';
+import { AppLoggerMiddleware } from './http.logger.middleware';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -37,9 +38,9 @@ import { ChannelsModule } from './channels/channels.module';
           password: config.get('POSTGRES_PASSWORD'),
           database: config.get('POSTGRES_DATABASE'),
           entities: [
-            User, Stats, Avatar, Friendship, Blocked, Achievement,
+            User, Stats, Avatar, Friendship, Blocked,
             Channel, Message, UserChannel, UsersInChannel,
-            Game 
+            Game
           ],
           // logging: 'all',
           synchronize: false     // shouldn't be used in production: may lose data
@@ -49,9 +50,19 @@ import { ChannelsModule } from './channels/channels.module';
     UsersModule,
     AuthModule,
 		PongModule,
+		GameModule,
     ChannelsModule
   ],
   controllers: [AppController],
-  providers: [AppService, AppGateway],
+  providers: [AppService, AppGateway, OnlineService],
+  exports: [AppGateway, OnlineService],
 })
-export class AppModule {}
+// before :
+// export class AppModule {}
+
+// after : (just to log http requests, to remove at the end...)
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(AppLoggerMiddleware).forRoutes('*');
+  }
+}

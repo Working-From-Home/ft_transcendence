@@ -1,16 +1,15 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne, OneToMany, ManyToMany, JoinTable, Check } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne, OneToMany, ManyToMany, JoinTable, Check, Index } from "typeorm";
 import { Avatar } from "./avatar.entity";
 import { Friendship } from "./friendship.entity";
 import { Stats } from "./stats.entity";
 import { Channel } from "../../channels/entities/channel.entity";
 import { Message } from "../../channels/entities/message.entity";
 import { UserChannel } from "../../channels/entities/user-channel.entity";
-import { Achievement } from "./achievement.entity";
 import { Blocked } from "./blocked.entity";
 import { Game } from "../../game/entities/game.entity";
+import { Exclude } from "class-transformer";
 
 @Entity()
-@Check(`case when ("role" = 'owner' OR "role" = 'admin') THEN banned IS NOT TRUE END`)
 export class User {
     @PrimaryGeneratedColumn()
     id: number;
@@ -23,17 +22,16 @@ export class User {
     @Column({ unique: true })
     username: string;
 
-    @Column()
-    password: string;
+    @Column({nullable: true })
+    @Exclude()
+    password: string | null;
 
-    @Column({ type: "enum", enum: ["owner", "admin", "user"], default: "user" })
-    role: "owner" | "admin" | "user";
+    @Column({ type: "text", nullable: true })
+    @Exclude()
+    refreshToken: string | null;
 
     @Column({ type: 'timestamptz', default: () => "CURRENT_TIMESTAMP" })
     createdAt: Date;
-
-    @Column({ type: "boolean", default: false })
-    banned: boolean;
 
     /* OAuth */
 
@@ -42,9 +40,24 @@ export class User {
 
     @Column({ type: "text", nullable: true })
     twoFaSecret: string | null;
+    
+    @Index()
+    @Column({ type: "text", unique: true, nullable: true})
+    @Exclude()
+    googleSub: string | null;
 
     @Column({ type: "text", nullable: true })
-    oauthToken: string | null;
+    @Exclude()
+    googleRefreshToken: string | null;
+
+    @Index()
+    @Column({ type: "text", unique: true, nullable: true })
+    @Exclude()
+    fortyTwoSub: string | null;
+    
+    @Column({ type: "text", nullable: true })
+    @Exclude()
+    fortyTwoRefreshToken: string | null;
 
     /* Avatar */
 
@@ -56,15 +69,13 @@ export class User {
     @OneToOne(() => Stats, (stats) => stats.user)
     stats: Stats;
 
-    /* Achievements */
-
-    @ManyToMany(() => Achievement, (achievement) => achievement.users)
-    @JoinTable({
-        name: "user_achievements",
-        joinColumns: [{ name: "userId", referencedColumnName: "id" }],
-        inverseJoinColumns: [{ name: "achievementId", referencedColumnName: "id" }]
-    })
-    achievements: Achievement[];
+    get statistics() {
+        return {
+            level: this.stats.xp,
+            victories: this.stats.victories,
+            losses: this.stats.losses
+        }
+    }
 
     /* Friendships */
 

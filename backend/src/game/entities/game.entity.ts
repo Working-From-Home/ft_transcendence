@@ -15,13 +15,12 @@ export class Game {
 
     @Column({ type: 'timestamptz', default: () => "CURRENT_TIMESTAMP" })
     createdAt: Date;
-
+    
+		@ManyToOne(() => User, (user) => user.wonGames, { onDelete: "SET NULL" })
+    @JoinColumn()
+    winner: User;
+		
     @ManyToOne(() => User, (user) => user.lossedGames, { onDelete: "SET NULL" })
     @JoinColumn()
     looser: User;
-
-    @ManyToOne(() => User, (user) => user.wonGames, { onDelete: "SET NULL" })
-    @JoinColumn()
-    winner: User;
 }
-  
