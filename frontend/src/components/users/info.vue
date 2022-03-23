@@ -15,6 +15,7 @@ import UserService from '@/services/UserService';
 import { useStatusStore } from '@/store/modules/status/status';
 import ChallengeButton from '@/components/pong/ChallengeButton.vue';
 import WatchButton from '@/components/pong/WatchButton.vue';
+import ChatBlockButton from "@/components/chat/ChatBlockButton.vue";
 import EditModal from '@/components/users/EditModal.vue';
 import FriendButtons from '@/components/users/FriendButtons.vue';
 import { Tooltip } from 'bootstrap';
@@ -199,6 +200,9 @@ function getUserData(id: number) {
     <div v-if="!props.isOwner" class="row m-4 mb-2">
       <div class="col mx-1">
         <FriendButtons :userId="userId"></FriendButtons>
+      </div>
+      <div class="col mx-1">
+        <ChatBlockButton :modalUserId="userId">Challenge</ChatBlockButton>
       </div>
       <div v-if="isOnline && !isInGame" class="col mx-1">
         <ChallengeButton :id="'challengeFromProfile'" :userId="props.userId"

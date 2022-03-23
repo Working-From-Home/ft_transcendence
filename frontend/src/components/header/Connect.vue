@@ -8,11 +8,17 @@ import { IChannel } from 'shared/models/socket-events';
 import socket from '@/socketApp';
 import { useCurrentUserStore } from '@/store/currentUser';
 import UserService from '@/services/UserService';
+import { useNotificationsStore } from '@/store/notifications';
 
 const authStore = useAuthStore();
 const statusStore = useStatusStore();
 const chatRoomsStore = useChatRoomsStore();
 const currentUserStore = useCurrentUserStore();
+const notificationsStore = useNotificationsStore()
+
+const chatRooms = computed<any>(() => {
+  return chatRoomsStore.getRooms;
+})
 
 const connect = computed<boolean>(() => {
   if (authStore.isLoggedIn) {
@@ -92,6 +98,27 @@ const connect = computed<boolean>(() => {
     socket.on('friendshipEnded', () => {
       currentUserStore.updateFriends(currentUserStore.userId);
     });
+
+    socket.on("changeParam", async (param: string, channelId: number, userId: number, content: Date | null) => {
+			for (const obj of chatRooms.value) {
+				if (obj.roomId.toString() === channelId.toString()){
+					if (param === "ban"){
+						notificationsStore.enqueue("info", "Banned", "You're banned from the Channel " + obj.roomName)
+					}
+					else if (param === "unban"){
+						notificationsStore.enqueue("info", "Unbanned", "You're unbanned from the Channel " + obj.roomName + ". You can now join.")
+					}
+					else if (param === "mute"){
+						notificationsStore.enqueue("info", "Banned", "You're muted in the Channel " + obj.roomName)
+					}
+					else if (param === "unmute"){
+						notificationsStore.enqueue("info", "Unbanned", "You're unmuted in the Channel " + obj.roomName)
+					}
+				}
+			}
+			chatRoomsStore.addParam(param, channelId, userId, content);
+		});
+
   }
   return authStore.isLoggedIn;
 });
