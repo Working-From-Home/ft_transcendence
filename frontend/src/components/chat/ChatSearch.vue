@@ -8,7 +8,7 @@
 					@input="searchChannels()"
 					type="search"
 					placeholder="search for a channel"
-					class="form-control form-control-lg border-secondary"
+					class="form-control border-secondary"
 					list="my-list-id"
 				/>
 				<datalist id="my-list-id">
