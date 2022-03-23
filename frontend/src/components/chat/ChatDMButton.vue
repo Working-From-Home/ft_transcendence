@@ -55,7 +55,7 @@ export default defineComponent({
   methods: {
     creatDm() {
       ChatService.createDm(this.userId, this.otherUserId).catch(({ response }) => {
-			this.notificationsStore.enqueue("warning", "Error", response.data.message)
+			this.notificationsStore.enqueue("info", "Information", response.data.message)
    		});
     },
   },
