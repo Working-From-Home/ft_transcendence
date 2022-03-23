@@ -10,6 +10,14 @@ git clone https://github.com/Working-From-Home/ft_transcendence.git && cd ft_tra
 ```
 Create a `.env` file, template example:
 ```
+# Must change thoses two variables BEFORE BUILD AND RUN if
+# running on 42's linux dump.
+# Type the command `id` to get your `uid` and `gid`)
+# Also it only works ouside `NFS`, like `/goinfre` or `/tmp`,
+# thus, it doesn't works inside `/sgoinfre`, or your home `~/`.
+HOST_UID=36435
+HOST_GID=4305
+
 ACCESS_TOKEN_SECRET=my_secret
 REFRESH_TOKEN_SECRET=my_secret2
 # expressed in seconds or a string describing a time span zeit/ms. Eg: 60, "2 days", "10h", "7d"
@@ -35,14 +43,6 @@ FORTY_TWO_SECRET=
 # Create google oauth2 credentials here -> https://console.cloud.google.com/apis/credentials
 GOOGLE_CLIENT_ID=
 GOOGLE_SECRET=
-
-# Must change thoses two variables BEFORE BUILD AND RUN if
-# running on 42's linux dump.
-# Type the command `id` to get your `uid` and `gid`)
-# Also it only works ouside `NFS`, like `/goinfre` or `/tmp`,
-# thus, it doesn't works inside `/sgoinfre`, or your home `~/`.
-HOST_UID=1000
-HOST_GID=1000
 
 # Database settings
 POSTGRES_PORT=5432
