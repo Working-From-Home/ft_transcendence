@@ -102,25 +102,25 @@ export default defineComponent({
 		this.$socketapp.on("sendMessage", async (resp: IMessage[]) => {
 			this.chatRoomsStore.addMessageCurrent(resp, this.currentRoom.roomId);
 		});
-		this.$socketapp.on("changeParam", async (param: string, channelId: number, userId: number, content: Date | null) => {
-			for (const obj of this.storeRoom) {
-				if (obj.roomId.toString() === channelId.toString()){
-					if (param === "ban"){
-						this.notificationsStore.enqueue("info", "Banned", "You're banned from the Channel " + obj.roomName)
-					}
-					else if (param === "unban"){
-						this.notificationsStore.enqueue("info", "Unbanned", "You're unbanned from the Channel " + obj.roomName + ". You can now join.")
-					}
-					else if (param === "mute"){
-						this.notificationsStore.enqueue("info", "Banned", "You're muted in the Channel " + obj.roomName)
-					}
-					else if (param === "unmute"){
-						this.notificationsStore.enqueue("info", "Unbanned", "You're unmuted in the Channel " + obj.roomName)
-					}
-				}
-			}
-			this.chatRoomsStore.addParam(param, channelId, userId, content);
-		});
+		// this.$socketapp.on("changeParam", async (param: string, channelId: number, userId: number, content: Date | null) => {
+		// 	for (const obj of this.storeRoom) {
+		// 		if (obj.roomId.toString() === channelId.toString()){
+		// 			if (param === "ban"){
+		// 				this.notificationsStore.enqueue("info", "Banned", "You're banned from the Channel " + obj.roomName)
+		// 			}
+		// 			else if (param === "unban"){
+		// 				this.notificationsStore.enqueue("info", "Unbanned", "You're unbanned from the Channel " + obj.roomName + ". You can now join.")
+		// 			}
+		// 			else if (param === "mute"){
+		// 				this.notificationsStore.enqueue("info", "Banned", "You're muted in the Channel " + obj.roomName)
+		// 			}
+		// 			else if (param === "unmute"){
+		// 				this.notificationsStore.enqueue("info", "Unbanned", "You're unmuted in the Channel " + obj.roomName)
+		// 			}
+		// 		}
+		// 	}
+		// 	this.chatRoomsStore.addParam(param, channelId, userId, content);
+		// });
 	},
 	unmounted() {
 		this.menuMessageModal.hide();
