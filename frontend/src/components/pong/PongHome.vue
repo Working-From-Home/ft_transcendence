@@ -6,7 +6,6 @@
         <p class="fs-5 mb-4">find your opponent now and express your talent</p>
         <pong-matchmaking />
 				<add-twofa-button />
-				<add-twofa-modal />
       </div>
     </div>
   </div>
@@ -56,10 +55,9 @@ import { useStatusStore } from '@/store/modules/status/status';
 import PongMatchmaking from './PongMatchmaking.vue';
 import { useCurrentUserStore } from '@/store/currentUser';
 import AddTwofaButton from '../auth/AddTwofaButton.vue';
-import AddTwofaModal from '../auth/AddTwofaModal.vue';
 
 export default defineComponent({
-  components: { PongMatchmaking, AddTwofaButton, AddTwofaModal },
+  components: { PongMatchmaking, AddTwofaButton},
   setup() {
     const statusStore = useStatusStore();
     const currentUserStore = useCurrentUserStore();

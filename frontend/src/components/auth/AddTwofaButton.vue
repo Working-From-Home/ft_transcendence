@@ -8,14 +8,16 @@
 		>
 			<span>Add 2FA</span>
 		</button>
+		<add-twofa-modal />
 	</div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import AddTwofaModal from '../auth/AddTwofaModal.vue';
 
 export default defineComponent({
-	
+	components: { AddTwofaModal }
 })
 
 </script>
