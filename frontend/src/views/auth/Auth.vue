@@ -1,11 +1,11 @@
 <template id="sign-in">
   <section class="vh-100">
     <div class="container py-5 h-100">
-      <div class="row d-flex align-items-center justify-content-center h-100">
-        <div class="col-md-8 col-lg-7 col-xl-6">
-          <img src="../../assets/pong-signin.svg" class="img-fluid pong-logo" alt="Mythic pong game image" />
+      <div class="row d-flex align-items-center justify-content-around h-100">
+        <div class="col-8 col-offset-2 col-lg-6 col-lg-offset-0 mb-4 mb-lg-0">
+          <img src="../../assets/pong-signin.svg" class="img-fluid pong-logo mx-2" alt="Mythic pong game image" />
         </div>
-        <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1 h-00">
+        <div class="col-8 col-offset-2 col-lg-4 col-lg-offset-2">
           <Transition name="fade-form" mode="out-in">
             <LoginForm v-if="selectForm == AuthMode.Login" @change-form="selectForm = AuthMode.Register" />
             <RegisterFormOptional v-else-if="selectForm == AuthMode.RegisterOptional || authStore.registerInProgress"/>
@@ -35,11 +35,6 @@ const authStore = useAuthStore();
 </script>
 
 <style lang="scss" scoped>
-// Inspect
-*:hover {
-  outline: 1px blue solid;
-}
-
 // utils
 @mixin filter-invert($n: 100%) {
   -webkit-filter: invert($n); /* safari 6.0 - 9.0 */
