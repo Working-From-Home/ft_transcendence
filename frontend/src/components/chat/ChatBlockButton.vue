@@ -3,7 +3,7 @@
     v-if="!isBlock"
     type="button"
     id="btn-front"
-    class="btn text-nowrap btn-info shadow m-2"
+    class="btn text-nowrap btn-success shadow m-2"
 	:style="small ? 'min-width: 2rem;' : 'min-width: 8.5rem;'"
     @click="blockUser"
   >
@@ -14,7 +14,7 @@
     v-else
     type="button"
     id="btn-front"
-    class="btn text-nowrap btn-info shadow m-2"
+    class="btn text-nowrap btn-success shadow m-2"
 	:style="small ? 'min-width: 2rem;' : 'min-width: 8.5rem;'"
     @click="unblockUser"
   >

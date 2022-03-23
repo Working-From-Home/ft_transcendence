@@ -6,36 +6,26 @@
         <input
           v-model="email"
           type="email"
-          class="form-control"
+          class="form-control border-secondary"
           id="email"
           placeholder=""
           required
           autofocus
         />
-        <label for="email" class="text-black">Email address</label>
+        <label for="email">Email address</label>
       </div>
       <!-- Password input -->
       <div class="form-floating mb-4">
         <input
           v-model="password"
           type="password"
-          class="form-control"
+          class="form-control border-secondary"
           id="password"
           placeholder=""
           required
         />
-        <label for="password" class="text-black">Password</label>
+        <label for="password">Password</label>
       </div>
-      <!-- Error from backend -->
-      <!-- <div :hidden="errorMessage == ''" class="alert alert-danger" role="alert" > -->
-      <div
-        :style="{ visibility: errorMessage ? 'visible' : 'hidden' }"
-        class="alert alert-danger"
-        role="alert"
-      >
-        {{ errorMessage }}
-      </div>
-
       <!-- Submit button -->
       <button type="submit" class="btn btn-primary btn-lg btn-block">
         Sign in
@@ -44,20 +34,20 @@
     <!-- OAuth -->
     <hr class="hr-text" data-content="Or continue with" />
     <a
-      class="btn btn-default btn-oauth rounded-circle rounded-circle"
+      class="btn btn-default btn-oauth rounded-circle mx-2"
       role="button"
       v-on:click="loginGoogle"
     >
       <font-awesome-icon :icon="['fab', 'google']" color="white" size="5x" />
     </a>
     <a
-      class="btn btn-default btn-oauth"
+      class="btn btn-default btn-oauth rounded-circle mx-2"
       role="button"
       v-on:click="loginFortyTwo"
     >
-      <img src="../../assets/logo42-white.svg" width="80" />
+      <img src="../../assets/logo42-white.svg" width="80" height="80" />
     </a>
-    <p>
+    <p class="mt-2">
       Don't have an account yet ?
       <router-link :to="{ name: 'signup' }" class="link-info"
         >Register here</router-link
@@ -79,29 +69,29 @@ import { AuthMode } from '@/views/auth/auth.interface';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { openSignInWindow } from './OauthPopup';
+import { useNotificationsStore } from '@/store/notifications';
 
 const emit = defineEmits<{
   (e: 'changeForm', value: AuthMode): void;
 }>();
 
 const authStore = useAuthStore();
+const notificationsStore = useNotificationsStore();
 const router = useRouter();
 
 const email =  ref('');
 const password = ref('');
 
-const errorMessage = ref('');
-
 const login = async () => {
   const e = await authStore.signInLocal(email.value, password.value);
-  if (e) errorMessage.value = e.message;
+  if (e) notify("danger", "failure", e.message);
   else router.push('/');
 };
 
 const receiveMessageGoogle = async (event: MessageEvent<any>) => {
   window.removeEventListener('message', receiveMessageGoogle);
   const e = await authStore.signInGoogle(event.data);
-  if (e) errorMessage.value = e.message;
+  if (e) notify("danger", "failure", e.message);
   else router.push('/');
 };
 const loginGoogle = async () => {
@@ -109,11 +99,10 @@ const loginGoogle = async () => {
   openSignInWindow(`${process.env.VUE_APP_BACKEND_SERVER_URI}/auth/google/`);
 };
 
-
 const receiveMessageFortyTwo = async (event: MessageEvent<any>) => {
   window.removeEventListener('message', receiveMessageFortyTwo);
   const e = await authStore.signInFortyTwo(event.data);
-  if (e) errorMessage.value = e.message;
+  if (e) notify("danger", "failure", e.message);
   else router.push('/');
 };
 const loginFortyTwo = async () => {
@@ -121,14 +110,12 @@ const loginFortyTwo = async () => {
   openSignInWindow(`${process.env.VUE_APP_BACKEND_SERVER_URI}/auth/42/`);
 };
 
+function notify(type: string, header: string, body: string) {
+  notificationsStore.enqueue(type, header, body);
+}
 </script>
 
 <style lang="scss" scoped>
-// Inspect
-*:hover {
-  outline: 1px blue solid;
-}
-
 // utils
 @mixin filter-invert($n: 100%) {
   -webkit-filter: invert($n); /* safari 6.0 - 9.0 */
