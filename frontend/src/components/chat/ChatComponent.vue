@@ -13,6 +13,7 @@
 			:showReactionEmojis="false"
 			:showAudio="false"
 			:showFiles="false"
+			:username-options="{minUsers: 2, currentUser: false}"
 			:show-footer="!chatRoomsStore.isMute"
 			:show-new-messages-divider="false"
 			:room-actions="roomActions"
