@@ -18,7 +18,7 @@ function deleteAccount() {
       <div class="modal-content">
         <!-- Modal Header -->
         <div class="modal-header">
-          <h4 class="modal-title">Delete your account</h4>
+          <h4 class="modal-title">Manage your account</h4>
           <button
             type="button"
             class="btn-close btn-close-white"
@@ -27,10 +27,13 @@ function deleteAccount() {
         </div>
         <!-- Modal body -->
         <div class="modal-body">
-          <p>Are you sure ? This action is irreversible.</p>
+          <h5 class="mb-4">Two-factor authentication</h5>
+          <hr>
+          <h5 class="mb-4">Delete your account</h5>
+          <p>Are you sure? This action is irreversible.</p>
           <ButtonTemplate
             type="button"
-            class="btn btn-danger mt-2"
+            class="btn btn-danger"
             @click="deleteAccount"
             data-bs-dismiss="modal"
           >
