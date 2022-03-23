@@ -9,15 +9,15 @@ const authStore = useAuthStore();
 const currentUserStore = useCurrentUserStore();
 
 function logout() {
-	authStore.logout();
-	socket.off('sendChannels');
-    socket.off('connect_error');
-    socket.off('connectedUsers');
-	socket.off('sendChannel');
-	socket.off('leaveChannel');
-	socket.off('sendMessage');
-	socket.off('changeParam');
-	socket.disconnect(); //  to remove and put at the right place too
+  authStore.logout();
+  socket.off('sendChannels');
+  socket.off('connect_error');
+  socket.off('connectedUsers');
+  socket.off('sendChannel');
+  socket.off('leaveChannel');
+  socket.off('sendMessage');
+  socket.off('changeParam');
+  socket.disconnect(); //  to remove and put at the right place too
 }
 </script>
 
@@ -26,7 +26,9 @@ function logout() {
     <nav class="navbar navbar-expand-lg navbar-dark">
       <!-- not logged header -->
       <div v-if="!authStore.isLoggedIn" class="container-fluid mx-lg-4 mx-2">
-        <router-link to="/" class="navbar-brand">Transcendence</router-link>
+        <router-link to="/" class="navbar-brand text-primary fw-bold"
+          >Transcendence</router-link
+        >
         <button
           class="navbar-toggler"
           type="button"
@@ -58,8 +60,10 @@ function logout() {
       </div>
       <!-- logged in header -->
       <div v-if="authStore.isLoggedIn" class="container-fluid mx-lg-4 mx-2">
-        <router-link to="/" class="navbar-brand text-primary fw-bold">Transcendence</router-link>
-				<!-- hamburger button -->
+        <router-link to="/" class="navbar-brand text-primary fw-bold"
+          >Transcendence</router-link
+        >
+        <!-- hamburger button -->
         <button
           class="navbar-toggler"
           type="button"
@@ -71,7 +75,7 @@ function logout() {
         >
           <span class="navbar-toggler-icon"></span>
         </button>
-				<!-- navbar -->
+        <!-- navbar -->
         <div class="collapse navbar-collapse" id="connectedNav">
           <!-- search bar -->
           <div class="ms-auto ps-lg-5">
@@ -80,8 +84,8 @@ function logout() {
                 <SearchBar></SearchBar>
               </div>
             </div>
-          </div>				
-          <ul id="navbar" class="navbar-nav d-lg-flex ms-auto">
+          </div>
+          <ul id="navbar" class="navbar-nav d-lg-flex ms-auto align-items-center">
             <!-- pong -->
             <li class="nav-item me-lg-3 ms-lg-auto">
               <router-link to="/pong" class="nav-link active">Pong</router-link>
@@ -93,19 +97,15 @@ function logout() {
             <!-- profile dropdown (only on large screen) -->
             <li class="nav-item me-4 dropdown d-none d-lg-inline-block">
               <a
-                class="dropdown-toggle"            href="#"                id="navbarDropdown"
+                class="nav-link active"
+                href="#"
+                id="navbarDropdown"
                 role="button"
                 data-bs-toggle="dropdown"
                 data-bs-display="static"
                 aria-expanded="false"
               >
-              <img
-                :src="currentUserStore.avatar"
-                alt="avatar"
-                width="40"
-                class="rounded"
-              /> 
-              {{ currentUserStore.username }}
+                {{ currentUserStore.username }}
               </a>
               <ul
                 class="dropdown-menu mt-2"
@@ -133,10 +133,7 @@ function logout() {
                   </a>
                 </li>
                 <li v-if="authStore.isLoggedIn">
-                  <router-link
-                    class="dropdown-item"
-                    to="/"
-                    @click="logout"
+                  <router-link class="dropdown-item" to="/" @click="logout"
                     >Logout
                   </router-link>
                 </li>
@@ -170,7 +167,16 @@ function logout() {
                 >Logout
               </router-link>
             </li>
-					</ul>	         
+            <!-- avatar (only on large screen) -->
+            <li class="nav-item d-none d-lg-inline-block">
+              <img
+                :src="currentUserStore.avatar"
+                alt="avatar"
+                width="30"
+                class="rounded-circle my-auto"
+              /> 
+            </li>
+          </ul>
         </div>
       </div>
     </nav>
