@@ -27,8 +27,6 @@ export class JwtTwoFaStrategy extends PassportStrategy(Strategy, 'jwt-two-fa')
 		}
 		else if (payload.isTwoFaAuthenticated) {
 			return { sub : payload.sub };
-		} else {
-			console.log('Not two fa authenticated! :(');
 		}
 	}
 } 

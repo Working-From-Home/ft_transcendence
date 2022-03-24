@@ -31,7 +31,7 @@ const connect = computed<boolean>(() => {
       statusStore.setOnlineUsers(userIds);
     });
     socket.on('connect_error', (err: any) => {
-      console.log(`socket connexion error: ${err}`);
+		notificationsStore.enqueue("danger", "failure", `socket connexion error: ${err}`);
     });
 	/* channel events */
     socket.on('sendChannels', async (resp: IChannel[]) => {
