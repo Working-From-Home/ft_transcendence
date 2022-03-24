@@ -88,46 +88,12 @@ export default defineComponent({
 		};
 	},
 	name: 'Chat',
-	props: {
-		size: String,
-	},
 	components: {
 		ChatWindow,
 		ChatSearch,
 		ChatNewRoomModal,
 		ChatInfoUserModal,
 		ChatAdminModal,
-	},
-	created() {
-		this.currentUserId = this.currentUserStore.userId;
-		this.$socketapp.on("sendMessage", async (resp: IMessage[]) => {
-			this.chatRoomsStore.addMessageCurrent(resp, this.currentRoom.roomId);
-		});
-		// this.$socketapp.on("changeParam", async (param: string, channelId: number, userId: number, content: Date | null) => {
-		// 	for (const obj of this.storeRoom) {
-		// 		if (obj.roomId.toString() === channelId.toString()){
-		// 			if (param === "ban"){
-		// 				this.notificationsStore.enqueue("info", "Banned", "You're banned from the Channel " + obj.roomName)
-		// 			}
-		// 			else if (param === "unban"){
-		// 				this.notificationsStore.enqueue("info", "Unbanned", "You're unbanned from the Channel " + obj.roomName + ". You can now join.")
-		// 			}
-		// 			else if (param === "mute"){
-		// 				this.notificationsStore.enqueue("info", "Banned", "You're muted in the Channel " + obj.roomName)
-		// 			}
-		// 			else if (param === "unmute"){
-		// 				this.notificationsStore.enqueue("info", "Unbanned", "You're unmuted in the Channel " + obj.roomName)
-		// 			}
-		// 		}
-		// 	}
-		// 	this.chatRoomsStore.addParam(param, channelId, userId, content);
-		// });
-	},
-	unmounted() {
-		this.menuMessageModal.hide();
-		this.adminModal.hide();
-		socket.off('sendMessage');
-		socket.off('changeParam');
 	},
 	data(){
 		return {
@@ -167,6 +133,17 @@ export default defineComponent({
 		this.menuMessageModal = new Modal("#menuMessageModal");
 		this.adminModal = new Modal("#adminModal");
 	},
+	created() {
+		this.currentUserId = this.currentUserStore.userId;
+		socket.off('sendMessage');
+		this.$socketapp.on("sendMessage", async (resp: IMessage[]) => {
+			this.chatRoomsStore.addMessageCurrent(resp, this.currentRoom.roomId);
+		});
+	},
+	unmounted() {
+		this.menuMessageModal.hide();
+		this.adminModal.hide();
+	},
 	computed: {
 		isChatView() {
 			if (this.$route.path === "/chat")
@@ -190,8 +167,6 @@ export default defineComponent({
 				}}
 			);
 			this.isMuted();
-			if (this.size === "mini")
-				this.opened = false;
 			if (options.reset)
 				this.messages = [];
 			this.messagesLoaded = false;
