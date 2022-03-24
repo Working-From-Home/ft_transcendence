@@ -2,7 +2,6 @@
 import { useAuthStore } from '@/store/auth';
 import { useRouter } from 'vue-router';
 import ButtonTemplate from './ButtonTemplate.vue';
-import AddTwofaButtonVue from '@/components/auth/AddTwofaButton.vue';
 import AddTwofaModal from '@/components/auth/AddTwofaModal.vue';
 import { Modal } from 'bootstrap';
 import { onMounted, ref } from 'vue';
@@ -43,7 +42,7 @@ function deleteAccount() {
         </div>
         <!-- Modal body -->
         <div class="modal-body">
-          <h5 class="mb-4">Two-factor authentication</h5>
+          <h5 class="mb-4 text-secondary">Two-factor authentication</h5>
           <p>Enable double authentication with Google Authenticator</p>
           <ButtonTemplate
             type="button"
@@ -56,7 +55,7 @@ function deleteAccount() {
           </ButtonTemplate>
 
           <hr>
-          <h5 class="mb-4">Delete your account</h5>
+          <h5 class="mb-4 text-secondary">Delete your account</h5>
           <p>Are you sure? This action is irreversible.</p>
           <ButtonTemplate
             type="button"
