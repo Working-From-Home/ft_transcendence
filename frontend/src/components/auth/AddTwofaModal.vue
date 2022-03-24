@@ -30,7 +30,6 @@
 									<div class="mb-3 mt-3">
 										<input v-model="twoFaCode" type="string" class="form-control w-50 mx-auto" placeholder="Enter code" name="twoFaCode" autocomplete="off">
 									</div>
-									<div v-if="wrongCode">Wrong authentication code!</div> 
 									<div class="mb-4">
 										<font-awesome-icon icon="circle-info" class="pe-2" />
 										<span>You will have to log in again</span>
@@ -54,20 +53,21 @@ import { useAuthStore } from "@/store/auth";
 import { Modal } from "bootstrap";
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
+import { useNotificationsStore } from "@/store/notifications";
 
 library.add(faCircleInfo);
 
 export default defineComponent({
 	setup() {
 		const authStore = useAuthStore();
-		return { authStore };
+		const notificationsStore = useNotificationsStore();
+		return { authStore, notificationsStore };
 	},
 	data() {
 		return {
 			QrCodeLoading: true,
 			QrCode: "",
 			twoFaCode: "",
-			wrongCode: false,
 			modal: {} as Modal,
 		}
 	},
@@ -83,7 +83,6 @@ export default defineComponent({
 		resetData() {
 			this.QrCodeLoading = true;
 			this.twoFaCode = "";
-			this.wrongCode = false;
 		},
 		async sendCode() {
 			try {
@@ -94,7 +93,11 @@ export default defineComponent({
 				this.$router.push('/signin');
 			} catch (err) {
 				this.twoFaCode = "";
-				this.wrongCode = true;
+				this.notificationsStore.enqueue(
+					'danger',
+					'failure',
+					'Wrong authentication code',
+				);
 			}
 		}
 	}

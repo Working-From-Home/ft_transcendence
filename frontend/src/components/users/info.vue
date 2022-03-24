@@ -155,7 +155,8 @@ function getUserData(id: number) {
 
     <div v-if="isOwner"><EditModal></EditModal></div>
 
-    <h2>{{ username }}</h2>
+    <h2 v-if="isOwner">{{ currentUserStore.username }}</h2>
+    <h2 v-else>{{ username }}</h2>
     <hr />
     <div class="row gx-3 pb-3 fs-6 fst-italic">
       <div
