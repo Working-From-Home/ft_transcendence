@@ -1,8 +1,6 @@
 <template>
   <div>
     <form @submit.prevent="submit" class="needs-validation">
-      <!-- Username -->
-      <!-- <div class="hstack gap-3 justify-content-lg-center mb-4"> -->
       <div class="d-inline-flex gap-2">
         <div class="form-floating">
           <input
@@ -31,10 +29,11 @@
       </div>
 
       <!-- Avatar -->
-      <div class="mb-4 mt-5">
-        <div class="mb-2" v-on:click="fileInput!.click()">
-          <img :src="state.avatar" class="img-thumbnail clickable-cursor" />
+      <div class="mt-5 mb-4">
+        <div class="mb-3">
+          <img :src="state.avatar" class="img-thumbnail" width="200" />
         </div>
+
         <input
           ref="fileInput"
           type="file"
@@ -43,24 +42,38 @@
           name="uploaded_file"
           @change="changeAvatar"
         />
+
+        <button
+          type="button"
+          v-on:click="fileInput!.click()"
+          class="btn btn-outline-secondary mx-2"
+          style="min-width: 5rem;"
+        >
+          Upload
+        </button>
+
         <button
           type="button"
           v-on:click="state.avatar = currentUserStore.avatar"
           :disabled="state.avatar == currentUserStore.avatar"
-          class="btn btn-outline-info btn-lg btn-block"
+          class="btn btn-outline-secondary mx-2"
+          style="min-width: 5rem;"
         >
-          Reset Avatar
+          Reset
         </button>
+
       </div>
       <!-- Submit button -->
       <div class="hstack gap-3 justify-content-lg-center">
-        <button
+
+        <!-- <button
           type="button"
           v-on:click="registrationDone"
           class="btn btn-secondary btn-lg btn-block"
         >
           Skip
-        </button>
+        </button> -->
+
         <button
           type="submit"
           class="btn btn-primary btn-lg btn-block"
@@ -68,6 +81,7 @@
         >
           Continue
         </button>
+
       </div>
     </form>
   </div>
@@ -128,8 +142,7 @@ const checkUsernameAvailability = async () => {
 const canContinue = computed((): boolean => {
   if (!!state.usernameError) return false;
   if (
-    state.username.trim() == currentUserStore.username &&
-    state.avatar == currentUserStore.avatar
+    state.username.trim() == currentUserStore.username
   )
     return false;
   return true;

@@ -14,7 +14,7 @@ const authStore = useAuthStore();
             >a 42 project by tlecoeuv,<br />hwinston, juligonz and alesanto</small
           >
           <div class="m-auto mt-4 mb-3 col-md-10 fs-5">
-            <p>
+            <p class="aaa mx-auto">
               This is not C or C++ basic functions! To do something that you’ve
               never done before without a piscine. Remind yourself at the
               beginning of your journey in computer science. Now, look where you
@@ -50,4 +50,16 @@ const authStore = useAuthStore();
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+@import "@/assets/scss/custom.scss";
+
+.aaa {
+    width: 75%;
+  }
+@include media-breakpoint-down(lg) {
+  .aaa {
+    width: 100%;
+  }
+}
+
+</style>
