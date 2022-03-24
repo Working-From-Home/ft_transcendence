@@ -22,13 +22,9 @@ export class TwoFaService {
 
 	public async generateTwoFaSecret(user : User) {
 		const secret = authenticator.generateSecret();
-
 		const otpauthUrl = authenticator.keyuri(user.email ,
 			this.configService.get('TWO_FA_APP_NAME'), secret);
-
-		console.log(secret);
-		await this.usersService.setTwoFaSecret(secret, user.id);
-		
+		await this.usersService.setTwoFaSecret(secret, user.id);	
 		return { secret, otpauthUrl }
 	}
 

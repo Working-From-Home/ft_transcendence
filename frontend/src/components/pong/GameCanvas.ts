@@ -16,7 +16,6 @@ export class GameCanvas {
 
     constructor(canvasName: string) {
         this.canvas = document.querySelector(canvasName) as HTMLCanvasElement;
-				console.log(this.canvas.width);
         this.context = this.canvas.getContext('2d');
     }
 

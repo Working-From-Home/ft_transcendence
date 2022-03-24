@@ -48,7 +48,6 @@ export default defineComponent({
       for (const obj of this.storeBlock) {
         if (obj.recipientId === this.modalUserId) return true;
       }
-	  console.log("not blocked");
       return false;
     },
   },

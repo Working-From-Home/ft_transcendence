@@ -42,7 +42,6 @@ export class AppGateway {
 	
 	async handleDisconnect(client: AppSocket) {
 		if (client.data.userId) {
-			console.log("disconnect")
 			this.onlineService.removeUser(client.data.userId)
 			this.server.emit("connectedUsers", this.onlineService.getOnlineUsers())
 			this.logger.log(`User id ${client.data.userId} is offline. (${this.onlineService.getTotalOnlineUsers()} online users)`)

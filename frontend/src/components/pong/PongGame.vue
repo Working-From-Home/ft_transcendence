@@ -63,12 +63,8 @@ export default defineComponent({
       this.$route.params.gameId,
       (playerIds: number[]) => {
         if (playerIds.length === 0) {
-          console.log(
-            `game with id: ${this.$route.params.gameId} doesn't exist`,
-          );
           this.$router.push({ path: '/pong' });
         }
-        console.log(`players id: ${playerIds}`);
         this.playerIds = playerIds;
       },
     );
@@ -87,7 +83,6 @@ export default defineComponent({
       this.gameCanvas.drawGameState(gameState);
     });
     this.$pongSocket.on('gameFinish', (winner: string) => {
-      console.log(`${winner} won!`);
       this.winner = winner;
       this.finished = true;
     });
