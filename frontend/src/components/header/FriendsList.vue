@@ -155,14 +155,14 @@ watch(
                     <td v-if="statusStore.isOnline(friend.id)" class="text-end">
                       <div class="d-flex flex-row justify-content-end">
                         <ChallengeButton
-                          v-if="!statusStore.isInGame(friend.id)"
+                          v-if="!statusStore.isInGame(friend.id) && !statusStore.isInGame(currentUserStore.userId)"
                           :id="'challengeFromFriendsList'"
                           :userId="friend.id"
                           :small="true"
                           class="mx-1"
                         ></ChallengeButton>
                         <WatchButton
-                          v-else
+                          v-if="statusStore.isInGame(friend.id)"
                           :userId="friend.id"
                           :small="true"
                           class="mx-1"
