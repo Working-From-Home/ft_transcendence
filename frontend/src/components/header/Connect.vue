@@ -34,7 +34,7 @@ const connect = computed<boolean>(() => {
     socket.on('connect_error', (err: any) => {
       console.log(`socket connexion error: ${err}`);
     });
-	 /* channel events */
+	/* channel events */
     socket.on('sendChannels', async (resp: IChannel[]) => {
 	  let blocked = await ChatService.getblock();
 	  chatRoomsStore.listBlock(blocked)
