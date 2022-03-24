@@ -14,11 +14,10 @@ const authStore = useAuthStore();
             >a 42 project by tlecoeuv,<br />hwinston, juligonz and alesanto</small
           >
           <div class="m-auto mt-4 mb-3 col-md-10 fs-5">
-            <p class="aaa mx-auto">
-              This is not C or C++ basic functions! To do something that you’ve
-              never done before without a piscine. Remind yourself at the
-              beginning of your journey in computer science. Now, look where you
-              are standing.
+            <p class="special-width mx-auto">
+              <span class="fst-italic">Transcendence</span> comes from the Latin prefix <span class="fst-italic">trans</span>, meaning 'beyond' 
+              and the word <span class="fst-italic">scandare</span>, meaning 'to climb'. When you achieve transcendence, 
+              you have gone beyond ordinary limitations.
             </p>
             <p class="fst-italic">Time to shine...</p>
           </div>
@@ -53,11 +52,11 @@ const authStore = useAuthStore();
 <style lang="scss" scoped>
 @import "@/assets/scss/custom.scss";
 
-.aaa {
-    width: 75%;
+.special-width {
+    width: 70%;
   }
 @include media-breakpoint-down(lg) {
-  .aaa {
+  .special-width {
     width: 100%;
   }
 }
