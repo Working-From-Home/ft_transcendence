@@ -20,10 +20,10 @@ services:
     ports:
       - ${FRONTEND_PORT}:${FRONTEND_PORT}
     networks:
-      # - mynet
-      mynet:
-        aliases:
-          - ${HOSTNAME}
+      - mynet
+      # mynet:
+      #   aliases:
+      #     - ${HOSTNAME}
     command: sh -c 'npm install && npm run serve'
 
   backend:
@@ -58,10 +58,10 @@ services:
       - 3000:3000
       - 9229:9229
     networks:
-      # - mynet
-      mynet:
-        aliases:
-          - ${HOSTNAME}
+      - mynet
+      # mynet:
+      #   aliases:
+      #     - ${HOSTNAME}
     # command: sh -c 'npm install && npm run start:dev'
     command: sh -c 'npm install && npm run start:debug'
 

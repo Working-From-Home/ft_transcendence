@@ -21,6 +21,7 @@ REFRESH_TOKEN_EXPIRATION=15d
 # Type the command `id` to get your `uid` and `gid`)
 # Also it only works ouside `NFS`, like `/goinfre` or `/tmp`,
 # thus, it doesn't works inside `/sgoinfre`, or your home `~/`.
+# (PS: pretty useless because docker rootless set "random" uid:gid)
 HOST_UID=1000
 HOST_GID=1000
 

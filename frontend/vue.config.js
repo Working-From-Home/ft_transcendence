@@ -1,6 +1,6 @@
 module.exports = {
   devServer: {
-	  host: process.env.VUE_APP_HOSTNAME,
+	  host: '0.0.0.0',
 	  port: process.env.VUE_APP_FRONTEND_PORT,
   },
   css: {
