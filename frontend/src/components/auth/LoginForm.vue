@@ -53,6 +53,7 @@
         >Register here</router-link
       >
     </p>
+		<TwofaAuthenticate />
   </div>
 </template>
 
@@ -66,9 +67,11 @@ library.add(faGoogle);
 <script setup lang="ts">
 import { useAuthStore } from '@/store/auth';
 import { AuthMode } from '@/views/auth/auth.interface';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { openSignInWindow } from './OauthPopup';
+import TwofaAuthenticate from './TwofaAuthenticate.vue';
+import { Modal } from 'bootstrap';
 import { useNotificationsStore } from '@/store/notifications';
 
 const emit = defineEmits<{
@@ -82,10 +85,22 @@ const router = useRouter();
 const email =  ref('');
 const password = ref('');
 
+const errorMessage = ref('');
+
+let twofaModal = {} as Modal
+
+onMounted(() => {
+	twofaModal = new Modal('#authTwoFA');
+})
+
 const login = async () => {
   const e = await authStore.signInLocal(email.value, password.value);
-  if (e) notify("danger", "failure", e.message);
-  else router.push('/');
+  if (e)
+		notify("danger", "failure", e.message);
+	else if (authStore.twoFaEnabled)
+		twofaModal.show();
+  else
+		router.push('/');
 };
 
 const receiveMessageGoogle = async (event: MessageEvent<any>) => {

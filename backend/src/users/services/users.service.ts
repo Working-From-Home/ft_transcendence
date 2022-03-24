@@ -101,4 +101,12 @@ export class UsersService {
 	  );
 	return y;
   }
+
+	async setTwoFaSecret(secret: string, userId: number) {
+		return this.repo.update(userId, { twoFaSecret: secret});
+	}
+
+	async turnOnTwoFa(userId : number) {
+		return this.repo.update(userId, { twoFaEnabled : true});
+	}
 }

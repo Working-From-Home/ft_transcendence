@@ -12,10 +12,17 @@ export const useAuthStore = defineStore('auth', {
     token: useLocalStorage('token', ''),
     refreshToken: useLocalStorage('refreshToken', ''),
     registerInProgress: useLocalStorage('registerInProgress', false),
+		twoFaEnabled: useLocalStorage('twoFaEnbaled', false),
+		twoFaAuthenticated: useLocalStorage('twoFaAuthenticated', false)
   }),
   getters: {
-    isLoggedIn: (state) =>
-      state.token !== '' && state.registerInProgress == false,
+    isLoggedIn: (state) => {
+      if (state.token === '' && state.registerInProgress == false)
+				return false;
+			if (state.twoFaEnabled && !state.twoFaAuthenticated)
+				return false;
+			return true;
+		},
     tokenBearer(): string {
       return this.token === '' ? '' : 'Bearer ' + this.token;
     },
@@ -29,8 +36,9 @@ export const useAuthStore = defineStore('auth', {
       try {
         const resp = await api.signInLocal(email, password);
         this.setState(resp.data.access_token);
-
-        await useCurrentUserStore().initStore(resp.data.id);
+				this.twoFaEnabled = resp.data.twoFaEnabled;
+				if (!this.twoFaEnabled)
+        	await useCurrentUserStore().initStore(resp.data.id);
       } catch (err) {
         const e = err as AxiosError<IError>;
         if (axios.isAxiosError(e)) return e.response?.data;
@@ -40,6 +48,7 @@ export const useAuthStore = defineStore('auth', {
       try {
         const resp = await api.signUpLocal(email, password);
         this.setState(resp.data.access_token, true);
+				this.twoFaEnabled = resp.data.twoFaEnabled;
 
         await useCurrentUserStore().initStore(resp.data.id);
       } catch (err) {
@@ -52,8 +61,10 @@ export const useAuthStore = defineStore('auth', {
       try {
         const resp = await api.signInGoogle(params);
         this.setState(resp.data.access_token);
+				this.twoFaEnabled = resp.data.twoFaEnabled;
 
-        await useCurrentUserStore().initStore(resp.data.id);
+				if (!this.twoFaEnabled)
+        	await useCurrentUserStore().initStore(resp.data.id);
       } catch (err) {
         const e = err as AxiosError<IError>;
         if (axios.isAxiosError(e)) return e.response?.data;
@@ -63,6 +74,7 @@ export const useAuthStore = defineStore('auth', {
       try {
         const resp = await api.signUpGoogle(params);
         this.setState(resp.data.access_token, true);
+				this.twoFaEnabled = resp.data.twoFaEnabled;
 
         await useCurrentUserStore().initStore(resp.data.id);
       } catch (err) {
@@ -76,8 +88,10 @@ export const useAuthStore = defineStore('auth', {
       try {
         const resp = await api.signInFortyTwo(params);
         this.setState(resp.data.access_token);
+				this.twoFaEnabled = resp.data.twoFaEnabled;
 
-        await useCurrentUserStore().initStore(resp.data.id);
+				if (!this.twoFaEnabled)
+        	await useCurrentUserStore().initStore(resp.data.id);
       } catch (err) {
         const e = err as AxiosError<IError>;
         if (axios.isAxiosError(e)) return e.response?.data;
@@ -87,6 +101,7 @@ export const useAuthStore = defineStore('auth', {
       try {
         const resp = await api.signUpFortyTwo(params);
         this.setState(resp.data.access_token, true);
+				this.twoFaEnabled = resp.data.twoFaEnabled;
 
         await useCurrentUserStore().initStore(resp.data.id);
       } catch (err) {

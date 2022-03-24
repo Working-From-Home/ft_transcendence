@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useCurrentUserStore } from '@/store/currentUser';
-import { useStatusStore } from '@/store/modules/status/status';
+import { useStatusStore } from '@/store/status';
 import { useRoute } from 'vue-router';
 import { IFriend } from '@/models/IFriendLists';
 import { computed, onMounted, ref, watch } from 'vue';

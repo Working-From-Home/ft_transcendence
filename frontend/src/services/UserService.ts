@@ -17,6 +17,7 @@ class UserService {
   getUserById(id: number) {
     return http.get<IUser>(`/users/${id}`);
   }
+
   async getAvatarOfUser(userId: number): Promise<string> {
     const response = await http.get(`/users/${userId}/avatar`, { responseType: 'arraybuffer' });
 		return formatImage(response.data);

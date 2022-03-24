@@ -6,8 +6,11 @@ import { UsersModule } from '../users/users.module';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './strategies/jwt.strategy'
+import { JwtTwoFaStrategy } from './strategies/jwt-two-fa.strategy';
 import { GoogleStrategy } from './strategies/google.strategy';
 import { FortyTwoStrategy } from './strategies/forty-two.strategy';
+import { TwoFaController } from './twoFa/twoFa.controller';
+import { TwoFaService } from './twoFa/twoFa.service';
 
 @Module({
     imports: [
@@ -25,8 +28,8 @@ import { FortyTwoStrategy } from './strategies/forty-two.strategy';
             inject: [ConfigService]
         })
     ],
-    providers: [AuthService, JwtStrategy, GoogleStrategy, FortyTwoStrategy ],
-    controllers: [AuthController],
+    providers: [AuthService, TwoFaService, JwtStrategy, JwtTwoFaStrategy ,GoogleStrategy, FortyTwoStrategy ],
+    controllers: [AuthController, TwoFaController],
 		exports: [AuthService]
 })
 export class AuthModule {}

@@ -99,7 +99,7 @@ export const useChatRoomsStore = defineStore('chatRooms', {
 							}
 							else if (param === "admin")
 								user.isAdmin = true;
-							return ;
+							break ;
 						}
 					}
 				}

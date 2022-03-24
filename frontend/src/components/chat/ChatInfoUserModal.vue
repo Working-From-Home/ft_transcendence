@@ -106,7 +106,7 @@ import ChallengeButton from '@/components/pong/ChallengeButton.vue';
 import WatchButton from '@/components/pong/WatchButton.vue';
 import ChatDMButton from './ChatDMButton.vue';
 import ChatBlockButton from './ChatBlockButton.vue';
-import { useStatusStore } from '@/store/modules/status/status';
+import { useStatusStore } from '@/store/status';
 import { useAuthStore } from '@/store/auth';
 import { IUserChannel } from 'shared/models/socket-events';
 import { library } from '@fortawesome/fontawesome-svg-core';

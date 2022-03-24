@@ -5,6 +5,7 @@
         <h1 class="display-6 mt-3 mb-4 fw-bold text-primary">Play Pong!</h1>
         <p class="fs-5 mb-4">find your opponent now and express your talent</p>
         <pong-matchmaking />
+				<add-twofa-button />
       </div>
     </div>
   </div>
@@ -50,12 +51,13 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { useStatusStore } from '@/store/modules/status/status';
+import { useStatusStore } from '@/store/status';
 import PongMatchmaking from './PongMatchmaking.vue';
 import { useCurrentUserStore } from '@/store/currentUser';
+import AddTwofaButton from '../auth/AddTwofaButton.vue';
 
 export default defineComponent({
-  components: { PongMatchmaking },
+  components: { PongMatchmaking, AddTwofaButton},
   setup() {
     const statusStore = useStatusStore();
     const currentUserStore = useCurrentUserStore();
