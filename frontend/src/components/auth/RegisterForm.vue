@@ -6,7 +6,7 @@
         <input
           v-model="email"
           type="email"
-          class="form-control"
+          class="form-control border-secondary"
           id="email"
           placeholder=""
           required
@@ -19,7 +19,7 @@
         <input
           v-model="password"
           type="password"
-          class="form-control"
+          class="form-control border-secondary"
           id="password"
           placeholder=""
           required
@@ -35,15 +35,6 @@
       <label for="password" >Confirm Password</label>
     </div> -->
 
-      <!-- Error from backend -->
-      <!-- <div :hidden="errorMessage == ''" class="alert alert-danger" role="alert" > -->
-      <div
-        :style="{ visibility: errorMessage ? 'visible' : 'hidden' }"
-        class="alert alert-danger"
-        role="alert"
-      >
-        {{ errorMessage }}
-      </div>
       <!-- Submit button -->
       <button type="submit" class="btn btn-primary btn-lg btn-block">
         Register
@@ -86,28 +77,29 @@ import { ref } from 'vue';
 import { AuthMode } from '@/views/auth/auth.interface';
 import { useRouter } from 'vue-router';
 import { openSignInWindow } from './OauthPopup';
+import { useNotificationsStore } from '@/store/notifications';
 
 const emit = defineEmits<{
   (e: 'changeForm', value: AuthMode): void;
 }>();
 
 const authStore = useAuthStore();
+const notificationsStore = useNotificationsStore();
 
 const email = ref('');
 const password = ref('');
 const passwordConfirm = ref('');
-const errorMessage = ref('');
 
 const register = async () => {
   const e = await authStore.signUpLocal(email.value, password.value);
-  if (e) errorMessage.value = e.message;
+  if (e) notify("danger", "failure", e.message);
   else emit('changeForm', AuthMode.RegisterOptional);
 };
 
 const receiveMessageGoogle = async (event: MessageEvent<any>) => {
   window.removeEventListener('message', receiveMessageGoogle);
   const e = await authStore.signUpGoogle(event.data);
-  if (e) errorMessage.value = e.message;
+  if (e) notify("danger", "failure", e.message);
   else emit('changeForm', AuthMode.RegisterOptional);
 };
 
@@ -119,7 +111,7 @@ const registerGoogle = async () => {
 const receiveMessageFortyTwo = async (event: MessageEvent<any>) => {
   window.removeEventListener('message', receiveMessageFortyTwo);
   const e = await authStore.signUpFortyTwo(event.data);
-  if (e) errorMessage.value = e.message;
+  if (e) notify("danger", "failure", e.message);
   else emit('changeForm', AuthMode.RegisterOptional);
 };
 
@@ -128,14 +120,12 @@ const registerFortyTwo = async () => {
   openSignInWindow(`${process.env.VUE_APP_BACKEND_SERVER_URI}/auth/42/`);
 };
 
+function notify(type: string, header: string, body: string) {
+  notificationsStore.enqueue(type, header, body);
+}
 </script>
 
 <style lang="scss" scoped>
-// Inspect
-*:hover {
-  outline: 1px blue solid;
-}
-
 // utils
 @mixin filter-invert($n: 100%) {
   -webkit-filter: invert($n); /* safari 6.0 - 9.0 */
