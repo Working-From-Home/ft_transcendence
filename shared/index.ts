@@ -3,7 +3,6 @@ export {
 	ClientToServerEvents,
 	InterServerEvents,
 	SocketData,
-
-	ISearchChannel, // move it outside this file
+	ISearchChannel,
 	IChannel
 } from './models/socket-events'

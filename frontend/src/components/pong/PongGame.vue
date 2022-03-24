@@ -71,7 +71,8 @@ export default defineComponent({
         console.log(`players id: ${playerIds}`);
         this.playerIds = playerIds;
       },
-    );
+    )
+	
   },
   mounted() {
     this.gameCanvas = new GameCanvas('#canvas');
