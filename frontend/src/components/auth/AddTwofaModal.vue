@@ -33,6 +33,7 @@
 							</div>
 							<div v-else>
 								<p>Scan the QrCode below and submit your code:</p>
+								<p>(You will have to login again after that)</p>
 								<img :src="QrCode" alt="Qrcode"  class="mx-3">
 								<form @submit.prevent="sendCode">
 									<div class="mb-3 mt-3">
