@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 import { useAuthStore } from '@/store/auth';
 import { useChatRoomsStore } from '@/store/chatroom';
-import { useStatusStore } from '@/store/modules/status/status';
+import { useStatusStore } from '@/store/status';
 import ChatService from '../../services/ChatService';
 import { IChannel } from 'shared/models/socket-events';
 import socket from '@/socketApp';
@@ -34,7 +34,7 @@ const connect = computed<boolean>(() => {
     socket.on('connect_error', (err: any) => {
       console.log(`socket connexion error: ${err}`);
     });
-	 /* channel events */
+	/* channel events */
     socket.on('sendChannels', async (resp: IChannel[]) => {
 	  let blocked = await ChatService.getblock();
 	  chatRoomsStore.listBlock(blocked)

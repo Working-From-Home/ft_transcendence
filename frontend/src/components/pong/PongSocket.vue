@@ -33,7 +33,7 @@
 
 <script lang="ts">
 import { useAuthStore } from '@/store/auth';
-import { useStatusStore } from '@/store/modules/status/status';
+import { useStatusStore } from '@/store/status';
 import { useNotificationsStore } from '@/store/notifications';
 import { Modal } from 'bootstrap';
 import { defineComponent } from 'vue';
