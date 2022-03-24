@@ -110,7 +110,7 @@ function getUserData(id: number) {
     <!-- edit button for medium and large screen -->
     <div
       v-else
-      class="d-none d-md-inline mt-1 mt-md-2 mx-5 position-absolute end-0"
+      class=" mt-1 mt-md-2 mx-5 position-absolute end-0"
       id="edit"
       data-bs-toggle="tooltip"
       title="edit profile"
@@ -137,7 +137,7 @@ function getUserData(id: number) {
       </span>
     </div>
     <!-- edit button for small screen -->
-    <div
+    <!-- <div
       v-else
       class="d-md-none mb-4"
       id="edit"
@@ -151,11 +151,12 @@ function getUserData(id: number) {
       >
         <font-awesome-icon icon="gear" class="fa-lg mx-3" />
       </div>
-    </div>
+    </div> -->
 
     <div v-if="isOwner"><EditModal></EditModal></div>
 
-    <h2>{{ username }}</h2>
+    <h2 v-if="isOwner">{{ currentUserStore.username }}</h2>
+    <h2 v-else>{{ username }}</h2>
     <hr />
     <div class="row gx-3 pb-3 fs-6 fst-italic">
       <div
