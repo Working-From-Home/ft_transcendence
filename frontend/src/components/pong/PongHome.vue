@@ -5,7 +5,6 @@
         <h1 class="display-6 mt-3 mb-4 fw-bold text-primary">Play Pong!</h1>
         <p class="fs-5 mb-4">find your opponent now and express your talent</p>
         <pong-matchmaking />
-				<add-twofa-button />
       </div>
     </div>
   </div>
