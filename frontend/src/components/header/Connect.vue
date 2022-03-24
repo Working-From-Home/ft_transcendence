@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 import { useAuthStore } from '@/store/auth';
 import { useChatRoomsStore } from '@/store/chatroom';
-import { useStatusStore } from '@/store/modules/status/status';
+import { useStatusStore } from '@/store/status';
 import ChatService from '../../services/ChatService';
 import { IChannel } from 'shared/models/socket-events';
 import socket from '@/socketApp';

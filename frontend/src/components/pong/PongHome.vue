@@ -51,7 +51,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { useStatusStore } from '@/store/modules/status/status';
+import { useStatusStore } from '@/store/status';
 import PongMatchmaking from './PongMatchmaking.vue';
 import { useCurrentUserStore } from '@/store/currentUser';
 import AddTwofaButton from '../auth/AddTwofaButton.vue';

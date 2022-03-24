@@ -12,7 +12,7 @@ library.add(faSkull);
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, onUpdated, ref } from 'vue';
 import UserService from '@/services/UserService';
-import { useStatusStore } from '@/store/modules/status/status';
+import { useStatusStore } from '@/store/status';
 import ChallengeButton from '@/components/pong/ChallengeButton.vue';
 import WatchButton from '@/components/pong/WatchButton.vue';
 import ChatBlockButton from "@/components/chat/ChatBlockButton.vue";
