@@ -20,11 +20,12 @@ import { Friendship } from '../entities/friendship.entity';
 import { FriendshipDto } from '../dtos/friendship.dto';
 import { UserDto } from '../dtos/user.dto';
 import { User } from '../entities/user.entity';
+import JwtTwoFaGuard from 'src/auth/guards/jwt-two-fa.guard';
 import { AppGateway } from 'src/app.gateway';
 
 @ApiTags('friends')
 @Controller('/users/:id/friends')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, JwtTwoFaGuard)
 export class FriendsController {
     constructor(
         private friendshipService: FriendshipService,

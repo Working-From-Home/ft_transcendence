@@ -110,6 +110,12 @@ const router = createRouter({
 });
 
 router.beforeEach(function(to, from, next) {
+	//take care of closing modal porperly on route change.
+	let modalBackground = document.querySelector('.modal-backdrop')
+	if (modalBackground) {
+		modalBackground.remove()
+	}
+
   const authStore = useAuthStore();
   document.title = `Transcendence - ${to.meta.title}`;
   if (to.meta.requiresAuth && !authStore.isLoggedIn)

@@ -12,10 +12,11 @@ import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { CurrentUserGuard } from 'src/auth/guards/current-user.guard';
 import { StatsService } from '../services/stats.service';
 import { UsersService } from '../services/users.service';
+import JwtTwoFaGuard from 'src/auth/guards/jwt-two-fa.guard';
 
 @ApiTags('stats')
 @Controller('users/:id/stats')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, JwtTwoFaGuard)
 export class StatsController {
     constructor(
         private statsService: StatsService,

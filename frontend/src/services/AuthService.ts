@@ -39,6 +39,22 @@ class AuthService {
     });
   }
 
+	/* Two Factor Auth:  */
+
+	async generateQrCode() {
+		const response = await http.post('/2fa/generate', {}, { responseType : 'blob'});
+		const fileUrl = window.URL.createObjectURL(response.data);
+		return fileUrl;
+	}
+
+	turnOnTwoFA(twoFaCode : string) {
+		return http.post('/2fa/turn-on', { twoFaCode : twoFaCode });
+	}
+
+	authenticateTwoFA(twoFaCode : string) {
+		return http.post('/2fa/authenticate', { twoFaCode : twoFaCode });
+	}
+
   /** Get a new access_token. Must provide the refresh token */
   refresh() {
     return http.post('/auth/refresh');

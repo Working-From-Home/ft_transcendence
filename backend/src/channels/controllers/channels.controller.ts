@@ -8,9 +8,10 @@ import { UpdateResult } from 'typeorm';
 import { Blocked } from '../../users/entities/blocked.entity';
 import { AppGateway } from 'src/app.gateway';
 import { IMessage } from 'shared/models/socket-events';
+import JwtTwoFaGuard from 'src/auth/guards/jwt-two-fa.guard';
 
 @Controller()
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, JwtTwoFaGuard)
 export class ChannelsController {
 	constructor(private chatService: ChatService,
 				private readonly appGateway: AppGateway
