@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { IChannel, IMessage, IBlocked } from 'shared/models/socket-events';
 import { useCurrentUserStore } from '@/store/currentUser';
+
 export interface State {
 	rooms : IChannel[];
 	messages : IMessage[];

@@ -17,7 +17,7 @@ function logout() {
   socket.off('leaveChannel');
   socket.off('sendMessage');
   socket.off('changeParam');
-  socket.disconnect(); //  to remove and put at the right place too
+  socket.disconnect();
 }
 </script>
 

@@ -84,11 +84,8 @@ export class PongGateway {
 	@SubscribeMessage('joinGame')
 	joinGame(@MessageBody() gameId : string, @ConnectedSocket() socket : Socket) : number[] {
 		const game = this.games.get(gameId);
-		if (!game)
-		{
-			this.logger.log("yo")
-			return [11, 12];
-		}
+		if (!game || typeof game === "undefined")
+			return [];
 		return game.join(socket);
 	}
 

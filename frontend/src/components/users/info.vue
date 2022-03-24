@@ -116,7 +116,7 @@ function getUserData(id: number) {
       <div
         class="mx-md-5 clickable-cursor"
         data-bs-toggle="modal"
-        data-bs-target="#deleteAccount"
+        data-bs-target="#setup"
       >
         <font-awesome-icon icon="gear" class="fa-lg mx-3" />
       </div>  

@@ -6,17 +6,14 @@
 </template>
 
 <script lang="ts">
-import { Options, Vue } from "vue-class-component";
 import ChatComponent from "../components/chat/ChatComponent.vue";
 import ChatSearch from "../components/chat/ChatSearch.vue";
+import { defineComponent } from 'vue'
 
-@Options({
+export default defineComponent({
   components: {
     ChatComponent,
     ChatSearch,
   },
-})
-export default class Chat extends Vue {
-
-}
+});
 </script>

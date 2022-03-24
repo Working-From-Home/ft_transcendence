@@ -31,7 +31,7 @@ export class UsersService {
     }
 
     async update(id: number, attrs: Partial<User>) {
-      // const user = await this.repo.findOne({ where: { id }});
+       const user = await this.repo.findOne({ where: { id }});
       // const maxMinutesEdit = 1;
       // const maxDate = new Date(new Date().getTime() + maxMinutesEdit*60000);
       // if (attrs.username && user.createdAt > maxDate)
