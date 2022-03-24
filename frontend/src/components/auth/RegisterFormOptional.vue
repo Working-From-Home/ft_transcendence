@@ -142,7 +142,8 @@ const checkUsernameAvailability = async () => {
 const canContinue = computed((): boolean => {
   if (!!state.usernameError) return false;
   if (
-    state.username.trim() == currentUserStore.username
+    state.username.trim() == currentUserStore.username &&
+    state.avatar == currentUserStore.avatar
   )
     return false;
   return true;
