@@ -34,11 +34,14 @@ import { defineComponent } from "vue";
 import AuthService from "@/services/AuthService"
 import { useAuthStore } from "@/store/auth";
 import { Modal } from "bootstrap";
+import router from "@/router";
+import { useCurrentUserStore } from "@/store/currentUser";
 
 export default defineComponent({
 	setup() {
 		const authStore = useAuthStore();
-		return { authStore };
+		const currentUserStore = useCurrentUserStore();
+		return { authStore, currentUserStore };
 	},
 	data() {
 		return {
@@ -53,9 +56,17 @@ export default defineComponent({
 	methods: {
 		async sendCode() {
 			try {
-				const response = await AuthService.turnOnTwoFA(this.twoFaCode);
+				console.log("yo1");
+				const response = await AuthService.authenticateTwoFA(this.twoFaCode);
+				this.authStore.setState(response.data.access_token);
+				this.authStore.twoFaAuthenticated = true;
+				await this.currentUserStore.initStore(response.data.id);
 				this.modal.hide();
+				this.wrongCode = false;
+				this.twoFaCode = "";
+				router.push('/');
 			} catch (err) {
+				console.log("yo!");
 				this.twoFaCode = "";
 				this.wrongCode = true;
 			}

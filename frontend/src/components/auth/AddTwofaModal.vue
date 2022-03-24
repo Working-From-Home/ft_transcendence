@@ -94,6 +94,8 @@ export default defineComponent({
 				const response = await AuthService.turnOnTwoFA(this.twoFaCode);
 				this.modal.hide();
 				this.resetData();
+				this.authStore.logout();
+				this.$router.push('/signin');
 			} catch (err) {
 				this.twoFaCode = "";
 				this.wrongCode = true;

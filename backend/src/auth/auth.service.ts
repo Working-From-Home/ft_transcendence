@@ -84,8 +84,9 @@ export class AuthService {
       const payload: JwtPayload = {sub: user.id, isTwoFaAuthenticated : isTwoFaAuth };
       return {
         id: user.id,
-        access_token: this.jwtService.sign(payload)
-      } 
+        access_token: this.jwtService.sign(payload),
+				twoFaEnabled : user.twoFaEnabled
+      }
   	}
 
   verifyJwt(jwt: string): Promise<JwtPayload> {

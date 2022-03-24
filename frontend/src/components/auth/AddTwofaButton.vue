@@ -18,7 +18,7 @@ import AddTwofaModal from '../auth/AddTwofaModal.vue';
 
 export default defineComponent({
 	components: { AddTwofaModal }
-})
+}) 
 
 </script>
 

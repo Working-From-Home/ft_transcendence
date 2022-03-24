@@ -39,6 +39,7 @@ export class TwoFaController {
 		if (!isCodeValid) {
 			throw new UnauthorizedException('Wrong authentification code');
 		}
+		console.log('cod valid! :)')
 		return this.authService.generateAccessToken(user, true);
 
 	}
