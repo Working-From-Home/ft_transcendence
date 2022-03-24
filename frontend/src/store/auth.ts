@@ -17,7 +17,7 @@ export const useAuthStore = defineStore('auth', {
   }),
   getters: {
     isLoggedIn: (state) => {
-      if (state.token === '' && state.registerInProgress == false)
+      if (state.registerInProgress || state.token === '')
 				return false;
 			if (state.twoFaEnabled && !state.twoFaAuthenticated)
 				return false;

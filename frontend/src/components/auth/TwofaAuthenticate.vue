@@ -56,7 +56,6 @@ export default defineComponent({
 	methods: {
 		async sendCode() {
 			try {
-				console.log("yo1");
 				const response = await AuthService.authenticateTwoFA(this.twoFaCode);
 				this.authStore.setState(response.data.access_token);
 				this.authStore.twoFaAuthenticated = true;
@@ -66,7 +65,6 @@ export default defineComponent({
 				this.twoFaCode = "";
 				router.push('/');
 			} catch (err) {
-				console.log("yo!");
 				this.twoFaCode = "";
 				this.wrongCode = true;
 			}

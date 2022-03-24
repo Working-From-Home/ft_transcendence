@@ -19,6 +19,7 @@ import ChatBlockButton from "@/components/chat/ChatBlockButton.vue";
 import EditModal from '@/components/users/EditModal.vue';
 import FriendButtons from '@/components/users/FriendButtons.vue';
 import { Tooltip } from 'bootstrap';
+import { useCurrentUserStore } from '@/store/currentUser';
 
 const props = defineProps({
   userId: {
@@ -32,6 +33,7 @@ const props = defineProps({
 });
 
 const statusStore = useStatusStore();
+const currentUserStore = useCurrentUserStore();
 
 const tooltips = ref<Tooltip[]>({} as Tooltip[]);
 const username = ref<string>('');
@@ -204,7 +206,7 @@ function getUserData(id: number) {
       <div class="col mx-1">
         <ChatBlockButton :modalUserId="userId">Challenge</ChatBlockButton>
       </div>
-      <div v-if="isOnline && !isInGame" class="col mx-1">
+      <div v-if="isOnline && !isInGame && !statusStore.isInGame(currentUserStore.userId)" class="col mx-1">
         <ChallengeButton :id="'challengeFromProfile'" :userId="props.userId"
           >Challenge</ChallengeButton
         >

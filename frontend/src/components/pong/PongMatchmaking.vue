@@ -34,7 +34,6 @@ export default defineComponent({
   },
   methods: {
     joinMatchmaking() {
-      console.log('joinMatchmaking!');
       this.$pongSocket.emit('joinMatchmaking');
       this.isSearching = true;
       this.$pongSocket.on('matchFound', (gameId: string) => {
@@ -42,7 +41,6 @@ export default defineComponent({
       });
     },
     leaveMatchmaking() {
-      console.log('leaveMatchmaking!');
       this.$pongSocket.emit('leaveMatchmaking');
       this.$pongSocket.off('matchFound');
       this.isSearching = false;

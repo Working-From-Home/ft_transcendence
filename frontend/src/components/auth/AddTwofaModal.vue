@@ -78,7 +78,6 @@ export default defineComponent({
 	methods: {
 		async getQrCode() {
 			this.QrCode = await AuthService.generateQrCode();
-			console.log(this.QrCode);
 			this.QrCodeLoading = false;
 		},
 		resetData() {

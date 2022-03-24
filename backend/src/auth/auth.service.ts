@@ -100,7 +100,6 @@ export class AuthService {
         return payload;
       })
       .catch((err) => {
-        console.log('lol aha -> ', err);
         return null;
       });
   }

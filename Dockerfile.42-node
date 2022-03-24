@@ -1,6 +1,4 @@
 FROM node:16-alpine3.15
-# node alpine3.15 tag not present, and postgres only support 3.15...
-# waiting for pr to be merged : https://github.com/nodejs/docker-node/pull/1615
 
 RUN apk add --no-cache su-exec curl zsh git emacs vim;
 
@@ -27,8 +25,7 @@ RUN set -eux; \
 		npm install -g \
 			@nestjs/cli \
 			@vue/cli@next \
-			typeorm-cli \
-			@stoplight/prism-cli;
+			typeorm-cli;
 
 
 VOLUME  /app

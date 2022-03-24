@@ -61,10 +61,8 @@ export default defineComponent({
     this.$pongSocket.connect();
 
     this.$pongSocket.on('gameRequest', (payload) => {
-      console.log('got game request!');
       this.hostId = payload.hostId as number;
       this.requestId = payload.requestId;
-      console.log(`request from id: ${this.hostId}`);
       this.gotChallengeModal.show();
     });
     this.$pongSocket.on('requestCanceled', () => {
@@ -76,7 +74,6 @@ export default defineComponent({
     });
   },
   unmounted() {
-    console.log('disconnecting socket');
     this.$pongSocket.off('gameRequest');
     this.$pongSocket.off('requestCanceled');
     this.$pongSocket.off('inGameUsers');
