@@ -10,6 +10,11 @@ import { CreateChannelDto } from "../dtos/create-channel.dto";
 import { ISearchChannel, IChannel, IUserChannel, IMessage } from "shared/models/socket-events";
 import { UsersService } from "src/users/services/users.service";
 import { Blocked } from 'src/users/entities/blocked.entity';
+import { randomBytes, scrypt as _scrypt } from "crypto";
+import { promisify } from "util";
+
+
+const scrypt = promisify(_scrypt);
 
 @Injectable()
 export class ChatService {
@@ -58,6 +63,13 @@ export class ChatService {
     })
   }
 
+	private async encryptPassword(password: string): Promise<string> {
+		const salt = randomBytes(8).toString('hex');
+		const hash = (await scrypt(password, salt, 32)) as Buffer;
+		const result = salt + '.' + hash.toString('hex');
+		return result;
+	}
+
   async createChannel(ownerId: number, data: CreateChannelDto) {
 	let channels = await this.searchChannelsByTitle(data.title);
 	for (const obj of channels) {
@@ -70,7 +82,12 @@ export class ChatService {
 
       const newChannel = new Channel();
       newChannel.title = data.title;
-      newChannel.password = data.password;
+	  if (data.password != '' && data.password != null){
+	    const encryptedPasword = await this.encryptPassword(data.password);
+	    newChannel.password = encryptedPasword;
+	  }
+	  else
+	  	newChannel.password = data.password;
       newChannel.owner = tmpOwner;
       newChannel.isDm = false;
       await entityManager.save(newChannel);
@@ -98,8 +115,12 @@ export class ChatService {
   async joinChannel(channelId: number, userId: number, data: any) {
     let channel = await this.userChannelRepo.findOne({where: [{userId, channelId}]})
 	let tmpChannel = await this.findChannelById(channelId);
-	if ((tmpChannel.password != null && tmpChannel.password != '') && tmpChannel.password != data.password) {
-		throw new UnauthorizedException('Wrong Password')
+	if (tmpChannel.password != null && tmpChannel.password != '') {
+		const [salt, storedHash] = tmpChannel.password.split('.');
+		const hash = (await scrypt(data.password, salt, 32)) as Buffer;
+		if (storedHash !== hash.toString('hex')) {
+			throw new UnauthorizedException('Wrong Password')
+		}
 	}
 	if (channel) {
 		if (channel.bannedUntil != null){
