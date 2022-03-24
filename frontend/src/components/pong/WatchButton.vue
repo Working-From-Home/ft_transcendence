@@ -70,10 +70,8 @@ export default defineComponent({
   methods: {
     watchGame() {
       this.$pongSocket.emit('getGameId', this.userId, (gameId: string) => {
-        console.log(`got answer: ${gameId}`);
         if (!gameId) {
           this.modal.show();
-          console.log(`no one playing with id ${this.userId}`);
         } else {
           this.$router.push({ path: `/pong/${gameId}` });
         }

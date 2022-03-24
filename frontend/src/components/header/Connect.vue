@@ -28,7 +28,6 @@ const connect = computed<boolean>(() => {
     socket.connect();
   
     socket.on('connectedUsers', (userIds: number[]) => {
-      console.log(`userIds: ${userIds}`);
       statusStore.setOnlineUsers(userIds);
     });
     socket.on('connect_error', (err: any) => {

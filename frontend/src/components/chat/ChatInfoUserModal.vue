@@ -54,13 +54,13 @@
               </div>
               <div v-if="!isCurrent && isOnline" class="row">
                 <ChallengeButton
-                  v-if="!statusStore.isInGame(modalUserId)"
+                  v-if="statusStore.isOnline(modalUserId) && !statusStore.isInGame(modalUserId) && !statusStore.isInGame(currentUserStore.userId)"
                   :id="'challengeFromChat'"
                   :userId="modalUserId"
                   class="mx-1"
                   >Challenge</ChallengeButton
                 >
-                <WatchButton v-else :userId="modalUserId" class="mx-1"
+                <WatchButton v-if="statusStore.isInGame(modalUserId)" :userId="modalUserId" class="mx-1"
                   >Watch</WatchButton
                 >
               </div>
@@ -111,6 +111,7 @@ import { useAuthStore } from '@/store/auth';
 import { IUserChannel } from 'shared/models/socket-events';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { useCurrentUserStore } from '@/store/currentUser';
 
 library.add(faUser);
 
@@ -118,7 +119,8 @@ export default defineComponent({
   setup() {
     const statusStore = useStatusStore();
     const authStore = useAuthStore();
-    return { statusStore, authStore };
+    const currentUserStore = useCurrentUserStore();
+    return { statusStore, authStore, currentUserStore };
   },
   components: { ChallengeButton, WatchButton, ChatDMButton, ChatBlockButton },
   props: {

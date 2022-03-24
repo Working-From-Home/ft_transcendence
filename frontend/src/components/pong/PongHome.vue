@@ -64,7 +64,6 @@ export default defineComponent({
   },
   mounted() {
     const id = this.currentUserStore.userId!;
-    console.log(`yo: ${id}`);
     if (!this.statusStore.getinGameusers.includes(id)) return;
 
     this.$pongSocket.emit('getGameId', id, (gameId: string) => {
