@@ -123,6 +123,7 @@ function deleteAccount() {
               class="btn btn-success mt-3"
               :disabled="!canContinue"
               style="min-width: 8.5rem"
+              data-bs-dismiss="modal"
             >
               Save
             </ButtonTemplate>
