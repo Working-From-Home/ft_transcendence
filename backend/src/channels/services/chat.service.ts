@@ -142,11 +142,15 @@ export class ChatService {
 
   /* Update */
 
-  async updateChannel(channelId: number, attrs: Partial<Channel>) {
+  async updateChannel(channelId: number, password: string | null) {
     const channel = await this.findChannelById(channelId);
-    if (this.isChannelDM(channel.id))
-      throw new UnauthorizedException('This channel cannot be updated');
-    return await this.channelRepo.update(channel, attrs);
+	if (password != '' && password != null){
+	  const encryptedPasword = await this.encryptPassword(password);
+	  channel.password = encryptedPasword;
+	}
+	else
+	  channel.password = password;
+    return await this.channelRepo.save(channel);
   }
   
   private async updateUserChannel(userId: number, channelId: number, attrs: Partial<UserChannel>) {
