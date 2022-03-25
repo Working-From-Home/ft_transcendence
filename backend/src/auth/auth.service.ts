@@ -117,7 +117,11 @@ export class AuthService {
   
     let user = (await this.usersService.findBy({ where: [{ fortyTwoSub: req.user.sub }] }))[0];
     if (!user)
+    {    
+      user = (await this.usersService.findBy({ where: [{ email: req.user.email }]}))[0];
+      if (user) throw new ForbiddenException('42 account has been registered via email. Please sign in with your email');
       throw new ForbiddenException('42 account not found, register instead ?');
+    }
     return this.generateAccessToken(user);
   }
 
@@ -126,7 +130,11 @@ export class AuthService {
   
     let user = (await this.usersService.findBy({ where: [{ googleSub: req.user.sub }] }))[0];
     if (!user)
+    {
+      user = (await this.usersService.findBy({ where: [{ email: req.user.email }]}))[0];
+      if (user) throw new ForbiddenException('Google account has been registered via email. Please sign in with your email');
       throw new ForbiddenException('Google account not found, register instead ?');
+    }
     return this.generateAccessToken(user);
   }
 
