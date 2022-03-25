@@ -11,10 +11,8 @@ git clone https://github.com/Working-From-Home/ft_transcendence.git && cd ft_tra
 Create a `.env` file, template example:
 ```
 ACCESS_TOKEN_SECRET=my_secret
-REFRESH_TOKEN_SECRET=my_secret2
 # expressed in seconds or a string describing a time span zeit/ms. Eg: 60, "2 days", "10h", "7d"
-ACCESS_TOKEN_EXPIRATION=3200s
-REFRESH_TOKEN_EXPIRATION=15d
+ACCESS_TOKEN_EXPIRATION=7d
 
 # Must change thoses two variables BEFORE BUILD AND RUN if
 # running on 42's linux dump.
