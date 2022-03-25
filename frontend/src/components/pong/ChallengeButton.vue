@@ -7,8 +7,7 @@
         [small && 'btn-sm btn-outline-danger'],
         [!small && 'btn-danger shadow m-2']
       "
-      data-bs-toggle="modal"
-      :data-bs-target="`#${id}0`"
+      @click="showSetupModal"
       :style="small ? 'min-width: 2rem;' : 'min-width: 8.5rem;'"
     >
       <font-awesome-icon icon="bolt" :class="!small && 'pe-2'"/>
@@ -101,6 +100,7 @@ export default defineComponent({
     return {
       requestId: '',
       gameSettings: { speed: 6, paddleSpeed: 5, score: 5 },
+      setupModal: {} as Modal,
       challengeModal: {} as Modal,
       responded: false
     };
@@ -110,9 +110,19 @@ export default defineComponent({
     return { notificationsStore };
   },
   mounted() {
+    this.setupModal = new Modal(`#${this.id}0`);
     this.challengeModal = new Modal(`#${this.id}`);
   },
   methods: {
+    showSetupModal() {
+      if (this.id === 'challengeFromChat') {
+        setTimeout(() => {
+          this.setupModal.show();
+        }, 500);
+      }
+      else
+        this.setupModal.show();
+    },
     sendGameRequest() {
       this.responded = false;
       this.$pongSocket.emit(
