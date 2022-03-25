@@ -4,11 +4,13 @@
 			<div class="modal-dialog modal-dialog-centered">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title">Admin Modal</h5>
-						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						<h5 class="modal-title">Channel settings</h5>
+						<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
-					<form ref="adminForm" @submit.prevent="">
-						<div class="modal-body">
+
+					<div class="modal-body">
+
+						<form ref="adminForm" @submit.prevent="">
 							<div class="input-group form-floating mb-4">
 								<input
 								v-model="userName"
@@ -25,28 +27,29 @@
 											{{ result.username }}
 									</option>
 								</datalist>
-								<label for="userName" class="text-black">User Name</label>
-								<button type="submit" class="btn btn-outline-warning" @click="Admin">Admin</button>
-								<button type="submit" class="btn btn-outline-warning" @click="muted">Mute</button>
-								<button type="submit" class="btn btn-outline-danger" @click="banned">Ban</button>
+								<label for="userName">search a user</label>
+								<button type="submit" class="btn btn-outline-success" style="min-width:4.5rem;" @click="Admin">admin</button>
+								<button type="submit" class="btn btn-outline-warning" style="min-width:4.5rem;" @click="muted">mute</button>
+								<button type="submit" class="btn btn-outline-danger" style="min-width:4.5rem;" @click="banned">ban</button>
 							</div>
-						</div>
-					</form>
-					<form @submit.prevent="">
-						<div class="modal-body">
-							<div class="input-group form-floating mb-4">
-								<input
-								v-model="newPassword"
-								type="text"
-								class="form-control"
-								id="newPassword"
-								placeholder=""
-								/>
-								<label for="newPassword" class="text-black">New password</label>
-								<button type="submit" class="btn btn-outline-warning" @click="changePassword">Submit</button>
+						</form>
+						<hr>
+						<form @submit.prevent="">
+							<div class="modal-body">
+								<div class="input-group form-floating mb-4">
+									<input
+									v-model="newPassword"
+									type="text"
+									class="form-control"
+									id="newPassword"
+									placeholder=""
+									/>
+									<label for="newPassword">enter new password</label>
+									<button type="submit" class="btn btn-success" data-bs-dismiss="modal" @click="changePassword">change password</button>
+								</div>
 							</div>
-						</div>
-					</form>
+						</form>
+					</div>
 				</div>
 			</div>
 		</div>
