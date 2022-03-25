@@ -107,6 +107,8 @@ const receiveMessageGoogle = async (event: MessageEvent<any>) => {
   window.removeEventListener('message', receiveMessageGoogle);
   const e = await authStore.signInGoogle(event.data);
   if (e) notify("danger", "failure", e.message);
+	else if (authStore.twoFaEnabled)
+		twofaModal.show();
   else router.push('/');
 };
 const loginGoogle = async () => {
@@ -118,6 +120,8 @@ const receiveMessageFortyTwo = async (event: MessageEvent<any>) => {
   window.removeEventListener('message', receiveMessageFortyTwo);
   const e = await authStore.signInFortyTwo(event.data);
   if (e) notify("danger", "failure", e.message);
+	else if (authStore.twoFaEnabled)
+		twofaModal.show();
   else router.push('/');
 };
 const loginFortyTwo = async () => {
