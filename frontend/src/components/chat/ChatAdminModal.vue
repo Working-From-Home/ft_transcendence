@@ -32,6 +32,21 @@
 							</div>
 						</div>
 					</form>
+					<form @submit.prevent="">
+						<div class="modal-body">
+							<div class="input-group form-floating mb-4">
+								<input
+								v-model="newPassword"
+								type="text"
+								class="form-control"
+								id="newPassword"
+								placeholder=""
+								/>
+								<label for="newPassword" class="text-black">New password</label>
+								<button type="submit" class="btn btn-outline-warning" @click="changePassword">Submit</button>
+							</div>
+						</div>
+					</form>
 				</div>
 			</div>
 		</div>
@@ -83,6 +98,7 @@ export default defineComponent({
 	data() {
 		return {
 			userName: '' as string,
+			newPassword: '' as string,
 			results: [] as IUserChannel[],
 			userTarget: {} as any,
 			timeModal: {} as Modal,
@@ -180,7 +196,12 @@ export default defineComponent({
 				}
 			}
 			this.notificationsStore.enqueue("warning", "Error", this.userName + " isn't a user of this room")
-			
+		},
+		changePassword() {
+			ChatService.updateChannel(this.roomId, this.newPassword).catch(({ response }) => {
+				this.notificationsStore.enqueue("warning", "Error", response.data.message)
+			});
+			this.notificationsStore.enqueue("info", "Information", "New password for your channel")
 		}
 	}  
 })

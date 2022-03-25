@@ -72,9 +72,9 @@ export class ChannelsController {
 	@Patch('/channels/:channelId')
 	async updateChannel(
 		@Param('channelId') channelId: number,
-		@Body() data: CreateChannelDto
-	): Promise<UpdateResult> {
-		return await this.chatService.updateChannel(channelId, data);
+		@Body() content: {password: string | null}
+	) {
+		await this.chatService.updateChannel(channelId, content.password);
 	}
 
 	@Put('/channels/:channelId')

@@ -18,8 +18,8 @@ class ChatService {
 	createMessage(channelId: number, content: any): Promise<IMessage> {
 		return http.post(`/channels/${channelId}/messages`, content);
 	}
-	updateChannel(channelId: number, data: Partial<ChannelUpdate>): Promise<any> {
-		return http.patch(`/channels/${channelId}`, data);
+	updateChannel(channelId: number, newPassword: string | null): Promise<any> {
+		return http.patch(`/channels/${channelId}`, {password: newPassword});
 	}
 	joinChannel(channelId: number, data: any): Promise<any> {
 		return http.put(`/channels/${channelId}`, data)
