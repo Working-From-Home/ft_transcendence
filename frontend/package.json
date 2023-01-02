@@ -34,7 +34,7 @@
     "@vue/cli-plugin-babel": "~5.0.1",
     "@vue/cli-plugin-router": "~5.0.1",
     "@vue/cli-plugin-typescript": "~5.0.1",
-    "@vue/cli-service": "~5.0.1",
+    "@vue/cli-service": "~5.0.8",
     "@vue/compiler-sfc": "^3.2.30",
     "prettier": "^2.5.1",
     "sass": "^1.49.7",
